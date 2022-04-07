@@ -10,6 +10,7 @@
 # SPDX-License-Identifier: EPL-2.0
 
 import sys, os, getopt
+from enum import Enum
 
 import openstack
 import yaml
@@ -26,24 +27,47 @@ ofile = '/dev/stdout'
 # to be used by OpenStack and also k8s discovery
 
 class cpu:
-    def __init__(self):
+    class VCPUtype(Enum):
+        UNKNOWN = 0
+        DEDCORE = 1
+        DEDTHREAD = 2
+        LIMOVERSUBSCR = 3
+        UNLIMITED = 4
+    def __init__(self, ncores, vtp = VCPUtype(0)):
         # Gaia-X attrs
-        self.cores = 0
-        self.threads = 0
-        self.freq = 0
-        self.boostFreq = 0
-        self.cache = 0
+        self.cores = ncores
+        #self.threads = 0
+        #self.freq = 0
+        #self.boostFreq = 0
+        #self.cache = 0
         # This would not be interesting typically
-        self.socketType = ""
+        #self.socketType = ""
         # Virt. attrs
-        self.dedicatedCore = false
-        self.dedicatedThread = false
-        self.limitOversubscr = false
+        self.dedication = vtp
 
 class mem:
-    def __init__(self):
-        self.memGB = 0
-        self.ECC = true
+    def __init__(self, gb, ecc=True):
+        self.memGB = gb
+        self.ECC = ecc
+
+class disk:
+    class Disktype(Enum):
+        UNKNOWN = 0
+        NETWORK = 1
+        HDD = 2
+        SSD = 3
+        NVME = 4
+    def __init__(self, size, tp = Disktype(0)):
+        self.sizeGB = size
+        self.diskType = tp
+
+class flavor:
+    def __init__(self, nm, cpus, memsz, disksz):
+        self.name = nm
+        self.cpu  = cpu(cpus)
+        self.mem  = mem(memsz)
+        self.disk = disk(disksz)
+
 
 class osService:
     def __init__(self, dct):
@@ -76,20 +100,31 @@ def usage(err = 1):
 
 
 def get_openstack_flavors():
+    "Uses openstack reported flavor attributes"
+    flavors = []
     for flv_id in conn.compute.flavors(id):
         flv_name = flv_id['name']
         flv_cores = flv_id['vcpus']
         flv_ram = flv_id['ram']
-        for in_count in range(len(flv_id)):
-            data = dict (
-                Name = flv_name,
-                Specs = dict (
-                    cores =  flv_cores,
-                    memGB =  (flv_ram/1024)
+        flv_disk = flv_id['disk']
+        # TODO: Parse SCS names for further information
+        # TODO: Parse eventual extra_specs
+        flavors.append(flavor(flv_name, flv_cores, flv_ram/1024, flv_disk))
+    return flavors
+
+def yaml_output_flavors(flavors):
+    data = []
+    for flv in flavors:
+         data.append(dict(
+            Name = flv.name,
+            Specs = dict (
+                    cores =  flv.cpu.cores,
+                    memGB =  flv.mem.memGB,
+                    diskGB = flv.disk.sizeGB
                 )
-            )
-        with open(ofile, 'a') as outfile:
-            yaml.dump(data, outfile, default_flow_style=False)
+            ))
+    with open(ofile, 'a') as outfile:
+        yaml.dump(data, outfile, default_flow_style=False)
 
 
 def main(argv):
@@ -118,7 +153,8 @@ def main(argv):
         mycloud.services.append(osService(svc))
     #print(conn)
     print(mycloud)
-    get_openstack_flavors()
+    flavors = get_openstack_flavors()
+    yaml_output_flavors(flavors)
 
 
 if __name__ == "__main__":
