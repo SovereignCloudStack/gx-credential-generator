@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 #
 # openstack-discovery.py
 #
@@ -10,8 +10,17 @@
 # SPDX-License-Identifier: EPL-2.0
 
 import sys, os, getopt
+
 import openstack
 import yaml
+
+# Global variables
+if "OS_CLOUD" in os.environ:
+        cloud = os.environ["OS_CLOUD"]
+else:
+        cloud = ""
+conn = None
+ofile = '/dev/stdout'
 
 # These should be moved to a helper file,
 # to be used by OpenStack and also k8s discovery
@@ -66,15 +75,28 @@ def usage(err = 1):
 	sys.exit(err)
 
 
-if "OS_CLOUD" in os.environ:
-        cloud = os.environ["OS_CLOUD"]
-else:
-        cloud = ""
+def get_openstack_flavors():
+	for flv_id in conn.compute.flavors(id):
+		flv_name = flv_id['name']
+		flv_cores = flv_id['vcpus']
+		flv_ram = flv_id['ram']
+		for in_count in range(len(flv_id)):
+			data = dict (
+				Name = flv_name,
+				Specs = dict (
+					cores =  flv_cores,
+					memGB =  (flv_ram/1024)
+				)
+			)
+		with open(ofile, 'a') as outfile:
+			yaml.dump(data, outfile, default_flow_style=False)
+
 
 def main(argv):
-        global cloud        
+        global cloud, conn
+        global ofile
         try:
-                opts, args = getopt.gnu_getopt(argv[1:], "c:h", ("os-cloud=", "help"))
+                opts, args = getopt.gnu_getopt(argv[1:], "c:f:h", ("os-cloud=", "file", "help"))
         except getopt.GetoptError as exc:
 	        usage(1)
         for opt in opts:
@@ -82,6 +104,9 @@ def main(argv):
                         usage(0)
                 elif opt[0] == "-c" or opt[0] == "--os-cloud":
                         cloud = opt[1]
+                elif opt[0] == "-f" or opt[0] == "--file":
+                        ofile = opt[1]
+
         if args:
                 usage(1)
         conn = openstack.connect(cloud=cloud)
@@ -93,6 +118,7 @@ def main(argv):
                 mycloud.services.append(osService(svc))
         #print(conn)
         print(mycloud)
+        get_openstack_flavors()
 
 
 if __name__ == "__main__":
