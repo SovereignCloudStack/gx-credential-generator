@@ -14,6 +14,14 @@ import sys, os, getopt
 import openstack
 import yaml
 
+# Global variables
+if "OS_CLOUD" in os.environ:
+        cloud = os.environ["OS_CLOUD"]
+else:
+        cloud = ""
+conn = None
+ofile = '/dev/stdout'
+
 # These should be moved to a helper file,
 # to be used by OpenStack and also k8s discovery
 
@@ -67,13 +75,7 @@ def usage(err = 1):
 	sys.exit(err)
 
 
-if "OS_CLOUD" in os.environ:
-        cloud = os.environ["OS_CLOUD"]
-else:
-        cloud = ""
-
 def get_openstack_flavors():
-	conn = openstack.connect(cloud=cloud)
 	for flv_id in conn.compute.flavors(id):
 		flv_name = flv_id['name']
 		flv_cores = flv_id['vcpus']
@@ -91,7 +93,7 @@ def get_openstack_flavors():
 
 
 def main(argv):
-        global cloud
+        global cloud, conn
         global ofile        
         try:
                 opts, args = getopt.gnu_getopt(argv[1:], "c:f:h", ("os-cloud=", "file", "help"))
