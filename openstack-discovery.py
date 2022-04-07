@@ -94,7 +94,7 @@ def get_openstack_flavors():
 
 def main(argv):
         global cloud, conn
-        global ofile        
+        global ofile
         try:
                 opts, args = getopt.gnu_getopt(argv[1:], "c:f:h", ("os-cloud=", "file", "help"))
         except getopt.GetoptError as exc:
@@ -105,8 +105,8 @@ def main(argv):
                 elif opt[0] == "-c" or opt[0] == "--os-cloud":
                         cloud = opt[1]
                 elif opt[0] == "-f" or opt[0] == "--file":
-                		ofile = opt[1]
-        
+                        ofile = opt[1]
+
         if args:
                 usage(1)
         conn = openstack.connect(cloud=cloud)
