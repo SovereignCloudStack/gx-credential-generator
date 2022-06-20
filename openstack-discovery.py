@@ -23,29 +23,6 @@ else:
 conn = None
 ofile = '/dev/stdout'
 
-# These should be moved to a helper file,
-# to be used by OpenStack and also k8s discovery
-
-class cpu:
-    def __init__(self):
-        # Gaia-X attrs
-        self.cores = 0
-        self.threads = 0
-        self.freq = 0
-        self.boostFreq = 0
-        self.cache = 0
-        # This would not be interesting typically
-        self.socketType = ""
-        # Virt. attrs
-        self.dedicatedCore = false
-        self.dedicatedThread = false
-        self.limitOversubscr = false
-
-class mem:
-    def __init__(self):
-        self.memGB = 0
-        self.ECC = true
-
 class osService:
     def __init__(self, dct):
         self.id = dct["id"]
@@ -80,8 +57,9 @@ def usage(err = 1):
 def get_openstack_flavors():
     """Use OpenStack conn (global var conn) to get flavor list from
        compute service.
-       Note: This does not use/populate objects of cpu and mem class yet,
-       but rather just stores a local list and outputs it.
+       Note: We should have a proper abstraction of flavor properties,
+       store them and generate appropriate data structures for YAML output.
+       Currently we just store a local list and outputs it.
        This will be fixed, once we use the SCS flavor parser."""
 
     flvs = list()
@@ -92,7 +70,7 @@ def get_openstack_flavors():
             numberOfvCPUs = flv_id['vcpus'],
             ramSize = dict(Value = flv_id['ram']/1024, Unit='GiB')
             )
-        # Only add diskSize if non-null
+        # Only add diskSize if non-zero
         flv_disk = flv_id['disk']
         if flv_disk:
             data["diskSize"] = dict(Value = flv_disk, Unit='GB')
