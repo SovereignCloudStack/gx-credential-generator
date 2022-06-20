@@ -23,20 +23,22 @@ else:
 conn = None
 ofile = '/dev/stdout'
 
-# These should be moved to a helper file,
+# These classes reflect the Gaia-X view on physical infra
+# They should be moved to a helper file,
 # to be used by OpenStack and also k8s discovery
+# They are currently unused
 
-class cpu:
+class CPU:
     def __init__(self):
         # Gaia-X attrs
-        self.cores = 0
-        self.threads = 0
-        self.freq = 0
-        self.boostFreq = 0
-        self.cache = 0
+        self.numberOfCores = 0
+        self.numberOfThreads = 0
+        self.frequency = 0
+        self.boostFrequency = 0
+        self.cacheSize = 0
         # This would not be interesting typically
-        self.socketType = ""
-        # Virt. attrs
+        self.allowedSocket = ""
+        # Virt. attrs -- not in GaX
         self.dedicatedCore = false
         self.dedicatedThread = false
         self.limitOversubscr = false
@@ -92,7 +94,7 @@ def get_openstack_flavors():
             numberOfvCPUs = flv_id['vcpus'],
             ramSize = dict(Value = flv_id['ram']/1024, Unit='GiB')
             )
-        # Only add diskSize if non-null
+        # Only add diskSize if non-zero
         flv_disk = flv_id['disk']
         if flv_disk:
             data["diskSize"] = dict(Value = flv_disk, Unit='GB')
