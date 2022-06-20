@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 #
 # gax-cpu.py
-# 
+#
 # These classes reflect the Gaia-X view on physical infra
 #
 # (c) Kurt Garloff <garloff@osb-alliance.com>, 3/2022 - 6/2022

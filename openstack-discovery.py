@@ -40,14 +40,34 @@ class osService:
         return str(self)
 
 class osCompute:
-    def __init__(self):
-        self.flavors = []
+    def __init__(self, conn):
+        self.conn = conn
+        self.flavors = self.get_openstack_flavors()
+
+    def get_openstack_flavors(self):
+        """Use OpenStack conn (global var conn) to get flavor list from
+           compute service. Populate flavor list."""
+        flvs = list()
+        for flv_id in self.conn.compute.flavors(id):
+            flvs.append(osFlavor(flv_id).toyaml())
+            # TODO:
+            # (a) parse extra specs if any
+            # (b) parse SCS flavor names
+        self.flavors = flvs
+        return flvs
+
 
 class osCloud:
-    def __init__(self):
-        self.regions = []
+    def __init__(self, conn):
+        self.conn = conn
+        self.regions = list(conn.identity.regions())
         self.services = []
-        self.compute = osCompute()
+        #self.services = list(conn.identity.services())
+        #self.services = conn.list_services()
+        for svc in conn.service_catalog:
+            self.services.append(osService(svc))
+        self.compute = osCompute(conn)
+        #print(conn)
     def __str__(self):
         strg = "#Regions: %s\n#Services\n#%s" % (self.regions, self.services)
         if self.compute.flavors:
@@ -86,19 +106,6 @@ class osFlavor:
         return ydct
 
 
-def get_openstack_flavors():
-    """Use OpenStack conn (global var conn) to get flavor list from
-       compute service. Populate flavor list."""
-
-    flvs = list()
-    for flv_id in conn.compute.flavors(id):
-        flvs.append(osFlavor(flv_id).toyaml())
-
-        # TODO:
-        # (a) parse extra specs if any
-        # (b) parse SCS flavor names
-    return flvs
-
 def main(argv):
     global cloud, conn
     global ofile
@@ -117,14 +124,7 @@ def main(argv):
     if args:
         usage(1)
     conn = openstack.connect(cloud=cloud)
-    mycloud = osCloud()
-    mycloud.regions = list(conn.identity.regions())
-    #mycloud.services = list(conn.identity.services())
-    #mycloud.services = conn.list_services()
-    for svc in conn.service_catalog:
-        mycloud.services.append(osService(svc))
-    #print(conn)
-    mycloud.compute.flavors = get_openstack_flavors()
+    mycloud = osCloud(conn)
     print(mycloud, file = open(ofile, 'a'))
 
 
