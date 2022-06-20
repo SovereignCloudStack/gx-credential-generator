@@ -39,12 +39,21 @@ class osService:
     def __repr__(self):
         return str(self)
 
+class osCompute:
+    def __init__(self):
+        self.flavors = []
+
 class osCloud:
     def __init__(self):
         self.regions = []
         self.services = []
+        self.compute = osCompute()
     def __str__(self):
-        return "#Regions: %s\n#Services\n%s" % (self.regions, self.services)
+        strg = "#Regions: %s\n#Services\n#%s" % (self.regions, self.services)
+        if self.compute.flavors:
+            yout = dict(compute = dict(flavor = self.compute.flavors))
+            strg += '\n' + yaml.dump(yout, default_flow_style=False)
+        return strg
 
 
 def usage(err = 1):
@@ -53,36 +62,42 @@ def usage(err = 1):
         print("You need to have OS_CLOUD set or pass --os-cloud=CLOUD.", file=sys.stderr)
     sys.exit(err)
 
+class osFlavor:
+    def __init__(self, flv):
+        self.name = flv['name']
+        # Note: cpuType, cpuGeneration, diskType are MR34 ideas,
+        # slightly different from and less comprehensive than
+        # the abstraction in SCS flavor spec. Convert later.
+        self.cpuType = ""
+        self.cpuGeneration = ""
+        self.numberOfvCPUs = flv['vcpus']
+        self.ramSize = flv['ram']       # MiB
+        self.diskSize = flv['disk']     # GB
+        self.diskType = ""
+
+    def toyaml(self):
+        ydct = dict(name = self.name,
+                    numberOfvCPUs = self.numberOfvCPUs,
+                    ramSize = dict(Value = self.ramSize/1024, Unit = 'GiB')
+                )
+        if self.diskSize:
+            ydct['diskSize'] = dict(Value = self.diskSize, Unit = 'GB')
+        # TODO: cpuType, cpuGen, diskType output
+        return ydct
+
 
 def get_openstack_flavors():
     """Use OpenStack conn (global var conn) to get flavor list from
-       compute service.
-       Note: We should have a proper abstraction of flavor properties,
-       store them and generate appropriate data structures for YAML output.
-       Currently we just store a local list and outputs it.
-       This will be fixed, once we use the SCS flavor parser."""
+       compute service. Populate flavor list."""
 
     flvs = list()
     for flv_id in conn.compute.flavors(id):
+        flvs.append(osFlavor(flv_id).toyaml())
 
-        data = dict (
-            name  = flv_id['name'],
-            numberOfvCPUs = flv_id['vcpus'],
-            ramSize = dict(Value = flv_id['ram']/1024, Unit='GiB')
-            )
-        # Only add diskSize if non-zero
-        flv_disk = flv_id['disk']
-        if flv_disk:
-            data["diskSize"] = dict(Value = flv_disk, Unit='GB')
-        flvs.append(data)
         # TODO:
         # (a) parse extra specs if any
         # (b) parse SCS flavor names
-
-    yout = dict(compute = dict(flavor = flvs))
-    with open(ofile, 'a') as outfile:
-        yaml.dump(yout, outfile, default_flow_style=False)
-
+    return flvs
 
 def main(argv):
     global cloud, conn
@@ -109,8 +124,9 @@ def main(argv):
     for svc in conn.service_catalog:
         mycloud.services.append(osService(svc))
     #print(conn)
-    print(mycloud)
-    get_openstack_flavors()
+    mycloud.compute.flavors = get_openstack_flavors()
+    print(mycloud, file = open(ofile, 'a'))
+
 
 
 if __name__ == "__main__":
