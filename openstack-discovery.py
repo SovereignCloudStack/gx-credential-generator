@@ -76,20 +76,27 @@ def usage(err = 1):
 
 
 def get_openstack_flavors():
+    flvs = list()
     for flv_id in conn.compute.flavors(id):
         flv_name = flv_id['name']
-        flv_cores = flv_id['vcpus']
-        flv_ram = flv_id['ram']
-        for in_count in range(len(flv_id)):
-            data = dict (
-                Name = flv_name,
-                Specs = dict (
-                    cores =  flv_cores,
-                    memGB =  (flv_ram/1024)
-                )
+        flv_cores= flv_id['vcpus']
+        flv_ram  = flv_id['ram']
+        flv_disk = flv_id['disk']
+
+        #for in_count in range(len(flv_id)):
+        data = dict (
+            name  = flv_name,
+            numberOfvCPUs = flv_cores,
+            ramSize = dict(Value = flv_ram/1024, Unit='GiB')
             )
-        with open(ofile, 'a') as outfile:
-            yaml.dump(data, outfile, default_flow_style=False)
+        # Only add diskSize if non-null
+        if flv_disk:
+            data["diskSize"] = dict(Value = flv_disk, Unit='GB')
+        flvs.append(data)
+
+    yout = dict(compute = dict(flavor = flvs))
+    with open(ofile, 'a') as outfile:
+        yaml.dump(yout, outfile, default_flow_style=False)
 
 
 def main(argv):
