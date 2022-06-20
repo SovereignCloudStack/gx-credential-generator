@@ -6,7 +6,8 @@
 # Save discovered information in classes that reflect G-X attributes
 # These can then be dumped as YAMLs or other forms
 #
-# (c) Kurt Garloff <garloff@osb-alliance.com>, 3/2022
+# (c) Kurt Garloff <garloff@osb-alliance.com>, 3/2022 - 6/2022
+# (c) Mathias Fechner <fechner@osism.tech>, 3/2022
 # SPDX-License-Identifier: EPL-2.0
 
 import sys, os, getopt
@@ -71,28 +72,34 @@ class osCloud:
 
 def usage(err = 1):
     print("Usage: openstack-discovery.py [options]", file=sys.stderr)
-    print("You need to have OS_CLOUD set or pass --os-cloud=CLOUD.", file=sys.stderr)
+    if not cloud:
+        print("You need to have OS_CLOUD set or pass --os-cloud=CLOUD.", file=sys.stderr)
     sys.exit(err)
 
 
 def get_openstack_flavors():
+    """Use OpenStack conn (global var conn) to get flavor list from
+       compute service.
+       Note: This does not use/populate objects of cpu and mem class yet,
+       but rather just stores a local list and outputs it.
+       This will be fixed, once we use the SCS flavor parser."""
+
     flvs = list()
     for flv_id in conn.compute.flavors(id):
-        flv_name = flv_id['name']
-        flv_cores= flv_id['vcpus']
-        flv_ram  = flv_id['ram']
-        flv_disk = flv_id['disk']
 
-        #for in_count in range(len(flv_id)):
         data = dict (
-            name  = flv_name,
-            numberOfvCPUs = flv_cores,
-            ramSize = dict(Value = flv_ram/1024, Unit='GiB')
+            name  = flv_id['name'],
+            numberOfvCPUs = flv_id['vcpus'],
+            ramSize = dict(Value = flv_id['ram']/1024, Unit='GiB')
             )
         # Only add diskSize if non-null
+        flv_disk = flv_id['disk']
         if flv_disk:
             data["diskSize"] = dict(Value = flv_disk, Unit='GB')
         flvs.append(data)
+        # TODO:
+        # (a) parse extra specs if any
+        # (b) parse SCS flavor names
 
     yout = dict(compute = dict(flavor = flvs))
     with open(ofile, 'a') as outfile:
