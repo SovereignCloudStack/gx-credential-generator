@@ -24,6 +24,9 @@ conn = None
 outjson = False
 ofile = '/dev/stdout'
 indent = "  "
+uriprefix = "https://scs.community/sd/"
+gxid = "test"
+svcname = "SCS Test"
 
 class osService:
     def __init__(self, dct):
@@ -58,6 +61,52 @@ class osCompute:
         self.flavors = flvs
         return flvs
 
+def valtype(val, tp = 'xsd:string'):
+    return { '@value': val, '@type': tp }
+
+def appenddicts(d1, *kwd):
+    d = d1
+    for k in kwd:
+        d.update(k)
+    return d
+
+def getdocsha512(url):
+    import requests, hashlib
+    r = requests.get(url)
+    r.raise_for_status()
+    #r.raw.decode_content = True
+    h = hashlib.sha512(r.content)   # .text would be better for HTML
+    return h.hexdigest()
+
+
+def gxjsonld(cld):
+    import gx_context
+    gxsvo = "gx-service-offering:"
+    jout = gx_context.gxcontext
+    jout.update(gx_context.gxtype)
+    myid = uriprefix+"gxserviceIaaSOfferingOpenStack-"+gxid+".json"
+    jout["@id"] = myid
+    provby   = valtype(uriprefix+"participant.json")
+    name     = valtype("OpenStack IaaS Service " + svcname)
+    #svcmodel = valtype("pay per use")
+    webadr   = valtype(uriprefix, 'xsd:anyURI')
+    termsdoc = uriprefix+"terms.pdf"
+    # calc sha512
+    termssha = getdocsha512(termsdoc)
+    tandc    = { gxsvo+"url": valtype(uriprefix+"terms.pdf"),
+                 gxsvo+"hash": valtype(termssha) }
+    #TODO: dependsOn
+    #TODO: aggregationOf
+    jout["credentialSubject"] = {
+            "id": myid,
+            gxsvo+"providedBy": provby,
+            gxsvo+"name": name,
+            gxsvo+"webAddress": webadr,
+            gxsvo+"TermsAndConditions": tandc,
+            gxsvo+"OpenStackService": { gxsvo+"compute": { gxsvo+"flavor": cld.compute.flavors }}
+            }
+    return jout
+
 
 class osCloud:
     def __init__(self, conn):
@@ -73,14 +122,15 @@ class osCloud:
     def __str__(self):
         strg = ""
         if not outjson:
-            strg = "#Regions: %s\n#Services\n#%s" % (self.regions, self.services)
+            strg = "#Regions: %s\n#Services\n#%s\n" % (self.regions, self.services)
         if self.compute.flavors:
             if not outjson:
                 yout = dict(compute = dict(flavor = self.compute.flavors))
-                strg += '\n' + yaml.dump(yout, default_flow_style=False)
+                strg += yaml.dump(yout, default_flow_style=False)
             else:
-                jout = dict(compute = dict(flavor = self.compute.flavors))
-                strg += '\n' + json.dumps(jout, indent = indent)
+                #jout = dict(compute = dict(flavor = self.compute.flavors))
+                jout = gxjsonld(self)
+                strg += json.dumps(jout, indent = indent)
 
         return strg
 
