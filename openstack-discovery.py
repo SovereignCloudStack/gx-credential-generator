@@ -13,7 +13,7 @@
 import sys, os, getopt
 
 import openstack
-import yaml
+import yaml, json
 
 # Global variables
 if "OS_CLOUD" in os.environ:
@@ -21,7 +21,9 @@ if "OS_CLOUD" in os.environ:
 else:
     cloud = ""
 conn = None
+outjson = False
 ofile = '/dev/stdout'
+indent = "  "
 
 class osService:
     def __init__(self, dct):
@@ -69,15 +71,26 @@ class osCloud:
         self.compute = osCompute(conn)
         #print(conn)
     def __str__(self):
-        strg = "#Regions: %s\n#Services\n#%s" % (self.regions, self.services)
+        strg = ""
+        if not outjson:
+            strg = "#Regions: %s\n#Services\n#%s" % (self.regions, self.services)
         if self.compute.flavors:
-            yout = dict(compute = dict(flavor = self.compute.flavors))
-            strg += '\n' + yaml.dump(yout, default_flow_style=False)
+            if not outjson:
+                yout = dict(compute = dict(flavor = self.compute.flavors))
+                strg += '\n' + yaml.dump(yout, default_flow_style=False)
+            else:
+                jout = dict(compute = dict(flavor = self.compute.flavors))
+                strg += '\n' + json.dumps(jout, indent = indent)
+
         return strg
 
 
 def usage(err = 1):
     print("Usage: openstack-discovery.py [options]", file=sys.stderr)
+    print("Options: -g/--gaia-x: output Gaia-X JSON-LD instead of YAML (YAML is default)")
+    print("         -j/--json:   output compact Gaia-X JSON-LD instead of YAML")
+    print("         -f FILE/--file=FILE: write output to FILE (default: stdout)")
+    print("         -c CLOUD/--os-cloud=CLOUD: use OpenStack cloud CLOUD (default: $OS_CLOUD)")
     if not cloud:
         print("You need to have OS_CLOUD set or pass --os-cloud=CLOUD.", file=sys.stderr)
     sys.exit(err)
@@ -107,10 +120,10 @@ class osFlavor:
 
 
 def main(argv):
-    global cloud, conn
+    global cloud, conn, outjson, indent
     global ofile
     try:
-        opts, args = getopt.gnu_getopt(argv[1:], "c:f:h", ("os-cloud=", "file", "help"))
+        opts, args = getopt.gnu_getopt(argv[1:], "c:f:hgj", ("os-cloud=", "file", "help", "gaia-x", "json"))
     except getopt.GetoptError as exc:
         usage(1)
     for opt in opts:
@@ -120,9 +133,15 @@ def main(argv):
             cloud = opt[1]
         elif opt[0] == "-f" or opt[0] == "--file":
             ofile = opt[1]
-
+        elif opt[0] == "-g" or opt[0] == "--gaia-x":
+            outjson = True
+        elif opt[0] == "-j" or opt[0] == "--json":
+            outjson = True
+            indent = None
     if args:
         usage(1)
+    if not cloud:
+        print("You need to have OS_CLOUD set or pass --os-cloud=CLOUD.", file=sys.stderr)
     conn = openstack.connect(cloud=cloud)
     mycloud = osCloud(conn)
     print(mycloud, file = open(ofile, 'a'))
