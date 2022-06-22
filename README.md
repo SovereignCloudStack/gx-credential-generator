@@ -9,6 +9,7 @@ We start with the region list and then read the OpenStack catalog to collect
 - OS_AUTH_URL (Keystone Endpoint)
 - List of services (along with supported versions, min thr. max)
 - Per service: extensions (cinderv3, nova)
+- Flavors for compute incl. flavor details (SCS spec)
 - AZs (for nova, cinderv3, neutron)
 - UI (URL, type: horizon or custom)
 
@@ -23,7 +24,7 @@ References:
 
 Notes from reviewing the SD attributes:
 * Virtualized CPU types: It might be of limited use to reference exact model names, rather characterize properties
-  (generation, speed, insn set externsions, ...)
+  (generation, speed, insn set extensions, ...)
 * NICs: Virtual NICs are almost unlimited, but there may be a limited amount of hardware-accelerated
   NICs (using SR-IOV and multiqueue features) available -- these may need to be added to SCS flavor
   naming.
@@ -54,3 +55,28 @@ So the SD for a k8s aaS solution would list possible options and
 ranges: What k8s versions are supported, what max number of workers,
 flavors, etc.? What services are optionally delivered (and supported)
 by the provider?
+
+For KaaS, the option space really needs to be described.
+As of now, this can not be discovered, short of using external sources,
+like the IaaS SD, the list of node images (osism minio), ...
+
+## Status (2022-06-21)
+The current PoC code can discover OpenStack capabilities and produces
+an entry for the compute service with endpoint URL and a flavor list.
+
+Thanks to the work in Hackathon #4, we have an option to export
+JSON-LD (use option `--gaia-x` aka. `-g`) that can be signed and
+successfully processed by the compilance service at
+http://compliance.lab.gaia-x.eu/
+Signing and verifying can be combined using the Delta-DAO signer.
+https://signer.demo.delta-dao.com/#signer
+
+From an OpenStack perspective, this is very incomplete.
+- We lack flavor details (though we need SCS specs to discover more)
+- We lack other aspects from the compute service (such as API
+  version and microversions and supported extensions).
+- We lack the service catalog and all other services.
+
+TODO: Create cmd line tool that does signing and interacting with
+the compliance service, so we can set up CI testing.
+
