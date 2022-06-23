@@ -45,10 +45,18 @@ class osService:
         return str(self)
 
 class osCompute:
-    def __init__(self, conn):
+    def __init__(self, conn, region="RegionOne"):
         self.conn = conn
         self.flavors = self.get_openstack_flavors()
-        self.ep = self.conn.compute.get_endpoint()
+        self.ep = conn.compute.get_endpoint()
+        self.version = conn.compute.version
+        self.versdata = conn.compute.get_all_version_data()[region]["public"]["compute"]
+        self.versinfo = list(map(lambda x: {'version': x.version, 'url': x.url,
+                                            'status': x.status, 'min_microversion': x.min_microversion,
+                                            'max_microversion': x.max_microversion},
+                                    self.versdata))
+
+        self.extensions = list(map(lambda x: x.name, conn.compute.extensions()))
 
     def get_openstack_flavors(self):
         """Use OpenStack conn (global var conn) to get flavor list from
@@ -104,9 +112,12 @@ def gxjsonld(cld):
             gxsvo+"name": name,
             gxsvo+"webAddress": webadr,
             gxsvo+"TermsAndConditions": tandc,
-            gxsvo+"OpenStackService": { gxsvo+"compute": {
-                gxsvo+"endpoint": valtype(cld.compute.ep, "xsd:anyURI"),
-                gxsvo+"flavor": cld.compute.flavors
+            gxsvo+"OpenStackService": { gxsvo+"auth_url": valtype(cld.auth["auth_url"], "xsd:anyURI"),
+                gxsvo+"compute": {
+                    gxsvo+"endpoint": valtype(cld.compute.ep, "xsd:anyURI"),
+                    gxsvo+"extension": cld.compute.extensions,
+                    gxsvo+"version": cld.compute.versinfo,
+                    gxsvo+"flavor": cld.compute.flavors
                 }
             }
     }
@@ -116,13 +127,14 @@ def gxjsonld(cld):
 class osCloud:
     def __init__(self, conn):
         self.conn = conn
+        self.auth = conn.auth
         self.regions = list(conn.identity.regions())
         self.services = []
         #self.services = list(conn.identity.services())
         #self.services = conn.list_services()
         for svc in conn.service_catalog:
             self.services.append(osService(svc))
-        self.compute = osCompute(conn)
+        self.compute = osCompute(conn, self.regions[0].id)
         #print(conn)
     def __str__(self):
         strg = ""
@@ -130,7 +142,12 @@ class osCloud:
             strg = "#Regions: %s\n#Services\n#%s\n" % (self.regions, self.services)
         if self.compute.flavors:
             if not outjson:
-                yout = dict(compute = dict(endpoint = self.compute.ep, flavor = self.compute.flavors))
+                yout = dict(auth = dict(auth_url = self.auth["auth_url"]),
+                            compute = dict(endpoint = self.compute.ep,
+                                #version = self.compute.version,
+                                version = self.compute.versinfo,
+                                extension = self.compute.extensions,
+                                flavor = self.compute.flavors))
                 strg += yaml.dump(yout, default_flow_style=False)
             else:
                 #jout = dict(compute = dict(flavor = self.compute.flavors))
