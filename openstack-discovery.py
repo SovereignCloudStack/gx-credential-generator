@@ -52,10 +52,12 @@ class osCompute:
         self.version = conn.compute.version
         self.versdata = conn.compute.get_all_version_data()[region]["public"]["compute"]
         self.versinfo = list(map(lambda x: {'version': x.version, 'url': x.url,
-                                            'status': x.status, 'min_microversion': x.min_microversion,
+                                            'status': x.status,
+                                            'min_microversion': x.min_microversion,
                                             'max_microversion': x.max_microversion},
-                                    self.versdata))
-
+                                        filter(lambda x: x.max_microversion, self.versdata)))
+        self.versinfo.extend(list(map(lambda x: {'version': x.version, 'url': x.url, 'status': x.status},
+                                        filter(lambda x: not x.max_microversion, self.versdata))))
         self.extensions = list(map(lambda x: x.name, conn.compute.extensions()))
 
     def get_openstack_flavors(self):
@@ -113,10 +115,14 @@ def gxjsonld(cld):
             gxsvo+"webAddress": webadr,
             gxsvo+"TermsAndConditions": tandc,
             gxsvo+"OpenStackService": { gxsvo+"auth_url": valtype(cld.auth["auth_url"], "xsd:anyURI"),
+                #gxsvo+"user_domain_name": valtype(cld.auth["user_domain_name"]),
                 gxsvo+"compute": {
                     gxsvo+"endpoint": valtype(cld.compute.ep, "xsd:anyURI"),
                     gxsvo+"extension": cld.compute.extensions,
                     gxsvo+"version": cld.compute.versinfo,
+                    gxsvo+"availability_zone": list(map(lambda x: x.name,
+                        filter(lambda x: x.state['available'] == True,
+                            cld.conn.compute.availability_zones()))),
                     gxsvo+"flavor": cld.compute.flavors
                 }
             }
@@ -143,10 +149,14 @@ class osCloud:
         if self.compute.flavors:
             if not outjson:
                 yout = dict(auth = dict(auth_url = self.auth["auth_url"]),
+                            #user_domain_name = self.auth["user_domain_name"],
                             compute = dict(endpoint = self.compute.ep,
                                 #version = self.compute.version,
                                 version = self.compute.versinfo,
                                 extension = self.compute.extensions,
+                                availability_zones = list(map(lambda x: x.name,
+                                    filter(lambda x: x.state['available'] == True,
+                                           conn.compute.availability_zones()))),
                                 flavor = self.compute.flavors))
                 strg += yaml.dump(yout, default_flow_style=False)
             else:
