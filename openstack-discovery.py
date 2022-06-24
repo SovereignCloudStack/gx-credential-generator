@@ -85,7 +85,7 @@ class osService:
         try:
             self.conn = conn.__getattribute__(stype)
             self.conn.service_name = name
-        except AttributeError as e:
+        except Exception as e:
             self.conn = None
             if not quiet:
                 print("No service proxy of type %s in SDK.\n%s" % (stype, e))
@@ -210,12 +210,17 @@ class osLoadBalancer(osService):
     svcID = ("load_balancer", "load-balancer")
     def __init__(self, conn, stype, name, region="RegionOne"):
         super().__init__(conn, stype, name, region, True)
-        self.flavors = self.conn.flavors()
-        self.flavors = list(map(lambda x: {"name": x.name, "description": x.description},
-                        filter(lambda x: x.is_enabled, self.flavors)))
+        try:
+            self.flavors = self.conn.flavors()
+            self.flavors = list(map(lambda x: {"name": x.name, "description": x.description},
+                                         filter(lambda x: x.is_enabled, self.flavors)))
+        except Exception as e:
+            print(e, file=sys.stderr)
+            self.flavors = None
     def __repr__(self):
         dct = super().__repr__()
-        dct[self.stype]["flavors"] = self.flavors
+        if self.flavors:
+            dct[self.stype]["flavors"] = self.flavors
         return dct
 
 ## TODO: List of public images with properties
@@ -367,7 +372,10 @@ def main(argv):
         print("You need to have OS_CLOUD set or pass --os-cloud=CLOUD.", file=sys.stderr)
     conn = openstack.connect(cloud=cloud)
     mycloud = osCloud(conn)
-    print(mycloud, file = open(ofile, 'a'))
+    if ofile == "/dev/stdout":
+        print(mycloud, file = sys.stdout)
+    else:
+        print(mycloud, file = open(ofile, 'a'))
 
 
 
