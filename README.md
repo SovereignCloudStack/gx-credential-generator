@@ -60,9 +60,12 @@ For KaaS, the option space really needs to be described.
 As of now, this can not be discovered, short of using external sources,
 like the IaaS SD, the list of node images (osism minio), ...
 
-## Status (2022-06-21)
+## Status (2022-06-24)
 The current PoC code can discover OpenStack capabilities and produces
-an entry for the compute service with endpoint URL and a flavor list.
+an entry for the services in the service catalogue.
+For the compute service, there is a flavor list (yet without some
+of the details discoverable by SCS specs); for volumes, we
+list the types, for loadbalancers, we have a flavor list as well.
 
 Thanks to the work in Hackathon #4, we have an option to export
 JSON-LD (use option `--gaia-x` aka. `-g`) that can be signed and
@@ -71,11 +74,10 @@ http://compliance.lab.gaia-x.eu/
 Signing and verifying can be combined using the Delta-DAO signer.
 https://signer.demo.delta-dao.com/#signer
 
-From an OpenStack perspective, this is very incomplete.
+From an OpenStack perspective, this still incomplete.
 - We lack flavor details (though we need SCS specs to discover more)
-- We lack other aspects from the compute service (such as API
-  version and microversions and supported extensions).
-- We lack the service catalog and all other services.
+- We lack a list of public images (along with image details)
+- Neutron probably has a few things to detect.
 
 TODO: Create cmd line tool that does signing and interacting with
 the compliance service, so we can set up CI testing.
