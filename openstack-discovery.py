@@ -28,7 +28,37 @@ uriprefix = "https://scs.community/sd/"
 gxid = "test"
 svcname = "SCS Test"
 
-class osService:
+def valtype(val, tp = 'xsd:string'):
+    "Wrapper to return dict pairs with @value and @type as needed in JSON-LD"
+    return { '@value': val, '@type': tp }
+
+def appenddicts(d1, *kwd):
+    "Return dict d1 with items from kwd added"
+    d = d1
+    for k in kwd:
+        d.update(k)
+    return d
+
+
+def versinfo(connprox, stype, region = "RegionOne"):
+    "Get list of supported versions and microversions from OS service"
+    vdata = connprox.get_all_version_data()[region]["public"]
+    for keys in vdata:
+        versdata = vdata[keys]
+        if keys == stype:
+            break
+    vinfo = list(map(lambda x: {'version': x.version, 'url': x.url,
+                                'status': x.status,
+                                'min_microversion': x.min_microversion,
+                                'max_microversion': x.max_microversion},
+                      filter(lambda x: x.max_microversion, versdata)))
+    vinfo.extend(list(map(lambda x: {'version': x.version, 'url': x.url, 'status': x.status},
+                          filter(lambda x: not x.max_microversion, versdata))))
+    return vinfo
+
+
+class osServiceCat:
+    "OpenStack service catalog"
     def __init__(self, dct):
         self.id = dct["id"]
         # interface: we only look at public
@@ -44,44 +74,154 @@ class osService:
     def __repr__(self):
         return str(self)
 
-class osCompute:
-    def __init__(self, conn, region="RegionOne"):
-        self.conn = conn
+class osService:
+    "A generic openStack service, with a proxy connection object from SDK"
+    def __init__(self, conn, stype, name, region = "RegionOne", quiet = True):
+        self.fulltype = stype
+        if stype[-2] == 'v' and stype[-1].isnumeric():
+            stype = stype[:-2]
+        stype = stype.replace('-', '_')
+        self.stype = stype
+        try:
+            self.conn = conn.__getattribute__(stype)
+            self.conn.service_name = name
+        except AttributeError as e:
+            self.conn = None
+            if not quiet:
+                print("No service proxy of type %s in SDK.\n%s" % (stype, e))
+            return
+        try:
+            self.ep = self.conn.get_endpoint().replace(conn.auth["project_id"], "${OS_PROJECT_ID}")
+        except Exception as e:
+            if stype == "identity":
+                self.ep = conn.auth["auth_url"]
+            else:
+                if self.conn:
+                    raise e
+        self.versdata = versinfo(self.conn, self.fulltype, region)
+        try:
+            #self.extensions = list(map(lambda x: x.name, self.conn.extensions()))
+            self.extensions = list(map(lambda x: x.alias, self.conn.extensions()))
+        except Exception as e:
+            self.extensions = None
+            if not quiet:
+                print("WARNING: Service %s does not support getting extensions.\n%s" % (self.fulltype, e))
+        try:
+            self.azs = list(filter(lambda x: x.state['available'] == True, self.conn.availability_zones()))
+        except:
+            self.azs = None
+            try:
+                self.azs = list(filter(lambda x: x.state == 'available', self.conn.availability_zones()))
+            except Exception as e:
+                if not quiet:
+                    print("WARNING: Service %s does not support getting AZs.\n%s" % (self.fulltype, e))
+
+    def __repr__(self):
+        dct = { self.stype: { "name": self.conn.service_name,
+                              "endpoint": self.ep,
+                              "versions": self.versdata
+                            }
+              }
+        if self.extensions:
+            dct[self.stype]["extensions"] = self.extensions
+        if self.azs:
+            dct[self.stype]["availability_zones"] = list(map(lambda x: x.name, self.azs))
+        return dct
+
+class osFlavor:
+    "Abstraction for flavors"
+    def __init__(self, flv):
+        self.name = flv['name']
+        # Note: cpuType, cpuGeneration, diskType are MR34 ideas,
+        # slightly different from and less comprehensive than
+        # the abstraction in SCS flavor spec. Convert later.
+        self.cpuType = ""
+        self.cpuGeneration = ""
+        self.numberOfvCPUs = flv['vcpus']
+        self.ramSize = flv['ram']       # MiB
+        self.diskSize = flv['disk']     # GB
+        self.diskType = ""
+
+    def __repr__(self):
+        ydct = dict(name = self.name,
+                    numberOfvCPUs = self.numberOfvCPUs,
+                    ramSize = dict(Value = self.ramSize/1024, Unit = 'GiB')
+                )
+        if self.diskSize:
+            ydct['diskSize'] = dict(Value = self.diskSize, Unit = 'GB')
+        # TODO: cpuType, cpuGen, diskType output
+        return ydct
+
+class osCompute(osService):
+    svcID = ("compute", "computev2", "compute_legacy")
+    #def __init__(self, conn, region="RegionOne"):
+    def __init__(self, conn, stype, name, region="RegionOne"):
+        super().__init__(conn, stype, name, region, False)
         self.flavors = self.get_openstack_flavors()
-        self.ep = conn.compute.get_endpoint()
-        self.version = conn.compute.version
-        self.versdata = conn.compute.get_all_version_data()[region]["public"]["compute"]
-        self.versinfo = list(map(lambda x: {'version': x.version, 'url': x.url,
-                                            'status': x.status,
-                                            'min_microversion': x.min_microversion,
-                                            'max_microversion': x.max_microversion},
-                                        filter(lambda x: x.max_microversion, self.versdata)))
-        self.versinfo.extend(list(map(lambda x: {'version': x.version, 'url': x.url, 'status': x.status},
-                                        filter(lambda x: not x.max_microversion, self.versdata))))
-        self.extensions = list(map(lambda x: x.name, conn.compute.extensions()))
+    def __repr__(self):
+        dct = super().__repr__()
+        dct[self.stype]["flavors"] = self.flavors
+        return dct
 
     def get_openstack_flavors(self):
         """Use OpenStack conn (global var conn) to get flavor list from
            compute service. Populate flavor list."""
         flvs = list()
-        for flv_id in self.conn.compute.flavors(id):
-            flvs.append(osFlavor(flv_id).toyaml())
+        for flv_id in self.conn.flavors(id):
+            flvs.append(osFlavor(flv_id).__repr__())
             # TODO:
             # (a) parse extra specs if any
             # (b) parse SCS flavor names
         self.flavors = flvs
         return flvs
 
-def valtype(val, tp = 'xsd:string'):
-    return { '@value': val, '@type': tp }
+class azInfo:
+    "Convert zoneXxx dict into class with Xxx attributes for availability zones"
+    def __init__(self, dct):
+        for key in dct:
+            if key[:4] == "zone":
+                newkey = key[4].lower() + key[5:]
+            else:
+                newkey = key
+            self.__setattr__(newkey, dct[key])
 
-def appenddicts(d1, *kwd):
-    d = d1
-    for k in kwd:
-        d.update(k)
-    return d
+class osVolume(osService):
+    "osService specialization for volumes (cinderv3)"
+    svcID = ("volumev3", "volumev2", "volume")
+    def __init__(self, conn, stype, name, region="RegionOne"):
+        super().__init__(conn, stype, name, region, True)
+        self.voltypes = list(self.conn.types())
+        # TODO: Fixup azs and exts
+        r = self.conn.request('/extensions', 'GET')
+        ext = json.loads(r.text)["extensions"]
+        self.extensions = list(map(lambda x: x["alias"], ext))
+        r = self.conn.request('/os-availability-zone', 'GET')
+        azs = json.loads(r.text)["availabilityZoneInfo"]
+        self.azs = list(map(lambda x: azInfo(x), filter(lambda x: x["zoneState"]["available"] == True, azs)))
+
+    def __repr__(self):
+        dct = super().__repr__()
+        dct[self.stype]["volume_types"] = list(map(
+            lambda x: { "name": x.name, "public": x.is_public }, self.voltypes))
+        return dct
+
+class osLoadBalancer(osService):
+    "osService specialization for load balancers"
+    svcID = ("load_balancer", "load-balancer")
+    def __init__(self, conn, stype, name, region="RegionOne"):
+        super().__init__(conn, stype, name, region, True)
+        self.flavors = self.conn.flavors()
+        self.flavors = list(map(lambda x: {"name": x.name, "description": x.description},
+                        filter(lambda x: x.is_enabled, self.flavors)))
+    def __repr__(self):
+        dct = super().__repr__()
+        dct[self.stype]["flavors"] = self.flavors
+        return dct
+
+## TODO: List of public images with properties
 
 def getdocsha512(url):
+    "Calculate SHA512 from terms document at URL"
     import requests, hashlib
     r = requests.get(url)
     r.raise_for_status()
@@ -90,7 +230,8 @@ def getdocsha512(url):
     return h.hexdigest()
 
 
-def gxjsonld(cld):
+def gxjsonldheader():
+    "Dict to generate JSON-LD header for Gaia-X SDs"
     import gx_context, time
     gxsvo = "gx-service-offering:"
     jout = gx_context.gxcontext
@@ -113,58 +254,68 @@ def gxjsonld(cld):
             gxsvo+"providedBy": provby,
             gxsvo+"name": name,
             gxsvo+"webAddress": webadr,
-            gxsvo+"TermsAndConditions": tandc,
-            gxsvo+"OpenStackService": { gxsvo+"auth_url": valtype(cld.auth["auth_url"], "xsd:anyURI"),
-                #gxsvo+"user_domain_name": valtype(cld.auth["user_domain_name"]),
-                gxsvo+"compute": {
-                    gxsvo+"endpoint": valtype(cld.compute.ep, "xsd:anyURI"),
-                    gxsvo+"extension": cld.compute.extensions,
-                    gxsvo+"version": cld.compute.versinfo,
-                    gxsvo+"availability_zone": list(map(lambda x: x.name,
-                        filter(lambda x: x.state['available'] == True,
-                            cld.conn.compute.availability_zones()))),
-                    gxsvo+"flavor": cld.compute.flavors
-                }
+            gxsvo+"TermsAndConditions": tandc
             }
-    }
     return jout
 
-
 class osCloud:
+    "Abstraction for openStack cloud with all its services"
     def __init__(self, conn):
         self.conn = conn
         self.auth = conn.auth
         self.regions = list(conn.identity.regions())
         self.services = []
-        #self.services = list(conn.identity.services())
-        #self.services = conn.list_services()
         for svc in conn.service_catalog:
-            self.services.append(osService(svc))
-        self.compute = osCompute(conn, self.regions[0].id)
-        #print(conn)
-    def __str__(self):
-        strg = ""
-        if not outjson:
-            strg = "#Regions: %s\n#Services\n#%s\n" % (self.regions, self.services)
-        if self.compute.flavors:
-            if not outjson:
-                yout = dict(auth = dict(auth_url = self.auth["auth_url"]),
-                            #user_domain_name = self.auth["user_domain_name"],
-                            compute = dict(endpoint = self.compute.ep,
-                                #version = self.compute.version,
-                                version = self.compute.versinfo,
-                                extension = self.compute.extensions,
-                                availability_zones = list(map(lambda x: x.name,
-                                    filter(lambda x: x.state['available'] == True,
-                                           conn.compute.availability_zones()))),
-                                flavor = self.compute.flavors))
-                strg += yaml.dump(yout, default_flow_style=False)
+            self.services.append(osServiceCat(svc))
+        self.ostacksvc = {}
+        handled = []
+        region0 = self.regions[0].id
+        # Iterate over service catalog
+        for svc in self.services:
+            if svc.type in (*handled, "compute_legacy", "cloudformation"):
+                continue
+            if svc.type in osCompute.svcID:
+                newsvc = osCompute(conn, svc.type, svc.name, region0)
+                handled.extend(osCompute.svcID)
+            elif svc.type in osVolume.svcID:
+                newsvc = osVolume (conn, svc.type, svc.name, region0)
+                handled.extend(osVolume.svcID)
+            elif svc.type in osLoadBalancer.svcID:
+                newsvc = osLoadBalancer(conn, svc.type, svc.name, region0)
+                handled.extend(osLoadBalancer.svcID)
             else:
-                #jout = dict(compute = dict(flavor = self.compute.flavors))
-                jout = gxjsonld(self)
-                strg += json.dumps(jout, indent = indent)
+                newsvc = osService(conn, svc.type, svc.name, region0)
+                handled.extend((svc.type, newsvc.stype,))
+                if svc.type == "orchestration":
+                    handled.extend("cloudformation")
 
-        return strg
+            if newsvc.conn:
+                self.ostacksvc[newsvc.stype] = newsvc
+
+    def __repr__(self):
+        inner = { "regions": list(map(lambda x: x.id, self.regions)) }
+        if outjson:
+            inner["auth_url"] = valtype(self.auth["auth_url"], "xsd:anyURI")
+        else:
+            inner["auth_url"] = self.auth["auth_url"]
+        for svckey in self.ostacksvc:
+            svc = self.ostacksvc[svckey]
+            inner = appenddicts(inner, svc.__repr__())
+            if outjson:
+                inner[svc.stype]["endpoint"] = valtype(svc.ep, "xsd:anyURI")
+        if not outjson:
+            return { "openstack": inner }
+        else:
+            jout = gxjsonldheader()
+            jout["credentialSubject"]["gxsvo+OpenStackService"] = inner
+            return jout
+
+    def __str__(self):
+        #print(self.__repr__())
+        if outjson:
+            return json.dumps(self.__repr__(), indent = indent)
+        else:
+            return yaml.dump(self.__repr__(), default_flow_style=False)
 
 
 def usage(err = 1):
@@ -180,29 +331,6 @@ def usage(err = 1):
     if not cloud:
         print("You need to have OS_CLOUD set or pass --os-cloud=CLOUD.", file=sys.stderr)
     sys.exit(err)
-
-class osFlavor:
-    def __init__(self, flv):
-        self.name = flv['name']
-        # Note: cpuType, cpuGeneration, diskType are MR34 ideas,
-        # slightly different from and less comprehensive than
-        # the abstraction in SCS flavor spec. Convert later.
-        self.cpuType = ""
-        self.cpuGeneration = ""
-        self.numberOfvCPUs = flv['vcpus']
-        self.ramSize = flv['ram']       # MiB
-        self.diskSize = flv['disk']     # GB
-        self.diskType = ""
-
-    def toyaml(self):
-        ydct = dict(name = self.name,
-                    numberOfvCPUs = self.numberOfvCPUs,
-                    ramSize = dict(Value = self.ramSize/1024, Unit = 'GiB')
-                )
-        if self.diskSize:
-            ydct['diskSize'] = dict(Value = self.diskSize, Unit = 'GB')
-        # TODO: cpuType, cpuGen, diskType output
-        return ydct
 
 
 def main(argv):
