@@ -62,7 +62,9 @@ like the IaaS SD, the list of node images (osism minio), ...
 
 ## Status (2022-06-24)
 The current PoC code can discover OpenStack capabilities and produces
-an entry for the services in the service catalogue.
+an entry for the services in the service catalogue, with name,
+(micro)versions, availability zones and extensions (where supported).
+
 For the compute service, there is a flavor list (yet without some
 of the details discoverable by SCS specs); for volumes, we
 list the types, for loadbalancers, we have a flavor list as well.
