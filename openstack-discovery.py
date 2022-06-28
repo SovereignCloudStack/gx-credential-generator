@@ -82,6 +82,10 @@ class osService:
             stype = stype[:-2]
         stype = stype.replace('-', '_')
         self.stype = stype
+        if "project_id" in conn.auth:
+            prj_id = conn.auth["project_id"]
+        else:
+            prj_id = conn.identity.get_project_id()
         try:
             self.conn = conn.__getattribute__(stype)
             self.conn.service_name = name
@@ -91,7 +95,7 @@ class osService:
                 print("No service proxy of type %s in SDK.\n%s" % (stype, e))
             return
         try:
-            self.ep = self.conn.get_endpoint().replace(conn.auth["project_id"], "${OS_PROJECT_ID}")
+            self.ep = self.conn.get_endpoint().replace(prj_id, "${OS_PROJECT_ID}")
         except Exception as e:
             if stype == "identity":
                 self.ep = conn.auth["auth_url"]
