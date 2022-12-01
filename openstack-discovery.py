@@ -354,7 +354,9 @@ class osCloud:
             prj_id = conn.identity.get_project_id()
         # Iterate over regions
         for region in self.regions:
+            # Keep list of already handled services to avoid duplicates/aliases
             handled = []
+            # Dictionary to collect OpenStack services
             ostacksvc = {}
             reg = region.id
             if debug:
@@ -363,25 +365,26 @@ class osCloud:
             for svc in self.regcat[reg]:
                 assert(svc.ep)
                 assert(reg == svc.region)
-                if svc.type in (*handled, "compute_legacy", "cloudformation"):
+                # Treating those two legacy services as non-OpenStack (just list EPs)
+                if svc.type in [*handled, "compute_legacy", "cloudformation"]:
                     continue
                 newsvc = None
                 for osClass in OSClasses:
                     if svc.type in osClass.svcID:
                         newsvc = osClass(conn, svc.type, svc.name, reg, prj_id, svc.ep)
-                        handled.extend(osCompute.svcID)
+                        handled.extend(osClass.svcID)
                         break
                 if not newsvc:
                     newsvc = osService(conn, svc.type, svc.name, reg, prj_id, svc.ep)
                     handled.extend((svc.type, newsvc.stype,))
-                    if svc.type == "orchestration":
-                        handled.extend("cloudformation")
                 # Only attach if conn is non-empty
                 if newsvc.conn:
                     ostacksvc[newsvc.stype] = newsvc
                     if debug:
                         print("#DEBUG: Region %s added OS Svc %s" % (reg, newsvc), file=sys.stderr)
                     svc.consumed = True
+                elif debug:
+                    print("#DEBUG: Region %s with service %s without connection" % (reg, newsvc), file=sys.stderr)
             # Handle remaining services that are listed
             for svc in self.regcat[reg]:
                 if not svc.consumed and not svc.type in ostacksvc:
