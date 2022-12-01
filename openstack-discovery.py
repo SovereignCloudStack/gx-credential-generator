@@ -275,6 +275,15 @@ def getdocsha512(url):
     h = hashlib.sha512(r.content)   # .text would be better for HTML
     return h.hexdigest()
 
+def getdocsha256(url):
+    "Calculate SHA256 from terms document at URL"
+    import requests, hashlib
+    r = requests.get(url)
+    r.raise_for_status()
+    #r.raw.decode_content = True
+    h = hashlib.sha256(r.content)   # .text would be better for HTML
+    return h.hexdigest()
+
 
 def gxjsonldheader():
     "Dict to generate JSON-LD header for Gaia-X SDs"
@@ -289,8 +298,8 @@ def gxjsonldheader():
     #svcmodel = valtype("pay per use")
     webadr   = valtype(uriprefix, 'xsd:anyURI')
     termsdoc = uriprefix+"terms.pdf"
-    # calc sha512
-    termssha = getdocsha512(termsdoc)
+    # calc sha256
+    termssha = getdocsha256(termsdoc)
     tandc    = { gxsvo+"url": valtype(uriprefix+"terms.pdf"),
                  gxsvo+"hash": valtype(termssha) }
     #TODO: dependsOn
