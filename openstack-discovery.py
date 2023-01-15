@@ -1,19 +1,23 @@
 #!/usr/bin/env python3
+# vim: set ts=4 sw=4 et:
 #
 # openstack-discovery.py
-#
-# Talk to OpenStack APIs to discover environment
-# Save discovered information in classes that reflect G-X attributes
-# These can then be dumped as YAML or as Gaia-X JSON-LD Self-Description.
-#
-# (c) Kurt Garloff <garloff@osb-alliance.com>, 3/2022 - 6/2022
-# (c) Mathias Fechner <fechner@osism.tech>, 3/2022
-# SPDX-License-Identifier: EPL-2.0
+"""
+Talk to OpenStack APIs to discover environment
+Save discovered information in classes that reflect G-X attributes
+These can then be dumped as YAML or as Gaia-X JSON-LD Self-Description.
 
-import sys, os, getopt
+(c) Kurt Garloff <garloff@osb-alliance.com>, 3/2022 - 6/2022
+(c) Mathias Fechner <fechner@osism.tech>, 3/2022
+SPDX-License-Identifier: EPL-2.0
+"""
 
+import sys
+import os
+import getopt
+import yaml
+import json
 import openstack
-import yaml, json
 
 # Global variables
 if "OS_CLOUD" in os.environ:
@@ -29,9 +33,11 @@ uriprefix = "https://scs.community/sd/"
 gxid = "test"
 svcname = "SCS Test"
 
-def valtype(val, tp = 'xsd:string'):
+
+def valtype(val, tp='xsd:string'):
     "Wrapper to return dict pairs with @value and @type as needed in JSON-LD"
-    return { '@value': val, '@type': tp }
+    return {'@value': val, '@type': tp}
+
 
 def appenddicts(d1, *kwd):
     "Return dict d1 with items from kwd added"
@@ -43,12 +49,13 @@ def appenddicts(d1, *kwd):
 
 def versinfo(connprox, stype, region):
     "Get list of supported versions and microversions from OS service"
-    vrdata = connprox.get_all_version_data(region_name = region)
+    vrdata = connprox.get_all_version_data(region_name=region)
+    # reg is wrong
     for reg in vrdata:
         try:
             vdata = vrdata[reg]["public"]
             break
-        except:
+        except AttributeError:
             pass
     for keys in vdata:
         versdata = vdata[keys]
@@ -58,7 +65,7 @@ def versinfo(connprox, stype, region):
                                 'status': x.status,
                                 'min_microversion': x.min_microversion,
                                 'max_microversion': x.max_microversion},
-                      filter(lambda x: x.max_microversion, versdata)))
+                     filter(lambda x: x.max_microversion, versdata)))
     vinfo.extend(list(map(lambda x: {'version': x.version, 'url': x.url, 'status': x.status},
                           filter(lambda x: not x.max_microversion, versdata))))
     return vinfo
@@ -73,18 +80,21 @@ class osServiceCat:
         # interface: we only look at public
         for ep in dct["endpoints"]:
             if ep["interface"] == "public" and (not regfilter or ep["region_id"] == regfilter):
-               self.ep = ep["url"]
+                self.ep = ep["url"]
         self.type = dct["type"]
         self.name = dct["name"]
         self.consumed = False
+
     def __str__(self):
         return "%s|%s|%s" % (self.type, self.name, self.ep)
+
     def __repr__(self):
         return str(self)
 
+
 class osService:
     "A generic openStack service, with a proxy connection object from SDK"
-    def __init__(self, conn, stype, name, region, prj_id, ep, quiet = True):
+    def __init__(self, conn, stype, name, region, prj_id, ep, quiet=True):
         self.fulltype = stype
         if stype[-2] == 'v' and stype[-1].isnumeric():
             stype = stype[:-2]
@@ -104,58 +114,58 @@ class osService:
             self.conn.service_name = name
             self.conn.region_name = region
             self.apiver = self.conn.get_api_major_version()
-        except Exception as e:
+        except Exception as exc:
             if not quiet:
-                print("#ERROR: No service proxy of type %s in SDK.\n%s" % (stype, e), file=sys.stderr)
-            #return
-        if not self.conn or (self.conn.version == None and not self.apiver):
+                print("#ERROR: No service proxy of type %s in SDK.\n%s" % (stype, exc), file=sys.stderr)
+            # return
+        if self.conn is None or (self.conn.version is None and self.apiver is not None):
             print("#WARNING: Skipping over %s b/c it advertizes no version" % stype, file=sys.stderr)
             self.conn = None
             return
         try:
             self.ep = self.conn.get_endpoint().replace(prj_id, "${OS_PROJECT_ID}")
-        except Exception as e:
+        except Exception:  # as exc:
             if stype == "identity":
                 self.ep = conn.auth["auth_url"]
             else:
                 if self.conn:
                     print("#ERROR: No endpoint found for service %s in region %s" % (self.stype, region),
-                            file = sys.stderr)
-                    #raise e
+                          file=sys.stderr)
+                    # raise exc
                     self.conn = None
                     return
         self.versdata = versinfo(self.conn, self.fulltype, region)
         try:
-            #self.extensions = list(map(lambda x: x.name, self.conn.extensions()))
+            # self.extensions = list(map(lambda x: x.name, self.conn.extensions()))
             self.extensions = list(map(lambda x: x.alias, self.conn.extensions()))
         except Exception as e:
             if not quiet:
                 print("#WARNING: Service %s does not support getting extensions.\n%s" % (self.fulltype, e),
-                        file=sys.stderr)
+                      file=sys.stderr)
         try:
-            self.azs = list(filter(lambda x: x.state['available'] == True, self.conn.availability_zones()))
-        except:
+            self.azs = list(filter(lambda x: x.state['available'] is True, self.conn.availability_zones()))
+        except Exception:
             try:
                 self.azs = list(filter(lambda x: x.state == 'available', self.conn.availability_zones()))
-            except Exception as e:
+            except Exception as exc:
                 if not quiet:
-                    print("#WARNING: Service %s does not support getting AZs.\n%s" % (self.fulltype, e),
-                            file=sys.stderr)
+                    print("#WARNING: Service %s does not support getting AZs.\n%s" % (self.fulltype, exc),
+                          file=sys.stderr)
 
     def __repr__(self):
-        dct = { self.stype: { "name": self.conn.service_name,
-                              "endpoint": self.ep,
-                              #"region": self.region,
-                              "versions": self.versdata
-                            }
-              }
+        dct = {self.stype: {"name": self.conn.service_name,
+                            "endpoint": self.ep,
+                            # "region": self.region,
+                            "versions": self.versdata}}
         if self.extensions:
             dct[self.stype]["extensions"] = self.extensions
         if self.azs:
             dct[self.stype]["availability_zones"] = list(map(lambda x: x.name, self.azs))
         return dct
+
     def __str__(self):
         return str(self.__repr__())
+
 
 class osFlavor:
     "Abstraction for flavors"
@@ -174,19 +184,21 @@ class osFlavor:
     def __repr__(self):
         ydct = dict(name = self.name,
                     numberOfvCPUs = self.numberOfvCPUs,
-                    ramSize = dict(Value = self.ramSize/1024, Unit = 'GiB')
-                )
+                    ramSize = dict(Value=self.ramSize/1024, Unit='GiB'))
         if self.diskSize:
-            ydct['diskSize'] = dict(Value = self.diskSize, Unit = 'GB')
+            ydct['diskSize'] = dict(Value=self.diskSize, Unit='GB')
         # TODO: cpuType, cpuGen, diskType output
         return ydct
 
+
 class osCompute(osService):
     svcID = ("compute", "computev2", "compute_legacy")
-    #def __init__(self, conn, region="RegionOne"):
+
+    # def __init__(self, conn, region="RegionOne"):
     def __init__(self, conn, stype, name, region, prj_id, ep):
         super().__init__(conn, stype, name, region, prj_id, ep, False)
         self.flavors = self.get_openstack_flavors()
+
     def __repr__(self):
         dct = super().__repr__()
         dct[self.stype]["flavors"] = self.flavors
@@ -204,6 +216,7 @@ class osCompute(osService):
         self.flavors = flvs
         return flvs
 
+
 class azInfo:
     "Convert zoneXxx dict into class with Xxx attributes for availability zones"
     def __init__(self, dct):
@@ -214,9 +227,11 @@ class azInfo:
                 newkey = key
             self.__setattr__(newkey, dct[key])
 
+
 class osVolume(osService):
     "osService specialization for volumes (cinderv3)"
     svcID = ("volumev3", "volumev2", "volume")
+
     def __init__(self, conn, stype, name, region, prj_id, ep):
         super().__init__(conn, stype, name, region, prj_id, ep, True)
         self.voltypes = list(self.conn.types())
@@ -226,93 +241,104 @@ class osVolume(osService):
         self.extensions = list(map(lambda x: x["alias"], ext))
         r = self.conn.request('/os-availability-zone', 'GET')
         azs = json.loads(r.text)["availabilityZoneInfo"]
-        self.azs = list(map(lambda x: azInfo(x), filter(lambda x: x["zoneState"]["available"] == True, azs)))
+        self.azs = list(map(lambda x: azInfo(x), filter(lambda x: x["zoneState"]["available"] is True, azs)))
 
     def __repr__(self):
         dct = super().__repr__()
         dct[self.stype]["volume_types"] = list(map(
-            lambda x: { "name": x.name, "public": x.is_public }, self.voltypes))
+            lambda x: {"name": x.name, "public": x.is_public}, self.voltypes))
         return dct
+
 
 class osLoadBalancer(osService):
     "osService specialization for load balancers"
     svcID = ("load_balancer", "load-balancer")
+
     def __init__(self, conn, stype, name, region, prj_id, ep):
         super().__init__(conn, stype, name, region, prj_id, ep, True)
         try:
             self.flavors = self.conn.flavors()
             self.flavors = list(map(lambda x: {"name": x.name, "description": x.description},
-                                         filter(lambda x: x.is_enabled, self.flavors)))
+                                    filter(lambda x: x.is_enabled, self.flavors)))
         except Exception as e:
             print(e, file=sys.stderr)
             self.flavors = None
+
     def __repr__(self):
         dct = super().__repr__()
         if self.flavors:
             dct[self.stype]["flavors"] = self.flavors
         return dct
 
-## TODO: List of public images with properties
+# TODO: List of public images with properties
 
-## TODO: Network class needs more detection; have AZs for routers and nets, endpoint not per region
+
+# TODO: Network class needs more detection; have AZs for routers and nets, endpoint not per region
 class osNetwork(osService):
     "osService specialization for network"
     svcID = ("network")
+
     def __init__(self, conn, stype, name, region, prj_id, ep):
         super().__init__(conn, stype, name, region, prj_id, ep, True)
         self.ep = ep
-    #TODO: Fixup AZs
+    # TODO: Fixup AZs
+
 
 # Known-classes
 OSClasses = [osCompute, osVolume, osLoadBalancer, osNetwork]
 
-def getdocsha512(url):
-    "Calculate SHA512 from terms document at URL"
-    import requests, hashlib
+
+def getdocshash(url, hashmeth):
+    "Calculate hash from terms document at URL"
+    import requests
     r = requests.get(url)
     r.raise_for_status()
-    #r.raw.decode_content = True
-    h = hashlib.sha512(r.content)   # .text would be better for HTML
+    # r.raw.decode_content = True
+    h = hashmeth(r.content)   # .text would be better for HTML
     return h.hexdigest()
 
+
+def getdocsha512(url):
+    "Calculate SHA512 from terms document at URL"
+    import hashlib
+    return getdocshash(url, hashlib.sha512)
+
+
 def getdocsha256(url):
-    "Calculate SHA256 from terms document at URL"
-    import requests, hashlib
-    r = requests.get(url)
-    r.raise_for_status()
-    #r.raw.decode_content = True
-    h = hashlib.sha256(r.content)   # .text would be better for HTML
-    return h.hexdigest()
+    "Calculate SHA512 from terms document at URL"
+    import hashlib
+    return getdocshash(url, hashlib.sha256)
 
 
 def gxjsonldheader():
     "Dict to generate JSON-LD header for Gaia-X SDs"
-    import gx_context, time
+    import gx_context
+    import time
     gxsvo = "gx-service-offering:"
     jout = gx_context.gxcontext
     jout.update(gx_context.gxtype)
-    myid = uriprefix+"gxserviceIaaSOfferingOpenStack-"+gxid+"-%i.json" % time.time()
+    myid = uriprefix + "gxserviceIaaSOfferingOpenStack-" + gxid + "-%i.json" % time.time()
     jout["@id"] = myid
-    provby   = valtype(uriprefix+"participant.json")
+    provby   = valtype(uriprefix + "participant.json")
     name     = valtype("OpenStack IaaS Service " + svcname)
-    #svcmodel = valtype("pay per use")
+    # svcmodel = valtype("pay per use")
     webadr   = valtype(uriprefix, 'xsd:anyURI')
-    termsdoc = uriprefix+"terms.pdf"
+    termsdoc = uriprefix + "terms.pdf"
     # calc sha256
     termssha = getdocsha256(termsdoc)
-    tandc    = { gxsvo+"url": valtype(uriprefix+"terms.pdf"),
-                 gxsvo+"hash": valtype(termssha) }
-    #TODO: dependsOn
-    #TODO: aggregationOf
+    tandc    = {gxsvo + "url": valtype(uriprefix + "terms.pdf"),
+                gxsvo + "hash": valtype(termssha)}
+    # TODO: dependsOn
+    # TODO: aggregationOf
     jout["credentialSubject"] = {
-            "id": myid,
-            gxsvo+"providedBy": provby,
-            gxsvo+"name": name,
-            gxsvo+"webAddress": webadr,
-            gxsvo+"TermsAndConditions": tandc,
-            gxsvo+"SDAutoGeneratedBy": "https://github.com/SovereignCloudStack/gx-self-description-generator/"
-            }
+        "id": myid,
+        gxsvo + "providedBy": provby,
+        gxsvo + "name": name,
+        gxsvo + "webAddress": webadr,
+        gxsvo + "TermsAndConditions": tandc,
+        gxsvo + "SDAutoGeneratedBy": "https://github.com/SovereignCloudStack/gx-self-description-generator/"}
     return jout
+
 
 class nonOSService:
     "Non-OpenStack services listed in the service catalogue"
@@ -320,18 +346,18 @@ class nonOSService:
         self.stype = stype
         self.name = name
         self.ep = url
+
     def __repr__(self):
-        return { self.stype: { "name": self.name,
-                               "endpoint": self.ep
-                             }
-               }
+        return {self.stype: {"name": self.name, "endpoint": self.ep}}
+
     def __str__(self):
         return str(self.__repr__())
+
 
 class osCloud:
     "Abstraction for openStack cloud with all its services"
     def __init__(self, conn):
-        import copy
+        # import copy
         self.conn = conn
         self.auth = conn.auth
         self.regions = list(conn.identity.regions())
@@ -387,7 +413,7 @@ class osCloud:
                     print("#DEBUG: Region %s with service %s without connection" % (reg, newsvc), file=sys.stderr)
             # Handle remaining services that are listed
             for svc in self.regcat[reg]:
-                if not svc.consumed and not svc.type in ostacksvc:
+                if not svc.consumed and svc.type not in ostacksvc:
                     ostacksvc[svc.type] = nonOSService(svc.type, svc.name, svc.ep.replace(prj_id, "${OS_PROJECT_ID}"))
                     if debug:
                         print("#DEBUG: Region %s added Non-OS %s" % (reg, ostacksvc[svc.type]), file=sys.stderr)
@@ -396,7 +422,7 @@ class osCloud:
         # TODO: Iterate over non-consumed services (global, non-region specifc)
 
     def __repr__(self):
-        inner = { "regions": list(map(lambda x: x.id, self.regions)) }
+        inner = {"regions": list(map(lambda x: x.id, self.regions))}
         if outjson:
             inner["auth_url"] = valtype(self.auth["auth_url"], "xsd:anyURI")
         else:
@@ -410,21 +436,21 @@ class osCloud:
                 if outjson:
                     inner[reg][svc.stype]["endpoint"] = valtype(svc.ep, "xsd:anyURI")
         if not outjson:
-            return { "openstack": inner }
+            return {"openstack": inner}
         else:
             jout = gxjsonldheader()
             jout["credentialSubject"]["gxsvo+OpenStackService"] = inner
             return jout
 
     def __str__(self):
-        #print(self.__repr__())
+        # print(self.__repr__())
         if outjson:
-            return json.dumps(self.__repr__(), indent = indent)
+            return json.dumps(self.__repr__(), indent=indent)
         else:
             return yaml.dump(self.__repr__(), default_flow_style=False)
 
 
-def usage(err = 1):
+def usage(err=1):
     print("Usage: openstack-discovery.py [options]", file=sys.stderr)
     print("Options: -g/--gaia-x: output Gaia-X JSON-LD instead of YAML (YAML is default)")
     print("         -j/--json:   output compact Gaia-X JSON-LD instead of YAML")
@@ -446,9 +472,10 @@ def main(argv):
     global ofile
     timeout = 12
     try:
-        opts, args = getopt.gnu_getopt(argv[1:], "c:f:hgjdu:n:i:t:", \
-                ("os-cloud=", "file=", "help", "gaia-x", "json", "debug", "uri=", "name=", "id=", "timeout="))
-    except getopt.GetoptError as exc:
+        opts, args = getopt.gnu_getopt(argv[1:], "c:f:hgjdu:n:i:t:",
+                                       ("os-cloud=", "file=", "help", "gaia-x", "json",
+                                        "debug", "uri=", "name=", "id=", "timeout="))
+    except getopt.GetoptError:  # as exc:
         usage(1)
     for opt in opts:
         if opt[0] == "-h" or opt[0] == "--help":
@@ -480,13 +507,10 @@ def main(argv):
     conn.config.config['api_timeout'] = timeout
     mycloud = osCloud(conn)
     if ofile == "/dev/stdout":
-        print(mycloud, file = sys.stdout)
+        print(mycloud, file=sys.stdout)
     else:
-        print(mycloud, file = open(ofile, 'a'))
-
+        print(mycloud, file=open(ofile, 'a'))
 
 
 if __name__ == "__main__":
     main(sys.argv)
-
-# vim:fenc=utf-8:ts=4:sw=4:noet:sts=4:ai
