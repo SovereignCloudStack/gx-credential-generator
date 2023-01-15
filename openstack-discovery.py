@@ -359,7 +359,6 @@ class nonOSService:
         return {self.stype: {"name": self.name, "endpoint": self.ep}}
 
 
-
 class osCloud:
     "Abstraction for openStack cloud with all its services"
     def __init__(self, conn):
@@ -434,7 +433,7 @@ class osCloud:
             inner["auth_url"] = valtype(self.auth["auth_url"], "xsd:anyURI")
         else:
             inner["auth_url"] = self.auth["auth_url"]
-        for reg,ostacksvc in self.ostacksvc.items():
+        for reg, ostacksvc in self.ostacksvc.items():
             inner[reg] = {}
             for svckey in ostacksvc:
                 svc = ostacksvc[svckey]
