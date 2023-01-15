@@ -19,13 +19,12 @@ class CPU:
         # This would not be interesting typically
         self.allowedSocket = ""
         # Virt. attrs -- not in GaX
-        self.dedicatedCore = false
-        self.dedicatedThread = false
-        self.limitOversubscr = false
+        self.dedicatedCore = False
+        self.dedicatedThread = False
+        self.limitOversubscr = False
+
 
 class MEM:
     def __init__(self):
         self.memGB = 0
-        self.ECC = true
-
-
+        self.ECC = True
