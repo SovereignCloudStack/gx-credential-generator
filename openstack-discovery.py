@@ -24,7 +24,6 @@ if "OS_CLOUD" in os.environ:
     cloud = os.environ["OS_CLOUD"]
 else:
     cloud = ""
-conn = None
 debug = False
 outjson = False
 ofile = '/dev/stdout'
@@ -78,15 +77,15 @@ class osServiceCat:
         self.region = regfilter
         self.ep = None
         # interface: we only look at public
-        for ep in dct["endpoints"]:
-            if ep["interface"] == "public" and (not regfilter or ep["region_id"] == regfilter):
-                self.ep = ep["url"]
+        for ept in dct["endpoints"]:
+            if ept["interface"] == "public" and (not regfilter or ept["region_id"] == regfilter):
+                self.ep = ept["url"]
         self.type = dct["type"]
         self.name = dct["name"]
         self.consumed = False
 
     def __str__(self):
-        return "%s|%s|%s" % (self.type, self.name, self.ep)
+        return f"{self.type}|{self.name}|{self.ep}"
 
     def __repr__(self):
         return str(self)
@@ -94,7 +93,7 @@ class osServiceCat:
 
 class osService:
     "A generic openStack service, with a proxy connection object from SDK"
-    def __init__(self, conn, stype, name, region, prj_id, ep, quiet=True):
+    def __init__(self, conn, stype, name, region, prj_id, ept, quiet=True):
         self.fulltype = stype
         if stype[-2] == 'v' and stype[-1].isnumeric():
             stype = stype[:-2]
@@ -138,9 +137,9 @@ class osService:
         try:
             # self.extensions = list(map(lambda x: x.name, self.conn.extensions()))
             self.extensions = list(map(lambda x: x.alias, self.conn.extensions()))
-        except Exception as e:
+        except Exception as exc:
             if not quiet:
-                print("#WARNING: Service %s does not support getting extensions.\n%s" % (self.fulltype, e),
+                print("#WARNING: Service %s does not support getting extensions.\n%s" % (self.fulltype, exc),
                       file=sys.stderr)
         try:
             self.azs = list(filter(lambda x: x.state['available'] is True, self.conn.availability_zones()))
@@ -161,7 +160,7 @@ class osService:
             dct[self.stype]["extensions"] = self.extensions
         if self.azs:
             dct[self.stype]["availability_zones"] = list(map(lambda x: x.name, self.azs))
-        return dct
+        return str(dct)
 
     def __str__(self):
         return str(self.__repr__())
@@ -467,7 +466,7 @@ def usage(err=1):
 
 
 def main(argv):
-    global cloud, conn, outjson, indent
+    global cloud, outjson, indent
     global uriprefix, gxid, svcname, debug
     global ofile
     timeout = 12
