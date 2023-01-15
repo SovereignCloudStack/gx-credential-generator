@@ -34,17 +34,17 @@ gxid = "test"
 svcname = "SCS Test"
 
 
-def valtype(val, tp='xsd:string'):
+def valtype(val, typ='xsd:string'):
     "Wrapper to return dict pairs with @value and @type as needed in JSON-LD"
-    return {'@value': val, '@type': tp}
+    return {'@value': val, '@type': typ}
 
 
-def appenddicts(d1, *kwd):
+def appenddicts(dct1, *kwd):
     "Return dict d1 with items from kwd added"
-    d = d1
+    dct = dct1
     for k in kwd:
-        d.update(k)
-    return d
+        dct.update(k)
+    return dct
 
 
 def versinfo(connprox, stype, region):
@@ -389,8 +389,8 @@ class osCloud:
                 print("#INFO: Creation service catalog for region %s" % reg, file=sys.stderr)
             # Iterate over service catalog
             for svc in self.regcat[reg]:
-                assert(svc.ep)
-                assert(reg == svc.region)
+                assert svc.ep
+                assert reg == svc.region
                 # Treating those two legacy services as non-OpenStack (just list EPs)
                 if svc.type in [*handled, "compute_legacy", "cloudformation"]:
                     continue
