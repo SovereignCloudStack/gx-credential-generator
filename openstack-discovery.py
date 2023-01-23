@@ -507,9 +507,15 @@ def main(argv):
     if args:
         usage(1)
     if not cloud:
-        print("You need to have OS_CLOUD set or pass --os-cloud=CLOUD.", file=sys.stderr)
-    conn = openstack.connect(cloud=cloud, timeout=timeout)
-    conn.config.config['api_timeout'] = timeout
+        print("ERROR: You need to have OS_CLOUD set or pass --os-cloud=CLOUD.", file=sys.stderr)
+    conn = openstack.connect(cloud=cloud, timeout=timeout, api_timeout=timeout*1.5+4)
+    try:
+        conn.authorize()
+    except:
+        print("INFO: Retry connection with 'default' domain", file=sys.stderr)
+        conn = openstack.connect(cloud=cloud, timeout=timeout, api_timeout=timeout*1.5+4,
+                                 default_domain='default', project_domain_id='default')
+        conn.authorize()
     mycloud = osCloud(conn)
     if ofile == "/dev/stdout":
         print(mycloud, file=sys.stdout)
