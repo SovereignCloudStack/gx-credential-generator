@@ -1,15 +1,19 @@
 #!/usr/bin/python3
+# vim: set ts=4 sw=4 et:
 #
 # gax-cpu.py
-#
-# These classes reflect the Gaia-X view on physical infra
-#
-# (c) Kurt Garloff <garloff@osb-alliance.com>, 3/2022 - 6/2022
-# SPDX-License-Identifier: EPL-2.0
+"""
+These classes reflect the Gaia-X view on physical infra
+
+(c) Kurt Garloff <garloff@osb-alliance.com>, 3/2022 - 6/2022
+SPDX-License-Identifier: EPL-2.0
+"""
 
 
 class CPU:
+    "CPU abstraction according to Gaia-X attributes"
     def __init__(self):
+        "c'tor setting all vals to defaults"
         # Gaia-X attrs
         self.numberOfCores = 0
         self.numberOfThreads = 0
@@ -19,13 +23,14 @@ class CPU:
         # This would not be interesting typically
         self.allowedSocket = ""
         # Virt. attrs -- not in GaX
-        self.dedicatedCore = false
-        self.dedicatedThread = false
-        self.limitOversubscr = false
+        self.dedicatedCore = False
+        self.dedicatedThread = False
+        self.limitOversubscr = False
+
 
 class MEM:
+    "RAM of an instance"
     def __init__(self):
+        "c'tor setting all vals to defaults"
         self.memGB = 0
-        self.ECC = true
-
-
+        self.ECC = True
