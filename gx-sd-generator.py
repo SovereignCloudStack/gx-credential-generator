@@ -63,7 +63,7 @@ def gxjsonldheader():
     gxsvo = "gx-service-offering:"
     jout = gx_context.gxcontext
     jout.update(gx_context.gxtype)
-    myid = uriprefix + "gxserviceIaaSOfferingOpenStack-" + gxid + f"-{time.time()}.json"
+    myid = uriprefix + "gxserviceIaaSOfferingOpenStack-" + gxid + f"-{int(time.time())}.json"
     jout["@id"] = myid
     provby   = valtype(uriprefix + "participant.json")
     name     = valtype("OpenStack IaaS Service " + svcname)
