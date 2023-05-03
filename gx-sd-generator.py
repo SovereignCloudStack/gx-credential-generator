@@ -170,7 +170,11 @@ def main(argv):
             print(output(mycloud), file=sys.stdout)
         else:
             # print(output(mycloud), file=open(f'{ofile}_{int(time())}.yamlld', 'a', encoding="UTF-8"))
-            print(output(mycloud), file=open(f'{ofile}_{int(time())}.jsonld', 'a', encoding="UTF-8"))
+            if ostack.outjson:
+                file_name = f'{ofile}_{int(time())}.jsonld'
+            else:
+                file_name = f'{ofile}_{int(time())}.yamlld'
+            print(output(mycloud), file=open(file_name, 'a', encoding="UTF-8"))
 
 
 if __name__ == "__main__":
