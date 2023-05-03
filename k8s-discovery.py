@@ -17,7 +17,8 @@ import os
 import getopt
 import json
 import yaml
-import openstack
+# import openstack
+from kubernetes import client, config
 
 # Global variables
 if "OS_CLOUD" in os.environ:
@@ -28,6 +29,22 @@ debug = False
 outjson = False
 ofile = '/dev/stdout'
 indent = "  "
+
+
+class KubeNodeCapacity():
+
+    def __init__(self, capacity, ephemeral_storage, hugepages_1Gi, hugepages_2Mi, memory, pods):
+        self.capacity = capacity
+        self.ephemeral_storage = ephemeral_storage
+        self.hugepages_1Gi=hugepages_1Gi
+        self.hugepages_2Mi = hugepages_2Mi
+        self.memory = memory
+        self.pods = pods
+class KubeNode():
+    def __init__(self, hostname, internal_ip, capacity):
+        self.hostname = hostname
+        self.internal_ip = internal_ip
+        self.capacity = capacity
 
 
 def valtype(val, typ='xsd:string'):
@@ -229,6 +246,7 @@ class azInfo:
                 newkey = key
             self.__setattr__(newkey, dct[key])
 
+
 class osVolume(osService):
     "osService specialization for volumes (cinderv3)"
     svcID = ("volumev3", "volumev2", "volume")
@@ -303,72 +321,38 @@ class nonOSService:
         return {self.stype: {"name": self.name, "endpoint": self.ep}}
 
 
-class osCloud:
+class KubeCluster:
     "Abstraction for openStack cloud with all its services"
     def __init__(self, conn):
         # import copy
         self.conn = conn
-        self.auth = conn.auth
-        self.regions = list(conn.identity.regions())
-        # Create per region service catalogs
-        self.regcat = {}
-        for region in self.regions:
-            reg = region.id
-            self.regcat[reg] = []
-            for svc in conn.service_catalog:
-                svccat = osServiceCat(svc, reg)
-                if svccat.ep:
-                    self.regcat[reg].append(svccat)
-            if debug:
-                print(f"#DEBUG: Svc Cat region {reg}: {self.regcat}", file=sys.stderr)
-        # Well-known OpenStack services
-        self.ostacksvc = {}
-        if "project_id" in conn.auth:
-            prj_id = conn.auth["project_id"]
-        else:
-            prj_id = conn.identity.get_project_id()
-        # Iterate over regions
-        for region in self.regions:
-            # Keep list of already handled services to avoid duplicates/aliases
-            handled = []
-            # Dictionary to collect OpenStack services
-            ostacksvc = {}
-            reg = region.id
-            if debug:
-                print(f"#INFO: Creation service catalog for region {reg}", file=sys.stderr)
-            # Iterate over service catalog
-            for svc in self.regcat[reg]:
-                assert svc.ep
-                assert reg == svc.region
-                # Treating those two legacy services as non-OpenStack (just list EPs)
-                if svc.type in [*handled, "compute_legacy", "cloudformation"]:
-                    continue
-                newsvc = None
-                for osClass in OSClasses:
-                    if svc.type in osClass.svcID:
-                        newsvc = osClass(conn, svc.type, svc.name, reg, prj_id, svc.ep)
-                        handled.extend(osClass.svcID)
-                        break
-                if not newsvc:
-                    newsvc = osService(conn, svc.type, svc.name, reg, prj_id, svc.ep)
-                    handled.extend((svc.type, newsvc.stype,))
-                # Only attach if conn is non-empty
-                if newsvc.conn:
-                    ostacksvc[newsvc.stype] = newsvc
-                    if debug:
-                        print(f"#DEBUG: Region {reg} added OS Svc {newsvc}" % (reg, newsvc), file=sys.stderr)
-                    svc.consumed = True
-                elif debug:
-                    print(f"#DEBUG: Region {reg} with service {newsvc} without connection", file=sys.stderr)
-            # Handle remaining services that are listed
-            for svc in self.regcat[reg]:
-                if not svc.consumed and svc.type not in ostacksvc:
-                    ostacksvc[svc.type] = nonOSService(svc.type, svc.name, svc.ep.replace(prj_id, "${OS_PROJECT_ID}"))
-                    if debug:
-                        print(f"#DEBUG: Region {reg} added Non-OS {ostacksvc[svc.type]}", file=sys.stderr)
-                    svc.consumed = True
-            self.ostacksvc[reg] = ostacksvc
-        # TODO: Iterate over non-consumed services (global, non-region specifc)
+        # self.auth = conn.auth
+        self.nodes = conn.list_node()
+
+        api_version = self.nodes.api_version
+        metadata = self.nodes.metadata
+        kube_gaia = {}
+        self.metadata = metadata
+        self.api_version = api_version
+        self.kube_nodes = []
+        for node in self.nodes.items:
+            addresses = node.status.addresses
+            cap =node.status.capacity
+            capacity = KubeNodeCapacity(cap['cpu'],cap['ephemeral-storage'],cap['hugepages-1Gi'],cap['hugepages-2Mi'],cap['memory'],cap['pods'])
+
+            hostname = None
+            internal_ip = None
+            for address in addresses:
+                if address.type == 'Hostname':
+                    hostname = address.address
+                elif address.type == 'InternalIP':
+                    internal_ip = address.address
+            self.kube_nodes.append(KubeNode(hostname, internal_ip, capacity))
+        
+
+        print(kube_gaia)
+
+
 
     def values(self):
         "dict representing stored data"
@@ -392,19 +376,6 @@ class osCloud:
             return json.dumps({"OpenStackService": self.values()}, indent=indent)
         return yaml.dump({"openstack": self.values()}, default_flow_style=False)
 
-class kCluster:
-    "Abstraction for kube cluster"
-    def __init__(self, conn):
-        pass
-
-    def values(self):
-        "dict representing stored data"
-        return "TODO"
-
-    def __str__(self):
-        # print(self.values())
-        return yaml.dump({"k8s": "TODO"})
-
 
 def usage(err=1):
     "output help"
@@ -420,9 +391,12 @@ def usage(err=1):
     sys.exit(err)
 
 
-def k8sconn(cloud, timeout):
+def kubeconn():
     "Establish connection to OpenStack cloud cloud (timeout timeout)"
-    # conn = openstack.connect(cloud=cloud, timeout=timeout, api_timeout=timeout*1.5+4)
+    config.load_kube_config()
+    return client.CoreV1Api()
+
+    #
     # try:
     #     conn.authorize()
     # except:
@@ -431,7 +405,6 @@ def k8sconn(cloud, timeout):
     #                              default_domain='default', project_domain_id='default')
     #     conn.authorize()
     # return conn
-    return "TODO"
 
 
 def main(argv):
@@ -445,34 +418,34 @@ def main(argv):
                                         "debug", "uri=", "name=", "id=", "timeout="))
     except getopt.GetoptError:  # as exc:
         usage(1)
-    for opt in opts:
-        if opt[0] == "-h" or opt[0] == "--help":
-            usage(0)
-        elif opt[0] == "-c" or opt[0] == "--os-cloud":
-            cloud = opt[1]
-        elif opt[0] == "-f" or opt[0] == "--file":
-            ofile = opt[1]
-        elif opt[0] == "-u" or opt[0] == "--uri":
-            uriprefix = opt[1]
-        elif opt[0] == "-n" or opt[0] == "--name":
-            svcname = opt[1]
-        elif opt[0] == "-i" or opt[0] == "--id":
-            gxid = opt[1]
-        elif opt[0] == "-d" or opt[0] == "--debug":
-            debug = True
-        elif opt[0] == "-t" or opt[0] == "--timeout":
-            timeout = int(opt[1])
-        elif opt[0] == "-j" or opt[0] == "--json":
-            outjson = True
-        elif opt[0] == "-J" or opt[0] == "--json-compact":
-            outjson = True
-            indent = None
-    if args:
-        usage(1)
-    if not cloud:
-        print("ERROR: You need to have OS_CLOUD set or pass --os-cloud=CLOUD.", file=sys.stderr)
-    conn = k8sconn(cloud, timeout)
-    mycloud = osCloud(conn)
+    # for opt in opts:
+    #     if opt[0] == "-h" or opt[0] == "--help":
+    #         usage(0)
+    #     elif opt[0] == "-c" or opt[0] == "--os-cloud":
+    #         cloud = opt[1]
+    #     elif opt[0] == "-f" or opt[0] == "--file":
+    #         ofile = opt[1]
+    #     elif opt[0] == "-u" or opt[0] == "--uri":
+    #         uriprefix = opt[1]
+    #     elif opt[0] == "-n" or opt[0] == "--name":
+    #         svcname = opt[1]
+    #     elif opt[0] == "-i" or opt[0] == "--id":
+    #         gxid = opt[1]
+    #     elif opt[0] == "-d" or opt[0] == "--debug":
+    #         debug = True
+    #     elif opt[0] == "-t" or opt[0] == "--timeout":
+    #         timeout = int(opt[1])
+    #     elif opt[0] == "-j" or opt[0] == "--json":
+    #         outjson = True
+    #     elif opt[0] == "-J" or opt[0] == "--json-compact":
+    #         outjson = True
+    #         indent = None
+    # if args:
+    #     usage(1)
+    # if not cloud:
+    #     print("ERROR: You need to have OS_CLOUD set or pass --os-cloud=CLOUD.", file=sys.stderr)
+    conn = kubeconn()
+    mycloud = KubeCluster(conn)
     if ofile == "/dev/stdout":
         print(mycloud, file=sys.stdout)
     else:

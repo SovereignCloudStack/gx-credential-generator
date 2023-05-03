@@ -1,0 +1,106 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix gax-validation:  <http://w3id.org/gaia-x/validation#> .
+
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix gax-core: <http://w3id.org/gaia-x/core#> .
+@prefix gax-node: <http://w3id.org/gaia-x/node#> .
+@prefix gax-resource: <http://w3id.org/gaia-x/resource#> .
+@prefix gax-participant: <http://w3id.org/gaia-x/participant#> .
+@prefix gax-service: <http://w3id.org/gaia-x/service#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix did: <https://www.w3.org/TR/did-core/#> .
+
+gax-validation:LegalPersonShape
+	a sh:NodeShape ;
+	sh:targetClass gax-participant:LegalPerson ;
+	sh:property [ sh:path gax-service:legalName ;
+				  sh:name "legal name" ;
+				  sh:order 1 ;
+				  sh:maxCount 1 ;
+				  sh:datatype xsd:string ] ;
+	sh:property [ sh:path gax-participant:registrationNumber ;
+				  sh:name "registration number" ;
+				  sh:order 2 ;
+				  sh:minCount 1 ;
+				  sh:maxCount 1 ;
+				  sh:datatype xsd:string ] ;
+	sh:property [ sh:path gax-participant:legalAddress ;
+				  sh:name "legal address" ;
+				  sh:order 3 ;
+				  sh:minCount 1 ;
+				  sh:maxCount 1 ;
+				  sh:node gax-validation:AddressShape ] ;
+	sh:property [ sh:path gax-participant:headquarterAddress ;
+				  sh:name "headquarter address" ;
+				  sh:order 4 ;
+				  sh:minCount 1 ;
+				  sh:maxCount 1 ;
+				  sh:node gax-validation:AddressShape ] ;
+	sh:property [ sh:path gax-participant:leiCode ;
+				  sh:name "lei code" ;
+				  sh:order 5 ;
+				  sh:maxCount 1 ;
+				  sh:datatype xsd:string ] ;
+	sh:property [ sh:path gax-participant:parentOrganisation ;
+				  sh:name "parent organisation" ;
+				  sh:order 6 ;
+				  sh:nodeKind sh:IRI ] ;
+	sh:property [ sh:path gax-participant:subOrganisation ;
+				  sh:name "sub organisation" ;
+				  sh:order 7 ;
+				  sh:nodeKind sh:IRI ] ;
+	sh:property [ sh:path gax-participant:termsAndConditions ;
+				  sh:name "terms and conditions" ;
+				  sh:order 8 ;
+				  sh:minCount 1 ;
+				  sh:maxCount 1 ;
+				  sh:node gax-validation:TermsAndConditionsShape ] ;
+.
+
+gax-validation:AddressShape
+	a sh:NodeShape ;
+	sh:targetClass vcard:Address ;
+	sh:property [ sh:path vcard:country-name ;
+				  sh:name "country-name" ;
+				  sh:order 1 ;
+				  sh:minCount 1 ;
+				  sh:maxCount 1 ;
+				  sh:datatype xsd:string ] ;
+	sh:property [ sh:path vcard:gps ;
+				  sh:name "gps" ;
+				  sh:order 2 ;
+				  sh:maxCount 1 ;
+				  sh:datatype xsd:string ] ;
+	sh:property [ sh:path vcard:street-address ;
+				  sh:name "street-address" ;
+				  sh:order 3 ;
+				  sh:datatype xsd:string ] ;
+	sh:property [ sh:path vcard:postal-code ;
+				  sh:name "postal-code" ;
+				  sh:order 4 ;
+				  sh:datatype xsd:string ] ;
+	sh:property [ sh:path vcard:locality ;
+				  sh:name "locality" ;
+				  sh:order 5 ;
+				  sh:datatype xsd:string ] ;
+.
+
+gax-validation:TermsAndConditionsShape
+	a sh:NodeShape ;
+	sh:targetClass gax-core:TermsAndConditions ;
+	sh:property [ sh:path gax-core:content ;
+				  sh:name "content" ;
+				  sh:order 1 ;
+				  sh:minCount 1 ;
+				  sh:maxCount 1 ;
+				  sh:datatype xsd:anyURI ] ;
+	sh:property [ sh:path gax-core:hash ;
+				  sh:name "hash" ;
+				  sh:order 2 ;
+				  sh:minCount 1 ;
+				  sh:maxCount 1 ;
+				  sh:datatype xsd:string ] ;
+.
