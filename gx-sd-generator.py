@@ -17,7 +17,7 @@ import json
 import yaml
 import importlib
 ostack = importlib.import_module("openstack-discovery")
-#k8s = importlib.import_module("k8s-discovery")
+k8s = importlib.import_module("k8s-discovery")
 
 # Global variables
 debug = False
@@ -126,10 +126,12 @@ def main(argv):
     global debug, ofile, outjson, indent
     global uriprefix, gxid, svcname
     timeout = 12
+    mycloud = None
     try:
-        opts, args = getopt.gnu_getopt(argv[1:], "c:f:hgjdu:n:i:t:",
+        opts, args = getopt.gnu_getopt(argv[1:], "c:f:hgjdu:n:i:t:k:K:",
                                        ("os-cloud=", "file=", "help", "gaia-x", "json",
-                                        "debug", "uri=", "name=", "id=", "timeout="))
+                                        "debug", "uri=", "name=", "id=", "timeout=",
+                                        "kubeconfig=", "context="))
     except getopt.GetoptError:  # as exc:
         usage(1)
     for opt in opts:
@@ -152,6 +154,10 @@ def main(argv):
             ostack.outjson = True
         elif opt[0] == "-t" or opt[0] == "--timeout":
             timeout = int(opt[1])
+        elif opt[0] == "-k" or opt[0] == "--kubeconfig":
+            k8s.kubeconfig = opt[1]
+        elif opt[0] == "-K" or opt[0] == "--context":
+            k8s.kubecontext = opt[1]
         elif opt[0] == "-j" or opt[0] == "--json":
             outjson = True
             ostack.outjson = True
