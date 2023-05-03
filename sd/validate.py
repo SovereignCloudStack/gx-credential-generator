@@ -40,12 +40,13 @@ def validate_sd(sd, schema):
 parser = ArgumentParser(description="Simple SD validator for development purposes")
 parser.add_argument(
     "sd",
-    help="Filepath of SelfDescription to validate. Should has jsonld format",
+    help=f"Filepath of SelfDescription to validate. Should have {DATA_FILE_FORMAT} format",
 )
 parser.add_argument(
     "schema",
-    help="Filepath of shacl schema to be used for validation. Should has turtle format",
+    help=f"Filepath of shacl schema to be used for validation. Should have {SHAPES_FILE_FORMAT} format",
 )
+
 
 if __name__ == "__main__":
     args = vars(parser.parse_args())
