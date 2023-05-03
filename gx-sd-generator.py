@@ -167,11 +167,11 @@ def main(argv):
         if ostack.cloud:
             conn = ostack.ostackconn(ostack.cloud, timeout)
             mycloud = ostack.osCloud(conn)
-    if mycloud:
-        if ofile == "/dev/stdout":
-            print(output(mycloud, myk8s), file=sys.stdout)
-        else:
-            print(output(mycloud, myk8s), file=open(ofile, 'a', encoding="UTF-8"))
+            if mycloud:
+                if ofile == "/dev/stdout":
+                    print(output(mycloud, myk8s), file=sys.stdout)
+                else:
+                    print(output(mycloud, myk8s), file=open(ofile, 'a', encoding="UTF-8"))
     if args and args[0] != "openstack":
         if args[0] == "k8s":
             if k8s.config:
