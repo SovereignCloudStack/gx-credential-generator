@@ -16,11 +16,11 @@ We start with the region list and then read the OpenStack catalog to collect
 This then should be output as JSON-LD (or YAML-LD) for the Gaia-X catalogue.
 
 References:
-<https://gaia-x.gitlab.io/gaia-x-community/gaia-x-self-descriptions/service/service.html>
-<https://gitlab.com/gaia-x/gaia-x-community/gx-hackathon/gx-hackathon-3/-/blob/main/gxfs-track/self-descriptions/service_taxonomy.md>
-<https://gitlab.com/gaia-x/gaia-x-community/gx-hackathon/gx-hackathon-3/-/blob/main/gxfs-track/self-descriptions/sd_attributes.md>
-<https://github.com/SovereignCloudStack/Docs/blob/main/Design-Docs/flavor-naming.md>
-<https://github.com/garloff/openstack-api-discovery>
+- <https://gaia-x.gitlab.io/gaia-x-community/gaia-x-self-descriptions/service/service.html>
+- <https://gitlab.com/gaia-x/gaia-x-community/gx-hackathon/gx-hackathon-3/-/blob/main/gxfs-track/self-descriptions/service_taxonomy.md>
+- <https://gitlab.com/gaia-x/gaia-x-community/gx-hackathon/gx-hackathon-3/-/blob/main/gxfs-track/self-descriptions/sd_attributes.md>
+- <https://github.com/SovereignCloudStack/Docs/blob/main/Design-Docs/flavor-naming.md>
+- <https://github.com/garloff/openstack-api-discovery>
 
 Notes from reviewing the SD attributes:
 * Virtualized CPU types: It might be of limited use to reference exact model names, rather characterize properties
@@ -59,6 +59,26 @@ by the provider?
 For KaaS, the option space really needs to be described.
 As of now, this can not be discovered, short of using external sources,
 like the IaaS SD, the list of node images (osism minio), ...
+
+## Quick Start Guide
+
+1. Clone the repository into a location of your choice
+```bash
+git clone git@github.com:SovereignCloudStack/gx-self-description-generator.git
+cd gx-self-description-generator
+```
+
+2. Install scripts dependencies (installing them into a Python [virtualenv](https://virtualenv.pypa.io/en/stable/) is recommended)
+```bash
+pip install -r requirements.txt
+```
+
+3. Generate Gaia-X Self-Descriptions
+
+   - OpenStack (script assumes OpenStack access (as normal tenant user)
+   ```bash
+   ./gx-sd-generator.py --gaia-x --os-cloud=<os-cloud>
+   ```
 
 ## Status (2022-06-24)
 The current PoC code can discover OpenStack capabilities and produces
