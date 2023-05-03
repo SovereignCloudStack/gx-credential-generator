@@ -63,7 +63,7 @@ def gxjsonldheader():
     gxsvo = "gx-service-offering:"
     jout = gx_context.gxcontext
     jout.update(gx_context.gxtype)
-    myid = uriprefix + "gxserviceIaaSOfferingOpenStack-" + gxid + f"-{time.time()}.json"
+    myid = uriprefix + "gxserviceIaaSOfferingOpenStack-" + gxid + f"-{int(time.time())}.json"
     jout["@id"] = myid
     provby   = valtype(uriprefix + "participant.json")
     name     = valtype("OpenStack IaaS Service " + svcname)
@@ -126,6 +126,8 @@ def main(argv):
     global debug, ofile, outjson, indent
     global uriprefix, gxid, svcname
     timeout = 12
+    mycloud = None
+    myk8s = None
     try:
         opts, args = getopt.gnu_getopt(argv[1:], "c:f:hgjdu:n:i:t:",
                                        ("os-cloud=", "file=", "help", "gaia-x", "json",
@@ -162,13 +164,13 @@ def main(argv):
         conn = ostack.ostackconn(ostack.cloud, timeout)
         mycloud = ostack.osCloud(conn)
     if False and k8s.kcfg:
-        # Do the kubernetes things
+        # Do the kubernetes things, fill in myk8s
         pass
     if mycloud:
         if ofile == "/dev/stdout":
-            print(output(mycloud), file=sys.stdout)
+            print(output(mycloud, myk8s), file=sys.stdout)
         else:
-            print(output(mycloud), file=open(ofile, 'a', encoding="UTF-8"))
+            print(output(mycloud, myk8s), file=open(ofile, 'a', encoding="UTF-8"))
 
 
 if __name__ == "__main__":
