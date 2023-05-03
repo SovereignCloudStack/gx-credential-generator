@@ -80,6 +80,15 @@ pip install -r requirements.txt
    ./gx-sd-generator.py --gaia-x --os-cloud=<os-cloud>
    ```
 
+## Simple SelfDescription validator
+
+Generated SelfDescriptions could be validated against their schemas (shapes) by the 
+simple SD validator script. Visit the `sd` directory and try to validate your 
+generated SD. Find the examples in `sd` directory and do the validation as follows:
+```bash
+./sd/validate.py sd/example.jsonld sd/example.ttl
+```
+
 ## Status (2022-06-24)
 The current PoC code can discover OpenStack capabilities and produces
 an entry for the services in the service catalogue, with name,
