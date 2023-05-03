@@ -18,6 +18,7 @@ import yaml
 import importlib
 ostack = importlib.import_module("openstack-discovery")
 #k8s = importlib.import_module("k8s-discovery")
+from time import time
 
 # Global variables
 debug = False
@@ -168,7 +169,12 @@ def main(argv):
         if ofile == "/dev/stdout":
             print(output(mycloud), file=sys.stdout)
         else:
-            print(output(mycloud), file=open(ofile, 'a', encoding="UTF-8"))
+            # print(output(mycloud), file=open(f'{ofile}_{int(time())}.yamlld', 'a', encoding="UTF-8"))
+            if ostack.outjson:
+                file_name = f'{ofile}_{int(time())}.jsonld'
+            else:
+                file_name = f'{ofile}_{int(time())}.yamlld'
+            print(output(mycloud), file=open(file_name, 'a', encoding="UTF-8"))
 
 
 if __name__ == "__main__":
