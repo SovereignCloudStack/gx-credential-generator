@@ -1,0 +1,62 @@
+{
+    "@id": "http://example.edu/verifiablePresentation/self-description1",
+    "proof": {
+        "created": "2023-03-01T11:05:08Z",
+        "jws": "eyJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdLCJhbGciOiJQUzI1NiJ9..RMGGGRlviGNdoBBTygv9JohKwB88mUQirUOZnOhxvNma-kBvP1kXvnnMFVitJ26wsctJjk5hM4EDiagGaxNplBPtFgrrilp6UgGlQiQIx8arjAnwktQIx3HF9E7uZ5iucwlfrsUjro5svej4aqS5n-tCNDW6wwkLgfd1frjIkWb01GA17qa3U1E762-1pnu5Z3EOSatufcnXgY3GdCOezP57y8-CLrpE9s8iTtRfNuJbs-4ka09akuDq_Z-6K_buQ5IXo5_B9C69DAkH_uzj9CGEgZxRwQg-ZykVXdDenfm9TkT2mPlqolt30cUyhDatMwHkOZpRk1vDdQMTmJwdPt_vpVpyXUGcN59ND5stuscXkU43e0lWoivtEs9eHmcuFz-mRsx6VnI-84qkH_TPdB2g5gfsH0HJCB9poK8wAPpNq3O7hf9rnctwt6doc_ZOKkZrVtJT9zaSR78vcER1FXInxx9Qe6idcIYR105YS9Q_VNJSE0vRj6fddi3B05FjweLW3XIqpDmRsFkuAhZI6aI6auNRtLlpNg-xgr_64Ek9EcaLc7PLw6iCvmdIYkl9NzUZgF0EDBPfOHIyjVprVO3bZ16WezbqjGnw6uR2MukDpretLN4ZbhqOiJM80BMz6Kdyk99bWy1xtCseu2Z6eNjwo3QcPhaZfw0pFeWb0V8",
+        "proofPurpose": "assertionMethod",
+        "type": "JsonWebSignature2020",
+        "verificationMethod": "did:web:compliance.lab.gaia-x.eu"
+    },
+    "type": ["VerifiablePresentation"],
+    "@context": ["https://www.w3.org/2018/credentials/v1"],
+    "verifiableCredential": {
+        "issuanceDate": "2022-10-19T18:48:09Z",
+        "credentialSubject": {
+            "gax-trust-framework:policy": "list of policy",
+            "gax-trust-framework:serviceTitle": "Software Title",
+            "dcat:keyword": [
+                "Keyword1_1",
+                "Keyword1_2",
+                "Keyword1_3",
+                "Keyword1_4",
+                "Keyword1_5",
+                "Keyword1_6",
+                "Keyword1_7"
+            ],
+            "@type": "gax-trust-framework:ServiceOffering",
+            "gax-core:offeredBy": {"@id": "https://www.example.org/Provider1.json"},
+            "@id": "https://www.example.org/mySoftwareOffering",
+            "@context": {
+                "gax-trust-framework": "https://w3id.org/gaia-x/gax-trust-framework#",
+                "xsd": "http://www.w3.org/2001/XMLSchema#",
+                "dcat": "http://www.w3.org/ns/dcat#",
+                "gax-core": "https://w3id.org/gaia-x/core#"
+            },
+            "gax-trust-framework:dataAccountExport": {
+                "gax-trust-framework:formatType": "application/gzip",
+                "@type": "gax-trust-framework:DataAccountExport",
+                "gax-trust-framework:accessType": "digital",
+                "gax-trust-framework:requestType": "API"
+            },
+            "gax-trust-framework:termsAndConditions": {
+                "gax-trust-framework:content": {
+                    "@value": "http://example.org/tac",
+                    "@type": "xsd:anyURI"
+                },
+                "@type": "gax-trust-framework:TermsAndConditions",
+                "gax-trust-framework:hash": "1234"
+            }
+        },
+        "@type": ["VerifiableCredential"],
+        "@id": "https://www.example.org/SoftwareOffering.json",
+        "proof": {
+            "created": "2023-03-01T11:05:07Z",
+            "jws": "eyJiNjQiOmZhbHNlLCJjcml0IjpbImI2NCJdLCJhbGciOiJQUzI1NiJ9..Y9vkgfzscLnY82AUTJsevtve5pmLv28VP39SvjaeKvUk9hUyzFIVrIUxfhIcMowRExLxzMVFKm3lz_1km6-6TU3HkKHgMIhUny6VEv_ozPQYYAWv-TWahefjnpb1Ta6Sl_K7mA4gpuKOFg7C-WQDz8JL-L6OHCSeiPmBUxkhmKdcMFbBX4dMoj90Oqj05hCQqmSs_bYaipMXsa8lDlaZhNQ9mk10wqe3SEf-Cp9YS0d-dvJvdw23HqB_DqH6UFoQ_NcANUKUKOxHDjIafCXhL8j59KezM0fV8rmVzRDxk5wsD0vjAwAOz4tCiiOxVPjQMdQub4ISNEw0ZcLGOYYKsRkIHQHYQo1cbgWg_f8Z6hebI5Jx8rDdwz0vnJky1mw5I09CprPq03Kh6E9PXWPiIJFU4jZxZdDyginm3bZfVaKZ07KRF3HEq00vOgjHBpNaNXkxloUi6hmVEGYTp04OQ-jopQM87zvnoIOqB78jQpRSQK2CYckAph_R0Sna_qI5unb5t-29DDNKuRxYOBJoK5O5i0OgbfecY82FyTvPOoYr2q7tN1WONlZqqBdlyqoo_NBsJ3xVsJQMXeTpF8XCOb9iCn-R3qpCZFdyg-6C0MWMTft8dEZIqVOfyuDSKyiz24qiHufVt94v87LlYIkDnNIFitkLqh4hQ7R4uYIMtEo",
+            "proofPurpose": "assertionMethod",
+            "type": "JsonWebSignature2020",
+            "verificationMethod": "did:web:compliance.lab.gaia-x.eu"
+        },
+        "@context": ["https://www.w3.org/2018/credentials/v1"],
+        "issuer": "http://gaiax.de"
+    }
+}
