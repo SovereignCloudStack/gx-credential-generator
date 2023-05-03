@@ -1,0 +1,2 @@
+openstacksdk==1.1.*
+PyYAML==6.*
