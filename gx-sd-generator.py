@@ -17,7 +17,7 @@ import json
 import yaml
 import importlib
 ostack = importlib.import_module("openstack-discovery")
-#k8s = importlib.import_module("k8s-discovery")
+k8s = importlib.import_module("k8s-discovery")
 from time import time
 
 # Global variables
@@ -93,15 +93,13 @@ def usage(err=1):
     print("         -j/--json:   output compact Gaia-X JSON-LD instead of YAML")
     print("         -f FILE/--file=FILE: write output to FILE (default: stdout)")
     print("         -c CLOUD/--os-cloud=CLOUD: use OpenStack cloud CLOUD (default: $OS_CLOUD)")
-    print("         -k KCFG/--kubeconfig=KCFG: use kubeconfig file KCFG (default: $UKBECONFIG)")
+    print("         -k KCFG/--kubeconfig=KCFG: use kubeconfig file KCFG (default: $KUBECONFIG)")
     print("         -K KCTX/--context=KCTX: use kubeconfig context KCTX")
     print("         -f FILE/--file=FILE: write output to FILE (default: stdout)")
     print("         -u URI/--uri=URI: use URI prefix. URI/particpant.json and URI/terms.pdf needed")
     print("         -n NAME/--name=NAME: use name in self description")
     print("         -i ID/--gxid=ID: use ID in self description")
     print("         -t TMO/--timeout=TMO: Timeout for the API connections/requests")
-    if not cloud or not kubecfg:
-        print("You need to have OS_CLOUD set or pass --os-cloud=CLOUD.", file=sys.stderr)
     sys.exit(err)
 
 
@@ -128,9 +126,9 @@ def main(argv):
     global uriprefix, gxid, svcname
     timeout = 12
     try:
-        opts, args = getopt.gnu_getopt(argv[1:], "c:f:hgjdu:n:i:t:",
+        opts, args = getopt.gnu_getopt(argv[1:], "c:f:hgjdu:n:i:t:k:K:",
                                        ("os-cloud=", "file=", "help", "gaia-x", "json",
-                                        "debug", "uri=", "name=", "id=", "timeout="))
+                                        "debug", "uri=", "name=", "id=", "timeout=", "kubeconfig=", "context="))
     except getopt.GetoptError:  # as exc:
         usage(1)
     for opt in opts:
@@ -157,14 +155,18 @@ def main(argv):
             outjson = True
             ostack.outjson = True
             indent = None
+        elif opt[0] == "-k" or opt[0] == "--kubeconfig":
+            k8s.config = opt[1]
+        elif opt[0] == "-K" or opt[0] == "--context":
+            k8s.context = opt[1]
     if args:
         usage(1)
     if ostack.cloud:
         conn = ostack.ostackconn(ostack.cloud, timeout)
         mycloud = ostack.osCloud(conn)
-    if False and k8s.kcfg:
-        # Do the kubernetes things
-        pass
+    if k8s.config:
+        conn = k8s.k8sconn(k8s.kcfg, k8s.config, k8s.context, timeout)
+        myk8s = k8s.k8sCluster(conn)
     if mycloud:
         if ofile == "/dev/stdout":
             print(output(mycloud), file=sys.stdout)
@@ -175,7 +177,11 @@ def main(argv):
             else:
                 file_name = f'{ofile}_{int(time())}.yamlld'
             print(output(mycloud), file=open(file_name, 'a', encoding="UTF-8"))
-
+    if myk8s:
+        if ofile == "/dev/stdout":
+            print(output(myk8s), file=sys.stdout)
+        else:
+            print(output(myk8s), file=open(f'{ofile}_{int(time())}.yaml', 'a', encoding="UTF-8"))
 
 if __name__ == "__main__":
     main(sys.argv)
