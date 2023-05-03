@@ -127,6 +127,8 @@ def main(argv):
     global debug, ofile, outjson, indent
     global uriprefix, gxid, svcname
     timeout = 12
+    mycloud = None
+    myk8s = None
     try:
         opts, args = getopt.gnu_getopt(argv[1:], "c:f:hgjdu:n:i:t:k:K:",
                                        ("os-cloud=", "file=", "help", "gaia-x", "json",
@@ -165,16 +167,11 @@ def main(argv):
         if ostack.cloud:
             conn = ostack.ostackconn(ostack.cloud, timeout)
             mycloud = ostack.osCloud(conn)
-        if mycloud:
-            if ofile == "/dev/stdout":
-                print(output(mycloud), file=sys.stdout)
-            else:
-                # print(output(mycloud), file=open(f'{ofile}_{int(time())}.yamlld', 'a', encoding="UTF-8"))
-                if ostack.outjson:
-                    file_name = f'{ofile}_{int(time())}.jsonld'
-                else:
-                    file_name = f'{ofile}_{int(time())}.yamlld'
-                print(output(mycloud), file=open(file_name, 'a', encoding="UTF-8"))
+    if mycloud:
+        if ofile == "/dev/stdout":
+            print(output(mycloud, myk8s), file=sys.stdout)
+        else:
+            print(output(mycloud, myk8s), file=open(ofile, 'a', encoding="UTF-8"))
     if args and args[0] != "openstack":
         if args[0] == "k8s":
             if k8s.config:
@@ -188,7 +185,6 @@ def main(argv):
                         print(output(myk8s), file=open(f'{ofile}_{int(time())}.yaml', 'a', encoding="UTF-8"))
         else:
             usage(1)
-    # get command
 
 
 if __name__ == "__main__":
