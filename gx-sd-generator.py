@@ -169,7 +169,8 @@ def main(argv):
         if ofile == "/dev/stdout":
             print(output(mycloud), file=sys.stdout)
         else:
-            print(output(mycloud), file=open(f'{ofile}_{int(time())}.yaml', 'a', encoding="UTF-8"))
+            # print(output(mycloud), file=open(f'{ofile}_{int(time())}.yamlld', 'a', encoding="UTF-8"))
+            print(output(mycloud), file=open(f'{ofile}_{int(time())}.jsonld', 'a', encoding="UTF-8"))
 
 
 if __name__ == "__main__":
