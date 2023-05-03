@@ -178,7 +178,8 @@ def main(argv):
     if args and args[0] != "openstack":
         if args[0] == "k8s":
             if k8s.config:
-                conn = k8s.k8sconn(k8s.kcfg, k8s.config, k8s.context, timeout)
+                # conn = k8s.kubeconn(k8s.kcfg, k8s.config, k8s.context, timeout)
+                conn = k8s.kubeconn()
                 myk8s = k8s.k8sCluster(conn)
                 if myk8s:
                     if ofile == "/dev/stdout":
