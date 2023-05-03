@@ -16,7 +16,7 @@ import os
 import sys
 
 # import openstack
-from kubernetes import client, config
+from kubernetes import client, config as cfg
 
 # Global variables
 if "KUBECONFIG" in os.environ:
@@ -113,7 +113,7 @@ class KubeCluster:
 
 def kubeconn():
     "Establish connection to OpenStack cloud cloud (timeout timeout)"
-    config.load_kube_config()
+    cfg.load_kube_config()
     return client.CoreV1Api()
 
     #
