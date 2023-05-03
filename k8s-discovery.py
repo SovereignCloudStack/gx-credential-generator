@@ -19,10 +19,10 @@ import sys
 from kubernetes import client, config
 
 # Global variables
-if "OS_CLOUD" in os.environ:
-    cloud = os.environ["OS_CLOUD"]
+if "KUBECONFIG" in os.environ:
+    config = os.environ["KUBECONFIG"]
 else:
-    cloud = ""
+    config = ""
 debug = False
 outjson = False
 ofile = '/dev/stdout'

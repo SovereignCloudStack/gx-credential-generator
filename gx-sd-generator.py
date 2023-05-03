@@ -88,7 +88,7 @@ def gxjsonldheader():
 
 def usage(err=1):
     "output help"
-    print("Usage: gx-sd-generator.py [options]", file=sys.stderr)
+    print("Usage: gx-sd-generator.py [options] [command]", file=sys.stderr)
     print("Options: -g/--gaia-x: output Gaia-X JSON-LD instead of YAML (YAML is default)")
     print("         -j/--json:   output compact Gaia-X JSON-LD instead of YAML")
     print("         -f FILE/--file=FILE: write output to FILE (default: stdout)")
@@ -100,6 +100,8 @@ def usage(err=1):
     print("         -n NAME/--name=NAME: use name in self description")
     print("         -i ID/--gxid=ID: use ID in self description")
     print("         -t TMO/--timeout=TMO: Timeout for the API connections/requests")
+    print("Command: openstack: collect OpenStack data (default)")
+    print("         k8s:       collect Kubernetes data")
     sys.exit(err)
 
 
@@ -125,6 +127,8 @@ def main(argv):
     global debug, ofile, outjson, indent
     global uriprefix, gxid, svcname
     timeout = 12
+    mycloud = None
+    myk8s = None
     try:
         opts, args = getopt.gnu_getopt(argv[1:], "c:f:hgjdu:n:i:t:k:K:",
                                        ("os-cloud=", "file=", "help", "gaia-x", "json",
@@ -159,29 +163,29 @@ def main(argv):
             k8s.config = opt[1]
         elif opt[0] == "-K" or opt[0] == "--context":
             k8s.context = opt[1]
-    if args:
-        usage(1)
-    if ostack.cloud:
-        conn = ostack.ostackconn(ostack.cloud, timeout)
-        mycloud = ostack.osCloud(conn)
-    if k8s.config:
-        conn = k8s.k8sconn(k8s.kcfg, k8s.config, k8s.context, timeout)
-        myk8s = k8s.k8sCluster(conn)
-    if mycloud:
-        if ofile == "/dev/stdout":
-            print(output(mycloud), file=sys.stdout)
+    if not args or args[0] == "openstack":  # default
+        if ostack.cloud:
+            conn = ostack.ostackconn(ostack.cloud, timeout)
+            mycloud = ostack.osCloud(conn)
+            if mycloud:
+                if ofile == "/dev/stdout":
+                    print(output(mycloud, myk8s), file=sys.stdout)
+                else:
+                    print(output(mycloud, myk8s), file=open(ofile, 'a', encoding="UTF-8"))
+    if args and args[0] != "openstack":
+        if args[0] == "k8s":
+            if k8s.config:
+                # conn = k8s.kubeconn(k8s.kcfg, k8s.config, k8s.context, timeout)
+                conn = k8s.kubeconn()
+                myk8s = k8s.k8sCluster(conn)
+                if myk8s:
+                    if ofile == "/dev/stdout":
+                        print(output(myk8s), file=sys.stdout)
+                    else:
+                        print(output(myk8s), file=open(f'{ofile}_{int(time())}.yaml', 'a', encoding="UTF-8"))
         else:
-            # print(output(mycloud), file=open(f'{ofile}_{int(time())}.yamlld', 'a', encoding="UTF-8"))
-            if ostack.outjson:
-                file_name = f'{ofile}_{int(time())}.jsonld'
-            else:
-                file_name = f'{ofile}_{int(time())}.yamlld'
-            print(output(mycloud), file=open(file_name, 'a', encoding="UTF-8"))
-    if myk8s:
-        if ofile == "/dev/stdout":
-            print(output(myk8s), file=sys.stdout)
-        else:
-            print(output(myk8s), file=open(f'{ofile}_{int(time())}.yaml', 'a', encoding="UTF-8"))
+            usage(1)
+
 
 if __name__ == "__main__":
     main(sys.argv)
