@@ -75,9 +75,13 @@ pip install -r requirements.txt
 
 3. Generate Gaia-X Self-Descriptions
 
-   - OpenStack (script assumes OpenStack access (as normal tenant user)
+   - OpenStack to stdout (script assumes OpenStack access (as normal tenant user)
    ```bash
    ./gx-sd-generator.py --gaia-x --os-cloud=<os-cloud>
+   ```
+   - OpenStack to json file (timestamp and extension is added to file name and script assumes OpenStack access (as normal tenant user)
+   ```bash
+   ./gx-sd-generator.py --gaia-x --os-cloud=<os-cloud>  --file=<file-name>
    ```
 
 4. Start the gaiax-pipeline
