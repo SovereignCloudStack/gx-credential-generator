@@ -157,7 +157,8 @@ def output(mycloud=None, myk8s=None):
     if outjson:
         dct = gxjsonldheader()
         if mycloud:
-            dct[gxsvo + "OpenStackService"] = mycloud.values()
+            prefix = 'ex:'
+            dct[prefix + "OpenStackService"] = mycloud.values(prefix=prefix)
         if myk8s:
             dct[gxsvo + "K8sClusterService"] = myk8s.values()
         return json.dumps(dct, indent=indent)
