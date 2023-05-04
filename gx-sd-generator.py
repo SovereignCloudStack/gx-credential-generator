@@ -121,7 +121,12 @@ def output(mycloud=None, myk8s=None):
         dct["openstack"] = mycloud.values()
     if myk8s:
         dct["k8sCluster"] = myk8s.values()
+    yaml.emitter.Emitter.process_tag = noop
     return yaml.dump(dct, default_flow_style=False)
+
+
+def noop(self, *args, **kw):
+    pass
 
 
 def main(argv):
