@@ -102,6 +102,29 @@ required attribute and check validation result):
 ./sd/validate.py sd/gx_service_offering_example.jsonld sd/gx_shapes_latest.ttl
 ```
 
+## Docker
+
+The docker environment creates a general and portable environment for the gx-sd-generator module. Before running the container, don't forget to mount your credentials for the correct path. OpenStack-related secret located under `~/.config/openstack`
+
+**Example codes:**
+
+Running the gx-sd-generator.py on an example cloud:
+```docker
+docker run -v "<secret_location>:/root/.config/openstack" $(docker build -q .)  ./gx-sd-generator.py --os-cloud gx-h61.1
+```
+
+Running the container in an interactive mode:
+```docker
+docker run -it -v "${PWD}/os_secret:/root/.config/openstack" $(docker build -q .) test bash
+```
+
+or you can use the following to create a temp location for the secrets:
+
+```shell
+mkdir -p os_secret && cp secret1 /os_secret
+docker run -v "${PWD}/os_secret:/root/.config/openstack" $(docker build -q .)  ./gx-sd-generator.py --os-cloud gx-h61.1
+```
+
 ## Status (2022-06-24)
 The current PoC code can discover OpenStack capabilities and produces
 an entry for the services in the service catalogue, with name,

@@ -1,0 +1,3 @@
+# Make sure credentials not push to the repo
+os_secret
+k8s_secret
