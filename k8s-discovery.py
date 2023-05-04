@@ -29,10 +29,10 @@ ofile = '/dev/stdout'
 indent = "  "
 
 
-class KubeNodeCapacity():
+class KubeNodeCapacity:
 
-    def __init__(self, capacity, ephemeral_storage, hugepages_1Gi, hugepages_2Mi, memory, pods):
-        self.capacity = capacity
+    def __init__(self, cpu, ephemeral_storage, hugepages_1Gi, hugepages_2Mi, memory, pods):
+        self.cpu = cpu
         self.ephemeral_storage = ephemeral_storage
         self.hugepages_1Gi = hugepages_1Gi
         self.hugepages_2Mi = hugepages_2Mi
