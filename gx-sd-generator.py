@@ -16,8 +16,13 @@ import getopt
 import json
 import yaml
 import importlib
+
+from time import time
+
 ostack = importlib.import_module("openstack-discovery")
 #k8s = importlib.import_module("k8s-discovery")
+
+
 
 # Global variables
 debug = False
@@ -168,9 +173,14 @@ def main(argv):
         pass
     if mycloud:
         if ofile == "/dev/stdout":
-            print(output(mycloud, myk8s), file=sys.stdout)
+            print(output(mycloud), file=sys.stdout)
         else:
-            print(output(mycloud, myk8s), file=open(ofile, 'a', encoding="UTF-8"))
+            # When output is file type, timestamp and file extension is added to the file name
+            if ostack.outjson:
+                file_name = f'{ofile}_{int(time())}.jsonld'
+            else:
+                file_name = f'{ofile}_{int(time())}.yamlld'
+            print(output(mycloud), file=open(file_name, 'a', encoding="UTF-8"))
 
 
 if __name__ == "__main__":
