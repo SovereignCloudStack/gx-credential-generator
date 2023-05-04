@@ -94,7 +94,7 @@ def usage(err=1):
     print("Usage: gx-sd-generator.py [options]", file=sys.stderr)
     print("Options: -g/--gaia-x: output Gaia-X JSON-LD instead of YAML (YAML is default)")
     print("         -j/--json:   output compact Gaia-X JSON-LD instead of YAML")
-    print("         -f FILE/--file=FILE: write output to FILE (default: stdout)")
+    print("         -f FILE/--file=FILE: write output to FILE_time.yaml/json (default: stdout)")
     print("         -c CLOUD/--os-cloud=CLOUD: use OpenStack cloud CLOUD (default: $OS_CLOUD)")
     print("         -k KCFG/--kubeconfig=KCFG: use kubeconfig file KCFG (default: $UKBECONFIG)")
     print("         -K KCTX/--context=KCTX: use kubeconfig context KCTX")
