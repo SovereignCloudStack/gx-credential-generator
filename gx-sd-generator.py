@@ -176,7 +176,7 @@ def main(argv):
         else:
             # When output is file type, timestamp and file extension is added to the file name
             if ostack.outjson:
-                file_name = f'{ofile}_{int(time())}.jsonld'
+                file_name = f'{ofile}_{int(time())}.json'
             else:
                 file_name = f'{ofile}_{int(time())}.yaml'
             print(output(mycloud), file=open(file_name, 'a', encoding="UTF-8"))
