@@ -39,9 +39,12 @@ Notes from reviewing the SD attributes:
 Same thing for k8s
 
 Collect information on a k8s cluster:
-- API endpoint, k8s version
-- number and type (flavor) of workers and control nodes
-- services (CNI, CSI, registry, ingress, metrics, ...)
+- Metadata
+- API Version
+- Nodes information
+- Pods information
+
+## K8s as-a-Service (KaaS) offering considerations
 
 For typical k8s aaS offerings, every cluster is different,
 and we probably don't want to have a description for every single
@@ -60,6 +63,7 @@ For KaaS, the option space really needs to be described.
 As of now, this can not be discovered, short of using external sources,
 like the IaaS SD, the list of node images (osism minio), ...
 
+
 ## Quick Start Guide
 
 1. Clone the repository into a location of your choice
@@ -75,13 +79,13 @@ pip install -r requirements.txt
 
 3. Generate Gaia-X Self-Descriptions
 
-   - OpenStack to stdout (script assumes OpenStack access (as normal tenant user)
-   ```bash
-   ./gx-sd-generator.py --gaia-x --os-cloud=<os-cloud>
-   ```
    - OpenStack to json file (timestamp and extension is added to file name and script assumes OpenStack access (as normal tenant user)
    ```bash
-   ./gx-sd-generator.py --gaia-x --os-cloud=<os-cloud>  --file=<file-name>
+   ./gx-sd-generator.py --gaia-x --os-cloud=<os-cloud> --file=<file-name>
+   ```
+   - K8s (script assumes K8s access)
+   ```bash
+   ./gx-sd-generator.py k8s
    ```
 
 4. Start the gaiax-pipeline
@@ -113,7 +117,30 @@ required attribute and check validation result):
 ./sd/validate.py sd/gx_service_offering_example.jsonld sd/gx_shapes_latest.ttl
 ```
 
-## Status (2022-06-24)
+## Docker
+
+The docker environment creates a general and portable environment for the gx-sd-generator module. Before running the container, don't forget to mount your credentials for the correct path. OpenStack-related secret located under `~/.config/openstack`
+
+**Example codes:**
+
+Running the gx-sd-generator.py on an example cloud:
+```docker
+docker run -v "<secret_location>:/root/.config/openstack" $(docker build -q .)  ./gx-sd-generator.py --os-cloud gx-h61.1
+```
+
+Running the container in an interactive mode:
+```docker
+docker run -it -v "${PWD}/os_secret:/root/.config/openstack" $(docker build -q .) test bash
+```
+
+or you can use the following to create a temp location for the secrets:
+
+```shell
+mkdir -p os_secret && cp secret1 /os_secret
+docker run -v "${PWD}/os_secret:/root/.config/openstack" $(docker build -q .)  ./gx-sd-generator.py --os-cloud gx-h61.1
+```
+
+## Status (2023-05-04)
 The current PoC code can discover OpenStack capabilities and produces
 an entry for the services in the service catalogue, with name,
 (micro)versions, availability zones and extensions (where supported).
@@ -133,6 +160,12 @@ From an OpenStack perspective, this still incomplete.
 - We lack flavor details (though we need SCS specs to discover more)
 - We lack a list of public images (along with image details)
 - Neutron probably has a few things to detect.
+
+During Hackathon#6, the JSON-LD was updated match the current
+shapes thanks to the work from dNation. A validator was added.
+
+Tecnalia contributed work to characterize K8s clusters in Hackathon#6
+as well as an Airflow automation pipeline.
 
 TODO: Create cmd line tool that does signing and interacting with
 the compliance service, so we can set up CI testing.
