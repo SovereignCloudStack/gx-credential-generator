@@ -64,11 +64,10 @@ def getdocsha256(url):
 def gxjsonldheader():
     "Dict to generate JSON-LD header for Gaia-X SDs"
     import gx_context
-    import time
     gxsvo = "gx-service-offering:"
     jout = gx_context.gxcontext
     jout.update(gx_context.gxtype)
-    myid = uriprefix + "gxserviceIaaSOfferingOpenStack-" + gxid + f"-{int(time.time())}.json"
+    myid = uriprefix + "gxserviceIaaSOfferingOpenStack-" + gxid + f"-{int(time())}.json"
     jout["@id"] = myid
     provby   = valtype(uriprefix + "participant.json")
     name     = valtype("OpenStack IaaS Service " + svcname)
