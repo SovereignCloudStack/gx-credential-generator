@@ -179,7 +179,7 @@ def main(argv):
             if ostack.outjson:
                 file_name = f'{ofile}_{int(time())}.jsonld'
             else:
-                file_name = f'{ofile}_{int(time())}.yamlld'
+                file_name = f'{ofile}_{int(time())}.yaml'
             print(output(mycloud), file=open(file_name, 'a', encoding="UTF-8"))
 
 
