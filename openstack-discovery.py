@@ -43,6 +43,28 @@ def appenddicts(dct1, *kwd):
     return dct
 
 
+def add_prefix_to_dict_keys(d, prefix):
+    res = dict()
+    for key in d.keys():
+        pre_key = key
+        if not key.startswith("@"):
+            pre_key = prefix + key
+
+        if isinstance(d[key], dict):
+            res[pre_key] = add_prefix_to_dict_keys(d[key], prefix)
+        elif isinstance(d[key], list):
+            res_list = list()
+            for item in d[key]:
+                if isinstance(item, dict):
+                    res_list.append(add_prefix_to_dict_keys(item, prefix))
+                else:
+                    res_list.append(item)
+            res[pre_key] = res_list
+        else:
+            res[pre_key] = d[key]
+    return res
+
+
 def versinfo(connprox, stype, region):
     "Get list of supported versions and microversions from OS service"
     vrdata = connprox.get_all_version_data(region_name=region)
@@ -371,7 +393,7 @@ class osCloud:
             self.ostacksvc[reg] = ostacksvc
         # TODO: Iterate over non-consumed services (global, non-region specifc)
 
-    def values(self):
+    def values(self, prefix=''):
         "dict representing stored data"
         inner = {"regions": list(map(lambda x: x.id, self.regions))}
         if outjson:
@@ -385,6 +407,8 @@ class osCloud:
                 inner[reg] = appenddicts(inner[reg], svc.values())
                 if outjson:
                     inner[reg][svc.stype]["endpoint"] = valtype(svc.ep, "xsd:anyURI")
+        if prefix:
+            return add_prefix_to_dict_keys(inner, prefix)
         return inner
 
     def __str__(self):
