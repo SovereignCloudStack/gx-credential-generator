@@ -80,6 +80,13 @@ pip install -r requirements.txt
    ./gx-sd-generator.py --gaia-x --os-cloud=<os-cloud>
    ```
 
+4. Start the gaiax-pipeline
+- To modify the airflow pipeline you have to touch the gaiax-pipeline.py file inside the dags folder
+```
+cd devops
+docker-compose up -d
+```
+
 ## Simple SelfDescription validator
 
 Generated SelfDescriptions could be validated against their schemas (shapes) by the 
