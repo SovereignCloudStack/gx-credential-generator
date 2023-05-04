@@ -27,7 +27,7 @@ def validate_sd(sd, schema):
     """Validate SD in jsonld format against given schema in turtle format"""
     conforms, results_graph, results_text = validate(
         load_file(sd),
-        shacl_graph=load_file(schema, file_format="turtle"),
+        shacl_graph=load_file(schema, file_format=SHAPES_FILE_FORMAT),
         data_graph_format=DATA_FILE_FORMAT,
         shacl_graph_format=SHAPES_FILE_FORMAT,
         inference="rdfs",
