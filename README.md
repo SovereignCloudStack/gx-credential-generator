@@ -80,6 +80,28 @@ pip install -r requirements.txt
    ./gx-sd-generator.py --gaia-x --os-cloud=<os-cloud>
    ```
 
+## Simple SelfDescription validator
+
+Generated SelfDescriptions could be validated against their schemas (shapes) by the 
+simple SD validator script. Visit the `sd` directory and try to validate your 
+generated SD. Find the examples in `sd` directory and do the validation as follows:
+```bash
+./sd/validate.py sd/example.jsonld sd/example.ttl
+```
+
+### GX SelfDescription - Service Offering minimal example
+
+SD definition `sd/gx_service_offering_example.jsonld` should represent
+a minimal GX Service Offering example that is valid against the latest GX shacl shapes `sd/gx_shapes_latest.ttl`.
+The latest GX shacl shapes (at the time of Hackathon#6 23/05/3-4) are
+used by the [GX wizard](https://wizard.lab.gaia-x.eu/), and they have been downloaded from the [GX registry](https://registry.lab.gaia-x.eu/v1/api/trusted-shape-registry/v1/shapes/trustframework).
+
+Try to validate a minimal example against the latest GX shapes (feel free to remove some
+required attribute and check validation result):
+```bash
+./sd/validate.py sd/gx_service_offering_example.jsonld sd/gx_shapes_latest.ttl
+```
+
 ## Status (2022-06-24)
 The current PoC code can discover OpenStack capabilities and produces
 an entry for the services in the service catalogue, with name,
