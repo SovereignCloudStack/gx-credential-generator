@@ -7,8 +7,7 @@ Talk to OpenStack APIs to discover environment
 Save discovered information in classes that reflect G-X attributes
 These can then be dumped as YAML or as Gaia-X JSON-LD Self-Description.
 
-(c) Tecnalia <garloff@osb-alliance.com>, 3/2022 - 6/2022
-(c) Mathias Fechner <fechner@osism.tech>, 3/2022
+(c) Tecnalia: Raúl Miñón, Ana I. Torre, Gorka Benguria, Gorka Zarate, Juan López de Armentia  <raul.minon@tecnalia.com>, 3/2023 - 4/2023
 SPDX-License-Identifier: EPL-2.0
 """
 
