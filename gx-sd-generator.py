@@ -14,6 +14,8 @@ import os
 import sys
 import getopt
 import json
+from typing import List
+
 import yaml
 import importlib
 ostack = importlib.import_module("openstack-discovery")
@@ -130,7 +132,8 @@ def main(argv):
     mycloud = None
     myk8s = None
     try:
-        opts, args = getopt.gnu_getopt(argv[1:], "c:f:hgjdu:n:i:t:k:K:",
+        args: list[str]
+        opts, args = getopt.gnu_getopt(argv[1:], "h:c:f:u:n:i:d:g:t:j:k:K:",
                                        ("os-cloud=", "file=", "help", "gaia-x", "json",
                                         "debug", "uri=", "name=", "id=", "timeout=", "kubeconfig=", "context="))
     except getopt.GetoptError:  # as exc:
@@ -176,15 +179,16 @@ def main(argv):
         if args[0] == "k8s":
             if k8s.config:
                 # conn = k8s.kubeconn(k8s.kcfg, k8s.config, k8s.context, timeout)
-                conn = k8s.kubeconn()
-                myk8s = k8s.k8sCluster(conn)
+                conn = k8s.kubeconn(k8s.config)
+                myk8s = k8s.KubeCluster(conn)
                 if myk8s:
                     if ofile == "/dev/stdout":
                         print(output(myk8s), file=sys.stdout)
                     else:
-                        print(output(myk8s), file=open(f'{ofile}_{int(time())}.yaml', 'a', encoding="UTF-8"))
+                        print(output(myk8s), file=open(f'{ofile}_k8s_{int(time())}.yaml', 'a', encoding="UTF-8"))
         else:
             usage(1)
+
 
 
 if __name__ == "__main__":
