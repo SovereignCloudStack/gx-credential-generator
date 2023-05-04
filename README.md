@@ -34,14 +34,17 @@ Notes from reviewing the SD attributes:
   Power supply zones? Internet connectivity zones? Minimal and maximal physical distance? Network
   latency distance?
 
-
 ## k8s
 Same thing for k8s
 
-Collect information on a k8s cluster:
-- API endpoint, k8s version
+- Metadata
 - number and type (flavor) of workers and control nodes
+- API Version
 - services (CNI, CSI, registry, ingress, metrics, ...)
+- Nodes information
+- Pods information
+
+## K8s as-a-Service (KaaS) offering considerations
 
 For typical k8s aaS offerings, every cluster is different,
 and we probably don't want to have a description for every single
@@ -75,12 +78,45 @@ pip install -r requirements.txt
 
 3. Generate Gaia-X Self-Descriptions
 
-   - OpenStack (script assumes OpenStack access (as normal tenant user)
+   - OpenStack to stdout (script assumes OpenStack access (as normal tenant user)
    ```bash
    ./gx-sd-generator.py --gaia-x --os-cloud=<os-cloud>
    ```
+   - OpenStack to json file (timestamp and extension is added to file name and script assumes OpenStack access (as normal tenant user)
+   ```bash
+   ./gx-sd-generator.py --gaia-x --os-cloud=<os-cloud>  --file=<file-name>
+   ```
 
-## Status (2022-06-24)
+4. Start the gaiax-pipeline
+- To modify the airflow pipeline you have to touch the gaiax-pipeline.py file inside the dags folder
+```
+cd devops
+docker-compose up -d
+```
+
+## Simple SelfDescription validator
+
+Generated SelfDescriptions could be validated against their schemas (shapes) by the 
+simple SD validator script. Visit the `sd` directory and try to validate your 
+generated SD. Find the examples in `sd` directory and do the validation as follows:
+```bash
+./sd/validate.py sd/example.jsonld sd/example.ttl
+```
+
+### GX SelfDescription - Service Offering minimal example
+
+SD definition `sd/gx_service_offering_example.jsonld` should represent
+a minimal GX Service Offering example that is valid against the latest GX shacl shapes `sd/gx_shapes_latest.ttl`.
+The latest GX shacl shapes (at the time of Hackathon#6 23/05/3-4) are
+used by the [GX wizard](https://wizard.lab.gaia-x.eu/), and they have been downloaded from the [GX registry](https://registry.lab.gaia-x.eu/v1/api/trusted-shape-registry/v1/shapes/trustframework).
+
+Try to validate a minimal example against the latest GX shapes (feel free to remove some
+required attribute and check validation result):
+```bash
+./sd/validate.py sd/gx_service_offering_example.jsonld sd/gx_shapes_latest.ttl
+```
+
+## Status (2023-05-04)
 The current PoC code can discover OpenStack capabilities and produces
 an entry for the services in the service catalogue, with name,
 (micro)versions, availability zones and extensions (where supported).
@@ -100,6 +136,12 @@ From an OpenStack perspective, this still incomplete.
 - We lack flavor details (though we need SCS specs to discover more)
 - We lack a list of public images (along with image details)
 - Neutron probably has a few things to detect.
+
+During Hackathon#6, the JSON-LD was updated match the current
+shapes thanks to the work from dNation. A validator was added.
+
+Tecnalia contributed work to characterize K8s clusters in Hackathon#6
+as well as an Airflow automation pipeline.
 
 TODO: Create cmd line tool that does signing and interacting with
 the compliance service, so we can set up CI testing.
