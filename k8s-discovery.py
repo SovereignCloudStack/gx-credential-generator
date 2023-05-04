@@ -45,7 +45,8 @@ class ContainerPort:
 
 
 class KubeContainer:
-    def __init__(self, c_image, command, image_pull_policy, c_name, ports, volumes):
+    def __init__(self, env, c_image, command, image_pull_policy, c_name, ports, volumes):
+        self.env = env
         self.c_image = c_image
         self.command = command
         self.image_pull_policy = image_pull_policy
@@ -135,6 +136,7 @@ class KubeCluster:
             uid = pod.metadata.uid
             containers = []
             for container in pod.spec.containers:
+                env = container.env
                 c_image = container.image
                 command = container.command
                 image_pull_policy = container.image_pull_policy
@@ -156,7 +158,7 @@ class KubeCluster:
                         read_only = volume.read_only
                         volumes.append(ContainerVolume(mount_path, v_name, read_only))
 
-                containers.append(KubeContainer(c_image, command, image_pull_policy, c_name, ports, volumes))
+                containers.append(KubeContainer(env, c_image, command, image_pull_policy, c_name, ports, volumes))
 
             self.kube_pods.append(
                 KubePod(host_ip, pod_i_ps, phase, start_time, qos_class, image, image_id, name, namespace, labels, uid,
