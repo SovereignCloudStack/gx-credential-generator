@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # vim: set ts=4 sw=4 et:
 #
-# openstack-discovery.py
+# k8s-discovery.py
 """
-Talk to OpenStack APIs to discover environment
+Talk to K8s APIs to discover environment
 Save discovered information in classes that reflect G-X attributes
 These can then be dumped as YAML or as Gaia-X JSON-LD Self-Description.
 
@@ -13,7 +13,6 @@ SPDX-License-Identifier: EPL-2.0
 import os
 import sys
 
-# import openstack
 from kubernetes import client, config as cfg
 
 # Global variables
@@ -91,7 +90,7 @@ class KubePod:
 
 
 class KubeCluster:
-    "Abstraction for openStack cloud with all its services"
+    "Abstraction for K8s with all its pods and nodes"
 
     def __init__(self, conn):
         self.conn = conn
@@ -169,19 +168,9 @@ class KubeCluster:
 
 
 def kubeconn(config_file, context, timeout):
-    "Establish connection to OpenStack cloud cloud (timeout timeout)"
+    "Establish connection to K8s cluster"
     cfg.load_kube_config(config_file=config_file, context=context)
     return client.CoreV1Api()
-
-    #
-    # try:
-    #     conn.authorize()
-    # except:
-    #     print("INFO: Retry connection with 'default' domain", file=sys.stderr)
-    #     conn = openstack.connect(cloud=cloud, timeout=timeout, api_timeout=timeout*1.5+4,
-    #                              default_domain='default', project_domain_id='default')
-    #     conn.authorize()
-    # return conn
 
 
 def main(argv):
@@ -189,38 +178,6 @@ def main(argv):
     global cloud, outjson, indent
     global debug, ofile
     timeout = 12
-    # try:
-    #     opts, args = getopt.gnu_getopt(argv[1:], "c:f:hjJdu:n:i:t:",
-    #                                    ("os-cloud=", "file=", "help", "json", "json-compact",
-    #                                     "debug", "uri=", "name=", "id=", "timeout="))
-    # except getopt.GetoptError:  # as exc:
-    #     usage(1)
-    # for opt in opts:
-    #     if opt[0] == "-h" or opt[0] == "--help":
-    #         usage(0)
-    #     elif opt[0] == "-c" or opt[0] == "--os-cloud":
-    #         cloud = opt[1]
-    #     elif opt[0] == "-f" or opt[0] == "--file":
-    #         ofile = opt[1]
-    #     elif opt[0] == "-u" or opt[0] == "--uri":
-    #         uriprefix = opt[1]
-    #     elif opt[0] == "-n" or opt[0] == "--name":
-    #         svcname = opt[1]
-    #     elif opt[0] == "-i" or opt[0] == "--id":
-    #         gxid = opt[1]
-    #     elif opt[0] == "-d" or opt[0] == "--debug":
-    #         debug = True
-    #     elif opt[0] == "-t" or opt[0] == "--timeout":
-    #         timeout = int(opt[1])
-    #     elif opt[0] == "-j" or opt[0] == "--json":
-    #         outjson = True
-    #     elif opt[0] == "-J" or opt[0] == "--json-compact":
-    #         outjson = True
-    #         indent = None
-    # if args:
-    #     usage(1)
-    # if not cloud:
-    #     print("ERROR: You need to have OS_CLOUD set or pass --os-cloud=CLOUD.", file=sys.stderr)
     conn = kubeconn(None, None, None)
     my_kube = KubeCluster(conn)
     if ofile == "/dev/stdout":
