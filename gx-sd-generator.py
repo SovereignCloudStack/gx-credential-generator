@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # vim: set ts=4 sw=4 et:
 #
 # gx-sd-generator.py
@@ -16,8 +16,13 @@ import getopt
 import json
 import yaml
 import importlib
+
+from time import time
+
 ostack = importlib.import_module("openstack-discovery")
 #k8s = importlib.import_module("k8s-discovery")
+
+
 
 # Global variables
 debug = False
@@ -109,10 +114,9 @@ def getprovby():
 def gxjsonldheader():
     "Dict to generate JSON-LD header for Gaia-X SDs"
     import gx_context
-    import time
     jout = gx_context.gxcontext
     jout.update(gx_context.gxtype)
-    myid = uriprefix + "gxserviceIaaSOfferingOpenStack-" + gxid + f"-{int(time.time())}.json"
+    myid = uriprefix + "gxserviceIaaSOfferingOpenStack-" + gxid + f"-{int(time())}.json"
     jout["@id"] = myid
     name     = valtype("OpenStack IaaS Service " + svcname)
     # svcmodel = valtype("pay per use")
@@ -134,7 +138,7 @@ def usage(err=1):
     print("Usage: gx-sd-generator.py [options]", file=sys.stderr)
     print("Options: -g/--gaia-x: output Gaia-X JSON-LD instead of YAML (YAML is default)")
     print("         -j/--json:   output compact Gaia-X JSON-LD instead of YAML")
-    print("         -f FILE/--file=FILE: write output to FILE (default: stdout)")
+    print("         -f FILE/--file=FILE: write output to FILE_time.yaml/json (default: stdout)")
     print("         -c CLOUD/--os-cloud=CLOUD: use OpenStack cloud CLOUD (default: $OS_CLOUD)")
     print("         -k KCFG/--kubeconfig=KCFG: use kubeconfig file KCFG (default: $UKBECONFIG)")
     print("         -K KCTX/--context=KCTX: use kubeconfig context KCTX")
@@ -212,9 +216,14 @@ def main(argv):
         pass
     if mycloud:
         if ofile == "/dev/stdout":
-            print(output(mycloud, myk8s), file=sys.stdout)
+            print(output(mycloud), file=sys.stdout)
         else:
-            print(output(mycloud, myk8s), file=open(ofile, 'a', encoding="UTF-8"))
+            # When output is file type, timestamp and file extension is added to the file name
+            if ostack.outjson:
+                file_name = f'{ofile}_{int(time())}.json'
+            else:
+                file_name = f'{ofile}_{int(time())}.yaml'
+            print(output(mycloud), file=open(file_name, 'a', encoding="UTF-8"))
 
 
 if __name__ == "__main__":
