@@ -1,0 +1,2 @@
+python-openstacksdk
+python-openstackclient

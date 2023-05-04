@@ -93,7 +93,7 @@ Generated SelfDescriptions could be validated against their schemas (shapes) by 
 simple SD validator script. Visit the `sd` directory and try to validate your 
 generated SD. Find the examples in `sd` directory and do the validation as follows:
 ```bash
-./sd/validate.py sd/example.jsonld sd/example.ttl
+./sd/gx-validate.py sd/example.jsonld sd/example.ttl
 ```
 
 ### GX SelfDescription - Service Offering minimal example
@@ -106,7 +106,7 @@ used by the [GX wizard](https://wizard.lab.gaia-x.eu/), and they have been downl
 Try to validate a minimal example against the latest GX shapes (feel free to remove some
 required attribute and check validation result):
 ```bash
-./sd/validate.py sd/gx_service_offering_example.jsonld sd/gx_shapes_latest.ttl
+./sd/gx-validate.py sd/gx_service_offering_example.jsonld sd/gx_shapes_latest.ttl
 ```
 
 ## Status (2022-06-24)
