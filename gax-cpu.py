@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # vim: set ts=4 sw=4 et:
 #
 # gax-cpu.py
