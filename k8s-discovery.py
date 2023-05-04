@@ -29,6 +29,32 @@ ofile = '/dev/stdout'
 indent = "  "
 
 
+class ContainerVolume:
+    def __init__(self, mount_path, v_name, read_only):
+        self.mount_path = mount_path
+        self.v_name = v_name
+        self.read_only = read_only
+
+
+class ContainerPort:
+    def __init__(self, container_port, port_name, protocol, port_host_ip, host_port):
+        self.container_port = container_port
+        self.port_name = port_name
+        self.protocol = protocol
+        self.port_host_ip = port_host_ip
+        self.port_host_port = host_port
+
+
+class KubeContainer:
+    def __init__(self, c_image, command, image_pull_policy, c_name, ports, volumes):
+        self.c_image = c_image
+        self.command = command
+        self.image_pull_policy = image_pull_policy
+        self.c_name = c_name
+        self.ports = ports
+        self.volumes = volumes
+
+
 class KubeNodeCapacity:
 
     def __init__(self, cpu, ephemeral_storage, hugepages_1Gi, hugepages_2Mi, memory, pods):
@@ -48,7 +74,8 @@ class KubeNode():
 
 
 class KubePod:
-    def __init__(self, host_ip, pod_i_ps, phase, start_time, qos_class, image, image_id, name, namespace):
+    def __init__(self, host_ip, pod_i_ps, phase, start_time, qos_class, image, image_id, name, namespace, labels, uid,
+                 containers):
         self.host_ip = host_ip
         self.pod_i_ps = pod_i_ps
         self.phase = phase
@@ -58,6 +85,9 @@ class KubePod:
         self.image_id = image_id
         self.name = name
         self.namespace = namespace
+        self.labels = labels
+        self.uid = uid
+        self.containers = containers
 
 
 class KubeCluster:
@@ -102,8 +132,36 @@ class KubeCluster:
             image_id = pod.status.container_statuses[0].image_id
             name = pod.metadata.name
             namespace = pod.metadata.namespace
+            labels = pod.metadata.labels
+            uid = pod.metadata.uid
+            containers = []
+            for container in pod.spec.containers:
+                c_image = container.image
+                command = container.command
+                image_pull_policy = container.image_pull_policy
+                c_name = container.name
+                ports = []
+                if container.ports:
+                    for port in container.ports:
+                        container_port = port.container_port
+                        port_name = port.name
+                        protocol = port.protocol
+                        port_host_ip = port.host_ip
+                        host_port = port.host_port
+                        ports.append(ContainerPort(container_port, port_name, protocol, port_host_ip, host_port))
+                volumes = []
+                if container.volume_mounts:
+                    for volume in container.volume_mounts:
+                        mount_path = volume.mount_path
+                        v_name = volume.name
+                        read_only = volume.read_only
+                        volumes.append(ContainerVolume(mount_path, v_name, read_only))
+
+                containers.append(KubeContainer(c_image, command, image_pull_policy, c_name, ports, volumes))
+
             self.kube_pods.append(
-                KubePod(host_ip, pod_i_ps, phase, start_time, qos_class, image, image_id, name, namespace))
+                KubePod(host_ip, pod_i_ps, phase, start_time, qos_class, image, image_id, name, namespace, labels, uid,
+                        containers))
 
         # spec.
         # for service in services
