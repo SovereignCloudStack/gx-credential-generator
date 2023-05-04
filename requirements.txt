@@ -1,4 +1,3 @@
+kubernetes==26.1.0
 openstacksdk==1.1.*
 PyYAML==6.*
-pyshacl==0.22.*
-rdflib==6.3.*
