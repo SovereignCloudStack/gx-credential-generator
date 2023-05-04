@@ -9,13 +9,10 @@ Some settings for the JSON-LD SDs needed in Gaia-X
 SPDX-License-Identifier: EPL-2.0
 """
 
-gxcontext = {"@context":
-             ["http://www.w3.org/ns/shacl#",
-              "http://www.w3.org/2001/XMLSchema#",
-              "http://w3id.org/gaia-x/resource#",
-              "http://w3id.org/gaia-x/participant#",
-              "http://w3id.org/gaia-x/service-offering#"]}
+gxcontext = {"@context": {
+    "gx": "https://https://registry.lab.gaia-x.eu//v1$/gx#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+    }
+}
 
-gxtype = {"@type":
-          ["VerifiableCredential",
-           "ServiceOfferingExperimental"]}
+gxtype = {"@type": "gx:ServiceOffering"}
