@@ -39,26 +39,11 @@ Notes from reviewing the SD attributes:
 Same thing for k8s
 
 Collect information on a k8s cluster:
-- API endpoint, k8s version
-- number and type (flavor) of workers and control nodes
-- services (CNI, CSI, registry, ingress, metrics, ...)
+- Metadata
+- API Version
+- Nodes information
+- Pods information
 
-For typical k8s aaS offerings, every cluster is different,
-and we probably don't want to have a description for every single
-customer specific cluster. (Some providers may offer self-service,
-so we would not want to push of a new SD into the G-X catalogue on
-creation, changing or deletion of clusters.) Still it might be
-helpful to have a SD on demand for an existing cluster to characterize
-it, so users can use the SD to match it to app requirements.
-
-So the SD for a k8s aaS solution would list possible options and
-ranges: What k8s versions are supported, what max number of workers,
-flavors, etc.? What services are optionally delivered (and supported)
-by the provider?
-
-For KaaS, the option space really needs to be described.
-As of now, this can not be discovered, short of using external sources,
-like the IaaS SD, the list of node images (osism minio), ...
 
 ## Quick Start Guide
 
@@ -79,7 +64,10 @@ pip install -r requirements.txt
    ```bash
    ./gx-sd-generator.py --gaia-x --os-cloud=<os-cloud>
    ```
-
+   - K8s (script assumes K8s access)
+   ```bash
+   ./gx-sd-generator.py k8s
+   ```
 4. Start the gaiax-pipeline
 - To modify the airflow pipeline you have to touch the gaiax-pipeline.py file inside the dags folder
 ```
