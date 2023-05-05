@@ -10,7 +10,6 @@
 SPDX-License-Identifier: EPL-2.0
 """
 
-import os
 import sys
 import getopt
 import importlib
@@ -182,15 +181,7 @@ def main(argv):
     timeout = 12
     mycloud = None
     myk8s = None
-    # Defaults for OpenStack and K8s
-    try:
-        ostack.cloud = os.environ["OS_CLOUD"]
-    except:
-        pass
-    try:
-        k8s.config = os.environ["KUBECONFIG"]
-    except:
-        pass
+    # Defaults for OpenStack and K8s are set by imports
     # Arg parser
     try:
         args: list[str]
