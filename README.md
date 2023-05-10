@@ -83,6 +83,7 @@ pip install -r requirements.txt
    ```bash
    ./gx-sd-generator.py --gaia-x --os-cloud=<os-cloud> --file=<file-name>
    ```
+   - To use generated Gaia-X Self-Description in [Gaia-X Wizard](https://wizard.lab.gaia-x.eu/) add `--wizard` option
    - K8s (script assumes K8s access)
    ```bash
    ./gx-sd-generator.py k8s
