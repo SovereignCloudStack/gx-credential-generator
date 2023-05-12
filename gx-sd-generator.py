@@ -25,6 +25,7 @@ k8s = importlib.import_module("k8s-discovery")
 # Global variables
 debug = False
 outjson = False
+wizard = False
 ofile = '/dev/stdout'
 indent = "  "
 uriprefix = "https://scs.community/sd/"
@@ -116,6 +117,11 @@ def gxjsonldheader():
     jout.update(gx_context.gxtype)
     myid = uriprefix + "gxserviceIaaSOfferingOpenStack-" + gxid + f"-{int(time())}.json"
     jout["@id"] = myid
+    if wizard:
+        del jout["@context"]
+        jout["id"] = jout.pop("@id")
+        jout["type"] = jout.pop("@type")
+
     name     = valtype("OpenStack IaaS Service " + svcname)
     # svcmodel = valtype("pay per use")
     webadr   = valtype(uriprefix, 'xsd:anyURI')
@@ -136,6 +142,7 @@ def usage(err=1):
     "output help"
     print("Usage: gx-sd-generator.py [options] [command]", file=sys.stderr)
     print("Options: -g/--gaia-x: output Gaia-X JSON-LD instead of YAML (YAML is default)")
+    print("         -w/--wizard: remove @context and '@' from @id and @type in generated SD to use it in Gaia-X Wizard")
     print("         -j/--json:   output compact Gaia-X JSON-LD instead of YAML")
     print("         -f FILE/--file=FILE: write output to FILE_time.yaml/json (default: stdout)")
     print("         -c CLOUD/--os-cloud=CLOUD: use OpenStack cloud CLOUD (default: $OS_CLOUD)")
@@ -176,7 +183,7 @@ def noop(self, *args, **kw):
 
 def main(argv):
     "Entry point for main program"
-    global debug, ofile, outjson, indent
+    global debug, ofile, outjson, indent, wizard
     global uriprefix, gxid, svcname
     timeout = 12
     mycloud = None
@@ -185,8 +192,8 @@ def main(argv):
     # Arg parser
     try:
         args: list[str]
-        opts, args = getopt.gnu_getopt(argv[1:], "c:f:hgjdu:n:i:t:k:K:",
-                                       ("os-cloud=", "file=", "help", "gaia-x", "json",
+        opts, args = getopt.gnu_getopt(argv[1:], "c:f:hgwjdu:n:i:t:k:K:",
+                                       ("os-cloud=", "file=", "help", "gaia-x", "wizard", "json",
                                         "debug", "uri=", "name=", "id=", "timeout=", "kubeconfig=", "context="))
     except getopt.GetoptError:  # as exc:
         usage(1)
@@ -208,6 +215,8 @@ def main(argv):
         elif opt[0] == "-g" or opt[0] == "--gaia-x":
             outjson = True
             ostack.outjson = True
+        elif opt[0] == "-w" or opt[0] == "--wizard":
+            wizard = True
         elif opt[0] == "-t" or opt[0] == "--timeout":
             timeout = int(opt[1])
         elif opt[0] == "-j" or opt[0] == "--json":
