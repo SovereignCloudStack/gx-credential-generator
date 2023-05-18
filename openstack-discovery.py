@@ -39,6 +39,7 @@ def appenddicts(dct1, *kwd):
     "Return dict d1 with items from kwd added"
     dct = dct1
     for k in kwd:
+        assert(k is not None)
         dct.update(k)
     return dct
 
@@ -289,9 +290,19 @@ class osLoadBalancer(osService):
         except Exception as exc:
             print(exc, file=sys.stderr)
             self.flavors = None
+        try:
+            self.providers = self.conn.providers()
+            self.providers = list(map(lambda x: {"name": x.name, "description": x.description},
+                                      self.providers))
+        except Exception as exc:
+            print(exc, file=sys.stderr)
+            self.providers = None
+
 
     def values(self):
         dct = super().values()
+        if self.providers:
+            dct[self.stype]["providers"] = self.providers
         if self.flavors:
             dct[self.stype]["flavors"] = self.flavors
         return dct
@@ -307,7 +318,17 @@ class osNetwork(osService):
     def __init__(self, conn, stype, name, region, prj_id, ept):
         super().__init__(conn, stype, name, region, prj_id, ept, True)
         self.ep = ept
-    # TODO: Fixup AZs
+        # TODO: Fixup AZs
+        # external network list
+        self.extnet = list(filter(lambda x: x.is_router_external and x.is_admin_state_up,
+                                  self.conn.networks()))
+        self.extnet = list(map(lambda x: {"name": x.name, "mtu": x.mtu, "description": x.description,
+                                          "shared": x.is_shared}, self.extnet))
+    def values(self):
+        dct = super().values()
+        if self.extnet:
+            dct[self.stype]["externalNetworks"] = self.extnet
+        return dct
 
 
 # Known-classes
@@ -379,7 +400,7 @@ class osCloud:
                 if newsvc.conn:
                     ostacksvc[newsvc.stype] = newsvc
                     if debug:
-                        print(f"#DEBUG: Region {reg} added OS Svc {newsvc}" % (reg, newsvc), file=sys.stderr)
+                        print(f"#DEBUG: Region {reg} added OS Svc {newsvc}", file=sys.stderr)
                     svc.consumed = True
                 elif debug:
                     print(f"#DEBUG: Region {reg} with service {newsvc} without connection", file=sys.stderr)
