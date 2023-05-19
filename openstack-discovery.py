@@ -28,6 +28,7 @@ debug = False
 outjson = False
 ofile = '/dev/stdout'
 indent = "  "
+errors = 0
 
 
 def valtype(val, typ='xsd:string'):
@@ -39,6 +40,7 @@ def appenddicts(dct1, *kwd):
     "Return dict d1 with items from kwd added"
     dct = dct1
     for k in kwd:
+        assert(k is not None)
         dct.update(k)
     return dct
 
@@ -114,6 +116,7 @@ class osService:
     "A generic openStack service, with a proxy connection object from SDK"
     def __init__(self, conn, stype, name, region, prj_id, ept, quiet=True):
         "c'tor for the OpenStack service to be caled by subclasses"
+        global errors
         self.fulltype = stype
         if stype[-2] == 'v' and stype[-1].isnumeric():
             stype = stype[:-2]
@@ -126,6 +129,7 @@ class osService:
         self.versdata = None
         self.extensions = None
         self.azs = None
+        self.name = name
         try:
             if debug:
                 print(f"#INFO: Creating Conn for {stype}:{name}", file=sys.stderr)
@@ -135,10 +139,11 @@ class osService:
             self.apiver = self.conn.get_api_major_version()
         except Exception as exc:
             if not quiet:
-                print(f"#ERROR: No service proxy of type {stype} in SDK.\n{exc}", file=sys.stderr)
+                print(f"#ERROR: No service proxy of type {stype} in region {region} in SDK.\n{exc}", file=sys.stderr)
+            errors += 1
             # return
         if self.conn is None or (self.conn.version is None and self.apiver is None):
-            print(f"#WARNING: Skipping over {stype} b/c it advertizes no version", file=sys.stderr)
+            print(f"#WARNING: Skipping over {stype} in region {region} b/c it advertizes no version", file=sys.stderr)
             self.conn = None
             return
         try:
@@ -150,6 +155,7 @@ class osService:
                 if self.conn:
                     print(f"#ERROR: No endpoint found for service {self.stype} in region {region}",
                           file=sys.stderr)
+                    errors += 1
                     # raise exc
                     self.conn = None
                     return
@@ -159,7 +165,7 @@ class osService:
             self.extensions = list(map(lambda x: x.alias, self.conn.extensions()))
         except Exception as exc:
             if not quiet:
-                print(f"#WARNING: Service {self.fulltype} does not support getting extensions.\n{exc}",
+                print(f"#WARNING: Service {self.fulltype} in region {region} does not support getting extensions.\n{exc}",
                       file=sys.stderr)
         try:
             self.azs = list(filter(lambda x: x.state['available'] is True, self.conn.availability_zones()))
@@ -168,13 +174,22 @@ class osService:
                 self.azs = list(filter(lambda x: x.state == 'available', self.conn.availability_zones()))
             except Exception as exc:
                 if not quiet:
-                    print(f"#WARNING: Service {self.fulltype} does not support getting AZs.\n{exc}",
+                    print(f"#WARNING: Service {self.fulltype} in region {region} does not support getting AZs.\n{exc}",
                           file=sys.stderr)
         # FIXME: We are not using ept, is that right?
+        try:
+            self.conn.get('/')
+            # We could check for a 200, but even if a 'GET /' did not succeed, we could establish a conn
+        except Exception:  # as exc:
+            print(f"#ERROR: Service {self.name} in region {region}: Could not connect to {self.ep}", file=sys.stderr)
+            self.conn = None
+            # Will not normally be seen:
+            self.ep = "ERROR: " + self.ep
+            errors += 1
 
     def values(self):
         "return dict representing stored values"
-        dct = {self.stype: {"name": self.conn.service_name,
+        dct = {self.stype: {"name": self.name,
                             "endpoint": self.ep,
                             # "region": self.region,
                             "versions": self.versdata}}
@@ -221,11 +236,15 @@ class osCompute(osService):
     # def __init__(self, conn, region="RegionOne"):
     def __init__(self, conn, stype, name, region, prj_id, ept):
         super().__init__(conn, stype, name, region, prj_id, ept, False)
+        if not self.conn:
+            self.flavors = None
+            return
         self.flavors = self.get_openstack_flavors()
 
     def values(self):
         dct = super().values()
-        dct[self.stype]["flavors"] = self.flavors
+        if self.flavors:
+            dct[self.stype]["flavors"] = self.flavors
         return dct
 
     def get_openstack_flavors(self):
@@ -258,6 +277,9 @@ class osVolume(osService):
 
     def __init__(self, conn, stype, name, region, prj_id, ept):
         super().__init__(conn, stype, name, region, prj_id, ept, True)
+        if not self.conn:
+            self.voltypes = None
+            return
         self.voltypes = list(self.conn.types())
         # TODO: Fixup azs and exts
         req = self.conn.request('/extensions', 'GET')
@@ -272,7 +294,8 @@ class osVolume(osService):
         dct = super().values()
         # dct[self.stype]["volume_types"] = list(map(
         #     lambda x: {"name": x.name, "public": x.is_public}, self.voltypes))
-        dct[self.stype]["volume_types"] = [{"name": x.name, "public": x.is_public} for x in self.voltypes]
+        if self.voltypes:
+            dct[self.stype]["volume_types"] = [{"name": x.name, "public": x.is_public} for x in self.voltypes]
         return dct
 
 
@@ -289,14 +312,31 @@ class osLoadBalancer(osService):
         except Exception as exc:
             print(exc, file=sys.stderr)
             self.flavors = None
+        try:
+            self.providers = self.conn.providers()
+            self.providers = list(map(lambda x: {"name": x.name, "description": x.description},
+                                      self.providers))
+        except Exception as exc:
+            print(exc, file=sys.stderr)
+            self.providers = None
 
     def values(self):
         dct = super().values()
+        if self.providers:
+            dct[self.stype]["providers"] = self.providers
         if self.flavors:
             dct[self.stype]["flavors"] = self.flavors
         return dct
 
 # TODO: List of public images with properties
+
+
+def ext_net_dict(net):
+    "Return dict with extNet properties"
+    dct = {"name": net.name, "mtu": net.mtu, "shared": net.is_shared}
+    if net.description:
+        dct["description"] = net.descrption
+    return dct
 
 
 # TODO: Network class needs more detection; have AZs for routers and nets, endpoint not per region
@@ -307,7 +347,17 @@ class osNetwork(osService):
     def __init__(self, conn, stype, name, region, prj_id, ept):
         super().__init__(conn, stype, name, region, prj_id, ept, True)
         self.ep = ept
-    # TODO: Fixup AZs
+        # TODO: Fixup AZs
+        # external network list
+        self.extnet = list(filter(lambda x: x.is_router_external and x.is_admin_state_up,
+                                  self.conn.networks()))
+        self.extnet = list(map(ext_net_dict, self.extnet))
+
+    def values(self):
+        dct = super().values()
+        if self.extnet:
+            dct[self.stype]["externalNetworks"] = self.extnet
+        return dct
 
 
 # Known-classes
@@ -324,6 +374,10 @@ class nonOSService:
     def values(self):
         "return dict with stored values"
         return {self.stype: {"name": self.name, "endpoint": self.ep}}
+
+    def __str__(self):
+        "textual representation"
+        return str(self.values())
 
 
 class osCloud:
@@ -379,7 +433,7 @@ class osCloud:
                 if newsvc.conn:
                     ostacksvc[newsvc.stype] = newsvc
                     if debug:
-                        print(f"#DEBUG: Region {reg} added OS Svc {newsvc}" % (reg, newsvc), file=sys.stderr)
+                        print(f"#DEBUG: Region {reg} added OS Svc {newsvc}", file=sys.stderr)
                     svc.consumed = True
                 elif debug:
                     print(f"#DEBUG: Region {reg} with service {newsvc} without connection", file=sys.stderr)
@@ -437,7 +491,7 @@ def ostackconn(cloud, timeout):
     conn = openstack.connect(cloud=cloud, timeout=timeout, api_timeout=timeout*1.5+4)
     try:
         conn.authorize()
-    except:
+    except Exception:
         print("INFO: Retry connection with 'default' domain", file=sys.stderr)
         conn = openstack.connect(cloud=cloud, timeout=timeout, api_timeout=timeout*1.5+4,
                                  default_domain='default', project_domain_id='default')
@@ -448,12 +502,12 @@ def ostackconn(cloud, timeout):
 def main(argv):
     "Entry point for main program"
     global cloud, outjson, indent
-    global debug, ofile
+    global debug, ofile, errors
     timeout = 12
     try:
-        opts, args = getopt.gnu_getopt(argv[1:], "c:f:hjJdu:n:i:t:",
+        opts, args = getopt.gnu_getopt(argv[1:], "c:f:hjJdt:",
                                        ("os-cloud=", "file=", "help", "json", "json-compact",
-                                        "debug", "uri=", "name=", "id=", "timeout="))
+                                        "debug", "timeout="))
     except getopt.GetoptError:  # as exc:
         usage(1)
     for opt in opts:
@@ -463,12 +517,6 @@ def main(argv):
             cloud = opt[1]
         elif opt[0] == "-f" or opt[0] == "--file":
             ofile = opt[1]
-        elif opt[0] == "-u" or opt[0] == "--uri":
-            uriprefix = opt[1]
-        elif opt[0] == "-n" or opt[0] == "--name":
-            svcname = opt[1]
-        elif opt[0] == "-i" or opt[0] == "--id":
-            gxid = opt[1]
         elif opt[0] == "-d" or opt[0] == "--debug":
             debug = True
         elif opt[0] == "-t" or opt[0] == "--timeout":
@@ -482,13 +530,15 @@ def main(argv):
         usage(1)
     if not cloud:
         print("ERROR: You need to have OS_CLOUD set or pass --os-cloud=CLOUD.", file=sys.stderr)
+        errors += 1
     conn = ostackconn(cloud, timeout)
     mycloud = osCloud(conn)
     if ofile == "/dev/stdout":
         print(mycloud, file=sys.stdout)
     else:
         print(mycloud, file=open(ofile, 'a', encoding="UTF-8"))
+    return errors
 
 
 if __name__ == "__main__":
-    main(sys.argv)
+    sys.exit(main(sys.argv))
