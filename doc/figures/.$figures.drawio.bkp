@@ -1,0 +1,31 @@
+<mxfile host="Electron" modified="2023-06-14T18:34:26.734Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.3.7 Chrome/112.0.5615.204 Electron/24.5.0 Safari/537.36" etag="KITBmgW8RXwdJbFr5pkO" version="21.3.7" type="device">
+  <diagram name="Integration XFSC" id="DrJs71jUKeZPwDchN5-C">
+    <mxGraphModel dx="769" dy="482" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Kt9p1X8fXqj5PMvGPd4u-6" value="sign" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Kt9p1X8fXqj5PMvGPd4u-1" target="Kt9p1X8fXqj5PMvGPd4u-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Kt9p1X8fXqj5PMvGPd4u-7" value="store" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Kt9p1X8fXqj5PMvGPd4u-1" target="Kt9p1X8fXqj5PMvGPd4u-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Kt9p1X8fXqj5PMvGPd4u-1" value="SCS Gaia-X Generator" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="400" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Kt9p1X8fXqj5PMvGPd4u-2" value="TSA" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="540" y="400" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Kt9p1X8fXqj5PMvGPd4u-3" value="OCM" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="400" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Kt9p1X8fXqj5PMvGPd4u-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.462;exitY=0.25;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="Kt9p1X8fXqj5PMvGPd4u-4" target="Kt9p1X8fXqj5PMvGPd4u-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Kt9p1X8fXqj5PMvGPd4u-4" value="Openstack &lt;br&gt;Cloud" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="500" width="130" height="80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
