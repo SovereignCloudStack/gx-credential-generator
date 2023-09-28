@@ -172,3 +172,5 @@ as well as an Airflow automation pipeline.
 TODO: Create cmd line tool that does signing and interacting with
 the compliance service, so we can set up CI testing.
 
+From a Gaia-X perspective, SCS generator is still incomplete, as it does not generate W3C Verifiable Credentials. A concept on how to make generator Gaia-X compliant and integrate it into Gaia-x Tool box, can be found [here](doc/xfsc.md).
+
