@@ -77,7 +77,14 @@ cd gx-self-description-generator
 pip install -r requirements.txt
 ```
 
-3. Generate Gaia-X Self-Descriptions
+3. Create `clouds.yaml` configuration file
+  - Gaia-x generator has to be configured with user credentials, auth-url, ... to access your Openstack cloud. This is done using [clouds.yaml](https://docs.openstack.org/python-openstackclient/ussuri/configuration/index.html) 
+  - Make sure the following keys exist in our `clouds.yaml`
+     - `auth.user_domain_name`
+     - `auth.project_domain_name`
+     - `region_name`
+
+4. Generate Gaia-X Self-Descriptions
 
    - OpenStack to json file (timestamp and extension is added to file name and script assumes OpenStack access (as normal tenant user)
    ```bash
