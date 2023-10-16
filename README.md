@@ -55,7 +55,6 @@ cd gx-credential-generator
 pip install -r requirements.txt
 ```
 
-
 ### OpenStack 
 
 a. Create `clouds.yaml` configuration file
