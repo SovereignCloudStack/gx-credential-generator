@@ -1,4 +1,4 @@
-# gx-credential-generator 
+# gx-credential-generator
 Tools for creating [Gaia-X Credentials](https://gitlab.com/gaia-x/technical-committee/architecture-document/-/blob/master/architecture_document/gx_conceptual_model.md#gaia-x-credentials), formally known as Self-Desceriptions, for SCS cloud inrastructure (OpenStack, k8s, ...).
 
 ## OpenStack
