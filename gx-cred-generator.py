@@ -2,7 +2,7 @@
 # vim: set ts=4 sw=4 et:
 #
 # gx-sd-generator.py
-"""Script to generate Gaia-X JSON-LD for self-descriptions.
+"""Script to generate Gaia-X JSON-LD for credentials.
   Uses openstack-discovery.py and k8s-discovery.py to
   collect the data.
 
