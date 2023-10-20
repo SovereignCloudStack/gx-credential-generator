@@ -84,7 +84,7 @@ pip install -r requirements.txt
      - `auth.project_domain_name`
      - `region_name`
 
-4. Generate Gaia-X Credentials 
+4. Generate Gaia-X Credentials
 
    - OpenStack to json file (timestamp and extension is added to file name and script assumes OpenStack access (as normal tenant user)
    ```bash
