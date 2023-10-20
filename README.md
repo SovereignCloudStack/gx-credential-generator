@@ -1,5 +1,9 @@
 # gx-credential-generator
+<<<<<<< HEAD
 Tool for creating [Gaia-X Crecentials](https://gitlab.com/gaia-x/technical-committee/architecture-document/-/blob/master/architecture_document/gx_conceptual_model.md#gaia-x-credentials), previously known as Gaia-X Self-Descriptions, for SCS compliant cloud infrastructures (OpenStack, k8s, ...)
+=======
+Tools for creating [Gaia-X Crecential](https://gitlab.com/gaia-x/technical-committee/architecture-document/-/blob/master/architecture_document/gx_conceptual_model.md#gaia-x-credentials), formally knwon as Self-Descriptions for SCS compliant cloud infrastructures (OpenStack, k8s, ...)
+>>>>>>> Replace self-description with credential (#65)
 
 ## Introduction
 
@@ -64,9 +68,7 @@ a. Create `clouds.yaml` configuration file
      - `auth.project_domain_name`
      - `region_name`
 
- 
 b. Generate Gaia-X Credentials
-
    - To print OpenStack properties in JSON-LD
 ```bash
    python3 cli.py openstack <os-cloud>
