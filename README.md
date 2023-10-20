@@ -1,5 +1,5 @@
-# gx-self-description-generator
-Tools for creating Gaia-X Self-Descriptions (OpenStack, k8s, ...)
+# gx-credential-generator
+Tools for creating [Gaia-X Crecential](https://gitlab.com/gaia-x/technical-committee/architecture-document/-/blob/master/architecture_document/gx_conceptual_model.md#gaia-x-credentials), formally knwon as Self-Descriptions for SCS compliant cloud infrastructures (OpenStack, k8s, ...)
 
 ## OpenStack
 We want to collect discoverable information from an OpenStack cloud,
@@ -84,13 +84,13 @@ pip install -r requirements.txt
      - `auth.project_domain_name`
      - `region_name`
 
-4. Generate Gaia-X Self-Descriptions
+4. Generate Gaia-X Credentials
 
    - OpenStack to json file (timestamp and extension is added to file name and script assumes OpenStack access (as normal tenant user)
    ```bash
    ./gx-sd-generator.py --gaia-x --os-cloud=<os-cloud> --file=<file-name>
    ```
-   - To use generated Gaia-X Self-Description in [Gaia-X Wizard](https://wizard.lab.gaia-x.eu/) add `--wizard` option
+   - To use generated Gaia-X Credential in [Gaia-X Wizard](https://wizard.lab.gaia-x.eu/) add `--wizard` option
      - '@' has to be removed from @id and @type in generated SD, to be able to sign and verify it in Gaia-X Wizard
    - K8s (script assumes K8s access)
    ```bash
