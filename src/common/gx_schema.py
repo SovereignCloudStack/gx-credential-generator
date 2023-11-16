@@ -8520,7 +8520,7 @@ class RNGTypes(EnumDefinitionImpl):
 
     Quantum = PermissibleValue(
         text="Quantum",
-        description="Hardware random generator is based in electronic quantum effects.")
+        description="Hardware random src is based in electronic quantum effects.")
 
     _defn = EnumDefinition(
         name="RNGTypes",
@@ -8531,19 +8531,19 @@ class RNGTypes(EnumDefinitionImpl):
         setattr(cls, "Electrical noise",
             PermissibleValue(
                 text="Electrical noise",
-                description="Hardware random generator is based on electronic noise."))
+                description="Hardware random src is based on electronic noise."))
         setattr(cls, "Chaos-based",
             PermissibleValue(
                 text="Chaos-based",
-                description="Hardware random generator is based on chaos."))
+                description="Hardware random src is based on chaos."))
         setattr(cls, "Free-running oscillators",
             PermissibleValue(
                 text="Free-running oscillators",
-                description="Hardware random generator is based in electronic free-running oscillators."))
+                description="Hardware random src is based in electronic free-running oscillators."))
         setattr(cls, "None",
             PermissibleValue(
                 text="None",
-                description="No hardware random generator (RNG) is used. Entropy is taken from /dev/urandom."))
+                description="No hardware random src (RNG) is used. Entropy is taken from /dev/urandom."))
 
 class VMDiskType(EnumDefinitionImpl):
 
