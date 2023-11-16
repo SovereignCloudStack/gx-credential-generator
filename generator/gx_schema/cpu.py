@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # vim: set ts=4 sw=4 et:
 #
-# gax-cpu.py
+# cpu.py
 """
 These classes reflect the Gaia-X view on physical infra
 
