@@ -1,5 +1,5 @@
 # Auto generated from gaia-x.yaml by pythongen.py version: 0.0.1
-# Generation date: 2023-11-16T13:30:52
+# Generation date: 2023-11-16T13:40:58
 # Schema: gaia-x
 #
 # id: http://w3id.org/gaia-x/gx-trust-framework/gaia-x
@@ -475,16 +475,16 @@ class UpdateStrategy(YAMLRoot):
 
 
 @dataclass
-class Latest-N(YAMLRoot):
+class LatestN(YAMLRoot):
     """
     Number of latest N outdated image versions, which will be valid.
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX["Latest-N"]
-    class_class_curie: ClassVar[str] = "gx:Latest-N"
-    class_name: ClassVar[str] = "Latest-N"
-    class_model_uri: ClassVar[URIRef] = GX.Latest-N
+    class_class_uri: ClassVar[URIRef] = GX.LatestN
+    class_class_curie: ClassVar[str] = "gx:LatestN"
+    class_name: ClassVar[str] = "Latest_N"
+    class_model_uri: ClassVar[URIRef] = GX.LatestN
 
     value: Optional[int] = None
 
@@ -8740,8 +8740,8 @@ slots.updateStrategy__oldVersionsValidUntil = Slot(uri=GX.oldVersionsValidUntil,
 slots.updateStrategy__providedUntil = Slot(uri=GX.providedUntil, name="updateStrategy__providedUntil", curie=GX.curie('providedUntil'),
                    model_uri=GX.updateStrategy__providedUntil, domain=None, range=Optional[str])
 
-slots.latest_N__value = Slot(uri=GX.value, name="latest-N__value", curie=GX.curie('value'),
-                   model_uri=GX.latest_N__value, domain=None, range=Optional[int])
+slots.latestN__value = Slot(uri=GX.value, name="latestN__value", curie=GX.curie('value'),
+                   model_uri=GX.latestN__value, domain=None, range=Optional[int])
 
 slots.issuer__issuerTermsAndConditions = Slot(uri=GX.issuerTermsAndConditions, name="issuer__issuerTermsAndConditions", curie=GX.curie('issuerTermsAndConditions'),
                    model_uri=GX.issuer__issuerTermsAndConditions, domain=None, range=Union[str, "GaiaXTermsAndConditions"])
