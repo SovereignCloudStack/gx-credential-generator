@@ -1,5 +1,5 @@
 # Auto generated from gaia-x.yaml by pythongen.py version: 0.0.1
-# Generation date: 2023-11-16T13:40:58
+# Generation date: 2023-11-17T10:12:38
 # Schema: gaia-x
 #
 # id: http://w3id.org/gaia-x/gx-trust-framework/gaia-x
@@ -272,7 +272,7 @@ class CPU(Device):
     class_name: ClassVar[str] = "CPU"
     class_model_uri: ClassVar[URIRef] = GX.CPU
 
-    cpuArchitecture: Optional[Union[str, "Architectures"]] = "\"others\""
+    cpuArchitecture: Optional[Union[str, "Architectures"]] = "Other"
     cpuFlag: Optional[Union[str, List[str]]] = empty_list()
     smtEnabled: Optional[Union[bool, Bool]] = False
     numberOfCores: Optional[int] = None
@@ -656,8 +656,8 @@ class Memory(Device):
     class_model_uri: ClassVar[URIRef] = GX.Memory
 
     memorySize: Union[dict, "MemorySize"] = None
-    memoryClass: Optional[Union[str, "MemoryClasses"]] = "\"other\""
-    memoryRank: Optional[Union[str, "MemoryRanks"]] = "\"other\""
+    memoryClass: Optional[Union[str, "MemoryClasses"]] = "other"
+    memoryRank: Optional[Union[str, "MemoryRanks"]] = "other"
     eccEnabled: Optional[Union[bool, Bool]] = False
     hardwareEncryption: Optional[Union[bool, Bool]] = False
 
@@ -1383,9 +1383,9 @@ class VMImage(Image):
     copyrightOwnedBy: Union[str, List[str]] = None
     license: Union[str, List[str]] = None
     resourcePolicy: Union[str, List[str]] = None
-    vmImageDiskFormat: Optional[Union[str, "VMDiskType"]] = "\"RAW\""
-    hypervisorType: Optional[Union[str, "HypervisorType"]] = "\"other\""
-    firmwareType: Optional[Union[str, "FirmType"]] = "\"other\""
+    vmImageDiskFormat: Optional[Union[str, "VMDiskType"]] = "RAW"
+    hypervisorType: Optional[Union[str, "HypervisorType"]] = "other"
+    firmwareType: Optional[Union[str, "FirmType"]] = "other"
     hwRngTypeOfImage: Optional[Union[str, "RNGTypes"]] = "None"
     watchDogAction: Optional[Union[str, "WatchDogActions"]] = "disabled"
 
@@ -3993,8 +3993,8 @@ class CountryNameNumeric(EnumDefinitionImpl):
 
 class Architectures(EnumDefinitionImpl):
 
-    Others = PermissibleValue(
-        text="Others",
+    other = PermissibleValue(
+        text="other",
         description="CPU architecture not specified above.")
 
     _defn = EnumDefinition(
@@ -5198,6 +5198,8 @@ class OSDistribution(EnumDefinitionImpl):
 
     @classmethod
     def _addvals(cls):
+        setattr(cls, "Alpine Linux",
+            PermissibleValue(text="Alpine Linux"))
         setattr(cls, "Arch Linux",
             PermissibleValue(text="Arch Linux"))
         setattr(cls, "CentOS Linux",
@@ -8484,7 +8486,7 @@ class FirmType(EnumDefinitionImpl):
     """
     BIOS = PermissibleValue(text="BIOS")
     UEFI = PermissibleValue(text="UEFI")
-    others = PermissibleValue(text="others")
+    other = PermissibleValue(text="other")
 
     _defn = EnumDefinition(
         name="FirmType",
@@ -8520,7 +8522,7 @@ class RNGTypes(EnumDefinitionImpl):
 
     Quantum = PermissibleValue(
         text="Quantum",
-        description="Hardware random src is based in electronic quantum effects.")
+        description="Hardware random generator is based in electronic quantum effects.")
 
     _defn = EnumDefinition(
         name="RNGTypes",
@@ -8531,19 +8533,19 @@ class RNGTypes(EnumDefinitionImpl):
         setattr(cls, "Electrical noise",
             PermissibleValue(
                 text="Electrical noise",
-                description="Hardware random src is based on electronic noise."))
+                description="Hardware random generator is based on electronic noise."))
         setattr(cls, "Chaos-based",
             PermissibleValue(
                 text="Chaos-based",
-                description="Hardware random src is based on chaos."))
+                description="Hardware random generator is based on chaos."))
         setattr(cls, "Free-running oscillators",
             PermissibleValue(
                 text="Free-running oscillators",
-                description="Hardware random src is based in electronic free-running oscillators."))
+                description="Hardware random generator is based in electronic free-running oscillators."))
         setattr(cls, "None",
             PermissibleValue(
                 text="None",
-                description="No hardware random src (RNG) is used. Entropy is taken from /dev/urandom."))
+                description="No hardware random generator (RNG) is used. Entropy is taken from /dev/urandom."))
 
 class VMDiskType(EnumDefinitionImpl):
 
