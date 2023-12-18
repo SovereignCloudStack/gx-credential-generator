@@ -1,0 +1,107 @@
+vm image:
+  Alpine Linux:
+    copyright owner: "Alpine Linux"
+    resource policy: DEFAULT
+    license:
+      - https://gitlab.alpinelinux.org/alpine/aports/-/issues/9074
+  Arch Linux:
+    copyright owner: "Judd Vinet, Aaron Griffin, Levente Polyák and others"
+    resource policy: DEFAULT
+    license:
+      - https://gitlab.archlinux.org/archlinux
+  CentOS Linux:
+    copyright owner: "The CentOS Project and others"
+    resource policy: DEFAULT
+    license:
+      - https://github.com/CentOS/
+  Debian:
+    copyright owner: "Ian Murdock and others"
+    resource policy: DEFAULT
+    license:
+      - https://www.debian.org/legal/licenses/index.en.html
+  Fedora:
+    copyright owner: "Fedora-Project"
+    resource policy: DEFAULT
+    license:
+      - https://docs.fedoraproject.org/en-US/legal/fedora-linux-license/
+  FreeBSD:
+    copyright owner: "The FreeBSD Project"
+    resource policy: DEFAULT
+    license:
+      - GPL-3.0
+      - LGPL-2.0
+  Gentoo Linux:
+    copyright owner: "Gentoo Foundation, Inc."
+    resource policy: DEFAULT
+    license:
+      - https://www.gentoo.org/glep/glep-0076.html
+  Mandrakelinux:
+    copyright owner: "Mandriva Linux"
+    resource policy: DEFAULT
+    license:
+      - GPL-3.0
+  Mandriva Linux:
+    copyright owner: "Mandriva S. A."
+    resource policy: DEFAULT
+    license:
+      - GPL-3.0
+  Mandriva Enterprise Server:
+    copyright owner: "Mandriva S. A."
+    resource policy: DEFAULT
+    license:
+      - GPL-3.0
+  MS-DOS:
+    copyright owner: "Microsoft Corporation"
+    resource policy: DEFAULT
+    license:
+      - https://www.microsoft.com/licensing/docs/view/Licensing-Guides
+  NetBSD:
+    copyright owner: "The NetBSD Foundation"
+    resource policy: DEFAULTV
+    license:
+      - https://www.netbsd.org/about/redistribution.html
+  Novell NetWare:
+    copyright owner: "Micro Focus International"
+    resource policy: DEFAULT
+    license:
+      - https://support.novell.com/techcenter/articles/ana19960702.html
+  OpenBSD:
+    copyright owner: "OpenBSD"
+    resource policy: DEFAULT
+    license:
+      - https://www.openbsd.org/policy.html
+  OpenSolaris:
+    copyright owner: "Sun Microsystems"
+    resource policy: DEFAULT
+    license:
+      - https://opensource.apple.com/source/xnu/xnu-2050.7.9/tools/tests/libMicro/OPENSOLARIS.LICENSE.auto.html
+  openSUSE:
+    copyright owner: "openSUSE contributors & others"
+    resource policy: DEFAULT
+    license:
+      - https://en.opensuse.org/openSUSE:License
+  Rocky Linux:
+    copyright owner: "Rocky Enterprise Software Foundation"
+    resource policy: DEFAULT
+    license:
+      - https://rockylinux.org/licensing
+  Red Hat Enterprise Linux:
+    copyright owner: "Red Hat, Inc."
+    resource policy: DEFAULT
+    license:
+      - https://www.redhat.com/en/store/red-hat-enterprise-linux-server
+  SUSE Linux Enterprise Desktop:
+    copyright owner: "SUSE"
+    resource policy: ""
+    license:
+      - https://www.suse.com/products/terms_and_conditions.pdf
+  Ubuntu:
+    copyright owner: "Canonical"
+    resource policy: DEFAULT
+    license:
+      - https://ubuntu.com/legal/open-source-licences
+  Microsoft Windows:
+    copyright owner: "Microsoft Corporation"
+    resource policy: DEFAULT
+    license:
+      - https://www.microsoft.com/licensing
