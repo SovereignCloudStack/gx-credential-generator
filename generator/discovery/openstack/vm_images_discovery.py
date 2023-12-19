@@ -16,6 +16,7 @@ import generator.common.const as const
 
 from typing import Dict
 
+
 class VmDiscovery():
 
     def __init__(self, conn: Connection, config: Dict) -> None:
@@ -44,19 +45,28 @@ class VmDiscovery():
         @return: Gaia-X virtual machine image
         """
 
-        # collect all properties
+        # Discover all SCS mandatory properties
         cpu_req = self._get_cpu_req(os_image.architecture)
-        ram_req = self._get_min_ram_req(os_image.min_ram)
-        root_disk_req = self._get_min_disk_req(os_image.min_disk)
-        operatingSystem = self._get_operation_system_info(os_image.os_version, os_image.os_distro)
+        ram_req = self._get_min_ram_req(os_image)
+        root_disk_req = self._get_min_disk_req(os_image)
+        operating_system = self._get_operation_system_info(os_image.os_version, os_image.os_distro)
 
-        #license = operatingSystem.license
-        #copyright_owner = operatingSystem.copyrightOwnedBy
-        #resource_policy= const.DEFAULT_RESOURCE_POLICY
+        # Discover all SCS recommended attributes
+        secure_boot = self._is_secure_boot(os_image)
+        firmware_type = self._get_firmeware_type(os_image)
+        watchdog_action = self._get_watchdog_action(os_image)
+        v_pmu = self._is_vmpu(os_image)
+        video_ram_size = self._get_video_ram(os_image)
+        multiqueue = self._is_multiqueue_enabled(os_image)
+
+        # Discover Gaia-X mandatory attributes
+        img_license = operating_system.license
+        copyright_owner = operating_system.copyrightOwnedBy
+        resource_policy = const.DEFAULT_RESOURCE_POLICY
 
         # read mandatory attributes from config or use default values
         try:
-            license = self.config[const.CONFIG_VM_IMAGE][os_image.name][const.CONFIG_LICENSE]
+            img_license = self.config[const.CONFIG_VM_IMAGE][os_image.name][const.CONFIG_LICENSE]
         except KeyError:
             pass
         try:
@@ -68,14 +78,22 @@ class VmDiscovery():
         except KeyError:
             pass
 
-        #return GX_Image(copyrightOwnedBy=copyright_owner,
-        #                license=license,
-        #                resourcePolicy=resource_policy,
-        #                cpuReq=cpu_req,
-        #                ramReq=ram_req,
-        #                rootDiskReq=root_disk_req,
-        #                operatingSystem=operatingSystem,
-        #                version=os_image.os_version)#
+        # print(os_image.os_secure_boot)
+
+        return GX_Image(copyrightOwnedBy=copyright_owner,
+                        license=img_license,
+                        resourcePolicy=resource_policy,
+                        cpuReq=cpu_req,
+                        ramReq=ram_req,
+                        rootDiskReq=root_disk_req,
+                        operatingSystem=operating_system,
+                        version=os_image.os_version,
+                        secureBoot=secure_boot,
+                        firmwareType=firmware_type,
+                        watchDogAction=watchdog_action,
+                        vPMU=v_pmu,
+                        videoRamSize=video_ram_size,
+                        multiQueues=multiqueue)
 
     @staticmethod
     def _get_cpu_req(arch: str) -> CPU:
@@ -90,16 +108,22 @@ class VmDiscovery():
         return CPU(cpuArchitecture=cpu_arch_types.other)
 
     @staticmethod
-    def _get_min_ram_req(min_ram_size: str) -> Memory:
+    def _get_min_ram_req(image: OS_Image) -> Memory:
         # Memory size tend to be measured in MB (1,000,000 bytes) and not MiB (1.048576 bytes) the RAM industry.
         # But OpenStack uses MiB.
-        size = MemorySize(value=float(min_ram_size * 1.048576), unit=const.UNIT_MB)
+        size = MemorySize(value=float(image.min_ram * 1.048576), unit=const.UNIT_MB)
+        try:
+            hw_encryption = image.hw_mem_encryption
+            if hw_encryption:
+                return Memory(memorySize=size, hardwareEncryption=hw_encryption)
+        except AttributeError:
+            pass
         return Memory(memorySize=size)
 
     @staticmethod
-    def _get_min_disk_req(disk_size: str) -> Disk:
-        size = MemorySize(value=float(disk_size * 1.073741824), unit=const.UNIT_GB)
-        return Disk(diskSize=size)
+    def _get_min_disk_req(image: OS_Image) -> Disk:
+        size = MemorySize(value=float(image.min_disk * 1.073741824), unit=const.UNIT_GB)
+        return Disk(diskSize=size, diskBusType=image.hw_disk_bus)
 
     def _get_operation_system_info(self, os_version: str, os_distro: str) -> OperatingSystem:
         # Copyright owner and license not supported as Image properties, currently --> Default values are used
@@ -229,9 +253,57 @@ class VmDiscovery():
     def _get_license(self, os: str) -> str:
         return self.config[const.CONFIG_VM_IMAGE][os][const.CONFIG_LICENSE]
 
+    def _is_secure_boot(self, image: OS_Image) -> bool:
+        try:
+            secure_boot = image.needs_secure_boot
+            if secure_boot:
+                return secure_boot
+        except AttributeError:
+            pass
+        return False
 
+    def _get_firmeware_type(self, image: OS_Image) -> str:
+        try:
+            firmwareType = image.hw_firmware_type
+            if firmwareType:
+                return firmwareType
+        except AttributeError:
+            pass
 
+        return const.DEFAULT_FIRMWARE_TYPE
 
+    def _get_watchdog_action(self, image: OS_Image) -> str:
+        try:
+            action = image.hw_watchdog_action
+            if action:
+                return action
+        except AttributeError:
+            pass
 
+        return const.DEFAULT_WATCHDOG_ACTION
 
+    def _is_vmpu(self, image: OS_Image) -> bool:
+        try:
+            pmu = image.hw_pmu
+            if pmu:
+                return pmu
+        except AttributeError:
+            pass
+        return False
 
+    def _get_video_ram(self, image: OS_Image) -> MemorySize:
+        try:
+            ram_size = image.hw_video_ram
+            if ram_size:
+                return MemorySize(value=float())
+        except AttributeError:
+            pass
+
+    def _is_multiqueue_enabled(self, image: OS_Image) -> bool:
+        try:
+            enabled = image.hw_vif_multiqueue_enabled
+            if enabled:
+                return enabled
+        except AttributeError:
+            pass
+        return False
