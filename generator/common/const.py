@@ -48,6 +48,8 @@ CONFIG_OS_WINDOWS = "Microsoft Windows"
 CONFIG_OS_CIRROS = "CirrOS"
 CONFIG_OS_ALMALINUX = "AlmaLinux"
 DEFAULT_RESOURCE_POLICY = "default: allow intent"
+DEFAULT_FIRMWARE_TYPE = "other"
+DEFAULT_WATCHDOG_ACTION = "none"
 
 <<<<<<< HEAD
 UNIT_MB = "https://qudt.org/vocab:unit/MegaBYTE"
