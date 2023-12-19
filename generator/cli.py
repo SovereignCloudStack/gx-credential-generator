@@ -1,6 +1,7 @@
 import click
 import openstack as os
 import sys
+import yaml
 
 from generator.discovery.openstack.opentack_discovery import OsCloud
 
@@ -11,9 +12,10 @@ def cli():
 
 
 @click.command()
+@click.option('--config', default='../config/config.yaml', help='Path to Configuration file for SCS GX Credential Generator.')
 @click.option('--timeout', default=12, help='Timeout for API calls in seconds')
 @click.argument('cloud')
-def openstack(cloud, timeout):
+def openstack(cloud, timeout, config):
     """Generates Gaia-X Credentials for openstack cloud CLOUD.
     CLOUD MUST refer to a name defined in Openstack's configuration file clouds.yaml."""
 
@@ -28,12 +30,9 @@ def openstack(cloud, timeout):
         conn.authorize()
 
     # generate Gaia-X Credentials
-    os_cloud = OsCloud(conn)
-    props = os_cloud.discover_properties()
-
-
-
-
+    with open(config, "r") as config_file:
+        os_cloud = OsCloud(conn, yaml.safe_load(config_file))
+        props = os_cloud.discover_properties()
 
 
 @click.command()

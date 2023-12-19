@@ -1,20 +1,23 @@
 import openstack
 from openstack.connection import Connection
+from typing import Dict
 import sys
 
 from generator.discovery.openstack.discovery_vm_images import VmDiscovery
 
 class OsCloud:
     "Abstraction for openStack cloud with all its services"
-    def __init__(self, conn: Connection) -> None:
+    def __init__(self, conn: Connection, config: Dict) -> None:
         # import copy
         self.conn = conn
         self.auth = conn.auth
         self.regions = list(conn.identity.regions())
+        self.config = config
 
     def discover_properties(self):
-        vm_dis = VmDiscovery(self.conn)
-        vm_dis.discover_vm_images()
+        vm_dis = VmDiscovery(self.conn, self.config)
+        creds = vm_dis.discover_vm_images()
+        print(creds)
 
 
         # Create per region service catalogs
