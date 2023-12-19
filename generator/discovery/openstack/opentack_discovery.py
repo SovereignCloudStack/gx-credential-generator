@@ -3,7 +3,7 @@ from openstack.connection import Connection
 from typing import Dict
 import sys
 
-from generator.discovery.openstack.discovery_vm_images import VmDiscovery
+from generator.discovery.openstack.vm_images_discovery import VmDiscovery
 
 class OsCloud:
     "Abstraction for openStack cloud with all its services"
