@@ -1,5 +1,5 @@
 # Auto generated from gaia-x.yaml by pythongen.py version: 0.0.1
-# Generation date: 2023-11-17T10:12:38
+# Generation date: 2023-12-19T11:59:13
 # Schema: gaia-x
 #
 # id: http://w3id.org/gaia-x/gx-trust-framework/gaia-x
@@ -91,7 +91,7 @@ class Address(YAMLRoot):
     class_model_uri: ClassVar[URIRef] = GX.Address
 
     countryCode: str = None
-    gps: Optional[str] = None
+    gps: Optional[Union[Union[dict, "GPSLocation"], List[Union[dict, "GPSLocation"]]]] = empty_list()
     streetAddress: Optional[str] = None
     postalCode: Optional[str] = None
     locality: Optional[str] = None
@@ -102,8 +102,7 @@ class Address(YAMLRoot):
         if not isinstance(self.countryCode, str):
             self.countryCode = str(self.countryCode)
 
-        if self.gps is not None and not isinstance(self.gps, str):
-            self.gps = str(self.gps)
+        self._normalize_inlined_as_dict(slot_name="gps", slot_type=GPSLocation, key_name="latitude", keyed=False)
 
         if self.streetAddress is not None and not isinstance(self.streetAddress, str):
             self.streetAddress = str(self.streetAddress)
@@ -113,6 +112,78 @@ class Address(YAMLRoot):
 
         if self.locality is not None and not isinstance(self.locality, str):
             self.locality = str(self.locality)
+
+        super().__post_init__(**kwargs)
+
+
+@dataclass
+class GPSLocation(YAMLRoot):
+    """
+    Physical GPS coordinates in ISO 6709:2008/Cor 1:2009 format.
+    """
+    _inherited_slots: ClassVar[List[str]] = []
+
+    class_class_uri: ClassVar[URIRef] = GX.GPSLocation
+    class_class_curie: ClassVar[str] = "gx:GPSLocation"
+    class_name: ClassVar[str] = "GPSLocation"
+    class_model_uri: ClassVar[URIRef] = GX.GPSLocation
+
+    latitude: str = None
+    longitude: str = None
+    altitude: Optional[str] = None
+    crs: Optional[str] = None
+
+    def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
+        if self._is_empty(self.latitude):
+            self.MissingRequiredField("latitude")
+        if not isinstance(self.latitude, str):
+            self.latitude = str(self.latitude)
+
+        if self._is_empty(self.longitude):
+            self.MissingRequiredField("longitude")
+        if not isinstance(self.longitude, str):
+            self.longitude = str(self.longitude)
+
+        if self.altitude is not None and not isinstance(self.altitude, str):
+            self.altitude = str(self.altitude)
+
+        if self.crs is not None and not isinstance(self.crs, str):
+            self.crs = str(self.crs)
+
+        super().__post_init__(**kwargs)
+
+
+@dataclass
+class GPSUnit(YAMLRoot):
+    """
+    Definition of a geographical point.
+    """
+    _inherited_slots: ClassVar[List[str]] = []
+
+    class_class_uri: ClassVar[URIRef] = GX.GPSUnit
+    class_class_curie: ClassVar[str] = "gx:GPSUnit"
+    class_name: ClassVar[str] = "GPSUnit"
+    class_model_uri: ClassVar[URIRef] = GX.GPSUnit
+
+    degrees: int = None
+    minutes: Optional[int] = None
+    seconds: Optional[int] = None
+    decimals: Optional[float] = None
+
+    def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
+        if self._is_empty(self.degrees):
+            self.MissingRequiredField("degrees")
+        if not isinstance(self.degrees, int):
+            self.degrees = int(self.degrees)
+
+        if self.minutes is not None and not isinstance(self.minutes, int):
+            self.minutes = int(self.minutes)
+
+        if self.seconds is not None and not isinstance(self.seconds, int):
+            self.seconds = int(self.seconds)
+
+        if self.decimals is not None and not isinstance(self.decimals, float):
+            self.decimals = float(self.decimals)
 
         super().__post_init__(**kwargs)
 
@@ -241,7 +312,7 @@ class Device(YAMLRoot):
     vendor: Optional[str] = None
     generation: Optional[str] = None
     defaultOversubscriptionRatio: Optional[int] = None
-    supportedOversubscriptionRatio: Optional[Union[int, List[int]]] = empty_list()
+    supportedOversubscriptionRatio: Optional[int] = None
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self.vendor is not None and not isinstance(self.vendor, str):
@@ -253,9 +324,8 @@ class Device(YAMLRoot):
         if self.defaultOversubscriptionRatio is not None and not isinstance(self.defaultOversubscriptionRatio, int):
             self.defaultOversubscriptionRatio = int(self.defaultOversubscriptionRatio)
 
-        if not isinstance(self.supportedOversubscriptionRatio, list):
-            self.supportedOversubscriptionRatio = [self.supportedOversubscriptionRatio] if self.supportedOversubscriptionRatio is not None else []
-        self.supportedOversubscriptionRatio = [v if isinstance(v, int) else int(v) for v in self.supportedOversubscriptionRatio]
+        if self.supportedOversubscriptionRatio is not None and not isinstance(self.supportedOversubscriptionRatio, int):
+            self.supportedOversubscriptionRatio = int(self.supportedOversubscriptionRatio)
 
         super().__post_init__(**kwargs)
 
@@ -388,7 +458,7 @@ class GPU(Device):
     class_model_uri: ClassVar[URIRef] = GX.GPU
 
     gpuMemory: Optional[Union[dict, "MemorySize"]] = None
-    gpuInterconnection: Optional[str] = "\"none\""
+    gpuInterconnection: Optional[Union[str, "GPUInterconnetionTypes"]] = "none"
     gpuProcessingUnits: Optional[int] = None
     gpuPassthrough: Optional[Union[bool, Bool]] = False
 
@@ -396,8 +466,8 @@ class GPU(Device):
         if self.gpuMemory is not None and not isinstance(self.gpuMemory, MemorySize):
             self.gpuMemory = MemorySize(**as_dict(self.gpuMemory))
 
-        if self.gpuInterconnection is not None and not isinstance(self.gpuInterconnection, str):
-            self.gpuInterconnection = str(self.gpuInterconnection)
+        if self.gpuInterconnection is not None and not isinstance(self.gpuInterconnection, GPUInterconnetionTypes):
+            self.gpuInterconnection = GPUInterconnetionTypes(self.gpuInterconnection)
 
         if self.gpuProcessingUnits is not None and not isinstance(self.gpuProcessingUnits, int):
             self.gpuProcessingUnits = int(self.gpuProcessingUnits)
@@ -695,7 +765,7 @@ class Quantity(YAMLRoot):
     class_model_uri: ClassVar[URIRef] = GX.Quantity
 
     value: float = None
-    unit: Union[str, URI] = None
+    unit: str = None
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self._is_empty(self.value):
@@ -705,8 +775,8 @@ class Quantity(YAMLRoot):
 
         if self._is_empty(self.unit):
             self.MissingRequiredField("unit")
-        if not isinstance(self.unit, URI):
-            self.unit = URI(self.unit)
+        if not isinstance(self.unit, str):
+            self.unit = str(self.unit)
 
         super().__post_init__(**kwargs)
 
@@ -724,7 +794,7 @@ class Frequency(Quantity):
     class_model_uri: ClassVar[URIRef] = GX.Frequency
 
     value: float = None
-    unit: Union[str, URI] = None
+    unit: str = None
 
 @dataclass
 class MemorySize(Quantity):
@@ -739,7 +809,7 @@ class MemorySize(Quantity):
     class_model_uri: ClassVar[URIRef] = GX.MemorySize
 
     value: float = None
-    unit: Union[str, URI] = None
+    unit: str = None
 
 @dataclass
 class Power(Quantity):
@@ -754,7 +824,7 @@ class Power(Quantity):
     class_model_uri: ClassVar[URIRef] = GX.Power
 
     value: float = None
-    unit: Union[str, URI] = None
+    unit: str = None
 
 class Participant(GaiaXEntity):
     """
@@ -1064,7 +1134,7 @@ class PXEImage(Image):
     copyrightOwnedBy: Union[str, List[str]] = None
     license: Union[str, List[str]] = None
     resourcePolicy: Union[str, List[str]] = None
-    pxeImageDiskFormat: Optional[Union[str, "PXEDiskType"]] = "\"ISO\""
+    pxeImageDiskFormat: Optional[Union[str, "PXEDiskType"]] = "ISO"
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self.pxeImageDiskFormat is not None and not isinstance(self.pxeImageDiskFormat, PXEDiskType):
@@ -1140,7 +1210,7 @@ class ServiceOffering(GaiaXEntity):
     providedBy: Union[str, LegalPersonRegistrationNumber] = None
     serviceOfferingTermsAndConditions: Union[Union[dict, "TermsAndConditions"], List[Union[dict, "TermsAndConditions"]]] = None
     dataAccountExport: Union[Union[dict, "DataAccountExport"], List[Union[dict, "DataAccountExport"]]] = None
-    servicePolicy: Union[str, List[str]] = "\"default:allow intent.\""
+    servicePolicy: Union[str, List[str]] = "default:allow intent"
     dependsOn: Optional[Union[str, List[str]]] = empty_list()
     aggregationOfResources: Optional[Union[str, List[str]]] = empty_list()
     dataProtectionRegime: Optional[Union[Union[str, "PersonalDataProtectionRegime"], List[Union[str, "PersonalDataProtectionRegime"]]]] = empty_list()
@@ -1213,7 +1283,7 @@ class InfrastructureServiceOffering(ServiceOffering):
     providedBy: Union[str, LegalPersonRegistrationNumber] = None
     serviceOfferingTermsAndConditions: Union[Union[dict, "TermsAndConditions"], List[Union[dict, "TermsAndConditions"]]] = None
     dataAccountExport: Union[Union[dict, "DataAccountExport"], List[Union[dict, "DataAccountExport"]]] = None
-    servicePolicy: Union[str, List[str]] = "\"default:allow intent.\""
+    servicePolicy: Union[str, List[str]] = "default:allow intent"
 
 @dataclass
 class ComputeServiceOffering(InfrastructureServiceOffering):
@@ -1230,7 +1300,7 @@ class ComputeServiceOffering(InfrastructureServiceOffering):
     providedBy: Union[str, LegalPersonRegistrationNumber] = None
     serviceOfferingTermsAndConditions: Union[Union[dict, "TermsAndConditions"], List[Union[dict, "TermsAndConditions"]]] = None
     dataAccountExport: Union[Union[dict, "DataAccountExport"], List[Union[dict, "DataAccountExport"]]] = None
-    servicePolicy: Union[str, List[str]] = "\"default:allow intent.\""
+    servicePolicy: Union[str, List[str]] = "default:allow intent"
     tenantSeparation: Optional[Union[str, "TenantSeparation"]] = None
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
@@ -1257,7 +1327,7 @@ class VirtualMachineServiceOffering(ComputeServiceOffering):
     dataAccountExport: Union[Union[dict, "DataAccountExport"], List[Union[dict, "DataAccountExport"]]] = None
     codeArtifact: Union[Union[dict, "VMImage"], List[Union[dict, "VMImage"]]] = None
     instantiationReq: Union[Union[dict, "ServerFlavor"], List[Union[dict, "ServerFlavor"]]] = None
-    servicePolicy: Union[str, List[str]] = "\"default:allow intent.\""
+    servicePolicy: Union[str, List[str]] = "default:allow intent"
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self._is_empty(self.codeArtifact):
@@ -1366,6 +1436,117 @@ class StandardConformity(YAMLRoot):
             self.publisher = str(self.publisher)
 
         super().__post_init__(**kwargs)
+
+
+@dataclass
+class DataResource(VirtualResource):
+    """
+    A dataset exposed through a service instance.
+    """
+    _inherited_slots: ClassVar[List[str]] = []
+
+    class_class_uri: ClassVar[URIRef] = GX.DataResource
+    class_class_curie: ClassVar[str] = "gx:DataResource"
+    class_name: ClassVar[str] = "DataResource"
+    class_model_uri: ClassVar[URIRef] = GX.DataResource
+
+    copyrightOwnedBy: Union[str, List[str]] = None
+    license: Union[str, List[str]] = None
+    resourcePolicy: Union[str, List[str]] = None
+    producedBy: Union[str, LegalPersonRegistrationNumber] = None
+    exposedThrough: Union[Union[dict, "DataExchangeComponent"], List[Union[dict, "DataExchangeComponent"]]] = None
+    containsPII: Union[bool, Bool] = None
+    obsoleteDateTime: Optional[Union[str, XSDDateTime]] = None
+    expirationDateTime: Optional[Union[str, XSDDateTime]] = None
+    dataController: Optional[Union[Union[dict, Participant], List[Union[dict, Participant]]]] = empty_list()
+    consent: Optional[Union[Union[dict, "Consent"], List[Union[dict, "Consent"]]]] = empty_list()
+
+    def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
+        if self._is_empty(self.producedBy):
+            self.MissingRequiredField("producedBy")
+        if not isinstance(self.producedBy, LegalPersonRegistrationNumber):
+            self.producedBy = LegalPersonRegistrationNumber(self.producedBy)
+
+        if self._is_empty(self.exposedThrough):
+            self.MissingRequiredField("exposedThrough")
+        if not isinstance(self.exposedThrough, list):
+            self.exposedThrough = [self.exposedThrough] if self.exposedThrough is not None else []
+        self.exposedThrough = [v if isinstance(v, DataExchangeComponent) else DataExchangeComponent(**as_dict(v)) for v in self.exposedThrough]
+
+        if self._is_empty(self.containsPII):
+            self.MissingRequiredField("containsPII")
+        if not isinstance(self.containsPII, Bool):
+            self.containsPII = Bool(self.containsPII)
+
+        if self.obsoleteDateTime is not None and not isinstance(self.obsoleteDateTime, XSDDateTime):
+            self.obsoleteDateTime = XSDDateTime(self.obsoleteDateTime)
+
+        if self.expirationDateTime is not None and not isinstance(self.expirationDateTime, XSDDateTime):
+            self.expirationDateTime = XSDDateTime(self.expirationDateTime)
+
+        if not isinstance(self.dataController, list):
+            self.dataController = [self.dataController] if self.dataController is not None else []
+        self.dataController = [v if isinstance(v, Participant) else Participant(**as_dict(v)) for v in self.dataController]
+
+        self._normalize_inlined_as_dict(slot_name="consent", slot_type=Consent, key_name="legalBasis", keyed=False)
+
+        super().__post_init__(**kwargs)
+
+
+@dataclass
+class Consent(YAMLRoot):
+    """
+    Information on the legitimate processing of information related to PII.
+    """
+    _inherited_slots: ClassVar[List[str]] = []
+
+    class_class_uri: ClassVar[URIRef] = GX.Consent
+    class_class_curie: ClassVar[str] = "gx:Consent"
+    class_name: ClassVar[str] = "Consent"
+    class_model_uri: ClassVar[URIRef] = GX.Consent
+
+    legalBasis: str = None
+    dataProtectionContactPoint: Union[str, List[str]] = None
+    purpose: Union[str, List[str]] = None
+    consentWithdrawalContactPoint: Union[str, List[str]] = None
+
+    def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
+        if self._is_empty(self.legalBasis):
+            self.MissingRequiredField("legalBasis")
+        if not isinstance(self.legalBasis, str):
+            self.legalBasis = str(self.legalBasis)
+
+        if self._is_empty(self.dataProtectionContactPoint):
+            self.MissingRequiredField("dataProtectionContactPoint")
+        if not isinstance(self.dataProtectionContactPoint, list):
+            self.dataProtectionContactPoint = [self.dataProtectionContactPoint] if self.dataProtectionContactPoint is not None else []
+        self.dataProtectionContactPoint = [v if isinstance(v, str) else str(v) for v in self.dataProtectionContactPoint]
+
+        if self._is_empty(self.purpose):
+            self.MissingRequiredField("purpose")
+        if not isinstance(self.purpose, list):
+            self.purpose = [self.purpose] if self.purpose is not None else []
+        self.purpose = [v if isinstance(v, str) else str(v) for v in self.purpose]
+
+        if self._is_empty(self.consentWithdrawalContactPoint):
+            self.MissingRequiredField("consentWithdrawalContactPoint")
+        if not isinstance(self.consentWithdrawalContactPoint, list):
+            self.consentWithdrawalContactPoint = [self.consentWithdrawalContactPoint] if self.consentWithdrawalContactPoint is not None else []
+        self.consentWithdrawalContactPoint = [v if isinstance(v, str) else str(v) for v in self.consentWithdrawalContactPoint]
+
+        super().__post_init__(**kwargs)
+
+
+class DataExchangeComponent(YAMLRoot):
+    """
+    A service/resource used to make a data resource available.
+    """
+    _inherited_slots: ClassVar[List[str]] = []
+
+    class_class_uri: ClassVar[URIRef] = GX.DataExchangeComponent
+    class_class_curie: ClassVar[str] = "gx:DataExchangeComponent"
+    class_name: ClassVar[str] = "DataExchangeComponent"
+    class_model_uri: ClassVar[URIRef] = GX.DataExchangeComponent
 
 
 @dataclass
@@ -4043,7 +4224,7 @@ class EncryptionAlgorithm(EnumDefinitionImpl):
         description="TBD")
     other = PermissibleValue(
         text="other",
-        description="Algorithm for enchryption not further described.")
+        description="Algorithm for encryption not further described.")
 
     _defn = EnumDefinition(
         name="EncryptionAlgorithm",
@@ -4147,6 +4328,24 @@ class DiskTypes(EnumDefinitionImpl):
             PermissibleValue(text="shared network storage"))
         setattr(cls, "high-perf NVMe",
             PermissibleValue(text="high-perf NVMe"))
+
+class GPUInterconnetionTypes(EnumDefinitionImpl):
+
+    NVLink = PermissibleValue(text="NVLink")
+    RoCE2 = PermissibleValue(text="RoCE2")
+    other = PermissibleValue(text="other")
+    none = PermissibleValue(text="none")
+
+    _defn = EnumDefinition(
+        name="GPUInterconnetionTypes",
+    )
+
+    @classmethod
+    def _addvals(cls):
+        setattr(cls, "Xe Link",
+            PermissibleValue(text="Xe Link"))
+        setattr(cls, "Infinity Fabric",
+            PermissibleValue(text="Infinity Fabric"))
 
 class UpdateFrequency(EnumDefinitionImpl):
     """
@@ -5190,6 +5389,9 @@ class OSDistribution(EnumDefinitionImpl):
     OpenSolaris = PermissibleValue(text="OpenSolaris")
     openSUSE = PermissibleValue(text="openSUSE")
     Ubuntu = PermissibleValue(text="Ubuntu")
+    CirrOS = PermissibleValue(text="CirrOS")
+    AlmaLinux = PermissibleValue(text="AlmaLinux")
+    others = PermissibleValue(text="others")
 
     _defn = EnumDefinition(
         name="OSDistribution",
@@ -8568,14 +8770,14 @@ class slots:
 slots.value = Slot(uri=QUDT.value, name="value", curie=QUDT.curie('value'),
                    model_uri=GX.value, domain=None, range=float)
 
-slots.unit = Slot(uri=QUDT.Unit, name="unit", curie=QUDT.curie('Unit'),
-                   model_uri=GX.unit, domain=None, range=Union[str, URI])
+slots.unit = Slot(uri=QUDT.unit, name="unit", curie=QUDT.curie('unit'),
+                   model_uri=GX.unit, domain=None, range=str)
 
 slots.address__countryCode = Slot(uri=GX.countryCode, name="address__countryCode", curie=GX.curie('countryCode'),
                    model_uri=GX.address__countryCode, domain=None, range=str)
 
 slots.address__gps = Slot(uri=GX.gps, name="address__gps", curie=GX.curie('gps'),
-                   model_uri=GX.address__gps, domain=None, range=Optional[str])
+                   model_uri=GX.address__gps, domain=None, range=Optional[Union[Union[dict, GPSLocation], List[Union[dict, GPSLocation]]]])
 
 slots.address__streetAddress = Slot(uri=VCARD['street-address'], name="address__streetAddress", curie=VCARD.curie('street-address'),
                    model_uri=GX.address__streetAddress, domain=None, range=Optional[str])
@@ -8585,6 +8787,31 @@ slots.address__postalCode = Slot(uri=VCARD['postal-code'], name="address__postal
 
 slots.address__locality = Slot(uri=VCARD.locality, name="address__locality", curie=VCARD.curie('locality'),
                    model_uri=GX.address__locality, domain=None, range=Optional[str])
+
+slots.gPSLocation__latitude = Slot(uri=GX.latitude, name="gPSLocation__latitude", curie=GX.curie('latitude'),
+                   model_uri=GX.gPSLocation__latitude, domain=None, range=str)
+
+slots.gPSLocation__longitude = Slot(uri=GX.longitude, name="gPSLocation__longitude", curie=GX.curie('longitude'),
+                   model_uri=GX.gPSLocation__longitude, domain=None, range=str)
+
+slots.gPSLocation__altitude = Slot(uri=GX.altitude, name="gPSLocation__altitude", curie=GX.curie('altitude'),
+                   model_uri=GX.gPSLocation__altitude, domain=None, range=Optional[str])
+
+slots.gPSLocation__crs = Slot(uri=GX.crs, name="gPSLocation__crs", curie=GX.curie('crs'),
+                   model_uri=GX.gPSLocation__crs, domain=None, range=Optional[str],
+                   pattern=re.compile(r'^CRS'))
+
+slots.gPSUnit__degrees = Slot(uri=GX.degrees, name="gPSUnit__degrees", curie=GX.curie('degrees'),
+                   model_uri=GX.gPSUnit__degrees, domain=None, range=int)
+
+slots.gPSUnit__minutes = Slot(uri=GX.minutes, name="gPSUnit__minutes", curie=GX.curie('minutes'),
+                   model_uri=GX.gPSUnit__minutes, domain=None, range=Optional[int])
+
+slots.gPSUnit__seconds = Slot(uri=GX.seconds, name="gPSUnit__seconds", curie=GX.curie('seconds'),
+                   model_uri=GX.gPSUnit__seconds, domain=None, range=Optional[int])
+
+slots.gPSUnit__decimals = Slot(uri=GX.decimals, name="gPSUnit__decimals", curie=GX.curie('decimals'),
+                   model_uri=GX.gPSUnit__decimals, domain=None, range=Optional[float])
 
 slots.gaiaXEntity__name = Slot(uri=GX.name, name="gaiaXEntity__name", curie=GX.curie('name'),
                    model_uri=GX.gaiaXEntity__name, domain=None, range=Optional[str])
@@ -8647,7 +8874,7 @@ slots.device__defaultOversubscriptionRatio = Slot(uri=GX.defaultOversubscription
                    model_uri=GX.device__defaultOversubscriptionRatio, domain=None, range=Optional[int])
 
 slots.device__supportedOversubscriptionRatio = Slot(uri=GX.supportedOversubscriptionRatio, name="device__supportedOversubscriptionRatio", curie=GX.curie('supportedOversubscriptionRatio'),
-                   model_uri=GX.device__supportedOversubscriptionRatio, domain=None, range=Optional[Union[int, List[int]]])
+                   model_uri=GX.device__supportedOversubscriptionRatio, domain=None, range=Optional[int])
 
 slots.disk__diskSize = Slot(uri=GX.diskSize, name="disk__diskSize", curie=GX.curie('diskSize'),
                    model_uri=GX.disk__diskSize, domain=None, range=Union[dict, MemorySize])
@@ -8671,7 +8898,7 @@ slots.gPU__gpuMemory = Slot(uri=GX.gpuMemory, name="gPU__gpuMemory", curie=GX.cu
                    model_uri=GX.gPU__gpuMemory, domain=None, range=Optional[Union[dict, MemorySize]])
 
 slots.gPU__gpuInterconnection = Slot(uri=GX.gpuInterconnection, name="gPU__gpuInterconnection", curie=GX.curie('gpuInterconnection'),
-                   model_uri=GX.gPU__gpuInterconnection, domain=None, range=Optional[str])
+                   model_uri=GX.gPU__gpuInterconnection, domain=None, range=Optional[Union[str, "GPUInterconnetionTypes"]])
 
 slots.gPU__gpuProcessingUnits = Slot(uri=GX.gpuProcessingUnits, name="gPU__gpuProcessingUnits", curie=GX.curie('gpuProcessingUnits'),
                    model_uri=GX.gPU__gpuProcessingUnits, domain=None, range=Optional[int])
@@ -8906,6 +9133,39 @@ slots.standardConformity__standardReference = Slot(uri=GX.standardReference, nam
 
 slots.standardConformity__publisher = Slot(uri=GX.publisher, name="standardConformity__publisher", curie=GX.curie('publisher'),
                    model_uri=GX.standardConformity__publisher, domain=None, range=Optional[str])
+
+slots.dataResource__producedBy = Slot(uri=GX.producedBy, name="dataResource__producedBy", curie=GX.curie('producedBy'),
+                   model_uri=GX.dataResource__producedBy, domain=None, range=Union[str, LegalPersonRegistrationNumber])
+
+slots.dataResource__exposedThrough = Slot(uri=GX.exposedThrough, name="dataResource__exposedThrough", curie=GX.curie('exposedThrough'),
+                   model_uri=GX.dataResource__exposedThrough, domain=None, range=Union[Union[dict, DataExchangeComponent], List[Union[dict, DataExchangeComponent]]])
+
+slots.dataResource__obsoleteDateTime = Slot(uri=GX.obsoleteDateTime, name="dataResource__obsoleteDateTime", curie=GX.curie('obsoleteDateTime'),
+                   model_uri=GX.dataResource__obsoleteDateTime, domain=None, range=Optional[Union[str, XSDDateTime]])
+
+slots.dataResource__expirationDateTime = Slot(uri=GX.expirationDateTime, name="dataResource__expirationDateTime", curie=GX.curie('expirationDateTime'),
+                   model_uri=GX.dataResource__expirationDateTime, domain=None, range=Optional[Union[str, XSDDateTime]])
+
+slots.dataResource__containsPII = Slot(uri=GX.containsPII, name="dataResource__containsPII", curie=GX.curie('containsPII'),
+                   model_uri=GX.dataResource__containsPII, domain=None, range=Union[bool, Bool])
+
+slots.dataResource__dataController = Slot(uri=GX.dataController, name="dataResource__dataController", curie=GX.curie('dataController'),
+                   model_uri=GX.dataResource__dataController, domain=None, range=Optional[Union[Union[dict, Participant], List[Union[dict, Participant]]]])
+
+slots.dataResource__consent = Slot(uri=GX.consent, name="dataResource__consent", curie=GX.curie('consent'),
+                   model_uri=GX.dataResource__consent, domain=None, range=Optional[Union[Union[dict, Consent], List[Union[dict, Consent]]]])
+
+slots.consent__legalBasis = Slot(uri=GX.legalBasis, name="consent__legalBasis", curie=GX.curie('legalBasis'),
+                   model_uri=GX.consent__legalBasis, domain=None, range=str)
+
+slots.consent__dataProtectionContactPoint = Slot(uri=GX.dataProtectionContactPoint, name="consent__dataProtectionContactPoint", curie=GX.curie('dataProtectionContactPoint'),
+                   model_uri=GX.consent__dataProtectionContactPoint, domain=None, range=Union[str, List[str]])
+
+slots.consent__purpose = Slot(uri=GX.purpose, name="consent__purpose", curie=GX.curie('purpose'),
+                   model_uri=GX.consent__purpose, domain=None, range=Union[str, List[str]])
+
+slots.consent__consentWithdrawalContactPoint = Slot(uri=GX.consentWithdrawalContactPoint, name="consent__consentWithdrawalContactPoint", curie=GX.curie('consentWithdrawalContactPoint'),
+                   model_uri=GX.consent__consentWithdrawalContactPoint, domain=None, range=Union[str, List[str]])
 
 slots.vMImage__vmImageDiskFormat = Slot(uri=GX.vmImageDiskFormat, name="vMImage__vmImageDiskFormat", curie=GX.curie('vmImageDiskFormat'),
                    model_uri=GX.vMImage__vmImageDiskFormat, domain=None, range=Optional[Union[str, "VMDiskType"]])
