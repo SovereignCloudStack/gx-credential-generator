@@ -28,7 +28,7 @@ vm image:
     copyright owner: "The FreeBSD Project"
     resource policy: DEFAULT
     license:
-      - GPL-3.0
+      - GPL-3.0-only
       - LGPL-2.0
   Gentoo Linux:
     copyright owner: "Gentoo Foundation, Inc."
@@ -39,17 +39,17 @@ vm image:
     copyright owner: "Mandriva Linux"
     resource policy: DEFAULT
     license:
-      - GPL-3.0
+      - GPL-3.0-only
   Mandriva Linux:
     copyright owner: "Mandriva S. A."
     resource policy: DEFAULT
     license:
-      - GPL-3.0
+      - GPL-3.0-only
   Mandriva Enterprise Server:
     copyright owner: "Mandriva S. A."
     resource policy: DEFAULT
     license:
-      - GPL-3.0
+      - GPL-3.0-only
   MS-DOS:
     copyright owner: "Microsoft Corporation"
     resource policy: DEFAULT
@@ -105,3 +105,18 @@ vm image:
     resource policy: DEFAULT
     license:
       - https://www.microsoft.com/licensing
+  CirrOS:
+    copyright owner: "Canonical Ltd."
+    resource policy: DEFAULT
+    license:
+      - GPL-2.0-only
+  AlmaLinux:
+    copyright owner: "Canonical Ltd."
+    resource policy: DEFAULT
+    license:
+      - https://almalinux.org/p/the-almalinux-os-licensing-policy/
+  Debian 11:
+    copyright owner: "AlmaLinux OS Foundation"
+    resource policy: DEFAULT
+    license:
+      - https://www.abc.org
