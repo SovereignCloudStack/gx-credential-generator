@@ -17,8 +17,6 @@ class OsCloud:
     def discover_properties(self):
         vm_dis = VmDiscovery(self.conn, self.config)
         creds = vm_dis.discover_vm_images()
-        print(creds)
-
 
         # Create per region service catalogs
         """self.regcat = {}
