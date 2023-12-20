@@ -28,10 +28,10 @@ class OsCloud:
         self.regions = list(conn.identity.regions())
         self.config = config
 
+
     def discover_properties(self) -> List[JsonLdObject]:
         """
         Discover all attributes of OS Cloud.
-
         @return: all attributes as list of YAMLRoot
         """
         creds = list()
