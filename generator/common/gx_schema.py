@@ -1,5 +1,5 @@
 # Auto generated from gaia-x.yaml by pythongen.py version: 0.0.1
-# Generation date: 2023-12-19T11:59:13
+# Generation date: 2023-12-20T13:27:56
 # Schema: gaia-x
 #
 # id: http://w3id.org/gaia-x/gx-trust-framework/gaia-x
@@ -4262,13 +4262,17 @@ class ChecksumAlgorithm(EnumDefinitionImpl):
             PermissibleValue(
                 text="sha-1",
                 description="TBD"))
-        setattr(cls, "ripemd-160",
+        setattr(cls, "sha-2",
             PermissibleValue(
-                text="ripemd-160",
+                text="sha-2",
                 description="TBD"))
         setattr(cls, "sha-3",
             PermissibleValue(
                 text="sha-3",
+                description="TBD"))
+        setattr(cls, "ripemd-160",
+            PermissibleValue(
+                text="ripemd-160",
                 description="TBD"))
 
 class KeyManagement(EnumDefinitionImpl):
@@ -5378,7 +5382,7 @@ class SPDX(EnumDefinitionImpl):
 
 class OSDistribution(EnumDefinitionImpl):
     """
-    Possible values for operationg system distribution.
+    Possible values for operating system distribution.
     """
     Debian = PermissibleValue(text="Debian")
     Fedora = PermissibleValue(text="Fedora")
@@ -5395,7 +5399,7 @@ class OSDistribution(EnumDefinitionImpl):
 
     _defn = EnumDefinition(
         name="OSDistribution",
-        description="Possible values for operationg system distribution.",
+        description="Possible values for operating system distribution.",
     )
 
     @classmethod

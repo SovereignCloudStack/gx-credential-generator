@@ -7,6 +7,9 @@ from generator.common.gx_schema import Memory
 from generator.common.gx_schema import MemorySize
 from generator.common.gx_schema import OperatingSystem
 from generator.common.gx_schema import UpdateStrategy
+from generator.common.gx_schema import CheckSum
+from generator.common.gx_schema import ChecksumAlgorithm
+
 from generator.common.gx_schema import UpdateFrequency
 from generator.common.gx_schema import VMImage as GX_Image
 
@@ -70,6 +73,9 @@ class VmDiscovery():
         self._add_operation_system_info(os_image, gx_image)
         self._add_build_date(os_image, gx_image)
         self._add_license_included(os_image, gx_image)
+        self._add_patch_level(os_image, gx_image)
+        self._add_version(os_image, gx_image)
+        self._add_checksum(os_image, gx_image)
 
         # Discover mandatory attribute
         self._add_license(os_image, gx_image)
@@ -357,7 +363,60 @@ class VmDiscovery():
         try:
             gx_image.licenseIncluded = os_image.properties['licenseIncluded']
         except KeyError:
-            gx_image.licenseIncluded = False
+            pass
+
+    @staticmethod
+    def _add_patch_level(os_image: OS_Image, gx_image: GX_Image) -> None:
+        try:
+            gx_image.patchLevel = os_image.properties['patchlevel']
+        except KeyError:
+            pass
+
+    @staticmethod
+    def _add_version(os_image: OS_Image, gx_image: GX_Image) -> None:
+        try:
+            gx_image.version = os_image.properties['internal_version']
+        except KeyError:
+            pass
+
+    @staticmethod
+    def _add_checksum(os_image: OS_Image, gx_image: GX_Image) -> None:
+        try:
+            algo = VmDiscovery._get_algo(os_image.hash_algo)
+            value = os_image.hash_value
+            gx_image.checksum = CheckSum(checkSum=value, checkSumCalculation=algo)
+        except AttributeError:
+            pass
+
+    @staticmethod
+    def _get_algo(algo: str) -> str:
+        if algo in ['sha512', 'sha224', 'sha256' 'sha384']:
+            return 'sha-2'
+        if algo in ['sha-3', 'md5', 'ripemd-160', 'blake2', 'blake3']:
+            return algo
+        return ChecksumAlgorithm.other
+
+
+    @staticmethod
+    def _add_maintenance_until(os_image: OS_Image, gx_image: GX_Image) -> None:
+        try:
+            gx_image.maintenance = os_image.properties['maintained_until']
+        except KeyError:
+            pass
+
+    @staticmethod
+    def _add_file_size(os_image: OS_Image, gx_image: GX_Image) -> None:
+        gx_image.file = MemorySize(value=float(os_image.size * 1.073741824), unit=const.UNIT_GB)
+
+    @staticmethod
+    def _add_signature(os_image: OS_Image, gx_image: GX_Image) -> None:
+        try:
+            os_image.img_signature # value
+            os_image.img_signature_hash_method # hash algo
+            os_image.img_signature_key_type # signature algo
+
+        except AttributeError:
+            pass
 
 
     # ToDo: add aggrenation of
