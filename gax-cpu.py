@@ -34,4 +34,3 @@ class MEM:
         "c'tor setting all vals to defaults"
         self.memGB = 0
         self.ECC = True
-        
