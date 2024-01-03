@@ -5,6 +5,8 @@ import yaml
 
 from generator.discovery.openstack.opentack_discovery import OsCloud
 
+import json
+import generator.common.json_ld as json_ld
 
 @click.group()
 def cli():
@@ -33,6 +35,7 @@ def openstack(cloud, timeout, config):
     with open(config, "r") as config_file:
         os_cloud = OsCloud(conn, yaml.safe_load(config_file))
         props = os_cloud.discover_properties()
+        print(json.dumps(props, indent=4, default=json_ld.to_json_ld))
 
 
 @click.command()

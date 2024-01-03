@@ -1,5 +1,5 @@
 # Auto generated from gaia-x.yaml by pythongen.py version: 0.0.1
-# Generation date: 2023-12-28T18:05:45
+# Generation date: 2023-12-20T13:27:56
 # Schema: gaia-x
 #
 # id: http://w3id.org/gaia-x/gx-trust-framework/gaia-x
@@ -78,6 +78,7 @@ class GaiaX(YAMLRoot):
     class_model_uri: ClassVar[URIRef] = GX.GaiaX
 
 
+
 @dataclass
 class Address(YAMLRoot):
     """
@@ -90,7 +91,7 @@ class Address(YAMLRoot):
     class_name: ClassVar[str] = "Address"
     class_model_uri: ClassVar[URIRef] = GX.Address
 
-    countryCode: Union[CountryNameAlpha2, str] = None
+    countryCode: str = None
     gps: Optional[Union[Union[dict, "GPSLocation"], List[Union[dict, "GPSLocation"]]]] = empty_list()
     streetAddress: Optional[str] = None
     postalCode: Optional[str] = None
@@ -128,8 +129,8 @@ class GPSLocation(YAMLRoot):
     class_name: ClassVar[str] = "GPSLocation"
     class_model_uri: ClassVar[URIRef] = GX.GPSLocation
 
-    latitude: Union[GPSUnit, dict] = None
-    longitude: Union[GPSUnit, dict] = None
+    latitude: str = None
+    longitude: str = None
     altitude: Optional[str] = None
     crs: Optional[str] = None
 
@@ -281,7 +282,6 @@ class Signature(YAMLRoot):
     class_model_uri: ClassVar[URIRef] = GX.Signature
 
     signature: str = None
-    hashAlgorithm: Union[str, "ChecksumAlgorithm"] = None
     signatureAlgorithm: Union[str, "SignatureAlgorithm"] = None
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
@@ -289,11 +289,6 @@ class Signature(YAMLRoot):
             self.MissingRequiredField("signature")
         if not isinstance(self.signature, str):
             self.signature = str(self.signature)
-
-        if self._is_empty(self.hashAlgorithm):
-            self.MissingRequiredField("hashAlgorithm")
-        if not isinstance(self.hashAlgorithm, ChecksumAlgorithm):
-            self.hashAlgorithm = ChecksumAlgorithm(self.hashAlgorithm)
 
         if self._is_empty(self.signatureAlgorithm):
             self.MissingRequiredField("signatureAlgorithm")
@@ -531,8 +526,8 @@ class UpdateStrategy(YAMLRoot):
 
     replaceFrequency: Optional[Union[str, "UpdateFrequency"]] = None
     hotfixHours: Optional[int] = None
-    oldVersionsValidUntil: Optional[Union[Validity2, dict]] = None
-    providedUntil: Optional[Union[str, XSDDate]] = None
+    oldVersionsValidUntil: Optional[str] = None
+    providedUntil: Optional[str] = None
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self.replaceFrequency is not None and not isinstance(self.replaceFrequency, UpdateFrequency):
@@ -856,7 +851,7 @@ class LegalPerson(Participant):
     class_name: ClassVar[str] = "LegalPerson"
     class_model_uri: ClassVar[URIRef] = GX.LegalPerson
 
-    registrationNumber: Union[Union[LeiCodeLeiCode, LocalRegistrationNumberLocal], List[Union[LeiCodeLeiCode, LocalRegistrationNumberLocal]]] = None
+    registrationNumber: Union[Union[str, LegalPersonRegistrationNumber], List[Union[str, LegalPersonRegistrationNumber]]] = None
     legalAddress: Union[dict, Address] = None
     headquartersAddress: Union[dict, Address] = None
     parentOrganizationOf: Optional[Union[Union[str, LegalPersonRegistrationNumber], List[Union[str, LegalPersonRegistrationNumber]]]] = empty_list()
@@ -903,7 +898,7 @@ class Resource(GaiaXEntity):
     class_name: ClassVar[str] = "Resource"
     class_model_uri: ClassVar[URIRef] = GX.Resource
 
-    aggregationOfResources: Optional[Union[Union[VirtualResource, dict], List[Union[VirtualResource, dict]]]] = empty_list()
+    aggregationOfResources: Optional[Union[str, List[str]]] = empty_list()
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if not isinstance(self.aggregationOfResources, list):
@@ -926,8 +921,8 @@ class VirtualResource(Resource):
     class_name: ClassVar[str] = "VirtualResource"
     class_model_uri: ClassVar[URIRef] = GX.VirtualResource
 
-    copyrightOwnedBy: Union[Union[LegalPersonRegistrationNumber, str], List[Union[LegalPersonRegistrationNumber, str]]] = None
-    license: Union[Union[URI, SPDX], List[Union[URI, SPDX]]] = None
+    copyrightOwnedBy: Union[str, List[str]] = None
+    license: Union[str, List[str]] = None
     resourcePolicy: Union[str, List[str]] = None
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
@@ -1004,8 +999,8 @@ class SoftwareResource(VirtualResource):
     class_name: ClassVar[str] = "SoftwareResource"
     class_model_uri: ClassVar[URIRef] = GX.SoftwareResource
 
-    copyrightOwnedBy: Union[Union[LegalPersonRegistrationNumber, str], List[Union[LegalPersonRegistrationNumber, str]]] = None
-    license: Union[Union[URI, SPDX], List[Union[URI, SPDX]]] = None
+    copyrightOwnedBy: Union[str, List[str]] = None
+    license: Union[str, List[str]] = None
     resourcePolicy: Union[str, List[str]] = None
     checksum: Optional[Union[dict, CheckSum]] = None
     signature: Optional[Union[dict, Signature]] = None
@@ -1044,8 +1039,8 @@ class CodeArtifact(SoftwareResource):
     class_name: ClassVar[str] = "CodeArtifact"
     class_model_uri: ClassVar[URIRef] = GX.CodeArtifact
 
-    copyrightOwnedBy: Union[Union[LegalPersonRegistrationNumber, str], List[Union[LegalPersonRegistrationNumber, str]]] = None
-    license: Union[Union[URI, SPDX], List[Union[URI, SPDX]]] = None
+    copyrightOwnedBy: Union[str, List[str]] = None
+    license: Union[str, List[str]] = None
     resourcePolicy: Union[str, List[str]] = None
 
 @dataclass
@@ -1061,8 +1056,8 @@ class Image(CodeArtifact):
     class_name: ClassVar[str] = "Image"
     class_model_uri: ClassVar[URIRef] = GX.Image
 
-    copyrightOwnedBy: Union[Union[LegalPersonRegistrationNumber, str], List[Union[LegalPersonRegistrationNumber, str]]] = None
-    license: Union[Union[URI, SPDX], List[Union[URI, SPDX]]] = None
+    copyrightOwnedBy: Union[str, List[str]] = None
+    license: Union[str, List[str]] = None
     resourcePolicy: Union[str, List[str]] = None
     fileSize: Optional[Union[dict, "MemorySize"]] = None
     operatingSystem: Optional[Union[dict, "OperatingSystem"]] = None
@@ -1137,8 +1132,8 @@ class PXEImage(Image):
     class_name: ClassVar[str] = "PXE_Image"
     class_model_uri: ClassVar[URIRef] = GX.PXEImage
 
-    copyrightOwnedBy: Union[Union[LegalPersonRegistrationNumber, str], List[Union[LegalPersonRegistrationNumber, str]]] = None
-    license: Union[Union[URI, SPDX], List[Union[URI, SPDX]]] = None
+    copyrightOwnedBy: Union[str, List[str]] = None
+    license: Union[str, List[str]] = None
     resourcePolicy: Union[str, List[str]] = None
     pxeImageDiskFormat: Optional[Union[str, "PXEDiskType"]] = "ISO"
 
@@ -1161,8 +1156,8 @@ class OperatingSystem(SoftwareResource):
     class_name: ClassVar[str] = "OperatingSystem"
     class_model_uri: ClassVar[URIRef] = GX.OperatingSystem
 
-    copyrightOwnedBy: Union[Union[LegalPersonRegistrationNumber, str], List[Union[LegalPersonRegistrationNumber, str]]] = None
-    license: Union[Union[URI, SPDX], List[Union[URI, SPDX]]] = None
+    copyrightOwnedBy: Union[str, List[str]] = None
+    license: Union[str, List[str]] = None
     resourcePolicy: Union[str, List[str]] = None
     osDistribution: Union[str, "OSDistribution"] = None
 
@@ -1187,8 +1182,8 @@ class Hypervisor(SoftwareResource):
     class_name: ClassVar[str] = "Hypervisor"
     class_model_uri: ClassVar[URIRef] = GX.Hypervisor
 
-    copyrightOwnedBy: Union[Union[LegalPersonRegistrationNumber, str], List[Union[LegalPersonRegistrationNumber, str]]] = None
-    license: Union[Union[URI, SPDX], List[Union[URI, SPDX]]] = None
+    copyrightOwnedBy: Union[str, List[str]] = None
+    license: Union[str, List[str]] = None
     resourcePolicy: Union[str, List[str]] = None
     hypervisorType: Union[str, "HypervisorType"] = None
 
@@ -1217,13 +1212,13 @@ class ServiceOffering(GaiaXEntity):
     serviceOfferingTermsAndConditions: Union[Union[dict, "TermsAndConditions"], List[Union[dict, "TermsAndConditions"]]] = None
     dataAccountExport: Union[Union[dict, "DataAccountExport"], List[Union[dict, "DataAccountExport"]]] = None
     servicePolicy: Union[str, List[str]] = "default:allow intent"
-    dependsOn: Optional[Union[Union[ComputeServiceOffering, dict], List[Union[ComputeServiceOffering, dict]]]] = empty_list()
-    aggregationOfResources: Optional[Union[Union[OperatingSystem, dict], List[Union[OperatingSystem, dict]]]] = empty_list()
+    dependsOn: Optional[Union[str, List[str]]] = empty_list()
+    aggregationOfResources: Optional[Union[str, List[str]]] = empty_list()
     dataProtectionRegime: Optional[Union[Union[str, "PersonalDataProtectionRegime"], List[Union[str, "PersonalDataProtectionRegime"]]]] = empty_list()
     keyword: Optional[Union[str, List[str]]] = empty_list()
     provisionType: Optional[Union[str, "ProvisionTypes"]] = None
     endpoint: Optional[Union[dict, Endpoint]] = None
-    hostedOn: Optional[Union[Union[VirtualResource, dict], List[Union[VirtualResource, dict]]]] = empty_list()
+    hostedOn: Optional[Union[str, List[str]]] = empty_list()
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self._is_empty(self.providedBy):
@@ -1456,8 +1451,8 @@ class DataResource(VirtualResource):
     class_name: ClassVar[str] = "DataResource"
     class_model_uri: ClassVar[URIRef] = GX.DataResource
 
-    copyrightOwnedBy: Union[Union[LegalPersonRegistrationNumber, str], List[Union[LegalPersonRegistrationNumber, str]]] = None
-    license: Union[Union[URI, SPDX], List[Union[URI, SPDX]]] = None
+    copyrightOwnedBy: Union[str, List[str]] = None
+    license: Union[str, List[str]] = None
     resourcePolicy: Union[str, List[str]] = None
     producedBy: Union[str, LegalPersonRegistrationNumber] = None
     exposedThrough: Union[Union[dict, "DataExchangeComponent"], List[Union[dict, "DataExchangeComponent"]]] = None
@@ -1567,8 +1562,8 @@ class VMImage(Image):
     class_name: ClassVar[str] = "VM_Image"
     class_model_uri: ClassVar[URIRef] = GX.VMImage
 
-    copyrightOwnedBy: Union[Union[LegalPersonRegistrationNumber, str], List[Union[LegalPersonRegistrationNumber, str]]] = None
-    license: Union[Union[URI, SPDX], List[Union[URI, SPDX]]] = None
+    copyrightOwnedBy: Union[str, List[str]] = None
+    license: Union[str, List[str]] = None
     resourcePolicy: Union[str, List[str]] = None
     vmImageDiskFormat: Optional[Union[str, "VMDiskType"]] = "RAW"
     hypervisorType: Optional[Union[str, "HypervisorType"]] = "other"
@@ -4268,21 +4263,9 @@ class ChecksumAlgorithm(EnumDefinitionImpl):
             PermissibleValue(
                 text="sha-1",
                 description="TBD"))
-        setattr(cls, "sha-224",
+        setattr(cls, "sha-2",
             PermissibleValue(
-                text="sha-224",
-                description="TBD"))
-        setattr(cls, "sha-256",
-            PermissibleValue(
-                text="sha-256",
-                description="TBD"))
-        setattr(cls, "sha-512",
-            PermissibleValue(
-                text="sha-512",
-                description="TBD"))
-        setattr(cls, "sha-384",
-            PermissibleValue(
-                text="sha-384",
+                text="sha-2",
                 description="TBD"))
         setattr(cls, "sha-3",
             PermissibleValue(
@@ -8796,7 +8779,7 @@ slots.unit = Slot(uri=QUDT.unit, name="unit", curie=QUDT.curie('unit'),
                    model_uri=GX.unit, domain=None, range=str)
 
 slots.address__countryCode = Slot(uri=GX.countryCode, name="address__countryCode", curie=GX.curie('countryCode'),
-                   model_uri=GX.address__countryCode, domain=None, range=Union[CountryNameAlpha2, str])
+                   model_uri=GX.address__countryCode, domain=None, range=str)
 
 slots.address__gps = Slot(uri=GX.gps, name="address__gps", curie=GX.curie('gps'),
                    model_uri=GX.address__gps, domain=None, range=Optional[Union[Union[dict, GPSLocation], List[Union[dict, GPSLocation]]]])
@@ -8811,10 +8794,10 @@ slots.address__locality = Slot(uri=VCARD.locality, name="address__locality", cur
                    model_uri=GX.address__locality, domain=None, range=Optional[str])
 
 slots.gPSLocation__latitude = Slot(uri=GX.latitude, name="gPSLocation__latitude", curie=GX.curie('latitude'),
-                   model_uri=GX.gPSLocation__latitude, domain=None, range=Union[GPSUnit, dict])
+                   model_uri=GX.gPSLocation__latitude, domain=None, range=str)
 
 slots.gPSLocation__longitude = Slot(uri=GX.longitude, name="gPSLocation__longitude", curie=GX.curie('longitude'),
-                   model_uri=GX.gPSLocation__longitude, domain=None, range=Union[GPSUnit, dict])
+                   model_uri=GX.gPSLocation__longitude, domain=None, range=str)
 
 slots.gPSLocation__altitude = Slot(uri=GX.altitude, name="gPSLocation__altitude", curie=GX.curie('altitude'),
                    model_uri=GX.gPSLocation__altitude, domain=None, range=Optional[str])
@@ -8882,9 +8865,6 @@ slots.checkSum__checkSum = Slot(uri=GX.checkSum, name="checkSum__checkSum", curi
 
 slots.signature__signature = Slot(uri=GX.signature, name="signature__signature", curie=GX.curie('signature'),
                    model_uri=GX.signature__signature, domain=None, range=str)
-
-slots.signature__hashAlgorithm = Slot(uri=GX.hashAlgorithm, name="signature__hashAlgorithm", curie=GX.curie('hashAlgorithm'),
-                   model_uri=GX.signature__hashAlgorithm, domain=None, range=Union[str, "ChecksumAlgorithm"])
 
 slots.signature__signatureAlgorithm = Slot(uri=GX.signatureAlgorithm, name="signature__signatureAlgorithm", curie=GX.curie('signatureAlgorithm'),
                    model_uri=GX.signature__signatureAlgorithm, domain=None, range=Union[str, "SignatureAlgorithm"])
@@ -8989,10 +8969,10 @@ slots.updateStrategy__hotfixHours = Slot(uri=GX.hotfixHours, name="updateStrateg
                    model_uri=GX.updateStrategy__hotfixHours, domain=None, range=Optional[int])
 
 slots.updateStrategy__oldVersionsValidUntil = Slot(uri=GX.oldVersionsValidUntil, name="updateStrategy__oldVersionsValidUntil", curie=GX.curie('oldVersionsValidUntil'),
-                   model_uri=GX.updateStrategy__oldVersionsValidUntil, domain=None, range=Optional[Union[Validity2, dict]])
+                   model_uri=GX.updateStrategy__oldVersionsValidUntil, domain=None, range=Optional[str])
 
 slots.updateStrategy__providedUntil = Slot(uri=GX.providedUntil, name="updateStrategy__providedUntil", curie=GX.curie('providedUntil'),
-                   model_uri=GX.updateStrategy__providedUntil, domain=None, range=Optional[Union[str, XSDDate]])
+                   model_uri=GX.updateStrategy__providedUntil, domain=None, range=Optional[str])
 
 slots.latestN__value = Slot(uri=GX.value, name="latestN__value", curie=GX.curie('value'),
                    model_uri=GX.latestN__value, domain=None, range=Optional[int])
@@ -9049,13 +9029,13 @@ slots.pXEImage__pxeImageDiskFormat = Slot(uri=GX.pxeImageDiskFormat, name="pXEIm
                    model_uri=GX.pXEImage__pxeImageDiskFormat, domain=None, range=Optional[Union[str, "PXEDiskType"]])
 
 slots.resource__aggregationOfResources = Slot(uri=GX.aggregationOfResources, name="resource__aggregationOfResources", curie=GX.curie('aggregationOfResources'),
-                   model_uri=GX.resource__aggregationOfResources, domain=None, range=Optional[Union[Union[VirtualResource, dict], List[Union[VirtualResource, dict]]]])
+                   model_uri=GX.resource__aggregationOfResources, domain=None, range=Optional[Union[str, List[str]]])
 
 slots.virtualResource__copyrightOwnedBy = Slot(uri=GX.copyrightOwnedBy, name="virtualResource__copyrightOwnedBy", curie=GX.curie('copyrightOwnedBy'),
-                   model_uri=GX.virtualResource__copyrightOwnedBy, domain=None, range=Union[Union[LegalPersonRegistrationNumber, str], List[Union[LegalPersonRegistrationNumber, str]]])
+                   model_uri=GX.virtualResource__copyrightOwnedBy, domain=None, range=Union[str, List[str]])
 
 slots.virtualResource__license = Slot(uri=GX.license, name="virtualResource__license", curie=GX.curie('license'),
-                   model_uri=GX.virtualResource__license, domain=None, range=Union[Union[URI, SPDX], List[Union[URI, SPDX]]])
+                   model_uri=GX.virtualResource__license, domain=None, range=Union[str, List[str]])
 
 slots.virtualResource__resourcePolicy = Slot(uri=GX.resourcePolicy, name="virtualResource__resourcePolicy", curie=GX.curie('resourcePolicy'),
                    model_uri=GX.virtualResource__resourcePolicy, domain=None, range=Union[str, List[str]])
@@ -9097,10 +9077,10 @@ slots.serviceOffering__providedBy = Slot(uri=GX.providedBy, name="serviceOfferin
                    model_uri=GX.serviceOffering__providedBy, domain=None, range=Union[str, LegalPersonRegistrationNumber])
 
 slots.serviceOffering__dependsOn = Slot(uri=GX.dependsOn, name="serviceOffering__dependsOn", curie=GX.curie('dependsOn'),
-                   model_uri=GX.serviceOffering__dependsOn, domain=None, range=Optional[Union[Union[ComputeServiceOffering, dict], List[Union[ComputeServiceOffering, dict]]]])
+                   model_uri=GX.serviceOffering__dependsOn, domain=None, range=Optional[Union[str, List[str]]])
 
 slots.serviceOffering__aggregationOfResources = Slot(uri=GX.aggregationOfResources, name="serviceOffering__aggregationOfResources", curie=GX.curie('aggregationOfResources'),
-                   model_uri=GX.serviceOffering__aggregationOfResources, domain=None, range=Optional[Union[Union[OperatingSystem, dict], List[Union[OperatingSystem, dict]]]])
+                   model_uri=GX.serviceOffering__aggregationOfResources, domain=None, range=Optional[Union[str, List[str]]])
 
 slots.serviceOffering__serviceOfferingTermsAndConditions = Slot(uri=GX.serviceOfferingTermsAndConditions, name="serviceOffering__serviceOfferingTermsAndConditions", curie=GX.curie('serviceOfferingTermsAndConditions'),
                    model_uri=GX.serviceOffering__serviceOfferingTermsAndConditions, domain=None, range=Union[Union[dict, TermsAndConditions], List[Union[dict, TermsAndConditions]]])
@@ -9124,7 +9104,7 @@ slots.serviceOffering__endpoint = Slot(uri=GX.endpoint, name="serviceOffering__e
                    model_uri=GX.serviceOffering__endpoint, domain=None, range=Optional[Union[dict, Endpoint]])
 
 slots.serviceOffering__hostedOn = Slot(uri=GX.hostedOn, name="serviceOffering__hostedOn", curie=GX.curie('hostedOn'),
-                   model_uri=GX.serviceOffering__hostedOn, domain=None, range=Optional[Union[Union[VirtualResource, dict], List[Union[VirtualResource, dict]]]])
+                   model_uri=GX.serviceOffering__hostedOn, domain=None, range=Optional[Union[str, List[str]]])
 
 slots.computeServiceOffering__tenantSeparation = Slot(uri=GX.tenantSeparation, name="computeServiceOffering__tenantSeparation", curie=GX.curie('tenantSeparation'),
                    model_uri=GX.computeServiceOffering__tenantSeparation, domain=None, range=Optional[Union[str, "TenantSeparation"]])
@@ -9242,6 +9222,3 @@ slots.confidentialComputing__technology = Slot(uri=GX.technology, name="confiden
 
 slots.confidentialComputing__attestationServiceURI = Slot(uri=GX.attestationServiceURI, name="confidentialComputing__attestationServiceURI", curie=GX.curie('attestationServiceURI'),
                    model_uri=GX.confidentialComputing__attestationServiceURI, domain=None, range=Optional[Union[str, URI]])
-
-Process finished with exit code 0
-
