@@ -59,6 +59,9 @@ def _get_cpu_arch(os_image_arch: str) -> str:
         return CpuArch.other.text
 
 import typing
+from json import JSONDecoder
+import json
+import urllib3
 
 from generator.common.gx_schema import Architectures as cpu_arch_types
 from generator.common.gx_schema import CPU
@@ -69,10 +72,13 @@ from generator.common.gx_schema import OperatingSystem
 from generator.common.gx_schema import UpdateStrategy
 from generator.common.gx_schema import CheckSum
 from generator.common.gx_schema import ChecksumAlgorithm
+from generator.common.gx_schema import GaiaXEntity
 
 from generator.common.gx_schema import UpdateFrequency
 from generator.common.gx_schema import VMImage as GX_Image
+import generator.common.json_ld as json_ld
 
+from generator.common.json_ld import JsonLdObject
 from generator.common.exceptions import MissingMandatoryAttribute
 
 from openstack.connection import Connection
@@ -83,12 +89,22 @@ import generator.common.const as const
 
 from typing import Dict
 
+import yaml
 
+# TODO:; Check imag meta dafta props standard, ob dort klar ist, das einige Properties uer properties stehhen und nicht direkt abgefrgat werden klnnen mur iber propeertiues[metadfate}
+# TODO: Es gab probleme mit der Serialiserung nach JSON-LD. Es wird nur JSON unterstützt, wie keine Pröfixe oder Kontexte vorhanden isnd
+# TODO: Es ga Probleme mit der Portierung von LinkML nach Python. Hier wird xsd:any of string abegebildet, Das macht er schwer daraud wieder sxd:anyURI zu machrn, was shacl erwartet.
 class VmDiscovery():
 
-    def __init__(self, conn: Connection, config: Dict) -> None:
-        self.conn = conn
-        self.config = config
+    def __init__(self) -> None:
+        with open("config/config.yaml", "r") as config_file:
+            self.config = yaml.safe_load(config_file)
+
+
+
+    #def __init__(self, conn: Connection, config: Dict) -> None:
+    #    self.conn = conn
+    #    self.config = config
 
     # def collect_vm_images(self, conn: Connection) -> List[str]:
     def discover_vm_images(self) -> List[JsonLdObject]:
@@ -480,7 +496,8 @@ class VmDiscovery():
                 license=self._get_license(
                     self._get_license_for_os(const.CONFIG_OS_ALMALINUX)
                 ),
-            )
+           )
+
         else:
             raise ValueError(
                 "Unsupported value for operating system distribution found: '"
@@ -537,7 +554,6 @@ class VmDiscovery():
 
     def _get_license(self, licenses: List[str]) -> List[Union[str, SPDX]]:
         license_list = list()
-
         for lic in licenses:
             if lic.startswith("http"):
                 license_list.append(URI(lic))
@@ -704,7 +720,6 @@ class VmDiscovery():
             return algo
         return ChecksumAlgorithm.other
 
-
     @staticmethod
     def _add_maintenance_until(os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
@@ -719,9 +734,9 @@ class VmDiscovery():
     @staticmethod
     def _add_signature(os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
-            os_image.img_signature # value
-            os_image.img_signature_hash_method # hash algo
-            os_image.img_signature_key_type # signature algo
+            os_image.img_signature  # value
+            os_image.img_signature_hash_method  # hash algo
+            os_image.img_signature_key_type  # signature algo
 
         except AttributeError:
             pass
@@ -793,3 +808,4 @@ class VmDiscovery():
 
     def _add_rng_model(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         gx_image.hwRngTypeOfImage = "None"
+
