@@ -1,5 +1,5 @@
 # Auto generated from gaia-x.yaml by pythongen.py version: 0.0.1
-# Generation date: 2023-12-28T18:05:45
+# Generation date: 2024-01-04T09:32:21
 # Schema: gaia-x
 #
 # id: http://w3id.org/gaia-x/gx-trust-framework/gaia-x
@@ -72,7 +72,7 @@ class GaiaX(YAMLRoot):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.GaiaX
+    class_class_uri: ClassVar[URIRef] = GX["GaiaX"]
     class_class_curie: ClassVar[str] = "gx:GaiaX"
     class_name: ClassVar[str] = "GaiaX"
     class_model_uri: ClassVar[URIRef] = GX.GaiaX
@@ -85,12 +85,12 @@ class Address(YAMLRoot):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = VCARD.Address
+    class_class_uri: ClassVar[URIRef] = VCARD["Address"]
     class_class_curie: ClassVar[str] = "vcard:Address"
     class_name: ClassVar[str] = "Address"
     class_model_uri: ClassVar[URIRef] = GX.Address
 
-    countryCode: Union[CountryNameAlpha2, str] = None
+    countryCode: str = None
     gps: Optional[Union[Union[dict, "GPSLocation"], List[Union[dict, "GPSLocation"]]]] = empty_list()
     streetAddress: Optional[str] = None
     postalCode: Optional[str] = None
@@ -123,13 +123,13 @@ class GPSLocation(YAMLRoot):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.GPSLocation
+    class_class_uri: ClassVar[URIRef] = GX["GPSLocation"]
     class_class_curie: ClassVar[str] = "gx:GPSLocation"
     class_name: ClassVar[str] = "GPSLocation"
     class_model_uri: ClassVar[URIRef] = GX.GPSLocation
 
-    latitude: Union[GPSUnit, dict] = None
-    longitude: Union[GPSUnit, dict] = None
+    latitude: str = None
+    longitude: str = None
     altitude: Optional[str] = None
     crs: Optional[str] = None
 
@@ -160,7 +160,7 @@ class GPSUnit(YAMLRoot):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.GPSUnit
+    class_class_uri: ClassVar[URIRef] = GX["GPSUnit"]
     class_class_curie: ClassVar[str] = "gx:GPSUnit"
     class_name: ClassVar[str] = "GPSUnit"
     class_model_uri: ClassVar[URIRef] = GX.GPSUnit
@@ -195,7 +195,7 @@ class GaiaXEntity(YAMLRoot):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.GaiaXEntity
+    class_class_uri: ClassVar[URIRef] = GX["GaiaXEntity"]
     class_class_curie: ClassVar[str] = "gx:GaiaXEntity"
     class_name: ClassVar[str] = "GaiaXEntity"
     class_model_uri: ClassVar[URIRef] = GX.GaiaXEntity
@@ -220,7 +220,7 @@ class Encryption(YAMLRoot):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.Encryption
+    class_class_uri: ClassVar[URIRef] = GX["Encryption"]
     class_class_curie: ClassVar[str] = "gx:Encryption"
     class_name: ClassVar[str] = "Encryption"
     class_model_uri: ClassVar[URIRef] = GX.Encryption
@@ -249,7 +249,7 @@ class CheckSum(YAMLRoot):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.CheckSum
+    class_class_uri: ClassVar[URIRef] = GX["CheckSum"]
     class_class_curie: ClassVar[str] = "gx:CheckSum"
     class_name: ClassVar[str] = "CheckSum"
     class_model_uri: ClassVar[URIRef] = GX.CheckSum
@@ -275,7 +275,7 @@ class CheckSum(YAMLRoot):
 class Signature(YAMLRoot):
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.Signature
+    class_class_uri: ClassVar[URIRef] = GX["Signature"]
     class_class_curie: ClassVar[str] = "gx:Signature"
     class_name: ClassVar[str] = "Signature"
     class_model_uri: ClassVar[URIRef] = GX.Signature
@@ -310,7 +310,7 @@ class Device(YAMLRoot):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.Device
+    class_class_uri: ClassVar[URIRef] = GX["Device"]
     class_class_curie: ClassVar[str] = "gx:Device"
     class_name: ClassVar[str] = "Device"
     class_model_uri: ClassVar[URIRef] = GX.Device
@@ -343,7 +343,7 @@ class CPU(Device):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.CPU
+    class_class_uri: ClassVar[URIRef] = GX["CPU"]
     class_class_curie: ClassVar[str] = "gx:CPU"
     class_name: ClassVar[str] = "CPU"
     class_model_uri: ClassVar[URIRef] = GX.CPU
@@ -397,7 +397,7 @@ class Disk(Device):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.Disk
+    class_class_uri: ClassVar[URIRef] = GX["Disk"]
     class_class_curie: ClassVar[str] = "gx:Disk"
     class_name: ClassVar[str] = "Disk"
     class_model_uri: ClassVar[URIRef] = GX.Disk
@@ -428,7 +428,7 @@ class Endpoint(YAMLRoot):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.Endpoint
+    class_class_uri: ClassVar[URIRef] = GX["Endpoint"]
     class_class_curie: ClassVar[str] = "gx:Endpoint"
     class_name: ClassVar[str] = "Endpoint"
     class_model_uri: ClassVar[URIRef] = GX.Endpoint
@@ -458,7 +458,7 @@ class GPU(Device):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.GPU
+    class_class_uri: ClassVar[URIRef] = GX["GPU"]
     class_class_curie: ClassVar[str] = "gx:GPU"
     class_name: ClassVar[str] = "GPU"
     class_model_uri: ClassVar[URIRef] = GX.GPU
@@ -491,7 +491,7 @@ class MaintenanceSubscription(YAMLRoot):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.MaintenanceSubscription
+    class_class_uri: ClassVar[URIRef] = GX["MaintenanceSubscription"]
     class_class_curie: ClassVar[str] = "gx:MaintenanceSubscription"
     class_name: ClassVar[str] = "MaintenanceSubscription"
     class_model_uri: ClassVar[URIRef] = GX.MaintenanceSubscription
@@ -524,15 +524,15 @@ class UpdateStrategy(YAMLRoot):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.UpdateStrategy
+    class_class_uri: ClassVar[URIRef] = GX["UpdateStrategy"]
     class_class_curie: ClassVar[str] = "gx:UpdateStrategy"
     class_name: ClassVar[str] = "UpdateStrategy"
     class_model_uri: ClassVar[URIRef] = GX.UpdateStrategy
 
     replaceFrequency: Optional[Union[str, "UpdateFrequency"]] = None
     hotfixHours: Optional[int] = None
-    oldVersionsValidUntil: Optional[Union[Validity2, dict]] = None
-    providedUntil: Optional[Union[str, XSDDate]] = None
+    oldVersionsValidUntil: Optional[str] = None
+    providedUntil: Optional[str] = None
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self.replaceFrequency is not None and not isinstance(self.replaceFrequency, UpdateFrequency):
@@ -557,7 +557,7 @@ class LatestN(YAMLRoot):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.LatestN
+    class_class_uri: ClassVar[URIRef] = GX["LatestN"]
     class_class_curie: ClassVar[str] = "gx:LatestN"
     class_name: ClassVar[str] = "Latest_N"
     class_model_uri: ClassVar[URIRef] = GX.LatestN
@@ -577,7 +577,7 @@ class InstantiationRequirement(YAMLRoot):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.InstantiationRequirement
+    class_class_uri: ClassVar[URIRef] = GX["InstantiationRequirement"]
     class_class_curie: ClassVar[str] = "gx:InstantiationRequirement"
     class_name: ClassVar[str] = "InstantiationRequirement"
     class_model_uri: ClassVar[URIRef] = GX.InstantiationRequirement
@@ -590,7 +590,7 @@ class Issuer(YAMLRoot):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.Issuer
+    class_class_uri: ClassVar[URIRef] = GX["Issuer"]
     class_class_curie: ClassVar[str] = "gx:Issuer"
     class_name: ClassVar[str] = "Issuer"
     class_model_uri: ClassVar[URIRef] = GX.Issuer
@@ -613,7 +613,7 @@ class RegistrationNumber(YAMLRoot):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.RegistrationNumber
+    class_class_uri: ClassVar[URIRef] = GX["RegistrationNumber"]
     class_class_curie: ClassVar[str] = "gx:RegistrationNumber"
     class_name: ClassVar[str] = "RegistrationNumber"
     class_model_uri: ClassVar[URIRef] = GX.RegistrationNumber
@@ -623,7 +623,7 @@ class RegistrationNumber(YAMLRoot):
 class LocalRegistrationNumber(RegistrationNumber):
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.LocalRegistrationNumber
+    class_class_uri: ClassVar[URIRef] = GX["LocalRegistrationNumber"]
     class_class_curie: ClassVar[str] = "gx:LocalRegistrationNumber"
     class_name: ClassVar[str] = "LocalRegistrationNumber"
     class_model_uri: ClassVar[URIRef] = GX.LocalRegistrationNumber
@@ -643,7 +643,7 @@ class LocalRegistrationNumber(RegistrationNumber):
 class VatID(RegistrationNumber):
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.VatID
+    class_class_uri: ClassVar[URIRef] = GX["VatID"]
     class_class_curie: ClassVar[str] = "gx:VatID"
     class_name: ClassVar[str] = "VatID"
     class_model_uri: ClassVar[URIRef] = GX.VatID
@@ -663,7 +663,7 @@ class VatID(RegistrationNumber):
 class LeiCode(RegistrationNumber):
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.LeiCode
+    class_class_uri: ClassVar[URIRef] = GX["LeiCode"]
     class_class_curie: ClassVar[str] = "gx:LeiCode"
     class_name: ClassVar[str] = "LeiCode"
     class_model_uri: ClassVar[URIRef] = GX.LeiCode
@@ -683,7 +683,7 @@ class LeiCode(RegistrationNumber):
 class EORI(RegistrationNumber):
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.EORI
+    class_class_uri: ClassVar[URIRef] = GX["EORI"]
     class_class_curie: ClassVar[str] = "gx:EORI"
     class_name: ClassVar[str] = "EORI"
     class_model_uri: ClassVar[URIRef] = GX.EORI
@@ -703,7 +703,7 @@ class EORI(RegistrationNumber):
 class EUID(RegistrationNumber):
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.EUID
+    class_class_uri: ClassVar[URIRef] = GX["EUID"]
     class_class_curie: ClassVar[str] = "gx:EUID"
     class_name: ClassVar[str] = "EUID"
     class_model_uri: ClassVar[URIRef] = GX.EUID
@@ -726,7 +726,7 @@ class Memory(Device):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.Memory
+    class_class_uri: ClassVar[URIRef] = GX["Memory"]
     class_class_curie: ClassVar[str] = "gx:Memory"
     class_name: ClassVar[str] = "Memory"
     class_model_uri: ClassVar[URIRef] = GX.Memory
@@ -765,7 +765,7 @@ class Quantity(YAMLRoot):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = QUDT.Quantity
+    class_class_uri: ClassVar[URIRef] = QUDT["Quantity"]
     class_class_curie: ClassVar[str] = "qudt:Quantity"
     class_name: ClassVar[str] = "Quantity"
     class_model_uri: ClassVar[URIRef] = GX.Quantity
@@ -809,7 +809,7 @@ class MemorySize(Quantity):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.MemorySize
+    class_class_uri: ClassVar[URIRef] = GX["MemorySize"]
     class_class_curie: ClassVar[str] = "gx:MemorySize"
     class_name: ClassVar[str] = "MemorySize"
     class_model_uri: ClassVar[URIRef] = GX.MemorySize
@@ -838,7 +838,7 @@ class Participant(GaiaXEntity):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.Participant
+    class_class_uri: ClassVar[URIRef] = GX["Participant"]
     class_class_curie: ClassVar[str] = "gx:Participant"
     class_name: ClassVar[str] = "Participant"
     class_model_uri: ClassVar[URIRef] = GX.Participant
@@ -851,12 +851,12 @@ class LegalPerson(Participant):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.LegalPerson
+    class_class_uri: ClassVar[URIRef] = GX["LegalPerson"]
     class_class_curie: ClassVar[str] = "gx:LegalPerson"
     class_name: ClassVar[str] = "LegalPerson"
     class_model_uri: ClassVar[URIRef] = GX.LegalPerson
 
-    registrationNumber: Union[Union[LeiCodeLeiCode, LocalRegistrationNumberLocal], List[Union[LeiCodeLeiCode, LocalRegistrationNumberLocal]]] = None
+    registrationNumber: Union[Union[str, LegalPersonRegistrationNumber], List[Union[str, LegalPersonRegistrationNumber]]] = None
     legalAddress: Union[dict, Address] = None
     headquartersAddress: Union[dict, Address] = None
     parentOrganizationOf: Optional[Union[Union[str, LegalPersonRegistrationNumber], List[Union[str, LegalPersonRegistrationNumber]]]] = empty_list()
@@ -898,12 +898,12 @@ class Resource(GaiaXEntity):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.Resource
+    class_class_uri: ClassVar[URIRef] = GX["Resource"]
     class_class_curie: ClassVar[str] = "gx:Resource"
     class_name: ClassVar[str] = "Resource"
     class_model_uri: ClassVar[URIRef] = GX.Resource
 
-    aggregationOfResources: Optional[Union[Union[VirtualResource, dict], List[Union[VirtualResource, dict]]]] = empty_list()
+    aggregationOfResources: Optional[Union[str, List[str]]] = empty_list()
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if not isinstance(self.aggregationOfResources, list):
@@ -921,13 +921,13 @@ class VirtualResource(Resource):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.VirtualResource
+    class_class_uri: ClassVar[URIRef] = GX["VirtualResource"]
     class_class_curie: ClassVar[str] = "gx:VirtualResource"
     class_name: ClassVar[str] = "VirtualResource"
     class_model_uri: ClassVar[URIRef] = GX.VirtualResource
 
-    copyrightOwnedBy: Union[Union[LegalPersonRegistrationNumber, str], List[Union[LegalPersonRegistrationNumber, str]]] = None
-    license: Union[Union[URI, SPDX], List[Union[URI, SPDX]]] = None
+    copyrightOwnedBy: Union[str, List[str]] = None
+    license: Union[str, List[str]] = None
     resourcePolicy: Union[str, List[str]] = None
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
@@ -960,7 +960,7 @@ class PhysicalResource(Resource):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.PhysicalResource
+    class_class_uri: ClassVar[URIRef] = GX["PhysicalResource"]
     class_class_curie: ClassVar[str] = "gx:PhysicalResource"
     class_name: ClassVar[str] = "PhysicalResource"
     class_model_uri: ClassVar[URIRef] = GX.PhysicalResource
@@ -999,13 +999,13 @@ class SoftwareResource(VirtualResource):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.SoftwareResource
+    class_class_uri: ClassVar[URIRef] = GX["SoftwareResource"]
     class_class_curie: ClassVar[str] = "gx:SoftwareResource"
     class_name: ClassVar[str] = "SoftwareResource"
     class_model_uri: ClassVar[URIRef] = GX.SoftwareResource
 
-    copyrightOwnedBy: Union[Union[LegalPersonRegistrationNumber, str], List[Union[LegalPersonRegistrationNumber, str]]] = None
-    license: Union[Union[URI, SPDX], List[Union[URI, SPDX]]] = None
+    copyrightOwnedBy: Union[str, List[str]] = None
+    license: Union[str, List[str]] = None
     resourcePolicy: Union[str, List[str]] = None
     checksum: Optional[Union[dict, CheckSum]] = None
     signature: Optional[Union[dict, Signature]] = None
@@ -1039,13 +1039,13 @@ class CodeArtifact(SoftwareResource):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.CodeArtifact
+    class_class_uri: ClassVar[URIRef] = GX["CodeArtifact"]
     class_class_curie: ClassVar[str] = "gx:CodeArtifact"
     class_name: ClassVar[str] = "CodeArtifact"
     class_model_uri: ClassVar[URIRef] = GX.CodeArtifact
 
-    copyrightOwnedBy: Union[Union[LegalPersonRegistrationNumber, str], List[Union[LegalPersonRegistrationNumber, str]]] = None
-    license: Union[Union[URI, SPDX], List[Union[URI, SPDX]]] = None
+    copyrightOwnedBy: Union[str, List[str]] = None
+    license: Union[str, List[str]] = None
     resourcePolicy: Union[str, List[str]] = None
 
 @dataclass
@@ -1056,13 +1056,13 @@ class Image(CodeArtifact):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.Image
+    class_class_uri: ClassVar[URIRef] = GX["Image"]
     class_class_curie: ClassVar[str] = "gx:Image"
     class_name: ClassVar[str] = "Image"
     class_model_uri: ClassVar[URIRef] = GX.Image
 
-    copyrightOwnedBy: Union[Union[LegalPersonRegistrationNumber, str], List[Union[LegalPersonRegistrationNumber, str]]] = None
-    license: Union[Union[URI, SPDX], List[Union[URI, SPDX]]] = None
+    copyrightOwnedBy: Union[str, List[str]] = None
+    license: Union[str, List[str]] = None
     resourcePolicy: Union[str, List[str]] = None
     fileSize: Optional[Union[dict, "MemorySize"]] = None
     operatingSystem: Optional[Union[dict, "OperatingSystem"]] = None
@@ -1132,13 +1132,13 @@ class PXEImage(Image):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.PXEImage
+    class_class_uri: ClassVar[URIRef] = GX["PXEImage"]
     class_class_curie: ClassVar[str] = "gx:PXEImage"
     class_name: ClassVar[str] = "PXE_Image"
     class_model_uri: ClassVar[URIRef] = GX.PXEImage
 
-    copyrightOwnedBy: Union[Union[LegalPersonRegistrationNumber, str], List[Union[LegalPersonRegistrationNumber, str]]] = None
-    license: Union[Union[URI, SPDX], List[Union[URI, SPDX]]] = None
+    copyrightOwnedBy: Union[str, List[str]] = None
+    license: Union[str, List[str]] = None
     resourcePolicy: Union[str, List[str]] = None
     pxeImageDiskFormat: Optional[Union[str, "PXEDiskType"]] = "ISO"
 
@@ -1156,13 +1156,13 @@ class OperatingSystem(SoftwareResource):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.OperatingSystem
+    class_class_uri: ClassVar[URIRef] = GX["OperatingSystem"]
     class_class_curie: ClassVar[str] = "gx:OperatingSystem"
     class_name: ClassVar[str] = "OperatingSystem"
     class_model_uri: ClassVar[URIRef] = GX.OperatingSystem
 
-    copyrightOwnedBy: Union[Union[LegalPersonRegistrationNumber, str], List[Union[LegalPersonRegistrationNumber, str]]] = None
-    license: Union[Union[URI, SPDX], List[Union[URI, SPDX]]] = None
+    copyrightOwnedBy: Union[str, List[str]] = None
+    license: Union[str, List[str]] = None
     resourcePolicy: Union[str, List[str]] = None
     osDistribution: Union[str, "OSDistribution"] = None
 
@@ -1182,13 +1182,13 @@ class Hypervisor(SoftwareResource):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.Hypervisor
+    class_class_uri: ClassVar[URIRef] = GX["Hypervisor"]
     class_class_curie: ClassVar[str] = "gx:Hypervisor"
     class_name: ClassVar[str] = "Hypervisor"
     class_model_uri: ClassVar[URIRef] = GX.Hypervisor
 
-    copyrightOwnedBy: Union[Union[LegalPersonRegistrationNumber, str], List[Union[LegalPersonRegistrationNumber, str]]] = None
-    license: Union[Union[URI, SPDX], List[Union[URI, SPDX]]] = None
+    copyrightOwnedBy: Union[str, List[str]] = None
+    license: Union[str, List[str]] = None
     resourcePolicy: Union[str, List[str]] = None
     hypervisorType: Union[str, "HypervisorType"] = None
 
@@ -1208,7 +1208,7 @@ class ServiceOffering(GaiaXEntity):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.ServiceOffering
+    class_class_uri: ClassVar[URIRef] = GX["ServiceOffering"]
     class_class_curie: ClassVar[str] = "gx:ServiceOffering"
     class_name: ClassVar[str] = "ServiceOffering"
     class_model_uri: ClassVar[URIRef] = GX.ServiceOffering
@@ -1217,13 +1217,13 @@ class ServiceOffering(GaiaXEntity):
     serviceOfferingTermsAndConditions: Union[Union[dict, "TermsAndConditions"], List[Union[dict, "TermsAndConditions"]]] = None
     dataAccountExport: Union[Union[dict, "DataAccountExport"], List[Union[dict, "DataAccountExport"]]] = None
     servicePolicy: Union[str, List[str]] = "default:allow intent"
-    dependsOn: Optional[Union[Union[ComputeServiceOffering, dict], List[Union[ComputeServiceOffering, dict]]]] = empty_list()
-    aggregationOfResources: Optional[Union[Union[OperatingSystem, dict], List[Union[OperatingSystem, dict]]]] = empty_list()
+    dependsOn: Optional[Union[str, List[str]]] = empty_list()
+    aggregationOfResources: Optional[Union[str, List[str]]] = empty_list()
     dataProtectionRegime: Optional[Union[Union[str, "PersonalDataProtectionRegime"], List[Union[str, "PersonalDataProtectionRegime"]]]] = empty_list()
     keyword: Optional[Union[str, List[str]]] = empty_list()
     provisionType: Optional[Union[str, "ProvisionTypes"]] = None
     endpoint: Optional[Union[dict, Endpoint]] = None
-    hostedOn: Optional[Union[Union[VirtualResource, dict], List[Union[VirtualResource, dict]]]] = empty_list()
+    hostedOn: Optional[Union[str, List[str]]] = empty_list()
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self._is_empty(self.providedBy):
@@ -1281,7 +1281,7 @@ class InfrastructureServiceOffering(ServiceOffering):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.InfrastructureServiceOffering
+    class_class_uri: ClassVar[URIRef] = GX["InfrastructureServiceOffering"]
     class_class_curie: ClassVar[str] = "gx:InfrastructureServiceOffering"
     class_name: ClassVar[str] = "InfrastructureServiceOffering"
     class_model_uri: ClassVar[URIRef] = GX.InfrastructureServiceOffering
@@ -1298,7 +1298,7 @@ class ComputeServiceOffering(InfrastructureServiceOffering):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.ComputeServiceOffering
+    class_class_uri: ClassVar[URIRef] = GX["ComputeServiceOffering"]
     class_class_curie: ClassVar[str] = "gx:ComputeServiceOffering"
     class_name: ClassVar[str] = "ComputeServiceOffering"
     class_model_uri: ClassVar[URIRef] = GX.ComputeServiceOffering
@@ -1323,7 +1323,7 @@ class VirtualMachineServiceOffering(ComputeServiceOffering):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.VirtualMachineServiceOffering
+    class_class_uri: ClassVar[URIRef] = GX["VirtualMachineServiceOffering"]
     class_class_curie: ClassVar[str] = "gx:VirtualMachineServiceOffering"
     class_name: ClassVar[str] = "VirtualMachineServiceOffering"
     class_model_uri: ClassVar[URIRef] = GX.VirtualMachineServiceOffering
@@ -1354,7 +1354,7 @@ class TermsAndConditions(YAMLRoot):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.TermsAndConditions
+    class_class_uri: ClassVar[URIRef] = GX["TermsAndConditions"]
     class_class_curie: ClassVar[str] = "gx:TermsAndConditions"
     class_name: ClassVar[str] = "TermsAndConditions"
     class_model_uri: ClassVar[URIRef] = GX.TermsAndConditions
@@ -1383,7 +1383,7 @@ class DataAccountExport(YAMLRoot):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.DataAccountExport
+    class_class_uri: ClassVar[URIRef] = GX["DataAccountExport"]
     class_class_curie: ClassVar[str] = "gx:DataAccountExport"
     class_name: ClassVar[str] = "DataAccountExport"
     class_model_uri: ClassVar[URIRef] = GX.DataAccountExport
@@ -1418,7 +1418,7 @@ class StandardConformity(YAMLRoot):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.StandardConformity
+    class_class_uri: ClassVar[URIRef] = GX["StandardConformity"]
     class_class_curie: ClassVar[str] = "gx:StandardConformity"
     class_name: ClassVar[str] = "StandardConformity"
     class_model_uri: ClassVar[URIRef] = GX.StandardConformity
@@ -1451,13 +1451,13 @@ class DataResource(VirtualResource):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.DataResource
+    class_class_uri: ClassVar[URIRef] = GX["DataResource"]
     class_class_curie: ClassVar[str] = "gx:DataResource"
     class_name: ClassVar[str] = "DataResource"
     class_model_uri: ClassVar[URIRef] = GX.DataResource
 
-    copyrightOwnedBy: Union[Union[LegalPersonRegistrationNumber, str], List[Union[LegalPersonRegistrationNumber, str]]] = None
-    license: Union[Union[URI, SPDX], List[Union[URI, SPDX]]] = None
+    copyrightOwnedBy: Union[str, List[str]] = None
+    license: Union[str, List[str]] = None
     resourcePolicy: Union[str, List[str]] = None
     producedBy: Union[str, LegalPersonRegistrationNumber] = None
     exposedThrough: Union[Union[dict, "DataExchangeComponent"], List[Union[dict, "DataExchangeComponent"]]] = None
@@ -1506,7 +1506,7 @@ class Consent(YAMLRoot):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.Consent
+    class_class_uri: ClassVar[URIRef] = GX["Consent"]
     class_class_curie: ClassVar[str] = "gx:Consent"
     class_name: ClassVar[str] = "Consent"
     class_model_uri: ClassVar[URIRef] = GX.Consent
@@ -1549,7 +1549,7 @@ class DataExchangeComponent(YAMLRoot):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.DataExchangeComponent
+    class_class_uri: ClassVar[URIRef] = GX["DataExchangeComponent"]
     class_class_curie: ClassVar[str] = "gx:DataExchangeComponent"
     class_name: ClassVar[str] = "DataExchangeComponent"
     class_model_uri: ClassVar[URIRef] = GX.DataExchangeComponent
@@ -1562,13 +1562,13 @@ class VMImage(Image):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.VMImage
+    class_class_uri: ClassVar[URIRef] = GX["VMImage"]
     class_class_curie: ClassVar[str] = "gx:VMImage"
     class_name: ClassVar[str] = "VM_Image"
     class_model_uri: ClassVar[URIRef] = GX.VMImage
 
-    copyrightOwnedBy: Union[Union[LegalPersonRegistrationNumber, str], List[Union[LegalPersonRegistrationNumber, str]]] = None
-    license: Union[Union[URI, SPDX], List[Union[URI, SPDX]]] = None
+    copyrightOwnedBy: Union[str, List[str]] = None
+    license: Union[str, List[str]] = None
     resourcePolicy: Union[str, List[str]] = None
     vmImageDiskFormat: Optional[Union[str, "VMDiskType"]] = "RAW"
     hypervisorType: Optional[Union[str, "HypervisorType"]] = "other"
@@ -1603,7 +1603,7 @@ class ServerFlavor(YAMLRoot):
     """
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.ServerFlavor
+    class_class_uri: ClassVar[URIRef] = GX["ServerFlavor"]
     class_class_curie: ClassVar[str] = "gx:ServerFlavor"
     class_name: ClassVar[str] = "ServerFlavor"
     class_model_uri: ClassVar[URIRef] = GX.ServerFlavor
@@ -1662,7 +1662,7 @@ class ServerFlavor(YAMLRoot):
 class ConfidentialComputing(YAMLRoot):
     _inherited_slots: ClassVar[List[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = GX.ConfidentialComputing
+    class_class_uri: ClassVar[URIRef] = GX["ConfidentialComputing"]
     class_class_curie: ClassVar[str] = "gx:ConfidentialComputing"
     class_name: ClassVar[str] = "ConfidentialComputing"
     class_model_uri: ClassVar[URIRef] = GX.ConfidentialComputing
@@ -8796,7 +8796,7 @@ slots.unit = Slot(uri=QUDT.unit, name="unit", curie=QUDT.curie('unit'),
                    model_uri=GX.unit, domain=None, range=str)
 
 slots.address__countryCode = Slot(uri=GX.countryCode, name="address__countryCode", curie=GX.curie('countryCode'),
-                   model_uri=GX.address__countryCode, domain=None, range=Union[CountryNameAlpha2, str])
+                   model_uri=GX.address__countryCode, domain=None, range=str)
 
 slots.address__gps = Slot(uri=GX.gps, name="address__gps", curie=GX.curie('gps'),
                    model_uri=GX.address__gps, domain=None, range=Optional[Union[Union[dict, GPSLocation], List[Union[dict, GPSLocation]]]])
@@ -8811,10 +8811,10 @@ slots.address__locality = Slot(uri=VCARD.locality, name="address__locality", cur
                    model_uri=GX.address__locality, domain=None, range=Optional[str])
 
 slots.gPSLocation__latitude = Slot(uri=GX.latitude, name="gPSLocation__latitude", curie=GX.curie('latitude'),
-                   model_uri=GX.gPSLocation__latitude, domain=None, range=Union[GPSUnit, dict])
+                   model_uri=GX.gPSLocation__latitude, domain=None, range=str)
 
 slots.gPSLocation__longitude = Slot(uri=GX.longitude, name="gPSLocation__longitude", curie=GX.curie('longitude'),
-                   model_uri=GX.gPSLocation__longitude, domain=None, range=Union[GPSUnit, dict])
+                   model_uri=GX.gPSLocation__longitude, domain=None, range=str)
 
 slots.gPSLocation__altitude = Slot(uri=GX.altitude, name="gPSLocation__altitude", curie=GX.curie('altitude'),
                    model_uri=GX.gPSLocation__altitude, domain=None, range=Optional[str])
@@ -8989,10 +8989,10 @@ slots.updateStrategy__hotfixHours = Slot(uri=GX.hotfixHours, name="updateStrateg
                    model_uri=GX.updateStrategy__hotfixHours, domain=None, range=Optional[int])
 
 slots.updateStrategy__oldVersionsValidUntil = Slot(uri=GX.oldVersionsValidUntil, name="updateStrategy__oldVersionsValidUntil", curie=GX.curie('oldVersionsValidUntil'),
-                   model_uri=GX.updateStrategy__oldVersionsValidUntil, domain=None, range=Optional[Union[Validity2, dict]])
+                   model_uri=GX.updateStrategy__oldVersionsValidUntil, domain=None, range=Optional[str])
 
 slots.updateStrategy__providedUntil = Slot(uri=GX.providedUntil, name="updateStrategy__providedUntil", curie=GX.curie('providedUntil'),
-                   model_uri=GX.updateStrategy__providedUntil, domain=None, range=Optional[Union[str, XSDDate]])
+                   model_uri=GX.updateStrategy__providedUntil, domain=None, range=Optional[str])
 
 slots.latestN__value = Slot(uri=GX.value, name="latestN__value", curie=GX.curie('value'),
                    model_uri=GX.latestN__value, domain=None, range=Optional[int])
@@ -9049,13 +9049,13 @@ slots.pXEImage__pxeImageDiskFormat = Slot(uri=GX.pxeImageDiskFormat, name="pXEIm
                    model_uri=GX.pXEImage__pxeImageDiskFormat, domain=None, range=Optional[Union[str, "PXEDiskType"]])
 
 slots.resource__aggregationOfResources = Slot(uri=GX.aggregationOfResources, name="resource__aggregationOfResources", curie=GX.curie('aggregationOfResources'),
-                   model_uri=GX.resource__aggregationOfResources, domain=None, range=Optional[Union[Union[VirtualResource, dict], List[Union[VirtualResource, dict]]]])
+                   model_uri=GX.resource__aggregationOfResources, domain=None, range=Optional[Union[str, List[str]]])
 
 slots.virtualResource__copyrightOwnedBy = Slot(uri=GX.copyrightOwnedBy, name="virtualResource__copyrightOwnedBy", curie=GX.curie('copyrightOwnedBy'),
-                   model_uri=GX.virtualResource__copyrightOwnedBy, domain=None, range=Union[Union[LegalPersonRegistrationNumber, str], List[Union[LegalPersonRegistrationNumber, str]]])
+                   model_uri=GX.virtualResource__copyrightOwnedBy, domain=None, range=Union[str, List[str]])
 
 slots.virtualResource__license = Slot(uri=GX.license, name="virtualResource__license", curie=GX.curie('license'),
-                   model_uri=GX.virtualResource__license, domain=None, range=Union[Union[URI, SPDX], List[Union[URI, SPDX]]])
+                   model_uri=GX.virtualResource__license, domain=None, range=Union[str, List[str]])
 
 slots.virtualResource__resourcePolicy = Slot(uri=GX.resourcePolicy, name="virtualResource__resourcePolicy", curie=GX.curie('resourcePolicy'),
                    model_uri=GX.virtualResource__resourcePolicy, domain=None, range=Union[str, List[str]])
@@ -9097,10 +9097,10 @@ slots.serviceOffering__providedBy = Slot(uri=GX.providedBy, name="serviceOfferin
                    model_uri=GX.serviceOffering__providedBy, domain=None, range=Union[str, LegalPersonRegistrationNumber])
 
 slots.serviceOffering__dependsOn = Slot(uri=GX.dependsOn, name="serviceOffering__dependsOn", curie=GX.curie('dependsOn'),
-                   model_uri=GX.serviceOffering__dependsOn, domain=None, range=Optional[Union[Union[ComputeServiceOffering, dict], List[Union[ComputeServiceOffering, dict]]]])
+                   model_uri=GX.serviceOffering__dependsOn, domain=None, range=Optional[Union[str, List[str]]])
 
 slots.serviceOffering__aggregationOfResources = Slot(uri=GX.aggregationOfResources, name="serviceOffering__aggregationOfResources", curie=GX.curie('aggregationOfResources'),
-                   model_uri=GX.serviceOffering__aggregationOfResources, domain=None, range=Optional[Union[Union[OperatingSystem, dict], List[Union[OperatingSystem, dict]]]])
+                   model_uri=GX.serviceOffering__aggregationOfResources, domain=None, range=Optional[Union[str, List[str]]])
 
 slots.serviceOffering__serviceOfferingTermsAndConditions = Slot(uri=GX.serviceOfferingTermsAndConditions, name="serviceOffering__serviceOfferingTermsAndConditions", curie=GX.curie('serviceOfferingTermsAndConditions'),
                    model_uri=GX.serviceOffering__serviceOfferingTermsAndConditions, domain=None, range=Union[Union[dict, TermsAndConditions], List[Union[dict, TermsAndConditions]]])
@@ -9124,7 +9124,7 @@ slots.serviceOffering__endpoint = Slot(uri=GX.endpoint, name="serviceOffering__e
                    model_uri=GX.serviceOffering__endpoint, domain=None, range=Optional[Union[dict, Endpoint]])
 
 slots.serviceOffering__hostedOn = Slot(uri=GX.hostedOn, name="serviceOffering__hostedOn", curie=GX.curie('hostedOn'),
-                   model_uri=GX.serviceOffering__hostedOn, domain=None, range=Optional[Union[Union[VirtualResource, dict], List[Union[VirtualResource, dict]]]])
+                   model_uri=GX.serviceOffering__hostedOn, domain=None, range=Optional[Union[str, List[str]]])
 
 slots.computeServiceOffering__tenantSeparation = Slot(uri=GX.tenantSeparation, name="computeServiceOffering__tenantSeparation", curie=GX.curie('tenantSeparation'),
                    model_uri=GX.computeServiceOffering__tenantSeparation, domain=None, range=Optional[Union[str, "TenantSeparation"]])
@@ -9242,6 +9242,3 @@ slots.confidentialComputing__technology = Slot(uri=GX.technology, name="confiden
 
 slots.confidentialComputing__attestationServiceURI = Slot(uri=GX.attestationServiceURI, name="confidentialComputing__attestationServiceURI", curie=GX.curie('attestationServiceURI'),
                    model_uri=GX.confidentialComputing__attestationServiceURI, domain=None, range=Optional[Union[str, URI]])
-
-Process finished with exit code 0
-
