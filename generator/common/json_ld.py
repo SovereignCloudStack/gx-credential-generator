@@ -3,22 +3,20 @@ Methods and classes needed/useful for JSON-LD serialization.
 """
 import inspect
 
-from generator.common.gx_schema import SCHEMA
-from generator.common.gx_schema import VCARD
-from generator.common.gx_schema import GX
-from generator.common.gx_schema import QUDT
-from generator.common.gx_schema import YAMLRoot
-from generator.common.gx_schema import slots
-
 from json import JSONDecoder
 
 from linkml_runtime.utils.metamodelcore import Bool, URI, XSDDate, XSDDateTime
 from linkml_runtime.utils.enumerations import EnumDefinitionImpl
+from linkml_runtime.utils.yamlutils import YAMLRoot, extended_str, extended_float, extended_int
 
-from typing import List
+from generator.common.gx_schema import GX, QUDT, SCHEMA, VCARD, slots
+from linkml_runtime.utils.yamlutils import TypedNode
+from typing import List, Tuple
 
 from uuid import uuid4
+from datetime import date, datetime
 
+from linkml_runtime.utils.yamlutils import YAMLRoot, extended_str
 
 class JsonLdObject:
     """Wrapper class to store properties and id of a GX object instance. This class is required, because python
@@ -70,7 +68,6 @@ def to_json_ld(obj) -> dict:
     @rtype: dict
     """
     json_ld = dict()
-
     if isinstance(obj, JsonLdObject):
         # if JsonLdObject adds id
         gx_object = obj.gx_object
@@ -85,56 +82,44 @@ def to_json_ld(obj) -> dict:
                 # skip emtpy values
                 continue
             slot_curie = get_slot_curie(key, obj)
-            if isinstance(value, XSDDateTime):
-                # Add type for datetime
-                json_ld[slot_curie] = dict()
-                json_ld[slot_curie]["@type"] = "xsd:dateTime"
-                json_ld[slot_curie]["@value"] = value
-            elif isinstance(value, XSDDate):
-                # add type for date
-                json_ld[slot_curie] = dict()
-                json_ld[slot_curie]["@type"] = "xsd:date"
-                json_ld[slot_curie]["@value"] = value
-            elif isinstance(value, float):
-                # add type for float
-                json_ld[slot_curie] = dict()
-                json_ld[slot_curie]["@type"] = "xsd:float"
-                json_ld[slot_curie]["@value"] = value
-            elif isinstance(value, str) and value.startswith("http"):
-                # linkML's python generator maps datatype 'anyURI' to 'string', but we need a URL here. Hence, we must
-                # check if string is a URL, by evaluation string's start and change datatype in JSON-LD appropriately.
-                json_ld[slot_curie] = dict()
-                json_ld[slot_curie]["@type"] = "xsd:anyURI"
-                json_ld[slot_curie]["@value"] = value
-            elif isinstance(value, bool):
-                # add type for boolean
-                json_ld[slot_curie] = dict()
-                json_ld[slot_curie]["@type"] = "xsd:boolean"
-                json_ld[slot_curie]["@value"] = value
-            elif isinstance(value, list):
+            if isinstance(value, list):
                 # call to_json_ld for each entry in list
                 json_ld[slot_curie] = list()
                 for item in value:
                     json_ld[slot_curie].append(to_json_ld(item))
-            elif isinstance(value, EnumDefinitionImpl):
+            elif isinstance(obj, EnumDefinitionImpl):
                 # add text for enumeration values instead of code
-                json_ld[slot_curie] = value.code.text
-            elif isinstance(value, YAMLRoot):
-                json_ld[slot_curie] = to_json_ld(value)
+                return obj.code.text
             else:
-                json_ld[slot_curie] = value
+                json_ld[slot_curie] = to_json_ld(value)
         return json_ld
-    elif isinstance(obj, str):
-        if obj.startswith("http"):
-            # linkML's python generator maps datatype 'anyURI' to 'string', but we need a URL here. Hence, we must
-            # check if string is a URL, by evaluation string's start and change datatype in JSON-LD appropriately.
-            json_ld["@type"] = "xsd:anyURI"
-            json_ld["@value"] = obj
-            return json_ld
-        else:
-            return obj
+    elif isinstance(obj, datetime):
+        # Add type for datetime
+        return {
+            "@type": "xsd:dateTime",
+            "@value": str(obj)}
+    elif isinstance(obj, date):
+        # add type for date
+        return {
+            "@type": "xsd:date",
+            "@value": str(obj)}
+    elif isinstance(obj, float):
+        # add type for float
+        return {
+            "@type": "xsd:float",
+            "@value": str(obj)}
+    elif isinstance(obj, URI):
+        # add type for URI
+        return {
+            "@type": "xsd:anyURI",
+            "@value": str(obj)}
+    elif isinstance(obj, bool):
+        # add type for boolean
+        return {
+            "@type": "xsd:boolean",
+            "@value": str(obj)}
     else:
-        return JSONDecoder().decode(obj)
+        return obj
 
 
 def get_slot_curie(slot_name:str, gx_object: object)-> str:
@@ -153,19 +138,20 @@ def get_slot_curie(slot_name:str, gx_object: object)-> str:
         elif hasattr(slots, slot_name):
             return getattr(slots, slot_name).curie
 
-
-def get_types(gaia_object: type) -> List[type]:
+def get_types(gx_object: type) -> List[type]:
     """
     Returns all types as curie of given GX_OBJECT. Types are instance's class as well as all its super classes.
-    @param gaia_object: GX object, whose type is to be retrived
-    @type gaia_object: type
+    @param gx_object: GX object, whose type is to be retrived
+    @type gx_object: type
     @return: list of types if given GX_OBJECT
     @rtype: list of types
     """
     types = []
-    for base in inspect.getmro(gaia_object):
-        if isinstance(base, YAMLRoot):
+    for base in _get_super_classes(gx_object):
+        try:
             types.append(base.class_class_curie)
+        except AttributeError:
+            pass
     return types
 
 
