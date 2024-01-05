@@ -1,3 +1,7 @@
+"""
+Constants used by SCS GX Credential Generator.
+"""
+
 DEFAULT_RESOURCE_POLICY = "default: allow intent"
 DEFAULT_FIRMWARE_TYPE = "other"
 DEFAULT_WATCHDOG_ACTION = "none"
