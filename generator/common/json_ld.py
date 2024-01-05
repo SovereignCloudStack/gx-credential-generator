@@ -17,23 +17,22 @@ from linkml_runtime.utils.yamlutils import YAMLRoot, extended_str
 
 from generator.common.gx_schema import GX, QUDT, SCHEMA, VCARD, slots
 
-from json import JSONDecoder
-
-from linkml_runtime.utils.metamodelcore import Bool, URI, XSDDate, XSDDateTime
-from linkml_runtime.utils.enumerations import EnumDefinitionImpl
-from linkml_runtime.utils.yamlutils import YAMLRoot, extended_str, extended_float, extended_int
-
-from generator.common.gx_schema import GX, QUDT, SCHEMA, VCARD, slots
-from linkml_runtime.utils.yamlutils import TypedNode
-from typing import List, Tuple
-
-from uuid import uuid4
 from datetime import date, datetime
 
+from generator.common.gx_schema import GX, QUDT, SCHEMA, VCARD, slots
+
+from linkml_runtime.utils.metamodelcore import URI
+from linkml_runtime.utils.enumerations import EnumDefinitionImpl
 from linkml_runtime.utils.yamlutils import YAMLRoot, extended_str
+
+from typing import List
+
+from uuid import uuid4
+
 
 class JsonLdObject:
     """Wrapper class to store properties and id of a GX object instance. This class is required, because python
+<<<<<<< HEAD
 <<<<<<< HEAD
     classes of Gaia-X Credential does not have an attribute to store instance's id and id is essential in GX Credentials.
     """
@@ -43,8 +42,10 @@ class JsonLdObject:
         Create a new object of JsonLdObejct
     classes of Gaia-X Credential does not have an attribute to store instance's id."""
 
-    def __init__(self, gx_object: YAMLRoot, gx_id=None):
+    def __init__(self, gx_object: YAMLRoot, gx_id:str=None):
         """
+        Create a new object of JsonLdObejct
+
         @param gx_object: Gaia-X object
         @type gx_object: YAMLRoot
         @param gx_id: id of Gaia-X object
@@ -174,7 +175,6 @@ def to_json_ld(obj) -> dict:
 def get_slot_curie(slot_name: str, gx_object: object) -> str:
     """
     Returns curie of slot with given SLOT_NAME of given GX_OBJECT.
-
     @param slot_name: name of slot whose curie is requested
     @type slot_name: str
     @param gx_object: GX object given slot may belong to
@@ -187,6 +187,7 @@ def get_slot_curie(slot_name: str, gx_object: object) -> str:
             return getattr(slots, s_class + "__" + slot_name).curie
         elif hasattr(slots, slot_name):
             return getattr(slots, slot_name).curie
+
 
 def get_types(gx_object: type) -> List[type]:
     """

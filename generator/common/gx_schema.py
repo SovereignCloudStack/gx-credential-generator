@@ -1,5 +1,5 @@
 # Auto generated from gaia-x.yaml by pythongen.py version: 0.0.1
-# Generation date: 2024-01-04T09:32:21
+# Generation date: 2024-01-05T13:21:25
 # Schema: gaia-x
 #
 # id: http://w3id.org/gaia-x/gx-trust-framework/gaia-x
@@ -255,7 +255,7 @@ class CheckSum(YAMLRoot):
     class_model_uri: ClassVar[URIRef] = GX.CheckSum
 
     checkSumCalculation: Union[str, "ChecksumAlgorithm"] = None
-    checkSum: str = None
+    checkSumValue: str = None
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self._is_empty(self.checkSumCalculation):
@@ -263,10 +263,10 @@ class CheckSum(YAMLRoot):
         if not isinstance(self.checkSumCalculation, ChecksumAlgorithm):
             self.checkSumCalculation = ChecksumAlgorithm(self.checkSumCalculation)
 
-        if self._is_empty(self.checkSum):
-            self.MissingRequiredField("checkSum")
-        if not isinstance(self.checkSum, str):
-            self.checkSum = str(self.checkSum)
+        if self._is_empty(self.checkSumValue):
+            self.MissingRequiredField("checkSumValue")
+        if not isinstance(self.checkSumValue, str):
+            self.checkSumValue = str(self.checkSumValue)
 
         super().__post_init__(**kwargs)
 
@@ -280,15 +280,15 @@ class Signature(YAMLRoot):
     class_name: ClassVar[str] = "Signature"
     class_model_uri: ClassVar[URIRef] = GX.Signature
 
-    signature: str = None
+    signatureValue: str = None
     hashAlgorithm: Union[str, "ChecksumAlgorithm"] = None
     signatureAlgorithm: Union[str, "SignatureAlgorithm"] = None
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
-        if self._is_empty(self.signature):
-            self.MissingRequiredField("signature")
-        if not isinstance(self.signature, str):
-            self.signature = str(self.signature)
+        if self._is_empty(self.signatureValue):
+            self.MissingRequiredField("signatureValue")
+        if not isinstance(self.signatureValue, str):
+            self.signatureValue = str(self.signatureValue)
 
         if self._is_empty(self.hashAlgorithm):
             self.MissingRequiredField("hashAlgorithm")
@@ -1072,6 +1072,7 @@ class Image(CodeArtifact):
     videoRamSize: Optional[Union[dict, "MemorySize"]] = None
     rootDiskReq: Optional[Union[dict, Disk]] = None
     encryption: Optional[Union[dict, Encryption]] = None
+    checkSum: Optional[Union[dict, CheckSum]] = None
     secureBoot: Optional[Union[bool, Bool]] = False
     vPMU: Optional[Union[bool, Bool]] = False
     multiQueues: Optional[Union[bool, Bool]] = False
@@ -1103,6 +1104,9 @@ class Image(CodeArtifact):
 
         if self.encryption is not None and not isinstance(self.encryption, Encryption):
             self.encryption = Encryption(**as_dict(self.encryption))
+
+        if self.checkSum is not None and not isinstance(self.checkSum, CheckSum):
+            self.checkSum = CheckSum(**as_dict(self.checkSum))
 
         if self.secureBoot is not None and not isinstance(self.secureBoot, Bool):
             self.secureBoot = Bool(self.secureBoot)
@@ -8877,11 +8881,11 @@ slots.encryption__keyManagement = Slot(uri=GX.keyManagement, name="encryption__k
 slots.checkSum__checkSumCalculation = Slot(uri=GX.checkSumCalculation, name="checkSum__checkSumCalculation", curie=GX.curie('checkSumCalculation'),
                    model_uri=GX.checkSum__checkSumCalculation, domain=None, range=Union[str, "ChecksumAlgorithm"])
 
-slots.checkSum__checkSum = Slot(uri=GX.checkSum, name="checkSum__checkSum", curie=GX.curie('checkSum'),
-                   model_uri=GX.checkSum__checkSum, domain=None, range=str)
+slots.checkSum__checkSumValue = Slot(uri=GX.checkSumValue, name="checkSum__checkSumValue", curie=GX.curie('checkSumValue'),
+                   model_uri=GX.checkSum__checkSumValue, domain=None, range=str)
 
-slots.signature__signature = Slot(uri=GX.signature, name="signature__signature", curie=GX.curie('signature'),
-                   model_uri=GX.signature__signature, domain=None, range=str)
+slots.signature__signatureValue = Slot(uri=GX.signatureValue, name="signature__signatureValue", curie=GX.curie('signatureValue'),
+                   model_uri=GX.signature__signatureValue, domain=None, range=str)
 
 slots.signature__hashAlgorithm = Slot(uri=GX.hashAlgorithm, name="signature__hashAlgorithm", curie=GX.curie('hashAlgorithm'),
                    model_uri=GX.signature__hashAlgorithm, domain=None, range=Union[str, "ChecksumAlgorithm"])
@@ -8954,6 +8958,9 @@ slots.image__rootDiskReq = Slot(uri=GX.rootDiskReq, name="image__rootDiskReq", c
 
 slots.image__encryption = Slot(uri=GX.encryption, name="image__encryption", curie=GX.curie('encryption'),
                    model_uri=GX.image__encryption, domain=None, range=Optional[Union[dict, Encryption]])
+
+slots.image__checkSum = Slot(uri=GX.checkSum, name="image__checkSum", curie=GX.curie('checkSum'),
+                   model_uri=GX.image__checkSum, domain=None, range=Optional[Union[dict, CheckSum]])
 
 slots.image__secureBoot = Slot(uri=GX.secureBoot, name="image__secureBoot", curie=GX.curie('secureBoot'),
                    model_uri=GX.image__secureBoot, domain=None, range=Optional[Union[bool, Bool]])
@@ -9242,3 +9249,4 @@ slots.confidentialComputing__technology = Slot(uri=GX.technology, name="confiden
 
 slots.confidentialComputing__attestationServiceURI = Slot(uri=GX.attestationServiceURI, name="confidentialComputing__attestationServiceURI", curie=GX.curie('attestationServiceURI'),
                    model_uri=GX.confidentialComputing__attestationServiceURI, domain=None, range=Optional[Union[str, URI]])
+

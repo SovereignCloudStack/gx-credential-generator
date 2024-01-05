@@ -12,22 +12,23 @@ SPDX-License-Identifier: EPL-2.0
 from typing import Dict, List
 
 import json
+import generator.common.json_ld as json_ld
 
-import openstack
+from generator.discovery.openstack.vm_images_discovery import VmDiscovery
+
 from openstack.connection import Connection
-from typing import Dict
-import sys
+
 
 from generator.common.json_ld import JsonLdObject
 from uuid import uuid4
 import generator.common.json_ld as json_ld
 from generator.common.gx_schema import VMImage
 
-from generator.discovery.openstack.vm_images_discovery import VmDiscovery
+
 
 
 class OsCloud:
-    "Abstraction for openStack cloud with all its services"
+    "Abstraction for openStack cloud with all its services."
     def __init__(self, conn: Connection, config: Dict) -> None:
         # import copy
         self.conn = conn
