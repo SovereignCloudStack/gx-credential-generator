@@ -57,7 +57,7 @@ vm image:
       - https://www.microsoft.com/licensing/docs/view/Licensing-Guides
   NetBSD:
     copyright owner: "The NetBSD Foundation"
-    resource policy: DEFAULTV
+    resource policy: DEFAULT
     license:
       - https://www.netbsd.org/about/redistribution.html
   Novell NetWare:
