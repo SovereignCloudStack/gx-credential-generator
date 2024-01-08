@@ -14,6 +14,8 @@ CONFIG_VM_IMAGE = "vm image"
 CONFIG_RESOURCE_POLICY = "resource policy"
 CONFIG_LICENSE = "license"
 CONFIG_COPYRIGHT = "copyright owner"
+CONFIG_OPERATING_SYSTEM = "operating system"
+CONFIG_OWN_IMAGES = "own images"
 
 CONFIG_OS_ALP = "Alpine Linux"
 CONFIG_OS_ARCH = "Arch Linux"
