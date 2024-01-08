@@ -24,6 +24,7 @@ CONFIG_FILESYSTEM_WALLET = "filesystem"
 CONFIG_XFSC_WALLET = "xfsc"
 
 
+
 CONFIG_OS_ALP = "Alpine Linux"
 CONFIG_OS_ARCH = "Arch Linux"
 CONFIG_OS_CENTOS = "CentOS Linux"
