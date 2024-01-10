@@ -10,6 +10,7 @@ from generator.common.gx_schema import GX, QUDT, SCHEMA, VCARD, slots
 from linkml_runtime.utils.metamodelcore import URI
 from linkml_runtime.utils.enumerations import EnumDefinitionImpl
 from linkml_runtime.utils.yamlutils import YAMLRoot, extended_str
+from linkml_runtime.linkml_model.meta import EnumDefinition, PermissibleValue, PvFormulaOptions
 
 from typing import List
 
@@ -68,6 +69,7 @@ def to_json_ld(obj) -> dict:
     @return:  object as dictionary
     @rtype: dict
     """
+
     json_ld = dict()
     if isinstance(obj, JsonLdObject):
         # if JsonLdObject add id
@@ -99,6 +101,9 @@ def to_json_ld(obj) -> dict:
             elif isinstance(obj, EnumDefinitionImpl):
                 # add text for enumeration values instead of code
                 return obj.code.text
+            elif isinstance(obj, PermissibleValue):
+                # add text for enumeration values instead of code
+                return obj.text
             else:
                 json_ld[slot_curie] = to_json_ld(value)
         return json_ld
