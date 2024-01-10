@@ -71,6 +71,7 @@ from generator.common.gx_schema import CheckSum
 from generator.common.gx_schema import ChecksumAlgorithm
 from generator.common.gx_schema import CPU
 from generator.common.gx_schema import Disk
+from generator.common.gx_schema import HypervisorType
 from generator.common.gx_schema import Memory
 from generator.common.gx_schema import MemorySize
 from generator.common.gx_schema import OperatingSystem
@@ -155,6 +156,8 @@ class VmDiscovery():
         self._add_version(os_image, gx_image)
         self._add_checksum(os_image, gx_image)
         self._add_signature(os_image, gx_image)
+        self._add_hypervisor(os_image, gx_image)
+        self._add_aggregation_of(os_image, gx_image)
 
         # Discover mandatory attribute
         self._add_license(os_image, gx_image)
@@ -163,6 +166,7 @@ class VmDiscovery():
 
         return gx_image
 
+<<<<<<< HEAD
     def _add_disk_format(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
             if os_image.disk_format.lower() == "raw":
@@ -179,6 +183,23 @@ class VmDiscovery():
                 gx_image.vmImageDiskFormat = "CVA"
         except AttributeError:
             pass
+=======
+    @staticmethod
+    def _add_cpu_req(os_image: OS_Image, gx_image: GX_Image) -> None:
+        try:
+            if os_image.architecture == "i686":
+             gx_image.cpuReq = CPU(cpuArchitecture="x86-32")
+            elif os_image.architecture in ["x86_64", "ia64"]:
+                gx_image.cpuReq = CPU(cpuArchitecture="x86-64")
+            elif os_image.architecture == "aarch6":
+                gx_image.cpuReq = CPU(cpuArchitecture="AArch-32")
+            elif os_image.architecture in ["alpha", "armv7l", "lm32", "openrisc", "parisc", "parisc64", "unicore32"]:
+                gx_image.cpuReq = CPU(cpuArchitecture="RISC-V")
+            else:
+                gx_image.cpuReq = CPU(cpuArchitecture=CpuArch.other)
+        except AttributeError as e:
+            raise MissingMandatoryAttribute(e.args)
+>>>>>>> Support aggregationOf and hypervisorType
 
     def _add_cpu_req(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         cpu = CPU(cpuArchitecture=_get_cpu_arch(os_image.architecture))
@@ -952,6 +973,7 @@ class VmDiscovery():
             pass
 
 
+
     def _get_checksum_algo(self, algo: str) -> str:
         if algo == "sha512":
             return "sha-512"
@@ -998,18 +1020,20 @@ class VmDiscovery():
                 gx_image.hypervisorType = "quemu"
             elif os_image.hypervisor_type == "hyperv":
                 gx_image.hypervisorType = "Hyper-V"
-            else:
+
                 gx_image.hypervisorType = HypervisorType.other.text
         except AttributeError as e:
             gx_image.hypervisorType = HypervisorType.other.text
             #raise MissingMandatoryAttribute(e.args)
 
     def _get_signature_algo(self, algo: str) -> str:
+
         if algo.startswith("SHA-"):
             return "RSA-Signature"
         return SignatureAlgorithm.other.text
 
     def _add_aggregation_of(self, os_image: OS_Image, gx_image: GX_Image) -> None:
+
 
         try:
             gx_image.aggregationOfResources = self.config[const.CONFIG_OWN_IMAGES][
@@ -1020,5 +1044,6 @@ class VmDiscovery():
 
     def _add_rng_model(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         gx_image.hwRngTypeOfImage = "None"
+
 
 
