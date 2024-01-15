@@ -1,10 +1,14 @@
+<<<<<<< HEAD
 import json
+=======
+>>>>>>> Add first test case
 import unittest
 import yaml
 
 from datetime import datetime
 
 from generator.common.json_ld import JsonLdObject
+<<<<<<< HEAD
 from generator.common.gx_schema import CheckSum
 from generator.common.gx_schema import CPU
 from generator.common.gx_schema import Disk
@@ -23,11 +27,37 @@ from pyshacl import validate
 
 from tests.common import OpenstackTestcase
 from tests.common import TestConnection
+=======
+from generator.common.gx_schema import Architectures as CpuArch
+from generator.common.gx_schema import CheckSum
+from generator.common.gx_schema import ChecksumAlgorithm
+from generator.common.gx_schema import CPU
+from generator.common.gx_schema import Disk
+from generator.common.gx_schema import HypervisorType
+from generator.common.gx_schema import Memory
+from generator.common.gx_schema import MemorySize
+from generator.common.gx_schema import OperatingSystem
+from generator.common.gx_schema import Signature
+from generator.common.gx_schema import SignatureAlgorithm
+from generator.common.gx_schema import SPDX
+from generator.common.gx_schema import WatchDogActions
+from generator.common.gx_schema import UpdateStrategy
+from generator.common.gx_schema import VMImage as GX_Image
+
+from generator.discovery.openstack.vm_images_discovery import VmDiscovery
+from openstack.image.v2.image import Image as OS_Image
+
+from tests.connection import TestConnection
+>>>>>>> Add first test case
 
 
 def _get_gx_images():
     return [JsonLdObject(
+<<<<<<< HEAD
         gx_id='image_1',
+=======
+        gx_id='94414c54 - 6222 - 4376 - 8f7a - a3cdd9b7f737',
+>>>>>>> Add first test case
         gx_object=GX_Image(name='Image1', description='Image 1_ext', aggregationOfResources=[],
                            copyrightOwnedBy=['Canonical'],
                            license=['https://ubuntu.com/legal/open-source-licences'],
@@ -74,7 +104,11 @@ def _get_gx_images():
                            hypervisorType='other',
                            hwRngTypeOfImage='None', watchDogAction=WatchDogActions.reset.text)),
         JsonLdObject(
+<<<<<<< HEAD
             gx_id='image_2',
+=======
+            gx_id='94414c54 - 6222 - 4376 - 8f7a - a3cdd9b7f737',
+>>>>>>> Add first test case
             gx_object=GX_Image(name='Image2', description='Image 2', aggregationOfResources=[],
                                copyrightOwnedBy=['Microsoft Corporation'],
                                license=['https://www.microsoft.com/licensing'],
@@ -188,6 +222,7 @@ def _get_os_images():
                      os_hash_algo="sha512",
                      os_hash_value="7f8bababc2c2a94880747383750470aee68c7e8840bb8811eaeda1b0ce71d59f40ebb182",
                      id="image_2",
+
                      properties={
                          'image_build_date': '2023-11-01',
                          'hotfix_hours': '4',
@@ -231,7 +266,6 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
         )
 
         self.assertTrue(conforms)
-
 
 
 if __name__ == '__main__':

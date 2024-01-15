@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #!/usr/bin/env python3
 # vim: set ts=4 sw=4 et:
 #
@@ -62,6 +63,8 @@ import typing
 from json import JSONDecoder
 import json
 import urllib3
+=======
+>>>>>>> Add first test case
 from linkml_runtime.utils.metamodelcore import URI
 
 from generator.common.expections import MissingMandatoryAttribute
@@ -93,7 +96,21 @@ from typing import Dict, Union, List
 from datetime import datetime
 
 
-# TODO:; Check imag meta dafta props standard, ob dort klar ist, das einige Properties uer properties stehhen und nicht direkt abgefrgat werden klnnen mur iber propeertiues[metadfate}
+def _get_cpu_arch(os_image_arch: str) -> str:
+    try:
+        if os_image_arch == "i686":
+            return "x86-32"
+        if os_image_arch in ["x86_64", "ia64"]:
+            return "x86-64"
+        if os_image_arch == "aarch6":
+            return "AArch-32"
+        if os_image_arch in ["alpha", "armv7l", "lm32", "openrisc", "parisc", "parisc64", "unicore32"]:
+            return "RISC-V"
+        return CpuArch.other.text
+    except AttributeError as e:
+        raise MissingMandatoryAttribute(e.args)
+
+
 class VmDiscovery():
 
     # def __init__(self) -> None:
@@ -158,6 +175,8 @@ class VmDiscovery():
         self._add_signature(os_image, gx_image)
         self._add_hypervisor(os_image, gx_image)
         self._add_aggregation_of(os_image, gx_image)
+        self._add_rng_model(os_image, gx_image)
+        self._add_disk_format(os_image, gx_image)
 
         # Discover mandatory attribute
         self._add_license(os_image, gx_image)
@@ -166,6 +185,7 @@ class VmDiscovery():
 
         return gx_image
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     def _add_disk_format(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
@@ -204,6 +224,18 @@ class VmDiscovery():
     def _add_cpu_req(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         cpu = CPU(cpuArchitecture=_get_cpu_arch(os_image.architecture))
 
+=======
+    def _add_disk_format(self, os_image: OS_Image, gx_image: GX_Image) -> None:
+        try:
+            gx_image.vmImageDiskFormat = os_image.disk_format
+        except AttributeError:
+            pass
+
+
+    def _add_cpu_req(self, os_image: OS_Image, gx_image: GX_Image) -> None:
+        cpu = CPU(cpuArchitecture=_get_cpu_arch(os_image.architecture))
+
+>>>>>>> Add first test case
         try:
             cpu.numberOfCores = os_image.hw_cpu_cores
         except AttributeError:
@@ -232,7 +264,10 @@ class VmDiscovery():
             pass
             #raise MissingMandatoryAttribute(e.args)
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> Add first test case
     def _add_min_disk_req(self, image: OS_Image, gx_image: GX_Image) -> None:
         try:
             size = MemorySize(
@@ -755,6 +790,7 @@ class VmDiscovery():
             gx_image.resourcePolicy = [const.DEFAULT_RESOURCE_POLICY]
 
     def _get_license(self, licenses: List[str]) -> List[Union[str, SPDX]]:
+<<<<<<< HEAD
         license_list = list()
         for lic in licenses:
             if lic.startswith("http"):
@@ -766,6 +802,8 @@ class VmDiscovery():
 
     @staticmethod
     def _get_license(licenses: List[str]) -> List[Union[str, SPDX]]:
+=======
+>>>>>>> Add first test case
         license_list = list()
 
         for l in licenses:
@@ -775,8 +813,7 @@ class VmDiscovery():
                 license_list.append(l)
         return license_list
 
-    @staticmethod
-    def _add_secure_boot(os_image: OS_Image, gx_image: GX_Image) -> None:
+    def _add_secure_boot(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
             if not os_image.needs_secure_boot:
                 return
@@ -784,8 +821,7 @@ class VmDiscovery():
         except AttributeError:
             pass
 
-    @staticmethod
-    def _add_firmeware_type(os_image: OS_Image, gx_image: GX_Image) -> None:
+    def _add_firmeware_type(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
             if not os_image.hw_firmware_type:
                 return
@@ -793,8 +829,7 @@ class VmDiscovery():
         except AttributeError:
             gx_image.firmwareType = const.DEFAULT_FIRMWARE_TYPE
 
-    @staticmethod
-    def _add_watchdog_action(os_image: OS_Image, gx_image: GX_Image) -> None:
+    def _add_watchdog_action(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
             if not os_image.hw_watchdog_action:
                 return
@@ -802,8 +837,7 @@ class VmDiscovery():
         except AttributeError:
             pass
 
-    @staticmethod
-    def _add_vmpu(os_image: OS_Image, gx_image: GX_Image) -> None:
+    def _add_vmpu(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
             if not os_image.hw_pmu:
                 return
@@ -811,19 +845,21 @@ class VmDiscovery():
         except AttributeError:
             pass
 
-    @staticmethod
-    def _add_video_ram(os_image: OS_Image, gx_image: GX_Image) -> None:
+    def _add_video_ram(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
             if not os_image.hw_video_ram:
                 return
+<<<<<<< HEAD
             gx_image.videoRamSize = MemorySize(
                 value=float(os_image.hw_video_ram), unit=const.UNIT_MB
             )
+=======
+            gx_image.videoRamSize = MemorySize(value=float(os_image.hw_video_ram), unit=const.UNIT_MB)
+>>>>>>> Add first test case
         except AttributeError:
             pass
 
-    @staticmethod
-    def _add_multiqueue_enabled(os_image: OS_Image, gx_image: GX_Image) -> None:
+    def _add_multiqueue_enabled(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
             if not os_image.hw_vif_multiqueue_enabled:
                 return
@@ -831,8 +867,7 @@ class VmDiscovery():
         except AttributeError:
             pass
 
-    @staticmethod
-    def _add_update_strategy(os_image: OS_Image, gx_image: GX_Image) -> None:
+    def _add_update_strategy(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         os_image.updateStrategy = UpdateStrategy()
 
         # collect mandatory attributes
@@ -856,8 +891,7 @@ class VmDiscovery():
         except KeyError:
             pass
 
-    @staticmethod
-    def _add_description(os_image: OS_Image, gx_image: GX_Image) -> None:
+    def _add_description(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
             gx_image.description = os_image.properties["image_description"]
         except KeyError:
@@ -871,8 +905,7 @@ class VmDiscovery():
         except KeyError:
             pass
 
-    @staticmethod
-    def _add_name(os_image: OS_Image, gx_image: GX_Image) -> None:
+    def _add_name(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
             if not os_image.name:
                 return
@@ -880,8 +913,7 @@ class VmDiscovery():
         except KeyError:
             pass
 
-    @staticmethod
-    def _add_build_date(os_image: OS_Image, gx_image: GX_Image) -> None:
+    def _add_build_date(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
 
             gx_image.buildDate = datetime.strptime(
@@ -892,17 +924,21 @@ class VmDiscovery():
             pass
 
     def _add_license_included(self, os_image: OS_Image, gx_image: GX_Image) -> None:
+<<<<<<< HEAD
         try:
             gx_image.licenseIncluded = os_image.properties["licenseIncluded"]
         except KeyError:
             pass
 
     def _add_patch_level(self, os_image: OS_Image, gx_image: GX_Image) -> None:
+=======
+>>>>>>> Add first test case
         try:
             gx_image.patchLevel = os_image.properties["patchlevel"]
         except KeyError:
             pass
 
+<<<<<<< HEAD
     def _add_version(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
             gx_image.version = os_image.properties["internal_version"]
@@ -917,29 +953,29 @@ class VmDiscovery():
 
     @staticmethod
     def _add_patch_level(os_image: OS_Image, gx_image: GX_Image) -> None:
+=======
+    def _add_patch_level(self, os_image: OS_Image, gx_image: GX_Image) -> None:
+>>>>>>> Add first test case
         try:
             gx_image.patchLevel = os_image.properties['patchlevel']
         except KeyError:
             pass
 
-    @staticmethod
-    def _add_version(os_image: OS_Image, gx_image: GX_Image) -> None:
+    def _add_version(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
             gx_image.version = os_image.properties['internal_version']
         except KeyError:
             pass
 
-    @staticmethod
-    def _add_checksum(os_image: OS_Image, gx_image: GX_Image) -> None:
+    def _add_checksum(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
-            algo = VmDiscovery._get_checksum_algo(os_image.hash_algo)
+            algo = self._get_checksum_algo(os_image.hash_algo)
             value = os_image.hash_value
             gx_image.checksum = CheckSum(checkSumValue=value, checkSumCalculation=algo)
         except AttributeError:
             pass
 
-    @staticmethod
-    def _get_checksum_algo(algo: str) -> str:
+    def _get_checksum_algo(self, algo: str) -> str:
         if algo == 'sha512':
             return 'sha-512'
         if algo == 'sha224':
@@ -950,17 +986,15 @@ class VmDiscovery():
             return 'sha-384'
         if algo in ['sha-3', 'md5', 'ripemd-160', 'blake2', 'blake3']:
             return algo
-        return ChecksumAlgorithm.other
+        return ChecksumAlgorithm.other.text
 
-    @staticmethod
-    def _add_maintenance_until(os_image: OS_Image, gx_image: GX_Image) -> None:
+    def _add_maintenance_until(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
             gx_image.maintenance = os_image.properties['maintained_until']
         except KeyError:
             pass
 
-    @staticmethod
-    def _add_file_size(os_image: OS_Image, gx_image: GX_Image) -> None:
+    def _add_file_size(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         gx_image.file = MemorySize(value=float(os_image.size * 1.073741824), unit=const.UNIT_GB)
 
     def _add_signature(self, os_image: OS_Image, gx_image: GX_Image) -> None:
@@ -1020,7 +1054,11 @@ class VmDiscovery():
                 gx_image.hypervisorType = "quemu"
             elif os_image.hypervisor_type == "hyperv":
                 gx_image.hypervisorType = "Hyper-V"
+<<<<<<< HEAD
 
+=======
+            else:
+>>>>>>> Add first test case
                 gx_image.hypervisorType = HypervisorType.other.text
         except AttributeError as e:
             gx_image.hypervisorType = HypervisorType.other.text
@@ -1028,6 +1066,10 @@ class VmDiscovery():
 
     def _get_signature_algo(self, algo: str) -> str:
 
+<<<<<<< HEAD
+=======
+    def _get_signature_algo(self, algo: str) -> str:
+>>>>>>> Add first test case
         if algo.startswith("SHA-"):
             return "RSA-Signature"
         return SignatureAlgorithm.other.text
@@ -1044,6 +1086,9 @@ class VmDiscovery():
 
     def _add_rng_model(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         gx_image.hwRngTypeOfImage = "None"
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> Add first test case
