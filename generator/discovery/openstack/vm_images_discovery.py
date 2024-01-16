@@ -353,20 +353,20 @@ class VmDiscovery():
 
     def _get_resource_policy_for_os(self, os: str) -> str:
         try:
-            return self.config[const.CONFIG_OPERATING_SYSTEM][const.CONFIG_RESOURCE_POLICY]
+            return self.config[const.CONFIG_DEFAULT][const.CONFIG_OPERATING_SYSTEM][const.CONFIG_RESOURCE_POLICY]
         except KeyError:
             return const.DEFAULT_RESOURCE_POLICY
 
     def _get_copyrightowner_for_os(self, os: str) -> List[str]:
-        return self.config[const.CONFIG_OPERATING_SYSTEM][os][const.CONFIG_COPYRIGHT]
+        return self.config[const.CONFIG_DEFAULT][const.CONFIG_OPERATING_SYSTEM][os][const.CONFIG_COPYRIGHT]
 
     def _get_license_for_os(self, os: str) -> List[str]:
-        return self.config[const.CONFIG_OPERATING_SYSTEM][os][const.CONFIG_LICENSE]
+        return self.config[const.CONFIG_DEFAULT][const.CONFIG_OPERATING_SYSTEM][os][const.CONFIG_LICENSE]
 
     def _add_copyrigthowner(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         # check if comfig contains image's specific copright owner
         try:
-            gx_image.copyrightOwnedBy = self.config[const.CONFIG_OWN_IMAGES][os_image.name][const.CONFIG_COPYRIGHT]
+            gx_image.copyrightOwnedBy = self.config[const.CONFIG_CLOUD_RESOURCES][const.CONFIG_OWN_IMAGES][os_image.name][const.CONFIG_COPYRIGHT]
         except KeyError:
             gx_image.copyrightOwnedBy = gx_image.operatingSystem.copyrightOwnedBy
 
@@ -374,7 +374,7 @@ class VmDiscovery():
         # read mandatory attributes from config or use default values
         try:
             # check if comfig contains image's specific license
-            gx_image.license = self.config[const.CONFIG_OWN_IMAGES][os_image.name][const.CONFIG_LICENSE]
+            gx_image.license = self.config[const.CONFIG_CLOUD_RESOURCES][const.CONFIG_OWN_IMAGES][os_image.name][const.CONFIG_LICENSE]
         except KeyError:
             gx_image.license = gx_image.operatingSystem.license
 
@@ -382,7 +382,7 @@ class VmDiscovery():
         # read mandatory attributes from config or use default values
         try:
             # check if comfig contains image's specific resource policy
-            gx_image.resourcePolicy = self.config[const.CONFIG_OWN_IMAGES][os_image.name][const.CONFIG_RESOURCE_POLICY]
+            gx_image.resourcePolicy = self.config[const.CONFIG_CLOUD_RESOURCES][const.CONFIG_OWN_IMAGES][os_image.name][const.CONFIG_RESOURCE_POLICY]
         except KeyError:
             gx_image.resourcePolicy = [const.DEFAULT_RESOURCE_POLICY]
 
@@ -569,4 +569,6 @@ class VmDiscovery():
             pass
 
     def _add_rng_model(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        gx_image.hwRngTypeOfImage = "None"
+        pass
+        # not supported yet
+        #gx_image.hwRngTypeOfImage = "None"

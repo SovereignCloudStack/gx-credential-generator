@@ -17,6 +17,12 @@ CONFIG_COPYRIGHT = "copyright owner"
 CONFIG_OPERATING_SYSTEM = "operating system"
 CONFIG_OWN_IMAGES = "own images"
 CONFIG_AGGREGATION_OF = "aggregation of"
+CONFIG_WALLETS = "wallets"
+CONFIG_DEFAULT = "default"
+CONFIG_CLOUD_RESOURCES = "cloud resources:"
+CONFIG_FILESYSTEM_WALLET = "filesystem"
+CONFIG_XFSC_WALLET = "xfsc"
+
 
 CONFIG_OS_ALP = "Alpine Linux"
 CONFIG_OS_ARCH = "Arch Linux"
