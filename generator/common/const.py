@@ -46,6 +46,7 @@ CONFIG_OS_UBUNTU = "Ubuntu"
 CONFIG_OS_WINDOWS = "Microsoft Windows"
 CONFIG_OS_CIRROS = "CirrOS"
 CONFIG_OS_ALMALINUX = "AlmaLinux"
+<<<<<<< HEAD
 DEFAULT_RESOURCE_POLICY = "default: allow intent"
 DEFAULT_FIRMWARE_TYPE = "other"
 DEFAULT_WATCHDOG_ACTION = "none"
@@ -53,7 +54,3 @@ DEFAULT_WATCHDOG_ACTION = "none"
 
 UNIT_MB = "https://qudt.org/vocab:unit/MegaBYTE"
 UNIT_GB = "https://qudt.org/vocab:unit/GigaBYTE"
-
-
-
-

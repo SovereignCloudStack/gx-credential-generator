@@ -1,4 +1,3 @@
-
 class MissingMandatoryAttribute(AttributeError):
     """
     An exception that occurs when an SCS mandatory attributes are missing.

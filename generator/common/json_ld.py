@@ -2,6 +2,7 @@
 Methods and classes needed/useful for JSON-LD serialization.
 """
 import inspect
+
 from datetime import date, datetime
 from typing import List
 from uuid import uuid4
@@ -18,21 +19,24 @@ from linkml_runtime.utils.yamlutils import YAMLRoot, extended_str
 from generator.common.gx_schema import GX, QUDT, SCHEMA, VCARD, slots
 
 from datetime import date, datetime
+from typing import List
+from uuid import uuid4
+
+from linkml_runtime.linkml_model.meta import (
+    EnumDefinition,
+    PermissibleValue,
+    PvFormulaOptions,
+)
+from linkml_runtime.utils.enumerations import EnumDefinitionImpl
+from linkml_runtime.utils.metamodelcore import URI
+from linkml_runtime.utils.yamlutils import YAMLRoot, extended_str
 
 from generator.common.gx_schema import GX, QUDT, SCHEMA, VCARD, slots
-
-from linkml_runtime.utils.metamodelcore import URI
-from linkml_runtime.utils.enumerations import EnumDefinitionImpl
-from linkml_runtime.utils.yamlutils import YAMLRoot, extended_str
-from linkml_runtime.linkml_model.meta import EnumDefinition, PermissibleValue, PvFormulaOptions
-
-from typing import List
-
-from uuid import uuid4
 
 
 class JsonLdObject:
     """Wrapper class to store properties and id of a GX object instance. This class is required, because python
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     classes of Gaia-X Credential does not have an attribute to store instance's id and id is essential in GX Credentials.
@@ -42,8 +46,12 @@ class JsonLdObject:
         """
         Create a new object of JsonLdObejct
     classes of Gaia-X Credential does not have an attribute to store instance's id."""
+=======
+    classes of Gaia-X Credential does not have an attribute to store instance's id and id is essential in GX Credentials.
+    """
+>>>>>>> Reformat files
 
-    def __init__(self, gx_object: YAMLRoot, gx_id:str=None):
+    def __init__(self, gx_object: YAMLRoot, gx_id: str = None):
         """
         Create a new object of JsonLdObejct
 

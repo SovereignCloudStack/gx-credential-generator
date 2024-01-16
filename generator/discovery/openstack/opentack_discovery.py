@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #!/usr/bin/env python3
 # vim: set ts=4 sw=4 et:
 #
@@ -14,9 +13,7 @@ from typing import Dict, List
 
 import json
 import generator.common.json_ld as json_ld
-=======
-from generator.common.json_ld import JsonLdObject
->>>>>>> Add simple FileSystem Wallet
+
 
 from generator.discovery.openstack.vm_images_discovery import VmDiscovery
 
@@ -24,6 +21,7 @@ from linkml_runtime.utils.yamlutils import YAMLRoot
 
 from openstack.connection import Connection
 
+s
 
 
 from generator.common.json_ld import JsonLdObject
@@ -33,6 +31,7 @@ from generator.common.gx_schema import VMImage
 
 class OsCloud:
     "Abstraction for openStack cloud with all its services."
+
     def __init__(self, conn: Connection, config: Dict) -> None:
         # import copy
         self.conn = conn

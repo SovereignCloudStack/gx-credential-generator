@@ -1,21 +1,18 @@
-import click
 import json
-
-import generator.common.json_ld as json_ld
-import generator.common.const as const
-
-import openstack as os
 import sys
+from typing import List
+
+import click
+import openstack as os
 import yaml
 
+import generator.common.const as const
+import generator.common.json_ld as json_ld
 from generator.common.json_ld import JsonLdObject
 from generator.discovery.openstack.opentack_discovery import OsCloud
-
-from generator.wallet.wallet import WalletConnector
 from generator.wallet.file_wallet import FileSystemWallet
+from generator.wallet.wallet import WalletConnector
 from generator.wallet.xfsc_wallet import XFSCWallet
-
-from typing import List
 
 
 @click.group()
@@ -25,11 +22,17 @@ def cli():
 
 @click.command()
 @click.option(
-    "--print-json-ld", is_flag=True, help="Use '--print-json-ld' to print all cloud resources as ONE credential on screen.")
-@click.option('--config', default='../config/config.yaml',
-              help='Path to Configuration file for SCS GX Credential Generator.')
-@click.option('--timeout', default=12, help='Timeout for API calls in seconds')
-@click.argument('cloud')
+    "--print-json-ld",
+    is_flag=True,
+    help="Use '--print-json-ld' to print all cloud resources as ONE credential on screen.",
+)
+@click.option(
+    "--config",
+    default="../config/config.yaml",
+    help="Path to Configuration file for SCS GX Credential Generator.",
+)
+@click.option("--timeout", default=12, help="Timeout for API calls in seconds")
+@click.argument("cloud")
 def openstack(cloud, timeout, config, print_json_ld):
     """Generates Gaia-X Credentials for openstack cloud CLOUD.
     CLOUD MUST refer to a name defined in Openstack's configuration file clouds.yaml."""
@@ -40,8 +43,13 @@ def openstack(cloud, timeout, config, print_json_ld):
         conn.authorize()
     except Exception:
         print("INFO: Retry connection with 'default' domain", file=sys.stderr)
-        conn = os.connect(cloud=cloud, timeout=timeout, api_timeout=timeout * 1.5 + 4,
-                          default_domain='default', project_domain_id='default')
+        conn = os.connect(
+            cloud=cloud,
+            timeout=timeout,
+            api_timeout=timeout * 1.5 + 4,
+            default_domain="default",
+            project_domain_id="default",
+        )
         conn.authorize()
 
     # generate Gaia-X Credentials
@@ -58,7 +66,7 @@ def openstack(cloud, timeout, config, print_json_ld):
         store_creds_in_wallet(wallets, creds)
         if print_json_ld:
             props = json_ld.get_json_ld_context()
-            props['@graph'] = creds
+            props["@graph"] = creds
             print(json.dumps(props, indent=4, default=json_ld.to_json_ld))
 
 
@@ -72,13 +80,19 @@ def init_wallets(config: dict) -> List[WalletConnector]:
     wallets = list()
     for wallet in config[const.CONFIG_WALLETS]:
         if wallet == const.CONFIG_FILESYSTEM_WALLET:
-            wallets.append(FileSystemWallet(config[const.CONFIG_WALLETS][const.CONFIG_FILESYSTEM_WALLET]['path']))
+            wallets.append(
+                FileSystemWallet(
+                    config[const.CONFIG_WALLETS][const.CONFIG_FILESYSTEM_WALLET]["path"]
+                )
+            )
         elif wallet == const.CONFIG_XFSC_WALLET:
             wallets.append(XFSCWallet())
     return wallets
 
 
-def store_creds_in_wallet(wallets: List[WalletConnector], creds: List[JsonLdObject]) -> None:
+def store_creds_in_wallet(
+    wallets: List[WalletConnector], creds: List[JsonLdObject]
+) -> None:
     for w in wallets:
         for c in creds:
             w.store_credential(c)
@@ -87,5 +101,5 @@ def store_creds_in_wallet(wallets: List[WalletConnector], creds: List[JsonLdObje
 cli.add_command(openstack)
 cli.add_command(kubernetes)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cli()
