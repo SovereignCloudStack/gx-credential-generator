@@ -18,6 +18,8 @@ from generator.common.gx_schema import SoftwareResource
 from generator.common.gx_schema import VirtualResource
 from generator.common.gx_schema import VMImage
 
+from typing import List
+
 
 class OpenstackTestcase(unittest.TestCase):
     def check_gaia_x_entity(self, ob_1: GaiaXEntity, ob_2: GaiaXEntity):
@@ -169,3 +171,16 @@ class OpenstackTestcase(unittest.TestCase):
         self.assertEqual(ob_1.firmwareType, str(ob_2.firmwareType), "VM_Image.firmwareType")
         self.assertEqual(ob_1.hwRngTypeOfImage, str(ob_2.hwRngTypeOfImage), "VM_Image.hwRngTypeOfImage")
         self.assertEqual(ob_1.watchDogAction, str(ob_2.watchDogAction), "VM_Image.watchDogAction")
+
+
+class TestConnection:
+    """
+    Wrap connection to OpenStack Cluster
+    """
+    images = []
+
+    def __init__(self, images: List[Image]):
+        self.images = images
+
+    def list_images(self):
+        return self.images

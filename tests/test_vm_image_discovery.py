@@ -1,3 +1,4 @@
+import json
 import unittest
 import yaml
 
@@ -14,12 +15,14 @@ from generator.common.gx_schema import WatchDogActions
 from generator.common.gx_schema import VMImage as GX_Image
 
 from generator.common.json_ld import to_json_ld
-
 from generator.discovery.openstack.vm_images_discovery import VmDiscovery
+
 from openstack.image.v2.image import Image as OS_Image
 
+from pyshacl import validate
+
 from tests.common import OpenstackTestcase
-from tests.connection import TestConnection
+from tests.common import TestConnection
 
 
 def _get_gx_images():
@@ -218,44 +221,17 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
                     self.check_vm_image(image_1.gx_object, image_2.gx_object)
 
     def test_json_ld(self):
-        jsond = {
-            '@id': 'ex:image_1', '@type': 'gx:VMImage', 'gx:name': 'Image1', 'gx:description': 'Image 1_ext',
-            'gx:copyrightOwnedBy': ['Canonical'], 'gx:license': ['https://ubuntu.com/legal/open-source-licences'],
-            'gx:resourcePolicy': ['default: allow intent'],
-            'gx:checksum': {'@type': 'gx:CheckSum', 'gx:checkSumCalculation': 'sha-512',
-                            'gx:checkSumValue': '7f8bababc2c2a948'}, 'gx:patchLevel': '1.5.2',
-            'gx:buildDate': '2023-12-01T00:00:00',
-            'gx:operatingSystem': {'@type': 'gx:OperatingSystem', 'gx:copyrightOwnedBy': ['Canonical'],
-                                   'gx:license': ['https://ubuntu.com/legal/open-source-licences'],
-                                   'gx:resourcePolicy': ['default: allow intent'], 'gx:version': 'Stable',
-                                   'gx:osDistribution': 'Ubuntu'},
-            'gx:cpuReq': {'@type': 'gx:CPU', 'gx:cpuArchitecture': 'x86-64',
-                          'gx:smtEnabled': {'@type': 'xsd:boolean', '@value': 'False'}, 'gx:numberOfCores': 2,
-                          'gx:numberOfThreads': 4}, 'gx:ramReq': {'@type': 'gx:Memory',
-                                                                  'gx:memorySize': {'@type': 'gx:MemorySize',
-                                                                                    'qudt:value': {'@type': 'xsd:float',
-                                                                                                   '@value': '0.0'},
-                                                                                    'qudt:unit': 'https://qudt.org/vocab/unit/MegaBYTE'},
-                                                                  'gx:memoryClass': 'other', 'gx:memoryRank': 'other',
-                                                                  'gx:eccEnabled': {'@type': 'xsd:boolean',
-                                                                                    '@value': 'False'},
-                                                                  'gx:hardwareEncryption': {'@type': 'xsd:boolean',
-                                                                                            '@value': 'False'}},
-            'gx:videoRamSize': {'@type': 'gx:MemorySize', 'qudt:value': {'@type': 'xsd:float', '@value': '20.0'},
-                                'qudt:unit': 'https://qudt.org/vocab/unit/MegaBYTE'},
-            'gx:rootDiskReq': {'@type': 'gx:Disk', 'gx:diskSize': {'@type': 'gx:MemorySize',
-                                                                   'qudt:value': {'@type': 'xsd:float',
-                                                                                  '@value': '21.47483648'},
-                                                                   'qudt:unit': 'https://qudt.org/vocab/unit/GigaBYTE'},
-                               'gx:diskType': 'other', 'gx:diskBusType': 'scsi'},
-            'gx:secureBoot': {'@type': 'xsd:boolean', '@value': 'True'},
-            'gx:vPMU': {'@type': 'xsd:boolean', '@value': 'False'},
-            'gx:multiQueues': {'@type': 'xsd:boolean', '@value': 'False'},
-            'gx:licenseIncluded': {'@type': 'xsd:boolean', '@value': 'False'}, 'gx:vmImageDiskFormat': 'RAW',
-            'gx:hypervisorType': 'other', 'gx:firmwareType': 'other', 'gx:hwRngTypeOfImage': 'None',
-            'gx:watchDogAction': 'reset'}
 
-        self.assertEqual(jsond, to_json_ld(_get_gx_images()[0]))
+        conforms, _, _ = validate(data_graph=json.dumps(
+            _get_gx_images()[0],
+            indent=4, default=to_json_ld),
+            shacl_graph="gaia-x.shacl.ttl",
+            data_graph_format="json-ld",
+            shacl_graph_format="ttl"
+        )
+
+        self.assertTrue(conforms)
+
 
 
 if __name__ == '__main__':

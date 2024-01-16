@@ -111,27 +111,27 @@ def to_json_ld(obj) -> dict:
         # Add type for datetime
         return {
             "@type": "xsd:dateTime",
-            "@value": str(obj)}
+            "@value": obj.strftime("%Y-%m-%dT%H:%M:%S")}
     elif isinstance(obj, date):
         # add type for date
         return {
             "@type": "xsd:date",
-            "@value": str(obj)}
+            "@value": obj}
     elif isinstance(obj, float):
         # add type for float
         return {
             "@type": "xsd:float",
-            "@value": str(obj)}
+            "@value": obj}
     elif isinstance(obj, URI):
         # add type for URI
         return {
             "@type": "xsd:anyURI",
-            "@value": str(obj)}
+            "@value": obj}
     elif isinstance(obj, bool):
         # add type for boolean
         return {
             "@type": "xsd:boolean",
-            "@value": str(obj)}
+            "@value": obj}
     else:
         return obj
 
