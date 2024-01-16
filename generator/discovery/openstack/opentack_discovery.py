@@ -1,16 +1,14 @@
-from generator.common.json_ld import JsonLdObject
-
-from generator.discovery.openstack.vm_images_discovery import VmDiscovery
-
-from linkml_runtime.utils.yamlutils import YAMLRoot
+from typing import Dict, List
 
 from openstack.connection import Connection
 
-from typing import Dict, List
+from generator.common.json_ld import JsonLdObject
+from generator.discovery.openstack.vm_images_discovery import VmDiscovery
 
 
 class OsCloud:
     "Abstraction for openStack cloud with all its services."
+
     def __init__(self, conn: Connection, config: Dict) -> None:
         # import copy
         self.conn = conn
@@ -30,7 +28,3 @@ class OsCloud:
         creds.extend(vm_dis.discover_vm_images())
 
         return creds
-
-
-
-
