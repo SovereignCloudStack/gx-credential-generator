@@ -128,16 +128,10 @@ class VmDiscovery:
         """
         images = list()
         for image in self.conn.list_images():
-<<<<<<< HEAD
             if image.visibility == 'public':
                 images.append(
                     JsonLdObject(self._convert_to_gx_image(image), gx_id=image.id)
                 )
-=======
-            images.append(
-                JsonLdObject(self._convert_to_gx_image(image), gx_id=image.id)
-            )
->>>>>>> Reformat files
         return images
 
     def _convert_to_gx_image(self, os_image: OS_Image) -> GX_Image:
@@ -829,18 +823,10 @@ class VmDiscovery:
         return self.config[const.CONFIG_DEFAULT][const.CONFIG_OPERATING_SYSTEM][os][
             const.CONFIG_LICENSE
         ]
-<<<<<<< HEAD
-
-=======
->>>>>>> Reformat files
 
     def _add_copyrigthowner(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         # check if comfig contains image's specific copyright owner
         try:
-<<<<<<< HEAD
-
-=======
->>>>>>> Reformat files
             gx_image.copyrightOwnedBy = self.config[const.CONFIG_CLOUD_RESOURCES][
                 const.CONFIG_OWN_IMAGES
             ][os_image.name][const.CONFIG_COPYRIGHT]
@@ -851,18 +837,10 @@ class VmDiscovery:
         # read mandatory attributes from config or use default values
         try:
             # check if comfig contains image's specific license
-<<<<<<< HEAD
-
             gx_image.license = self.config[const.CONFIG_CLOUD_RESOURCES][
                 const.CONFIG_OWN_IMAGES
             ][os_image.name][const.CONFIG_LICENSE]
 
-
-=======
-            gx_image.license = self.config[const.CONFIG_CLOUD_RESOURCES][
-                const.CONFIG_OWN_IMAGES
-            ][os_image.name][const.CONFIG_LICENSE]
->>>>>>> Reformat files
         except KeyError:
             gx_image.license = gx_image.operatingSystem.license
 
@@ -870,11 +848,6 @@ class VmDiscovery:
         # read mandatory attributes from config or use default values
         try:
             # check if comfig contains image's specific resource policy
-<<<<<<< HEAD
-
-
-=======
->>>>>>> Reformat files
             gx_image.resourcePolicy = self.config[const.CONFIG_CLOUD_RESOURCES][
                 const.CONFIG_OWN_IMAGES
             ][os_image.name][const.CONFIG_RESOURCE_POLICY]
@@ -939,10 +912,6 @@ class VmDiscovery:
         try:
             if not os_image.hw_video_ram:
                 return
-<<<<<<< HEAD
-
-=======
->>>>>>> Reformat files
             gx_image.videoRamSize = MemorySize(
                 value=float(os_image.hw_video_ram), unit=const.UNIT_MB
             )
@@ -1005,17 +974,10 @@ class VmDiscovery:
 
     def _add_build_date(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
-<<<<<<< HEAD
-
             gx_image.buildDate = datetime.strptime(
                 os_image.properties["image_build_date"], "%Y-%m-%d"
             )
 
-=======
-            gx_image.buildDate = datetime.strptime(
-                os_image.properties["image_build_date"], "%Y-%m-%d"
-            )
->>>>>>> Reformat files
         except KeyError:
             pass
 
@@ -1175,11 +1137,5 @@ class VmDiscovery:
             pass
 
     def _add_rng_model(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-<<<<<<< HEAD
-        gx_image.hwRngTypeOfImage = "None"
 
-=======
-        pass
-        # not supported yet
-        # gx_image.hwRngTypeOfImage = "None"
->>>>>>> Reformat files
+        gx_image.hwRngTypeOfImage = "None"
