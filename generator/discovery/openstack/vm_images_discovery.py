@@ -71,6 +71,7 @@ from generator.common.gx_schema import CheckSum
 from generator.common.gx_schema import ChecksumAlgorithm
 from generator.common.gx_schema import CPU
 from generator.common.gx_schema import Disk
+from generator.common.gx_schema import DiskTypes
 from generator.common.gx_schema import HypervisorType
 from generator.common.gx_schema import Memory
 from generator.common.gx_schema import MemorySize
@@ -92,6 +93,8 @@ from typing import Dict, Union, List
 
 from datetime import datetime
 
+import yaml
+
 
 def _get_cpu_arch(os_image_arch: str) -> str:
     try:
@@ -110,7 +113,7 @@ def _get_cpu_arch(os_image_arch: str) -> str:
 
 class VmDiscovery():
 
-    # def __init__(self) -> None:
+    #def __init__(self) -> None:
     #    with open("config/config.yaml", "r") as config_file:
     #        self.config = yaml.safe_load(config_file)
 

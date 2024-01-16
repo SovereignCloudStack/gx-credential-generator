@@ -1,4 +1,3 @@
-
 import json
 import unittest
 import yaml
@@ -37,10 +36,13 @@ from generator.common.gx_schema import VMImage as GX_Image
 from generator.common.json_ld import to_json_ld
 
 from generator.discovery.openstack.vm_images_discovery import VmDiscovery
+
 from openstack.image.v2.image import Image as OS_Image
 
+from pyshacl import validate
+
 from tests.common import OpenstackTestcase
-from tests.connection import TestConnection
+from tests.common import TestConnection
 
 
 
@@ -249,7 +251,6 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
         )
 
         self.assertTrue(conforms)
-
 
 
 if __name__ == '__main__':
