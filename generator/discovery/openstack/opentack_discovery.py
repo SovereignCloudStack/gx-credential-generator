@@ -1,10 +1,12 @@
-import generator.common.json_ld as json_ld
+from generator.common.json_ld import JsonLdObject
 
 from generator.discovery.openstack.vm_images_discovery import VmDiscovery
 
+from linkml_runtime.utils.yamlutils import YAMLRoot
+
 from openstack.connection import Connection
 
-from typing import Dict
+from typing import Dict, List
 
 
 class OsCloud:
@@ -16,19 +18,18 @@ class OsCloud:
         self.regions = list(conn.identity.regions())
         self.config = config
 
-    def discover_properties(self) -> dict:
+    def discover_properties(self) -> List[JsonLdObject]:
         """
         Discover all attributes of OS Cloud.
 
-        @return: all attributes as dict
+        @return: all attributes as list of YAMLRoot
         """
-        props = json_ld.get_json_ld_context()
-        props['@graph'] = []
+        creds = list()
 
         vm_dis = VmDiscovery(self.conn, self.config)
-        for img in vm_dis.discover_vm_images():
-            props['@graph'].append(img)
-        return props
+        creds.extend(vm_dis.discover_vm_images())
+
+        return creds
 
 
 
