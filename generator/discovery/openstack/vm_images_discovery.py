@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #!/usr/bin/env python3
 # vim: set ts=4 sw=4 et:
 #
@@ -63,8 +62,6 @@ import typing
 from json import JSONDecoder
 import json
 import urllib3
-=======
->>>>>>> Add first test case
 from linkml_runtime.utils.metamodelcore import URI
 
 from generator.common.expections import MissingMandatoryAttribute
@@ -185,8 +182,6 @@ class VmDiscovery():
 
         return gx_image
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     def _add_disk_format(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
             if os_image.disk_format.lower() == "raw":
@@ -203,39 +198,10 @@ class VmDiscovery():
                 gx_image.vmImageDiskFormat = "CVA"
         except AttributeError:
             pass
-=======
-    @staticmethod
-    def _add_cpu_req(os_image: OS_Image, gx_image: GX_Image) -> None:
-        try:
-            if os_image.architecture == "i686":
-             gx_image.cpuReq = CPU(cpuArchitecture="x86-32")
-            elif os_image.architecture in ["x86_64", "ia64"]:
-                gx_image.cpuReq = CPU(cpuArchitecture="x86-64")
-            elif os_image.architecture == "aarch6":
-                gx_image.cpuReq = CPU(cpuArchitecture="AArch-32")
-            elif os_image.architecture in ["alpha", "armv7l", "lm32", "openrisc", "parisc", "parisc64", "unicore32"]:
-                gx_image.cpuReq = CPU(cpuArchitecture="RISC-V")
-            else:
-                gx_image.cpuReq = CPU(cpuArchitecture=CpuArch.other)
-        except AttributeError as e:
-            raise MissingMandatoryAttribute(e.args)
->>>>>>> Support aggregationOf and hypervisorType
 
     def _add_cpu_req(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         cpu = CPU(cpuArchitecture=_get_cpu_arch(os_image.architecture))
 
-=======
-    def _add_disk_format(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        try:
-            gx_image.vmImageDiskFormat = os_image.disk_format
-        except AttributeError:
-            pass
-
-
-    def _add_cpu_req(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        cpu = CPU(cpuArchitecture=_get_cpu_arch(os_image.architecture))
-
->>>>>>> Add first test case
         try:
             cpu.numberOfCores = os_image.hw_cpu_cores
         except AttributeError:
@@ -264,10 +230,7 @@ class VmDiscovery():
             pass
             #raise MissingMandatoryAttribute(e.args)
 
-<<<<<<< HEAD
 
-=======
->>>>>>> Add first test case
     def _add_min_disk_req(self, image: OS_Image, gx_image: GX_Image) -> None:
         try:
             size = MemorySize(
@@ -790,7 +753,6 @@ class VmDiscovery():
             gx_image.resourcePolicy = [const.DEFAULT_RESOURCE_POLICY]
 
     def _get_license(self, licenses: List[str]) -> List[Union[str, SPDX]]:
-<<<<<<< HEAD
         license_list = list()
         for lic in licenses:
             if lic.startswith("http"):
@@ -802,8 +764,7 @@ class VmDiscovery():
 
     @staticmethod
     def _get_license(licenses: List[str]) -> List[Union[str, SPDX]]:
-=======
->>>>>>> Add first test case
+
         license_list = list()
 
         for l in licenses:
@@ -849,13 +810,10 @@ class VmDiscovery():
         try:
             if not os_image.hw_video_ram:
                 return
-<<<<<<< HEAD
+
             gx_image.videoRamSize = MemorySize(
                 value=float(os_image.hw_video_ram), unit=const.UNIT_MB
             )
-=======
-            gx_image.videoRamSize = MemorySize(value=float(os_image.hw_video_ram), unit=const.UNIT_MB)
->>>>>>> Add first test case
         except AttributeError:
             pass
 
@@ -924,21 +882,20 @@ class VmDiscovery():
             pass
 
     def _add_license_included(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-<<<<<<< HEAD
+
         try:
             gx_image.licenseIncluded = os_image.properties["licenseIncluded"]
         except KeyError:
             pass
 
     def _add_patch_level(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-=======
->>>>>>> Add first test case
+
         try:
             gx_image.patchLevel = os_image.properties["patchlevel"]
         except KeyError:
             pass
 
-<<<<<<< HEAD
+
     def _add_version(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
             gx_image.version = os_image.properties["internal_version"]
@@ -953,9 +910,6 @@ class VmDiscovery():
 
     @staticmethod
     def _add_patch_level(os_image: OS_Image, gx_image: GX_Image) -> None:
-=======
-    def _add_patch_level(self, os_image: OS_Image, gx_image: GX_Image) -> None:
->>>>>>> Add first test case
         try:
             gx_image.patchLevel = os_image.properties['patchlevel']
         except KeyError:
@@ -1054,22 +1008,13 @@ class VmDiscovery():
                 gx_image.hypervisorType = "quemu"
             elif os_image.hypervisor_type == "hyperv":
                 gx_image.hypervisorType = "Hyper-V"
-<<<<<<< HEAD
-
-=======
             else:
->>>>>>> Add first test case
                 gx_image.hypervisorType = HypervisorType.other.text
         except AttributeError as e:
             gx_image.hypervisorType = HypervisorType.other.text
             #raise MissingMandatoryAttribute(e.args)
 
     def _get_signature_algo(self, algo: str) -> str:
-
-<<<<<<< HEAD
-=======
-    def _get_signature_algo(self, algo: str) -> str:
->>>>>>> Add first test case
         if algo.startswith("SHA-"):
             return "RSA-Signature"
         return SignatureAlgorithm.other.text
@@ -1086,9 +1031,4 @@ class VmDiscovery():
 
     def _add_rng_model(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         gx_image.hwRngTypeOfImage = "None"
-<<<<<<< HEAD
 
-
-
-=======
->>>>>>> Add first test case
