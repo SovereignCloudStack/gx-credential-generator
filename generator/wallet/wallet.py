@@ -1,16 +1,23 @@
-from abc import ABCMeta
+from abc import ABC
 from abc import abstractmethod
-from linkml_runtime.utils.yamlutils import YAMLRoot
+
+from generator.common.json_ld import JsonLdObject
 
 
-class WalletConnector(ABCMeta):
+class WalletConnector(ABC):
     """
     Abstraction for wallet connections. A wallet stores Gaia-X credentials and class WalletsConnector
     wraps API calls for different kind of wallets.
     """
 
     @abstractmethod
-    def store_credential(self, credential: YAMLRoot, filename: str = None) -> None:
+    def store_credential(self, credential: JsonLdObject) -> None:
+        """
+        Stores given CREDENTIAL in this wallet.
+        @param credential: credential to be stored in JSON-LD
+        @type JsonLdObject
+        @return: None
+        """
         pass
 
     @abstractmethod
