@@ -707,6 +707,4 @@ class VmDiscovery:
             pass
 
     def _add_rng_model(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        pass
-        # not supported yet
-        # gx_image.hwRngTypeOfImage = "None"
+        gx_image.hwRngTypeOfImage = "None"
