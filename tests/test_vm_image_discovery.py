@@ -4,31 +4,27 @@ import yaml
 from datetime import datetime
 
 from generator.common.json_ld import JsonLdObject
-from generator.common.gx_schema import Architectures as CpuArch
 from generator.common.gx_schema import CheckSum
-from generator.common.gx_schema import ChecksumAlgorithm
 from generator.common.gx_schema import CPU
 from generator.common.gx_schema import Disk
-from generator.common.gx_schema import HypervisorType
 from generator.common.gx_schema import Memory
 from generator.common.gx_schema import MemorySize
 from generator.common.gx_schema import OperatingSystem
-from generator.common.gx_schema import Signature
-from generator.common.gx_schema import SignatureAlgorithm
-from generator.common.gx_schema import SPDX
 from generator.common.gx_schema import WatchDogActions
-from generator.common.gx_schema import UpdateStrategy
 from generator.common.gx_schema import VMImage as GX_Image
+
+from generator.common.json_ld import to_json_ld
 
 from generator.discovery.openstack.vm_images_discovery import VmDiscovery
 from openstack.image.v2.image import Image as OS_Image
 
+from tests.common import OpenstackTestcase
 from tests.connection import TestConnection
 
 
 def _get_gx_images():
     return [JsonLdObject(
-        gx_id='94414c54 - 6222 - 4376 - 8f7a - a3cdd9b7f737',
+        gx_id='image_1',
         gx_object=GX_Image(name='Image1', description='Image 1_ext', aggregationOfResources=[],
                            copyrightOwnedBy=['Canonical'],
                            license=['https://ubuntu.com/legal/open-source-licences'],
@@ -75,7 +71,7 @@ def _get_gx_images():
                            hypervisorType='other',
                            hwRngTypeOfImage='None', watchDogAction=WatchDogActions.reset.text)),
         JsonLdObject(
-            gx_id='94414c54 - 6222 - 4376 - 8f7a - a3cdd9b7f737',
+            gx_id='image_2',
             gx_object=GX_Image(name='Image2', description='Image 2', aggregationOfResources=[],
                                copyrightOwnedBy=['Microsoft Corporation'],
                                license=['https://www.microsoft.com/licensing'],
@@ -138,7 +134,7 @@ def _get_os_images():
                      hw_cpu_threads=4,
                      architecture="x86_64",
                      name="Image1",
-                     disk_format="raw",
+                     disk_format='RAW',
                      container_format="bare",
                      needs_secure_boot=True,
                      size="9116319744",
@@ -149,7 +145,7 @@ def _get_os_images():
                      owner="477ba6f14a5b43abe85b2966be7ebe136",
                      os_hash_algo="sha512",
                      os_hash_value="7f8bababc2c2a948",
-                     id="94414c54 - 6222 - 4376 - 8f7a - a3cdd9b7f737",
+                     id="image_1",
                      signatureValue="f8bababc2c2a948807473837504760432b99a3dac81629da77142328a9f638fe34371f",
                      hashAlgorithm="SHA-224",
                      signatureAlgorithm="ECC-CURVES",
@@ -177,7 +173,7 @@ def _get_os_images():
                      hw_cpu_threads=4,
                      architecture="x86_64",
                      name="Image2",
-                     disk_format="raw",
+                     disk_format="RAW",
                      container_format="bare",
                      needs_secure_boot=True,
                      size="9116319744",
@@ -188,7 +184,7 @@ def _get_os_images():
                      owner="477ba6f14a5b43abe85b2966be7ebe136",
                      os_hash_algo="sha512",
                      os_hash_value="7f8bababc2c2a94880747383750470aee68c7e8840bb8811eaeda1b0ce71d59f40ebb182",
-                     id="94453c54 - 6222 - 4376 - 8f7a - a3cdd9b7f737",
+                     id="image_2",
                      properties={
                          'image_build_date': '2023-11-01',
                          'hotfix_hours': '4',
@@ -201,30 +197,65 @@ def _get_os_images():
                          'subscription_required': True,
                          'subscription_included': False,
                          'maintained_until': datetime.strptime("2024-05-31", "%Y-%m-%d")
-
                      })]
 
-class VMImageDiscoveryTestcase(unittest.TestCase):
+
+class VMImageDiscoveryTestcase(OpenstackTestcase):
     def setUp(self):
         with open('../config/config.yaml', 'r') as config_file:
             self.config = yaml.safe_load(config_file)
             self.discovery = VmDiscovery(conn=TestConnection(_get_os_images()), config=self.config)
 
     def test_discovery_vm_images(self):
-        actual_gax_images =  self.discovery.discover_vm_images()
+        actual_gax_images = self.discovery.discover_vm_images()
         expected_gax_images = _get_gx_images()
 
         self.assertEqual(len(expected_gax_images), len(expected_gax_images))
 
-        count = 0
         for image_1 in actual_gax_images:
             for image_2 in expected_gax_images:
                 if image_1.gx_id == image_2.gx_id:
-                    self._assert_equal(image_1, image_2)
+                    self.check_vm_image(image_1.gx_object, image_2.gx_object)
 
-    def _assert_equal(self, image_1: JsonLdObject, image_2: JsonLdObject):
-        self.assertEqual(image_1.gx_id, image_2.gx_id,"Wrong 'gx_id'")
-        self.assertEqual(image_1.gx_object.aggregationOfResources, image_2.gx_object.aggregationOfResources,"aggregationOf")
+    def test_json_ld(self):
+        jsond = {
+            '@id': 'ex:image_1', '@type': 'gx:VMImage', 'gx:name': 'Image1', 'gx:description': 'Image 1_ext',
+            'gx:copyrightOwnedBy': ['Canonical'], 'gx:license': ['https://ubuntu.com/legal/open-source-licences'],
+            'gx:resourcePolicy': ['default: allow intent'],
+            'gx:checksum': {'@type': 'gx:CheckSum', 'gx:checkSumCalculation': 'sha-512',
+                            'gx:checkSumValue': '7f8bababc2c2a948'}, 'gx:patchLevel': '1.5.2',
+            'gx:buildDate': '2023-12-01T00:00:00',
+            'gx:operatingSystem': {'@type': 'gx:OperatingSystem', 'gx:copyrightOwnedBy': ['Canonical'],
+                                   'gx:license': ['https://ubuntu.com/legal/open-source-licences'],
+                                   'gx:resourcePolicy': ['default: allow intent'], 'gx:version': 'Stable',
+                                   'gx:osDistribution': 'Ubuntu'},
+            'gx:cpuReq': {'@type': 'gx:CPU', 'gx:cpuArchitecture': 'x86-64',
+                          'gx:smtEnabled': {'@type': 'xsd:boolean', '@value': 'False'}, 'gx:numberOfCores': 2,
+                          'gx:numberOfThreads': 4}, 'gx:ramReq': {'@type': 'gx:Memory',
+                                                                  'gx:memorySize': {'@type': 'gx:MemorySize',
+                                                                                    'qudt:value': {'@type': 'xsd:float',
+                                                                                                   '@value': '0.0'},
+                                                                                    'qudt:unit': 'https://qudt.org/vocab/unit/MegaBYTE'},
+                                                                  'gx:memoryClass': 'other', 'gx:memoryRank': 'other',
+                                                                  'gx:eccEnabled': {'@type': 'xsd:boolean',
+                                                                                    '@value': 'False'},
+                                                                  'gx:hardwareEncryption': {'@type': 'xsd:boolean',
+                                                                                            '@value': 'False'}},
+            'gx:videoRamSize': {'@type': 'gx:MemorySize', 'qudt:value': {'@type': 'xsd:float', '@value': '20.0'},
+                                'qudt:unit': 'https://qudt.org/vocab/unit/MegaBYTE'},
+            'gx:rootDiskReq': {'@type': 'gx:Disk', 'gx:diskSize': {'@type': 'gx:MemorySize',
+                                                                   'qudt:value': {'@type': 'xsd:float',
+                                                                                  '@value': '21.47483648'},
+                                                                   'qudt:unit': 'https://qudt.org/vocab/unit/GigaBYTE'},
+                               'gx:diskType': 'other', 'gx:diskBusType': 'scsi'},
+            'gx:secureBoot': {'@type': 'xsd:boolean', '@value': 'True'},
+            'gx:vPMU': {'@type': 'xsd:boolean', '@value': 'False'},
+            'gx:multiQueues': {'@type': 'xsd:boolean', '@value': 'False'},
+            'gx:licenseIncluded': {'@type': 'xsd:boolean', '@value': 'False'}, 'gx:vmImageDiskFormat': 'RAW',
+            'gx:hypervisorType': 'other', 'gx:firmwareType': 'other', 'gx:hwRngTypeOfImage': 'None',
+            'gx:watchDogAction': 'reset'}
+
+        self.assertEqual(jsond, to_json_ld(_get_gx_images()[0]))
 
 
 if __name__ == '__main__':
