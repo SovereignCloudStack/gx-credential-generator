@@ -2,26 +2,28 @@
 Methods and classes needed/useful for JSON-LD serialization.
 """
 import inspect
-
 from datetime import date, datetime
+from typing import List
+from uuid import uuid4
+
+from linkml_runtime.linkml_model.meta import (
+    EnumDefinition,
+    PermissibleValue,
+    PvFormulaOptions,
+)
+from linkml_runtime.utils.enumerations import EnumDefinitionImpl
+from linkml_runtime.utils.metamodelcore import URI
+from linkml_runtime.utils.yamlutils import YAMLRoot, extended_str
 
 from generator.common.gx_schema import GX, QUDT, SCHEMA, VCARD, slots
-
-from linkml_runtime.utils.metamodelcore import URI
-from linkml_runtime.utils.enumerations import EnumDefinitionImpl
-from linkml_runtime.utils.yamlutils import YAMLRoot, extended_str
-from linkml_runtime.linkml_model.meta import EnumDefinition, PermissibleValue, PvFormulaOptions
-
-from typing import List
-
-from uuid import uuid4
 
 
 class JsonLdObject:
     """Wrapper class to store properties and id of a GX object instance. This class is required, because python
-    classes of Gaia-X Credential does not have an attribute to store instance's id and id is essential in GX Credentials."""
+    classes of Gaia-X Credential does not have an attribute to store instance's id and id is essential in GX Credentials.
+    """
 
-    def __init__(self, gx_object: YAMLRoot, gx_id:str=None):
+    def __init__(self, gx_object: YAMLRoot, gx_id: str = None):
         """
         Create a new object of JsonLdObejct
 
@@ -44,15 +46,14 @@ def get_json_ld_context() -> dict:
     @rtype: dict
     """
     return {
-        "@context":
-            {
-                GX.prefix: GX,
-                QUDT.prefix: QUDT,
-                SCHEMA.prefix: SCHEMA,
-                VCARD.prefix: VCARD,
-                "xsd": "http://www.w3.org/2001/XMLSchema#",
-                "ex": "https://example.com/"
-            }
+        "@context": {
+            GX.prefix: GX,
+            QUDT.prefix: QUDT,
+            SCHEMA.prefix: SCHEMA,
+            VCARD.prefix: VCARD,
+            "xsd": "http://www.w3.org/2001/XMLSchema#",
+            "ex": "https://example.com/",
+        }
     }
 
 
@@ -74,7 +75,7 @@ def to_json_ld(obj) -> dict:
     if isinstance(obj, JsonLdObject):
         # if JsonLdObject add id
         gx_object = obj.gx_object
-        json_ld['@id'] = "ex:" + obj.gx_id.replace(" ", "")
+        json_ld["@id"] = "ex:" + obj.gx_id.replace(" ", "")
         # call to_json_ld for gx_object
         json_ld.update(to_json_ld(gx_object))
         return json_ld
@@ -84,7 +85,7 @@ def to_json_ld(obj) -> dict:
         # json_ld['@type'] = get_types(obj.__class__)
         try:
             # set type of Gaia-X object if possible
-            json_ld['@type'] = obj.class_class_curie
+            json_ld["@type"] = obj.class_class_curie
         except AttributeError:
             pass
         for key, value in obj.__dict__.items():
@@ -109,29 +110,19 @@ def to_json_ld(obj) -> dict:
         return json_ld
     elif isinstance(obj, datetime):
         # Add type for datetime
-        return {
-            "@type": "xsd:dateTime",
-            "@value": obj.strftime("%Y-%m-%dT%H:%M:%S")}
+        return {"@type": "xsd:dateTime", "@value": obj.strftime("%Y-%m-%dT%H:%M:%S")}
     elif isinstance(obj, date):
         # add type for date
-        return {
-            "@type": "xsd:date",
-            "@value": obj}
+        return {"@type": "xsd:date", "@value": obj}
     elif isinstance(obj, float):
         # add type for float
-        return {
-            "@type": "xsd:float",
-            "@value": obj}
+        return {"@type": "xsd:float", "@value": obj}
     elif isinstance(obj, URI):
         # add type for URI
-        return {
-            "@type": "xsd:anyURI",
-            "@value": obj}
+        return {"@type": "xsd:anyURI", "@value": obj}
     elif isinstance(obj, bool):
         # add type for boolean
-        return {
-            "@type": "xsd:boolean",
-            "@value": obj}
+        return {"@type": "xsd:boolean", "@value": obj}
     else:
         return obj
 
