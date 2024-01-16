@@ -7,6 +7,7 @@ from generator.common.gx_schema import CheckSum
 from generator.common.gx_schema import ChecksumAlgorithm
 from generator.common.gx_schema import CPU
 from generator.common.gx_schema import Disk
+from generator.common.gx_schema import DiskTypes
 from generator.common.gx_schema import HypervisorType
 from generator.common.gx_schema import Memory
 from generator.common.gx_schema import MemorySize
@@ -28,6 +29,8 @@ from typing import Dict, Union, List
 
 from datetime import datetime
 
+import yaml
+
 
 def _get_cpu_arch(os_image_arch: str) -> str:
     try:
@@ -46,7 +49,7 @@ def _get_cpu_arch(os_image_arch: str) -> str:
 
 class VmDiscovery():
 
-    # def __init__(self) -> None:
+    #def __init__(self) -> None:
     #    with open("config/config.yaml", "r") as config_file:
     #        self.config = yaml.safe_load(config_file)
 
@@ -117,7 +120,18 @@ class VmDiscovery():
 
     def _add_disk_format(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
-            gx_image.vmImageDiskFormat = os_image.disk_format
+            if os_image.disk_format.lower() == "raw":
+                gx_image.vmImageDiskFormat = "RAW"
+            if os_image.disk_format.lower() == "qcow2":
+                gx_image.vmImageDiskFormat = "QCOW2"
+            if os_image.disk_format.lower() == "vhd":
+                gx_image.vmImageDiskFormat = "VHD"
+            if os_image.disk_format.lower() == "iso":
+                gx_image.vmImageDiskFormat = "ISO"
+            if os_image.disk_format.lower() == "cvf":
+                gx_image.vmImageDiskFormat = "CVF"
+            if os_image.disk_format.lower() == "cva":
+                gx_image.vmImageDiskFormat = "CVA"
         except AttributeError:
             pass
 
