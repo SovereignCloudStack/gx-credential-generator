@@ -39,3 +39,4 @@ jobs:
       run: |
         ls
         python -m pytest tests/
+
