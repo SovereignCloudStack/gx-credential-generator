@@ -67,9 +67,10 @@ class VmDiscovery:
         """
         images = list()
         for image in self.conn.list_images():
-            images.append(
-                JsonLdObject(self._convert_to_gx_image(image), gx_id=image.id)
-            )
+            if image.visibility == 'public':
+                images.append(
+                    JsonLdObject(self._convert_to_gx_image(image), gx_id=image.id)
+                )
         return images
 
     def _convert_to_gx_image(self, os_image: OS_Image) -> GX_Image:

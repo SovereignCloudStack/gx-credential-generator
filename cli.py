@@ -22,18 +22,23 @@ def cli():
 
 @click.command()
 @click.option(
-    "--print-json-ld",
+    "--wallet",
     is_flag=True,
-    help="Use '--print-json-ld' to print all cloud resources as ONE credential on screen.",
+    help="Use '--wallet' to store generated credentials in all wallets. Wallets can be configured in configuration file.",
+)
+@click.option(
+    "--no-print",
+    is_flag=True,
+    help="Use '--no-print' to omit json-ld print on screen.",
 )
 @click.option(
     "--config",
-    default="../config/config.yaml",
+    default="config/config.yaml",
     help="Path to Configuration file for SCS GX Credential Generator.",
 )
 @click.option("--timeout", default=12, help="Timeout for API calls in seconds")
 @click.argument("cloud")
-def openstack(cloud, timeout, config, print_json_ld):
+def openstack(cloud, timeout, config, no_print, wallet):
     """Generates Gaia-X Credentials for openstack cloud CLOUD.
     CLOUD MUST refer to a name defined in Openstack's configuration file clouds.yaml."""
 
@@ -56,15 +61,18 @@ def openstack(cloud, timeout, config, print_json_ld):
     with open(config, "r") as config_file:
         # init everything
         config_dict = yaml.safe_load(config_file)
-        wallets = init_wallets(config_dict)
         os_cloud = OsCloud(conn, config_dict)
 
         # run discovery
         creds = os_cloud.discover_properties()
 
-        # store creds in wallets and print them as overall JSON-LD
-        store_creds_in_wallet(wallets, creds)
-        if print_json_ld:
+        # store creds in wallets
+        if wallet:
+            wallets = init_wallets(config_dict)
+            store_creds_in_wallet(wallets, creds)
+
+        # print on screen
+        if not no_print:
             props = json_ld.get_json_ld_context()
             props["@graph"] = creds
             print(json.dumps(props, indent=4, default=json_ld.to_json_ld))
@@ -78,20 +86,23 @@ def kubernetes():
 
 def init_wallets(config: dict) -> List[WalletConnector]:
     wallets = list()
-    for wallet in config[const.CONFIG_WALLETS]:
-        if wallet == const.CONFIG_FILESYSTEM_WALLET:
-            wallets.append(
-                FileSystemWallet(
-                    config[const.CONFIG_WALLETS][const.CONFIG_FILESYSTEM_WALLET]["path"]
+    try:
+        for wallet in config[const.CONFIG_WALLETS]:
+            if wallet == const.CONFIG_FILESYSTEM_WALLET:
+                wallets.append(
+                    FileSystemWallet(
+                        config[const.CONFIG_WALLETS][const.CONFIG_FILESYSTEM_WALLET]["path"]
+                    )
                 )
-            )
-        elif wallet == const.CONFIG_XFSC_WALLET:
-            wallets.append(XFSCWallet())
+            elif wallet == const.CONFIG_XFSC_WALLET:
+                wallets.append(XFSCWallet())
+    except KeyError:
+        pass
     return wallets
 
 
 def store_creds_in_wallet(
-    wallets: List[WalletConnector], creds: List[JsonLdObject]
+        wallets: List[WalletConnector], creds: List[JsonLdObject]
 ) -> None:
     for w in wallets:
         for c in creds:
