@@ -100,7 +100,6 @@ simple SD validator script. Visit the `sd` directory and try to validate your
 generated SD. Find the examples in `sd` directory and do the validation as follows:
 
 
-
 Try to validate a minimal example against the latest GX shapes (feel free to remove some
 required attribute and check validation result):
 ```bash

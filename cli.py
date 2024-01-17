@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #!/usr/bin/env python3
 
 """Script to validate self-description in JSON-LD format
@@ -14,6 +15,10 @@ import json
 import sys
 import warnings
 
+=======
+import json
+import sys
+>>>>>>> Update documentation
 from typing import List
 
 import click
@@ -22,20 +27,26 @@ import yaml
 
 import generator.common.const as const
 import generator.common.json_ld as json_ld
+<<<<<<< HEAD
 
 from pyshacl import validate
 
+=======
+>>>>>>> Update documentation
 from generator.common.json_ld import JsonLdObject
 from generator.discovery.openstack.opentack_discovery import OsCloud
 from generator.wallet.file_wallet import FileSystemWallet
 from generator.wallet.wallet import WalletConnector
 from generator.wallet.xfsc_wallet import XFSCWallet
 
+<<<<<<< HEAD
 import rdflib
 
 SHAPES_FILE_FORMAT = "turtle"
 DATA_FILE_FORMAT = "json-ld"
 
+=======
+>>>>>>> Update documentation
 
 @click.group()
 def cli():
@@ -53,13 +64,6 @@ def cli():
 #    is_flag=True,
 #    help="Use '--no-print' to omit json-ld print on screen.",
 #)
-@click.option(
-    "--config",
-    default="config/config.yaml",
-    help="Path to Configuration file for SCS GX Credential Generator.",
-)
-@click.option("--timeout", default=12, help="Timeout for API calls in seconds")
-@click.argument("cloud")
 def openstack(cloud, timeout, config):
 #def openstack(cloud, timeout, config, no_print, wallet):
     """Generates Gaia-X Credentials for openstack cloud CLOUD.
@@ -135,6 +139,7 @@ def store_creds_in_wallet(
             w.store_credential(c)
 
 
+<<<<<<< HEAD
 def load_file(filepath, file_format=DATA_FILE_FORMAT):
     """Load file in a given format"""
     graph = rdflib.Graph()
@@ -163,6 +168,7 @@ def load_file(filepath, file_format=DATA_FILE_FORMAT):
 cli.add_command(openstack)
 cli.add_command(kubernetes)
 #cli.add_command(validate)
+
 
 if __name__ == "__main__":
     cli()
