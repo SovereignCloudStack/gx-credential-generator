@@ -205,7 +205,7 @@ def _get_os_images():
 
 class VMImageDiscoveryTestcase(OpenstackTestcase):
     def setUp(self):
-        with open('../config/config.yaml', 'r') as config_file:
+        with open('config/config.yaml', 'r') as config_file:
             self.config = yaml.safe_load(config_file)
             self.discovery = VmDiscovery(conn=TestConnection(_get_os_images()), config=self.config)
 
@@ -225,7 +225,7 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
         conforms, _, _ = validate(data_graph=json.dumps(
             _get_gx_images()[0],
             indent=4, default=to_json_ld),
-            shacl_graph="gaia-x.shacl.ttl",
+            shacl_graph="tests/gaia-x.shacl.ttl",
             data_graph_format="json-ld",
             shacl_graph_format="ttl"
         )
