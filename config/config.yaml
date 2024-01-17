@@ -135,4 +135,3 @@ default:
 #wallets:
 #  filesystem:
 #    path: /etc/wallet/gx-credentials/
-
