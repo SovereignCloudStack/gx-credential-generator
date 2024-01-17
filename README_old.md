@@ -1,16 +1,22 @@
+# Depracted - see README.md for up-to-date information
+
+
 # gx-credential-generator
 Tools for creating [Gaia-X Crecentials](https://gitlab.com/gaia-x/technical-committee/architecture-document/-/blob/master/architecture_document/gx_conceptual_model.md#gaia-x-credentials), previously known as Self-Descriptions, for SCS compliant cloud infrastructures (OpenStack, k8s, ...)
 
-## Introduction
-
-### OpenStack
+## OpenStack
 We want to collect discoverable information from an OpenStack cloud,
 assuming that we have access to it (as normal tenant user).
 
-We read the OpenStack catalog to collect
-- public VM Images
+We start with the region list and then read the OpenStack catalog to collect
+- OS_AUTH_URL (Keystone Endpoint)
+- List of services (along with supported versions, min thr. max)
+- Per service: extensions (cinderv3, nova)
+- Flavors for compute incl. flavor details (SCS spec)
+- AZs (for nova, cinderv3, neutron)
+- UI (URL, type: horizon or custom)
 
-This then should be output as JSON-LD for the Gaia-X catalogue.
+This then should be output as JSON-LD (or YAML-LD) for the Gaia-X catalogue.
 
 References:
 - <https://gaia-x.gitlab.io/gaia-x-community/gaia-x-self-descriptions/service/service.html>
@@ -32,7 +38,7 @@ Notes from reviewing the SD attributes:
   latency distance?
 
 
-### k8s
+## k8s
 Same thing for k8s
 
 Collect information on a k8s cluster:
@@ -41,7 +47,7 @@ Collect information on a k8s cluster:
 - Nodes information
 - Pods information
 
-#### K8s as-a-Service (KaaS) offering considerations
+## K8s as-a-Service (KaaS) offering considerations
 
 For typical k8s aaS offerings, every cluster is different,
 and we probably don't want to have a description for every single
@@ -65,8 +71,8 @@ like the IaaS SD, the list of node images (osism minio), ...
 
 1. Clone the repository into a location of your choice
 ```bash
-git clone git@github.com:SovereignCloudStack/gx-credential-generator.git
-cd gx-credential-generator
+git clone git@github.com:SovereignCloudStack/gx-self-description-generator.git
+cd gx-self-description-generator
 ```
 
 2. Install scripts dependencies (installing them into a Python [virtualenv](https://virtualenv.pypa.io/en/stable/) is recommended)
@@ -76,94 +82,34 @@ pip install -r requirements.txt
 
 3. Create `clouds.yaml` configuration file
   - Gaia-x generator has to be configured with user credentials, auth-url, ... to access your Openstack cloud. This is done using [clouds.yaml](https://docs.openstack.org/python-openstackclient/ussuri/configuration/index.html) 
-  - Make sure the following keys exist in our `clouds.yaml`. clouds.yaml is a yaml file containing several cloud configurations. Each configuration is referred by name. 
+  - Make sure the following keys exist in our `clouds.yaml`
      - `auth.user_domain_name`
      - `auth.project_domain_name`
      - `region_name`
 
-  - GX Credential Generator requires access to OpenStack cluster as normal tenant user and K8s access
-
 4. Generate Gaia-X Credentials
 
-   - To print OpenStack properties in JSON-LD as ONE credential
+   - OpenStack to json file (timestamp and extension is added to file name and script assumes OpenStack access (as normal tenant user)
    ```bash
-   python3 cli.py openstack <os-cloud>
+   ./gx-sd-generator.py --gaia-x --os-cloud=<os-cloud> --file=<file-name>
    ```
-   - To store OpenStack properties as credential in wallet
-   ```bash
-   python3 cli.py openstack <os-cloud> --wallet
-   ```
-   - To omit to print OpenStack properties on screen  store OpenStack properties as credential in wallet
-   ```bash
-   python3 cli.py openstack <os-cloud> --wallet --no-print
-   ```
-   - To print K8s properties ... 
+   - To use generated Gaia-X Credential in [Gaia-X Wizard](https://wizard.lab.gaia-x.eu/) add `--wizard` option
+     - '@' has to be removed from @id and @type in generated SD, to be able to sign and verify it in Gaia-X Wizard
+   - K8s (script assumes K8s access)
    ```bash
    ./gx-sd-generator.py k8s
    ```
-5. Start the gaiax-pipeline (deprecated)
+
+4. Start the gaiax-pipeline
 - To modify the airflow pipeline you have to touch the gaiax-pipeline.py file inside the dags folder
-  ```
-  cd devops
-  docker-compose up -d
-  ```
-
-## Gaia-X Compliance
-
-GX Credential Generator creates credentials compliant with the latest (3024/01/19) Credential Schema, which can be downloaded from the [GX registry](https://registry.lab.gaia-x.eu/v1/api/trusted-shape-registry/v1/shapes/trustframework)
-
-## Configuration
-
-GX Credential generator is configured by config.yaml. The configuration includes:
-
-- Default values for mandatory attributes
-- Wallets
-
-### Mandatory Attributes
-Gaia-X Credential schema dictates mandatory attributes for some class. If values for mandatory attributes can not be access from OpenStack or K8S cluster, default values are taken from configuration file, from section `default`.
-Providers are able to change default values. In doing so, attribute values for **ALL** instances of impacted cloud resource are modified. 
-
-#### CopyrightOwner, License and ResourcePolicy of VM images
-
-`copyrigthowner`, `license` and `resourcePolicy` are mandatory for VM Images and their operating systems. As these values are not accessible from OpenStack cloud, default values are used. Configuration file lists default values for `copyrightOwner`, `license` and `resourcePolicy` for operating systems, e.g. for Alpine Linux. 
-
-```yaml
-default:
-  operating system:
-    Alpine Linux:
-      copyright owner: "Alpine Linux"
-      resource policy: "default: allow intent"
-      license:
-        - https://gitlab.alpinelinux.org/alpine/aports/-/issues/9074
+```
+cd devops
+docker-compose up -d
 ```
 
-By default, generator uses operating system values for VM Image as well. I.e. by default, VM Image and operating system have the same values for `copyrigthOwner`, `license` and `resourcePolicy`. Providers are able to change values for each VM Image instance, individually. Therefore, the section `cloud resources/own images` exists. To set individual values for a specific VM Image add a new section, started by image's name, to configuration file. The following example defines ìndividual values for `copyrigthOwner`, `license` and `resourcePolicy` for VM image called `AlmaLinux 8`.
-
-```yaml
-cloud resources:
-  own images:
-    AlmaLinux 8:
-      copyright owner:
-        - "AlmaLinux OS Foundation"
-        - "ABC"
-      resource policy: "abc"
-      license:
-          - https://www.abc.org
-```
-
-### Mandatory Attributes
-
-Similar to mandatory attributes, GX Credential Schemas supports optional attributes, whose values can not be retrieved from OpenStack cloud. These values can be set in configuration file as well.
-
-#### AggregationOf of VM Images
-
-
-
-
-### Wallets
+## Simple SelfDescription validator
 
 Generated SelfDescriptions could be validated against their schemas (shapes) by the 
-
 simple SD validator script. Visit the `sd` directory and try to validate your 
 generated SD. Find the examples in `sd` directory and do the validation as follows:
 ```bash
