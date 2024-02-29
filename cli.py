@@ -14,6 +14,7 @@ import json
 import sys
 import warnings
 
+
 from typing import List
 
 import click
@@ -163,6 +164,7 @@ def load_file(filepath, file_format=DATA_FILE_FORMAT):
 cli.add_command(openstack)
 cli.add_command(kubernetes)
 #cli.add_command(validate)
+
 
 if __name__ == "__main__":
     cli()
