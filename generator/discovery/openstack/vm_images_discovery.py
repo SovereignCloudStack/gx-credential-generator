@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+# vim: set ts=4 sw=4 et:
+#
+# vm_images_discovery.py
+"""Script to discovery VM images properties.
+
+(c) Anja Strunk <anja.strunk@cloudandheat.com>, 1/2024
+SPDX-License-Identifier: EPL-2.0
+"""
+
 from datetime import datetime
 from typing import Dict, List, Union
 
@@ -6,7 +16,7 @@ from openstack.connection import Connection
 from openstack.image.v2.image import Image as OS_Image
 
 import generator.common.const as const
-from generator.common.expections import MissingMandatoryAttribute
+#from generator.common.expections import MissingMandatoryAttribute
 from generator.common.gx_schema import CPU, SPDX
 from generator.common.gx_schema import Architectures as CpuArch
 from generator.common.gx_schema import (
@@ -45,7 +55,8 @@ def _get_cpu_arch(os_image_arch: str) -> str:
             return "RISC-V"
         return CpuArch.other.text
     except AttributeError as e:
-        raise MissingMandatoryAttribute(e.args)
+        #raise MissingMandatoryAttribute(e.args)
+        return CpuArch.other.text
 
 
 class VmDiscovery:
@@ -166,7 +177,9 @@ class VmDiscovery:
                 pass
             gx_image.ramReq = mem_req
         except AttributeError as e:
-            raise MissingMandatoryAttribute(e.args)
+            pass
+            #raise MissingMandatoryAttribute(e.args)
+
 
     def _add_min_disk_req(self, image: OS_Image, gx_image: GX_Image) -> None:
         try:
@@ -175,7 +188,8 @@ class VmDiscovery:
             )
             gx_image.rootDiskReq = Disk(diskSize=size, diskBusType=image.hw_disk_bus)
         except AttributeError as e:
-            raise MissingMandatoryAttribute(e.args)
+            #raise MissingMandatoryAttribute(e.args)
+            pass
 
     def _add_operation_system_info(
         self, os_image: OS_Image, gx_image: GX_Image
@@ -579,7 +593,8 @@ class VmDiscovery:
                 "provided_until"
             ]
         except KeyError as e:
-            raise MissingMandatoryAttribute(e.args)
+            #raise MissingMandatoryAttribute(e.args)
+            pass
 
         # collect optional attributes
         try:
@@ -692,7 +707,8 @@ class VmDiscovery:
             else:
                 gx_image.hypervisorType = HypervisorType.other.text
         except AttributeError as e:
-            raise MissingMandatoryAttribute(e.args)
+            gx_image.hypervisorType = HypervisorType.other.text
+            #raise MissingMandatoryAttribute(e.args)
 
     def _get_signature_algo(self, algo: str) -> str:
         if algo.startswith("SHA-"):
