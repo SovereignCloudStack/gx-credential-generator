@@ -17,6 +17,7 @@ from openstack.image.v2.image import Image as OS_Image
 
 import generator.common.const as const
 #from generator.common.expections import MissingMandatoryAttribute
+
 from generator.common.gx_schema import CPU, SPDX
 from generator.common.gx_schema import Architectures as CpuArch
 from generator.common.gx_schema import (
@@ -68,6 +69,7 @@ from openstack.image.v2.image import Image as OS_Image
 
 import generator.common.const as const
 from generator.common.expections import MissingMandatoryAttribute
+
 from generator.common.gx_schema import CPU, SPDX
 from generator.common.gx_schema import Architectures as CpuArch
 from generator.common.gx_schema import (
@@ -106,7 +108,8 @@ def _get_cpu_arch(os_image_arch: str) -> str:
             return "RISC-V"
         return CpuArch.other.text
     except AttributeError as e:
-        raise MissingMandatoryAttribute(e.args)
+        #raise MissingMandatoryAttribute(e.args)
+        return CpuArch.other.text
 
 
 class VmDiscovery:
@@ -240,6 +243,7 @@ class VmDiscovery:
         except AttributeError as e:
             #raise MissingMandatoryAttribute(e.args)
             pass
+
 
     def _add_operation_system_info(
         self, os_image: OS_Image, gx_image: GX_Image
@@ -797,20 +801,9 @@ class VmDiscovery:
 
     def _get_resource_policy_for_os(self, os: str) -> str:
         try:
-<<<<<<< HEAD
-<<<<<<< HEAD
             return self.config[const.CONFIG_DEFAULT][const.CONFIG_OPERATING_SYSTEM][
                 const.CONFIG_RESOURCE_POLICY
             ]
-
-=======
-            return self.config[const.CONFIG_DEFAULT][const.CONFIG_OPERATING_SYSTEM][const.CONFIG_RESOURCE_POLICY]
->>>>>>> Add simple FileSystem Wallet
-=======
-            return self.config[const.CONFIG_DEFAULT][const.CONFIG_OPERATING_SYSTEM][
-                const.CONFIG_RESOURCE_POLICY
-            ]
->>>>>>> Reformat files
         except KeyError:
             return const.DEFAULT_RESOURCE_POLICY
 

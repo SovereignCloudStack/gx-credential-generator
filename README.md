@@ -107,10 +107,6 @@ required attribute and check validation result):
 ```
 
 
-## Compliance
-
-GX Credential Generator creates credentials compliant with the latest (3024/01/19) Credential Schema, which can be downloaded from the [GX registry](https://registry.lab.gaia-x.eu/v1/api/trusted-shape-registry/v1/shapes/trustframework).
-GX Credential Generator **does not** create W3C complaint [Verifiable Credentials](https://www.w3.org/TR/vc-data-model/).
 
 ## Configuration
 
