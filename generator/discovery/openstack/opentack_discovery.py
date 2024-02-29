@@ -15,6 +15,7 @@ from openstack.connection import Connection
 
 from generator.common.json_ld import JsonLdObject
 from generator.discovery.openstack.vm_images_discovery import VmDiscovery
+from generator.discovery.openstack.server_flavor_discovery import ServerFlavorDiscovery
 
 
 class OsCloud:
@@ -35,8 +36,7 @@ class OsCloud:
         @rtype List[JsonLdObject]
         """
         creds = list()
-
-        vm_dis = VmDiscovery(self.conn, self.config)
-        creds.extend(vm_dis.discover_vm_images())
+        #creds.extend(VmDiscovery(self.conn, self.config).discover())
+        creds.extend(ServerFlavorDiscovery(self.conn, self.config).discover())
 
         return creds

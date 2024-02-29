@@ -85,9 +85,9 @@ class VmDiscovery:
         self.config = config
 
     # def collect_vm_images(self, conn: Connection) -> List[str]:
-    def discover_vm_images(self) -> List[JsonLdObject]:
+    def discover(self) -> List[JsonLdObject]:
         """
-        Return one credential for each VM image provided by openstack cloud.
+        Return one JsonLdObject for each public VM image at openstack cloud.
 
         @return: list of VM images
         @rtype: list[JsonLdObject]
