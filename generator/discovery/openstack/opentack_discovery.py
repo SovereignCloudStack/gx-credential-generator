@@ -1,3 +1,14 @@
+#!/usr/bin/env python3
+# vim: set ts=4 sw=4 et:
+#
+# openstack_discoverypy
+"""Script to generate GX Credentials in JSON-LD.
+
+(c) Kurt Garloff <garloff@osb-alliance.com>, 5/2023
+(c) Anja Strunk <anja.strunk@cloudandheat.com>, 1/2024
+SPDX-License-Identifier: EPL-2.0
+"""
+
 from typing import Dict, List
 
 from openstack.connection import Connection

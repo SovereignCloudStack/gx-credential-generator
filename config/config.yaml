@@ -91,7 +91,7 @@ default:
       resource policy: "default: allow intent"
       license:
         - https://www.redhat.com/en/store/red-hat-enterprise-linux-server
-    SUSE Linux Enterprise Desktop:
+    SUSE Linux Enterprise Server:
       copyright owner: "SUSE"
       resource policy: "default: allow intent"
       license:
