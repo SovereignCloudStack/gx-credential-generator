@@ -28,9 +28,9 @@ from pyshacl import validate
 
 from generator.common.json_ld import JsonLdObject
 from generator.discovery.openstack.opentack_discovery import OsCloud
-from generator.wallet.file_wallet import FileSystemWallet
-from generator.wallet.wallet import WalletConnector
-from generator.wallet.xfsc_wallet import XFSCWallet
+#from generator.wallet.file_wallet import FileSystemWallet
+#from generator.wallet.wallet import WalletConnector
+#from generator.wallet.xfsc_wallet import XFSCWallet
 
 import rdflib
 
@@ -111,29 +111,29 @@ def kubernetes():
     pass
 
 
-def init_wallets(config: dict) -> List[WalletConnector]:
-    wallets = list()
-    try:
-        for wallet in config[const.CONFIG_WALLETS]:
-            if wallet == const.CONFIG_FILESYSTEM_WALLET:
-                wallets.append(
-                    FileSystemWallet(
-                        config[const.CONFIG_WALLETS][const.CONFIG_FILESYSTEM_WALLET]["path"]
-                    )
-                )
-            elif wallet == const.CONFIG_XFSC_WALLET:
-                wallets.append(XFSCWallet())
-    except KeyError:
-        pass
-    return wallets
+#def init_wallets(config: dict) -> List[WalletConnector]:
+#    wallets = list()
+#    try:
+#        for wallet in config[const.CONFIG_WALLETS]:
+#            if wallet == const.CONFIG_FILESYSTEM_WALLET:
+#                wallets.append(
+#                    FileSystemWallet(
+#                        config[const.CONFIG_WALLETS][const.CONFIG_FILESYSTEM_WALLET]["path"]
+#                    )
+#                )
+#            elif wallet == const.CONFIG_XFSC_WALLET:
+#                wallets.append(XFSCWallet())
+#    except KeyError:
+#        pass
+#    return wallets
 
 
-def store_creds_in_wallet(
-        wallets: List[WalletConnector], creds: List[JsonLdObject]
-) -> None:
-    for w in wallets:
-        for c in creds:
-            w.store_credential(c)
+#def store_creds_in_wallet(
+#        wallets: List[WalletConnector], creds: List[JsonLdObject]
+#) -> None:
+#    for w in wallets:
+#        for c in creds:
+#            w.store_credential(c)
 
 
 def load_file(filepath, file_format=DATA_FILE_FORMAT):

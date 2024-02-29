@@ -229,9 +229,7 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
             data_graph_format="json-ld",
             shacl_graph_format="ttl"
         )
-
         self.assertTrue(conforms)
-
 
 
 if __name__ == '__main__':

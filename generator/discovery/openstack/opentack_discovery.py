@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # vim: set ts=4 sw=4 et:
 #
-# openstack_discoverypy
+# openstack_discovery.py
 """Script to generate GX Credentials in JSON-LD.
 
 (c) Kurt Garloff <garloff@osb-alliance.com>, 5/2023
@@ -31,7 +31,8 @@ class OsCloud:
         """
         Discover all attributes of OS Cloud.
 
-        @return: all attributes as list of YAMLRoot
+        @return: all attributes as list
+        @rtype List[JsonLdObject]
         """
         creds = list()
 

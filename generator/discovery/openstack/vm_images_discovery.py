@@ -16,7 +16,6 @@ from openstack.connection import Connection
 from openstack.image.v2.image import Image as OS_Image
 
 import generator.common.const as const
-#from generator.common.expections import MissingMandatoryAttribute
 from generator.common.gx_schema import CPU, SPDX
 from generator.common.gx_schema import Architectures as CpuArch
 from generator.common.gx_schema import (
@@ -55,8 +54,25 @@ def _get_cpu_arch(os_image_arch: str) -> str:
             return "RISC-V"
         return CpuArch.other.text
     except AttributeError as e:
-        #raise MissingMandatoryAttribute(e.args)
         return CpuArch.other.text
+
+
+def _add_disk_format(os_image: OS_Image, gx_image: GX_Image) -> None:
+    try:
+        if os_image.disk_format.lower() == "raw":
+            gx_image.vmImageDiskFormat = "RAW"
+        if os_image.disk_format.lower() == "qcow2":
+            gx_image.vmImageDiskFormat = "QCOW2"
+        if os_image.disk_format.lower() == "vhd":
+            gx_image.vmImageDiskFormat = "VHD"
+        if os_image.disk_format.lower() == "iso":
+            gx_image.vmImageDiskFormat = "ISO"
+        if os_image.disk_format.lower() == "cvf":
+            gx_image.vmImageDiskFormat = "CVF"
+        if os_image.disk_format.lower() == "cva":
+            gx_image.vmImageDiskFormat = "CVA"
+    except AttributeError:
+        pass
 
 
 class VmDiscovery:
@@ -123,7 +139,7 @@ class VmDiscovery:
         self._add_hypervisor(os_image, gx_image)
         self._add_aggregation_of(os_image, gx_image)
         self._add_rng_model(os_image, gx_image)
-        self._add_disk_format(os_image, gx_image)
+        _add_disk_format(os_image, gx_image)
 
         # Discover mandatory attribute
         self._add_license(os_image, gx_image)
@@ -131,23 +147,6 @@ class VmDiscovery:
         self._add_resource_policy(os_image, gx_image)
 
         return gx_image
-
-    def _add_disk_format(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        try:
-            if os_image.disk_format.lower() == "raw":
-                gx_image.vmImageDiskFormat = "RAW"
-            if os_image.disk_format.lower() == "qcow2":
-                gx_image.vmImageDiskFormat = "QCOW2"
-            if os_image.disk_format.lower() == "vhd":
-                gx_image.vmImageDiskFormat = "VHD"
-            if os_image.disk_format.lower() == "iso":
-                gx_image.vmImageDiskFormat = "ISO"
-            if os_image.disk_format.lower() == "cvf":
-                gx_image.vmImageDiskFormat = "CVF"
-            if os_image.disk_format.lower() == "cva":
-                gx_image.vmImageDiskFormat = "CVA"
-        except AttributeError:
-            pass
 
     def _add_cpu_req(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         cpu = CPU(cpuArchitecture=_get_cpu_arch(os_image.architecture))
@@ -593,7 +592,6 @@ class VmDiscovery:
                 "provided_until"
             ]
         except KeyError as e:
-            #raise MissingMandatoryAttribute(e.args)
             pass
 
         # collect optional attributes
