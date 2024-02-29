@@ -23,27 +23,6 @@ from pyshacl import validate
 
 from tests.common import OpenstackTestcase
 from tests.common import TestConnection
-from generator.common.gx_schema import Architectures as CpuArch
-from generator.common.gx_schema import CheckSum
-from generator.common.gx_schema import CPU
-from generator.common.gx_schema import Disk
-from generator.common.gx_schema import Memory
-from generator.common.gx_schema import MemorySize
-from generator.common.gx_schema import OperatingSystem
-from generator.common.gx_schema import WatchDogActions
-from generator.common.gx_schema import VMImage as GX_Image
-
-from generator.common.json_ld import to_json_ld
-
-from generator.discovery.openstack.vm_images_discovery import VmDiscovery
-
-from openstack.image.v2.image import Image as OS_Image
-
-from pyshacl import validate
-
-from tests.common import OpenstackTestcase
-from tests.common import TestConnection
-
 
 
 def _get_gx_images():
@@ -242,6 +221,7 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
                     self.check_vm_image(image_1.gx_object, image_2.gx_object)
 
     def test_json_ld(self):
+
         conforms, _, _ = validate(data_graph=json.dumps(
             _get_gx_images()[0],
             indent=4, default=to_json_ld),
@@ -251,6 +231,7 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
         )
 
         self.assertTrue(conforms)
+
 
 
 if __name__ == '__main__':

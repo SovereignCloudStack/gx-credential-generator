@@ -59,6 +59,8 @@ def cli():
     default="config/config.yaml",
     help="Path to Configuration file for SCS GX Credential Generator.",
 )
+@click.option("--timeout", default=12, help="Timeout for API calls in seconds")
+@click.argument("cloud")
 def openstack(cloud, timeout, config):
 #def openstack(cloud, timeout, config, no_print, wallet):
     """Generates Gaia-X Credentials for openstack cloud CLOUD.

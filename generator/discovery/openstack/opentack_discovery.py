@@ -11,23 +11,11 @@ SPDX-License-Identifier: EPL-2.0
 
 from typing import Dict, List
 
-import json
-import generator.common.json_ld as json_ld
-
-
-from generator.discovery.openstack.vm_images_discovery import VmDiscovery
-
-from linkml_runtime.utils.yamlutils import YAMLRoot
-
 from openstack.connection import Connection
 
-s
-
-
 from generator.common.json_ld import JsonLdObject
-from uuid import uuid4
-import generator.common.json_ld as json_ld
-from generator.common.gx_schema import VMImage
+from generator.discovery.openstack.vm_images_discovery import VmDiscovery
+
 
 class OsCloud:
     "Abstraction for openStack cloud with all its services."
@@ -43,9 +31,11 @@ class OsCloud:
         """
         Discover all attributes of OS Cloud.
 
+        @return: all attributes as list of YAMLRoot
         """
         creds = list()
 
         vm_dis = VmDiscovery(self.conn, self.config)
         creds.extend(vm_dis.discover_vm_images())
+
         return creds

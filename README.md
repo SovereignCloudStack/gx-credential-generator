@@ -55,6 +55,7 @@ cd gx-credential-generator
 pip install -r requirements.txt
 ```
 
+
 ### OpenStack 
 
 a. Create `clouds.yaml` configuration file
@@ -64,7 +65,9 @@ a. Create `clouds.yaml` configuration file
      - `auth.project_domain_name`
      - `region_name`
 
+ 
 b. Generate Gaia-X Credentials
+
    - To print OpenStack properties in JSON-LD
 ```bash
    python3 cli.py openstack <os-cloud>
@@ -100,6 +103,7 @@ simple SD validator script. Visit the `sd` directory and try to validate your
 generated SD. Find the examples in `sd` directory and do the validation as follows:
 
 
+
 Try to validate a minimal example against the latest GX shapes (feel free to remove some
 required attribute and check validation result):
 ```bash
@@ -107,6 +111,10 @@ required attribute and check validation result):
 ```
 
 
+## Compliance
+
+GX Credential Generator creates credentials compliant with the latest (3024/01/19) Credential Schema, which can be downloaded from the [GX registry](https://registry.lab.gaia-x.eu/v1/api/trusted-shape-registry/v1/shapes/trustframework).
+GX Credential Generator **does not** create W3C complaint [Verifiable Credentials](https://www.w3.org/TR/vc-data-model/).
 
 ## Configuration
 

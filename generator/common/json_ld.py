@@ -2,22 +2,6 @@
 Methods and classes needed/useful for JSON-LD serialization.
 """
 import inspect
-
-from datetime import date, datetime
-from typing import List
-from uuid import uuid4
-
-from linkml_runtime.linkml_model.meta import (
-    EnumDefinition,
-    PermissibleValue,
-    PvFormulaOptions,
-)
-from linkml_runtime.utils.enumerations import EnumDefinitionImpl
-from linkml_runtime.utils.metamodelcore import URI
-from linkml_runtime.utils.yamlutils import YAMLRoot, extended_str
-
-from generator.common.gx_schema import GX, QUDT, SCHEMA, VCARD, slots
-
 from datetime import date, datetime
 from typing import List
 from uuid import uuid4
@@ -36,20 +20,8 @@ from generator.common.gx_schema import GX, QUDT, SCHEMA, VCARD, slots
 
 class JsonLdObject:
     """Wrapper class to store properties and id of a GX object instance. This class is required, because python
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     classes of Gaia-X Credential does not have an attribute to store instance's id and id is essential in GX Credentials.
     """
-
-    def __init__(self, gx_object: YAMLRoot, gx_id: str = None):
-        """
-        Create a new object of JsonLdObejct
-    classes of Gaia-X Credential does not have an attribute to store instance's id."""
-=======
-    classes of Gaia-X Credential does not have an attribute to store instance's id and id is essential in GX Credentials.
-    """
->>>>>>> Reformat files
 
     def __init__(self, gx_object: YAMLRoot, gx_id: str = None):
         """
@@ -123,34 +95,7 @@ def to_json_ld(obj) -> dict:
                 continue
             slot_curie = get_slot_curie(key, obj)
             if isinstance(value, list):
-                # Add type for datetime
-                json_ld[slot_curie] = dict()
-                json_ld[slot_curie]["@type"] = "xsd:dateTime"
-                json_ld[slot_curie]["@value"] = value
-            elif isinstance(value, XSDDate):
-                # add type for date
-                json_ld[slot_curie] = dict()
-                json_ld[slot_curie]["@type"] = "xsd:date"
-                json_ld[slot_curie]["@value"] = value
-            elif isinstance(value, float):
-                # add type for float
-                json_ld[slot_curie] = dict()
-                json_ld[slot_curie]["@type"] = "xsd:float"
-                json_ld[slot_curie]["@value"] = value
-            elif isinstance(value, str) and value.startswith("http"):
-                # linkML's python generator maps datatype 'anyURI' to 'string', but we need a URL here. Hence, we must
-                # check if string is a URL, by evaluation string's start and change datatype in JSON-LD appropriately.
-                json_ld[slot_curie] = dict()
-                json_ld[slot_curie]["@type"] = "xsd:anyURI"
-                json_ld[slot_curie]["@value"] = value
-            elif isinstance(value, bool):
-                # add type for boolean
-                json_ld[slot_curie] = dict()
-                json_ld[slot_curie]["@type"] = "xsd:boolean"
-                json_ld[slot_curie]["@value"] = value
-            elif isinstance(value, list):
-               if isinstance(value, list):
-         # call to_json_ld for each entry in list
+                # call to_json_ld for each entry in list
                 json_ld[slot_curie] = list()
                 for item in value:
                     json_ld[slot_curie].append(to_json_ld(item))
@@ -184,7 +129,7 @@ def to_json_ld(obj) -> dict:
 
 def get_slot_curie(slot_name: str, gx_object: object) -> str:
     """
-    Returns curie of slot with given SLOT_NAME of given GX_OBJECT.
+    Return curie of slot with given SLOT_NAME of given GX_OBJECT.
     @param slot_name: name of slot whose curie is requested
     @type slot_name: str
     @param gx_object: GX object given slot may belong to
@@ -201,9 +146,11 @@ def get_slot_curie(slot_name: str, gx_object: object) -> str:
 
 def get_types(gx_object: type) -> List[type]:
     """
-    Returns all types as curie of given GX_OBJECT. Types are instance's class as well as all its super classes.
-    @param gaia_object: GX object, whose type is to be retrived
-    @type gaia_object: type
+    Return all types as curie of given GX_OBJECT. Types are instance's class as well as all super classes.
+    @param gx_object: GX object, whose type is to be retrieved
+    @type gx_object: type
+    @return: list of types if given GX_OBJECT
+    @rtype: list of types
     """
     types = []
     for base in _get_super_classes(gx_object):
@@ -211,9 +158,6 @@ def get_types(gx_object: type) -> List[type]:
             types.append(base.class_class_curie)
         except AttributeError:
             pass
-    for base in inspect.getmro(gx_object):
-        if isinstance(base, YAMLRoot):
-            types.append(base.class_class_curie)
     return types
 
 
