@@ -135,6 +135,7 @@ def kubernetes():
 #        for c in creds:
 #            w.store_credential(c)
 
+
 def load_file(filepath, file_format=DATA_FILE_FORMAT):
     """Load file in a given format"""
     graph = rdflib.Graph()
