@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # vim: set ts=4 sw=4 et:
 #
-# vm_images_discovery.py
+# images_discovery.py
 """Script to discovery VM images properties.
 
 (c) Anja Strunk <anja.strunk@cloudandheat.com>, 1/2024
@@ -75,7 +75,7 @@ def _add_disk_format(os_image: OS_Image, gx_image: GX_Image) -> None:
         pass
 
 
-class VmDiscovery:
+class ImageDiscovery:
     # def __init__(self) -> None:
     #    with open("config/config.yaml", "r") as config_file:
     #        self.config = yaml.safe_load(config_file)
@@ -96,11 +96,11 @@ class VmDiscovery:
         for image in self.conn.list_images():
             if image.visibility == 'public':
                 images.append(
-                    JsonLdObject(self._convert_to_gx_image(image), gx_id=image.id)
+                    JsonLdObject(self._convert_to_gx(image), gx_id=image.id)
                 )
         return images
 
-    def _convert_to_gx_image(self, os_image: OS_Image) -> GX_Image:
+    def _convert_to_gx(self, os_image: OS_Image) -> GX_Image:
         """
         Convert Openstack image to a Gaia-X virtual machine image.
         @param os_image: Openstack image properties

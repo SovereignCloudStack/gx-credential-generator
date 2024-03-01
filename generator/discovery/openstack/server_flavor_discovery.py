@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # vim: set ts=4 sw=4 et:
 #
-# vm_images_discovery.py
+# images_discovery.py
 """Script to discovery server flavor properties.
 
 (c) Anja Strunk <anja.strunk@cloudandheat.com>, 2/2024
@@ -54,10 +54,10 @@ class ServerFlavorDiscovery:
         flavors = list()
         for fl in self.conn.list_flavors():
             if fl.is_public:
-                flavors.append(JsonLdObject(self._convert_to_gx_flavor(fl), gx_id=fl.id))
+                flavors.append(JsonLdObject(self._convert_to_gx(fl), gx_id=fl.id))
         return flavors
 
-    def _convert_to_gx_flavor(self, os_flavor: OS_Flavor) -> GX_Flavor:
+    def _convert_to_gx(self, os_flavor: OS_Flavor) -> GX_Flavor:
         """
         Convert Openstack flavor to a Gaia-X server flavor.
         @param os_flavor: Openstack server flavor

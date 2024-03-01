@@ -15,7 +15,7 @@ from generator.common.gx_schema import WatchDogActions
 from generator.common.gx_schema import VMImage as GX_Image
 
 from generator.common.json_ld import to_json_ld
-from generator.discovery.openstack.vm_images_discovery import VmDiscovery
+from generator.discovery.openstack.images_discovery import ImageDiscovery
 
 from openstack.image.v2.image import Image as OS_Image
 
@@ -207,10 +207,10 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
     def setUp(self):
         with open('config/config.yaml', 'r') as config_file:
             self.config = yaml.safe_load(config_file)
-            self.discovery = VmDiscovery(conn=TestConnection(_get_os_images()), config=self.config)
+            self.discovery = ImageDiscovery(conn=TestConnection(_get_os_images()), config=self.config)
 
     def test_discovery_vm_images(self):
-        actual_gax_images = self.discovery.discover_vm_images()
+        actual_gax_images = self.discovery.discover()
         expected_gax_images = _get_gx_images()
 
         self.assertEqual(len(expected_gax_images), len(expected_gax_images))
