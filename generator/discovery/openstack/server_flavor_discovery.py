@@ -16,7 +16,7 @@ from openstack.connection import Connection
 from openstack.compute.v2.flavor import Flavor as OS_Flavor
 
 import generator.common.const as const
-from generator.common.gx_schema import CPU, SPDX
+from generator.common.gx_schema import CPU, SPDX, DiskTypes
 from generator.common.gx_schema import Architectures as CpuArch
 from generator.common.gx_schema import (
     CheckSum,
@@ -33,6 +33,7 @@ from generator.common.gx_schema import (
 from generator.common.gx_schema import ServerFlavor as GX_Flavor
 from generator.common.json_ld import JsonLdObject
 
+import re
 
 class ServerFlavorDiscovery:
     # def __init__(self) -> None:
@@ -43,10 +44,9 @@ class ServerFlavorDiscovery:
         self.conn = conn
         self.config = config
 
-    # def collect_vm_images(self, conn: Connection) -> List[str]:
     def discover(self) -> List[JsonLdObject]:
         """
-        Return one JsonLdObject for each punlic server flavor discovery at openstack cloud.
+        Return one JsonLdObject for each public server flavor discovery at openstack cloud.
 
         @return: list of public server flavors
         @rtype: list[JsonLdObject]
@@ -68,43 +68,84 @@ class ServerFlavorDiscovery:
 
         # Initialize Gaia-X Server Flavor
         gx_flavor = GX_Flavor(
-            cpu=self._get_cpu_req(),
-            ram=self._get_ram_req(),
-            bootVolume=self._get_boot_volume_req()
+            cpu=self._get_cpu(os_flavor),
+            ram=self._get_ram(os_flavor),
+            bootVolume=self._get_boot_volume(os_flavor)
         )
 
         # Discover optional attributes
-        self._add_name(os_flavor, gx_flavor)
+        self._add_description(os_flavor, gx_flavor)
 
         return gx_flavor
 
-    def _get_cpu_req(self) -> CPU:
+    def _get_cpu(self, os_flavor: OS_Flavor) -> CPU:
+        cpu = CPU(cpuArchitecture=CpuArch.other)
+        if os_flavor.name.startswith("SCS-"):
+            # parse SCS flavor name
+            cpu_cap = os_flavor.name.split("-")[1]
+            cpu_suffix = cpu_cap[-1]
+            if cpu_cap.endswith('i'):
+                cpu_suffix = cpu_cap[-2]
+            if cpu_suffix == "C":
+                cpu.smtEnabled = False
+                cpu.defaultOversubscriptionRatio = 1
+            elif cpu_cap.endswith('T'):
+                cpu.smtEnabled = True
+                cpu.defaultOversubscriptionRatio = 1
+            elif cpu_cap.endswith('V'):
+                cpu.smtEnabled = True
+                cpu.defaultOversubscriptionRatio = 5
+            elif cpu_cap.endswith('L'):
+                cpu.smtEnabled = True
+                cpu.defaultOversubscriptionRatio = 6
+        return cpu
 
-        pass
-
-    def _get_ram_req(self, os_flavor: OS_Flavor) -> Memory:
+    def _get_ram(self, os_flavor: OS_Flavor) -> Memory:
         size = MemorySize(
-            value=float(os_flavor.min_ram * 1.048576), unit=const.UNIT_MB
+            value=float(os_flavor.ram), unit=const.UNIT_MB
         )
-        mem_req = Memory(memorySize=size)
-        # try:
-        #    mem_req.hardwareEncryption = os_image.hw_mem_encryption
-        # except AttributeError:
-        #    pass
-        return mem_req
+        mem = Memory(memorySize=size)
+        if os_flavor.name.startswith("SCS-"):
+            # parse SCS flavor name
+            try:
+                mem_cap = os_flavor.name.split("-")[2]
+                if mem_cap.endswith("u"):
+                    mem.eccEnabled = True
+                elif mem_cap.endswith("o"):
+                    mem.eccEnabled = True
+                elif mem_cap.endswith("ou"):
+                    mem.eccEnabled = True
+                    mem.defaultOversubscriptionRatio = 2
+                    mem.eccEnabled = True
+            except IndexError:
+                # flavor name does not conform with SCS Flavor Naming Standard v3
+                pass
+        return mem
 
-    def _get_boot_volume_req(self) -> Disk:
-        pass
+    def _get_boot_volume(self, os_flavor: OS_Flavor) -> Disk:
+        size = MemorySize(
+            value=float(os_flavor.disk), unit=const.UNIT_GB
+        )
+        disk = Disk(diskSize=size)
+        if os_flavor.name.startswith("SCS-"):
+            # parse SCS flavor name
+            try:
+                disk_cap = os_flavor.name.split("-")[3]
+                if disk_cap.endswith("n"):
+                    disk.diskType = "shared network storage"
+                elif disk_cap.endswith("h"):
+                    disk.diskType = "local HDD"
+                elif disk_cap.endswith("s"):
+                    disk.diskType = "local SSD"
+                elif disk_cap.endswith("p"):
+                    disk.diskType = "local HDD"
+                    disk.diskBusType = "NVMe"
+            except IndexError:
+                # no disk description found
+                pass
+        return disk
 
-    @staticmethod
-    def _add_name(os_flavor: OS_Flavor, gx_flavor: GX_Flavor) -> None:
-        try:
-            gx_flavor.name = os_flavor.name
-        except KeyError:
-            pass
-
-    @staticmethod
-    def _add_description(os_flavor: OS_Flavor, gx_flavor: GX_Flavor) -> None:
+    def _add_description(self, os_flavor: OS_Flavor, gx_flavor: GX_Flavor) -> None:
         try:
             gx_flavor.description = os_flavor.description
         except KeyError:
