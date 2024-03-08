@@ -1,5 +1,8 @@
 import unittest
 
+from openstack.image.v2.image import Image as OS_Image
+from openstack.compute.v2.flavor import Flavor as OS_Flavor
+
 from generator.common.gx_schema import CheckSum
 from generator.common.gx_schema import CodeArtifact
 from generator.common.gx_schema import CPU
@@ -9,6 +12,7 @@ from generator.common.gx_schema import Encryption
 from generator.common.gx_schema import GaiaXEntity
 from generator.common.gx_schema import GPU
 from generator.common.gx_schema import Hypervisor
+from generator.common.gx_schema import ServerFlavor
 from generator.common.gx_schema import Image
 from generator.common.gx_schema import Memory
 from generator.common.gx_schema import OperatingSystem
@@ -17,6 +21,8 @@ from generator.common.gx_schema import Signature
 from generator.common.gx_schema import SoftwareResource
 from generator.common.gx_schema import VirtualResource
 from generator.common.gx_schema import VMImage
+from generator.common.gx_schema import InstantiationRequirement
+from generator.common.gx_schema import Hypervisor
 
 from typing import List
 
@@ -172,15 +178,44 @@ class OpenstackTestcase(unittest.TestCase):
         self.assertEqual(ob_1.hwRngTypeOfImage, str(ob_2.hwRngTypeOfImage), "VM_Image.hwRngTypeOfImage")
         self.assertEqual(ob_1.watchDogAction, str(ob_2.watchDogAction), "VM_Image.watchDogAction")
 
+    def check_installation_requirement(self, ob_1: InstantiationRequirement, ob_2: InstantiationRequirement):
+        self.check_gaia_x_entity(ob_1, ob_2)
+
+    def check_hypervisor(self, ob_1: Hypervisor, ob_2: Hypervisor):
+        self.check_software_resource(ob_1, ob_2)
+        self.assertEqual(ob_1.hypervisorType, str(ob_2.hypervisorType), "Hypervisor.hypervisorType")
+
+    def check_flavors(self, ob_1: ServerFlavor, ob_2: ServerFlavor):
+        # self.check_installation_requirement(ob_1, ob_2)
+        self.check_cpu(ob_1.cpu, ob_2.cpu)
+        self.check_mem(ob_1.ram, ob_2.ram)
+        self.check_gpu(ob_1.gpu, ob_2.gpu)
+        self.check_disk(ob_1.bootVolume, ob_2.bootVolume)
+        self.assertEqual(len(ob_1.additionalVolume), len(ob_2.additionalVolume), "ServerFlavor.additionalVolume")
+        self.check_hypervisor(ob_1.hypervisor, ob_2.hypervisor)
+        self.assertEqual(ob_1.confidentialComputing, str(ob_2.confidentialComputing),
+                         "ServerFlavor.confidentialComputing")
+        self.assertEqual(ob_1.hardwareAssistedVirtualization, str(ob_2.hardwareAssistedVirtualization),
+                         "ServerFlavor.hardwareAssistedVirtualization")
+        self.assertEqual(ob_1.hwRngTypeOfFlavor, str(ob_2.hwRngTypeOfFlavor), "ServerFlavor.hwRngTypeOfFlavor")
+
+        for i in range(9, len(ob_1.additionalVolume) - 1):
+            self.check_disk(ob_1.additionalVolume[i], ob_2.additionalVolume[i])
+
 
 class TestConnection:
     """
     Wrap connection to OpenStack Cluster
     """
     images = []
+    flavors = []
 
-    def __init__(self, images: List[Image]):
+    def __init__(self, images: List[OS_Image] = None, flavors: List[OS_Flavor] = None):
         self.images = images
+        self.flavors = flavors
 
     def list_images(self):
         return self.images
+
+    def list_flavors(self):
+        return self.flavors
