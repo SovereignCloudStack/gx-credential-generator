@@ -116,11 +116,6 @@ default:
       resource policy: "default: allow intent"
       license:
         - https://almalinux.org/p/the-almalinux-os-licensing-policy/
-    Debian 11:
-      copyright owner: "AlmaLinux OS Foundation"
-      resource policy: "default: allow intent"
-      license:
-        - https://www.abc.org
 #cloud resources:
 #  own images:
 #    AlmaLinux 8:
