@@ -22,7 +22,7 @@ from openstack.image.v2.image import Image as OS_Image
 from pyshacl import validate
 
 from tests.common import OpenstackTestcase
-from tests.common import TestConnection
+from tests.common import MockConnection
 
 
 def _get_gx_images():
@@ -207,7 +207,7 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
     def setUp(self):
         with open('config/config.yaml', 'r') as config_file:
             self.config = yaml.safe_load(config_file)
-            self.discovery = VmDiscovery(conn=TestConnection(_get_os_images()), config=self.config)
+            self.discovery = VmDiscovery(conn=MockConnection(_get_os_images()), config=self.config)
 
     def test_discovery_vm_images(self):
         actual_gax_images = self.discovery.discover_vm_images()

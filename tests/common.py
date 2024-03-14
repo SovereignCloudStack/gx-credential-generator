@@ -173,7 +173,7 @@ class OpenstackTestcase(unittest.TestCase):
         self.assertEqual(ob_1.watchDogAction, str(ob_2.watchDogAction), "VM_Image.watchDogAction")
 
 
-class TestConnection:
+class MockConnection:
     """
     Wrap connection to OpenStack Cluster
     """
