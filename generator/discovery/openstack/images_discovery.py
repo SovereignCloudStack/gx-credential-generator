@@ -15,6 +15,7 @@ from linkml_runtime.utils.metamodelcore import URI
 from openstack.connection import Connection
 from openstack.image.v2.image import Image as OS_Image
 
+import generator.common.common as common
 import generator.common.const as const
 from generator.common.gx_schema import CPU, SPDX
 from generator.common.gx_schema import Architectures as CpuArch
@@ -32,9 +33,6 @@ from generator.common.gx_schema import (
 )
 from generator.common.gx_schema import VMImage as GX_Image
 from generator.common.json_ld import JsonLdObject
-import generator.common.common as common
-
-
 
 
 def _get_cpu_arch(os_image_arch: str) -> str:
@@ -97,10 +95,8 @@ class ImageDiscovery:
         """
         images = list()
         for image in self.conn.list_images():
-            if image.visibility == 'public':
-                images.append(
-                    JsonLdObject(self._convert_to_gx(image), gx_id=image.id)
-                )
+            if image.visibility == "public":
+                images.append(JsonLdObject(self._convert_to_gx(image), gx_id=image.id))
         return images
 
     def _convert_to_gx(self, os_image: OS_Image) -> GX_Image:
@@ -180,8 +176,7 @@ class ImageDiscovery:
             gx_image.ramReq = mem_req
         except AttributeError as e:
             pass
-            #raise MissingMandatoryAttribute(e.args)
-
+            # raise MissingMandatoryAttribute(e.args)
 
     def _add_min_disk_req(self, image: OS_Image, gx_image: GX_Image) -> None:
         try:
@@ -190,7 +185,7 @@ class ImageDiscovery:
             )
             gx_image.rootDiskReq = Disk(diskSize=size, diskBusType=image.hw_disk_bus)
         except AttributeError as e:
-            #raise MissingMandatoryAttribute(e.args)
+            # raise MissingMandatoryAttribute(e.args)
             pass
 
     def _add_operation_system_info(
@@ -202,16 +197,23 @@ class ImageDiscovery:
             gx_image.operatingSystem = OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_ARCH,
-                resourcePolicy=common.get_resource_policy(self.config, const.CONFIG_OS_ARCH),
-                copyrightOwnedBy=common.get_copyright_owner(self.config, const.CONFIG_OS_ARCH),
-                license=common.get_license(self.config, const.CONFIG_OS_ARCH))
+                resourcePolicy=common.get_resource_policy(
+                    self.config, const.CONFIG_OS_ARCH
+                ),
+                copyrightOwnedBy=common.get_copyright_owner(
+                    self.config, const.CONFIG_OS_ARCH
+                ),
+                license=common.get_license(self.config, const.CONFIG_OS_ARCH),
+            )
         elif os_image.os_distro == "centos":
             gx_image.operatingSystem = OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_CENTOS,
-                resourcePolicy=common.get_resource_policy(self.config, const.CONFIG_OS_CENTOS),
-                copyrightOwnedBy=common.get_copyright_owner(self.config,
-                    const.CONFIG_OS_CENTOS
+                resourcePolicy=common.get_resource_policy(
+                    self.config, const.CONFIG_OS_CENTOS
+                ),
+                copyrightOwnedBy=common.get_copyright_owner(
+                    self.config, const.CONFIG_OS_CENTOS
                 ),
                 license=self._get_license(
                     common.get_license(self.config, const.CONFIG_OS_CENTOS)
@@ -221,9 +223,11 @@ class ImageDiscovery:
             gx_image.operatingSystem = OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_DEBIAN,
-                resourcePolicy=common.get_resource_policy(self.config, const.CONFIG_OS_DEBIAN),
-                copyrightOwnedBy=common.get_copyright_owner(self.config,
-                    const.CONFIG_OS_DEBIAN
+                resourcePolicy=common.get_resource_policy(
+                    self.config, const.CONFIG_OS_DEBIAN
+                ),
+                copyrightOwnedBy=common.get_copyright_owner(
+                    self.config, const.CONFIG_OS_DEBIAN
                 ),
                 license=self._get_license(
                     common.get_license(self.config, const.CONFIG_OS_DEBIAN)
@@ -233,9 +237,11 @@ class ImageDiscovery:
             gx_image.operatingSystem = OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_FEDORA,
-                resourcePolicy=common.get_resource_policy(self.config, const.CONFIG_OS_FEDORA),
-                copyrightOwnedBy=common.get_copyright_owner(self.config,
-                    const.CONFIG_OS_FEDORA
+                resourcePolicy=common.get_resource_policy(
+                    self.config, const.CONFIG_OS_FEDORA
+                ),
+                copyrightOwnedBy=common.get_copyright_owner(
+                    self.config, const.CONFIG_OS_FEDORA
                 ),
                 license=self._get_license(
                     common.get_license(self.config, const.CONFIG_OS_FEDORA)
@@ -245,11 +251,11 @@ class ImageDiscovery:
             gx_image.operatingSystem = OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_FREEBSD,
-                resourcePolicy=common.get_resource_policy(self.config,
-                    const.CONFIG_OS_FREEBSD
+                resourcePolicy=common.get_resource_policy(
+                    self.config, const.CONFIG_OS_FREEBSD
                 ),
-                copyrightOwnedBy=common.get_copyright_owner(self.config,
-                    const.CONFIG_OS_FREEBSD
+                copyrightOwnedBy=common.get_copyright_owner(
+                    self.config, const.CONFIG_OS_FREEBSD
                 ),
                 license=self._get_license(
                     common.get_license(self.config, const.CONFIG_OS_FREEBSD)
@@ -259,9 +265,11 @@ class ImageDiscovery:
             gx_image.operatingSystem = OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_GENTOO,
-                resourcePolicy=common.get_resource_policy(self.config, const.CONFIG_OS_GENTOO),
-                copyrightOwnedBy=common.get_copyright_owner(self.config,
-                    const.CONFIG_OS_GENTOO
+                resourcePolicy=common.get_resource_policy(
+                    self.config, const.CONFIG_OS_GENTOO
+                ),
+                copyrightOwnedBy=common.get_copyright_owner(
+                    self.config, const.CONFIG_OS_GENTOO
                 ),
                 license=self._get_license(
                     common.get_license(self.config, const.CONFIG_OS_GENTOO)
@@ -271,11 +279,11 @@ class ImageDiscovery:
             gx_image.operatingSystem = OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_MANDRAKE,
-                resourcePolicy=common.get_resource_policy(self.config,
-                    const.CONFIG_OS_MANDRAKE
+                resourcePolicy=common.get_resource_policy(
+                    self.config, const.CONFIG_OS_MANDRAKE
                 ),
-                copyrightOwnedBy=common.get_copyright_owner(self.config,
-                    const.CONFIG_OS_MANDRAKE
+                copyrightOwnedBy=common.get_copyright_owner(
+                    self.config, const.CONFIG_OS_MANDRAKE
                 ),
                 license=self._get_license(
                     common.get_license(self.config, const.CONFIG_OS_MANDRAKE)
@@ -285,8 +293,8 @@ class ImageDiscovery:
             gx_image.operatingSystem = OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_MANDRIVA,
-                resourcePolicy=common.get_resource_policy(self.config,
-                    const.CONFIG_OS_MANDRIVA
+                resourcePolicy=common.get_resource_policy(
+                    self.config, const.CONFIG_OS_MANDRIVA
                 ),
                 copyrightOwnedBy=self._get_copyrightowner_for_os(
                     const.CONFIG_OS_MANDRIVA
@@ -299,8 +307,12 @@ class ImageDiscovery:
             gx_image.operatingSystem = OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_MES,
-                resourcePolicy=common.get_resource_policy(self.config, const.CONFIG_OS_MES),
-                copyrightOwnedBy=common.get_copyright_owner(self.config,const.CONFIG_OS_MES),
+                resourcePolicy=common.get_resource_policy(
+                    self.config, const.CONFIG_OS_MES
+                ),
+                copyrightOwnedBy=common.get_copyright_owner(
+                    self.config, const.CONFIG_OS_MES
+                ),
                 license=self._get_license(
                     common.get_license(self.config, const.CONFIG_OS_MES)
                 ),
@@ -309,8 +321,12 @@ class ImageDiscovery:
             gx_image.operatingSystem = OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_MSDOS,
-                resourcePolicy=common.get_resource_policy(self.config, const.CONFIG_OS_MSDOS),
-                copyrightOwnedBy=common.get_copyright_owner(self.config,const.CONFIG_OS_MSDOS),
+                resourcePolicy=common.get_resource_policy(
+                    self.config, const.CONFIG_OS_MSDOS
+                ),
+                copyrightOwnedBy=common.get_copyright_owner(
+                    self.config, const.CONFIG_OS_MSDOS
+                ),
                 license=self._get_license(
                     common.get_license(self.config, const.CONFIG_OS_MSDOS)
                 ),
@@ -319,9 +335,11 @@ class ImageDiscovery:
             gx_image.operatingSystem = OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_NETBSD,
-                resourcePolicy=common.get_resource_policy(self.config, const.CONFIG_OS_NETBSD),
-                copyrightOwnedBy=common.get_copyright_owner(self.config,
-                    const.CONFIG_OS_NETBSD
+                resourcePolicy=common.get_resource_policy(
+                    self.config, const.CONFIG_OS_NETBSD
+                ),
+                copyrightOwnedBy=common.get_copyright_owner(
+                    self.config, const.CONFIG_OS_NETBSD
                 ),
                 license=self._get_license(
                     common.get_license(self.config, const.CONFIG_OS_NETBSD)
@@ -331,9 +349,11 @@ class ImageDiscovery:
             gx_image.operatingSystem = OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_NOVELL,
-                resourcePolicy=common.get_resource_policy(self.config, const.CONFIG_OS_NOVELL),
-                copyrightOwnedBy=common.get_copyright_owner(self.config,
-                    const.CONFIG_OS_NOVELL
+                resourcePolicy=common.get_resource_policy(
+                    self.config, const.CONFIG_OS_NOVELL
+                ),
+                copyrightOwnedBy=common.get_copyright_owner(
+                    self.config, const.CONFIG_OS_NOVELL
                 ),
                 license=self._get_license(
                     common.get_license(self.config, const.CONFIG_OS_NOVELL)
@@ -343,11 +363,11 @@ class ImageDiscovery:
             gx_image.operatingSystem = OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_OPENBSD,
-                resourcePolicy=common.get_resource_policy(self.config,
-                    const.CONFIG_OS_OPENBSD
+                resourcePolicy=common.get_resource_policy(
+                    self.config, const.CONFIG_OS_OPENBSD
                 ),
-                copyrightOwnedBy=common.get_copyright_owner(self.config,
-                    const.CONFIG_OS_OPENBSD
+                copyrightOwnedBy=common.get_copyright_owner(
+                    self.config, const.CONFIG_OS_OPENBSD
                 ),
                 license=self._get_license(
                     common.get_license(self.config, const.CONFIG_OS_OPENBSD)
@@ -357,11 +377,11 @@ class ImageDiscovery:
             gx_image.operatingSystem = OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_SOLARIS,
-                resourcePolicy=common.get_resource_policy(self.config,
-                    const.CONFIG_OS_SOLARIS
+                resourcePolicy=common.get_resource_policy(
+                    self.config, const.CONFIG_OS_SOLARIS
                 ),
-                copyrightOwnedBy=common.get_copyright_owner(self.config,
-                    const.CONFIG_OS_SOLARIS
+                copyrightOwnedBy=common.get_copyright_owner(
+                    self.config, const.CONFIG_OS_SOLARIS
                 ),
                 license=self._get_license(
                     common.get_license(self.config, const.CONFIG_OS_SOLARIS)
@@ -371,11 +391,11 @@ class ImageDiscovery:
             gx_image.operatingSystem = OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_OPEN_SUSE,
-                resourcePolicy=common.get_resource_policy(self.config,
-                    const.CONFIG_OS_OPEN_SUSE
+                resourcePolicy=common.get_resource_policy(
+                    self.config, const.CONFIG_OS_OPEN_SUSE
                 ),
-                copyrightOwnedBy=common.get_copyright_owner(self.config,
-                    const.CONFIG_OS_OPEN_SUSE
+                copyrightOwnedBy=common.get_copyright_owner(
+                    self.config, const.CONFIG_OS_OPEN_SUSE
                 ),
                 license=self._get_license(
                     common.get_license(self.config, const.CONFIG_OS_OPEN_SUSE)
@@ -385,8 +405,12 @@ class ImageDiscovery:
             gx_image.operatingSystem = OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_ROCKY,
-                resourcePolicy=common.get_resource_policy(self.config, const.CONFIG_OS_ROCKY),
-                copyrightOwnedBy=common.get_copyright_owner(self.config, const.CONFIG_OS_ROCKY),
+                resourcePolicy=common.get_resource_policy(
+                    self.config, const.CONFIG_OS_ROCKY
+                ),
+                copyrightOwnedBy=common.get_copyright_owner(
+                    self.config, const.CONFIG_OS_ROCKY
+                ),
                 license=self._get_license(
                     common.get_license(self.config, const.CONFIG_OS_ROCKY)
                 ),
@@ -395,8 +419,12 @@ class ImageDiscovery:
             gx_image.operatingSystem = OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_RHEL,
-                resourcePolicy=common.get_resource_policy(self.config, const.CONFIG_OS_RHEL),
-                copyrightOwnedBy=common.get_copyright_owner(self.config,const.CONFIG_OS_RHEL),
+                resourcePolicy=common.get_resource_policy(
+                    self.config, const.CONFIG_OS_RHEL
+                ),
+                copyrightOwnedBy=common.get_copyright_owner(
+                    self.config, const.CONFIG_OS_RHEL
+                ),
                 license=self._get_license(
                     common.get_license(self.config, const.CONFIG_OS_RHEL)
                 ),
@@ -405,8 +433,12 @@ class ImageDiscovery:
             gx_image.operatingSystem = OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_SLED,
-                resourcePolicy=common.get_resource_policy(self.config, const.CONFIG_OS_SLED),
-                copyrightOwnedBy=common.get_copyright_owner(self.config,const.CONFIG_OS_SLED),
+                resourcePolicy=common.get_resource_policy(
+                    self.config, const.CONFIG_OS_SLED
+                ),
+                copyrightOwnedBy=common.get_copyright_owner(
+                    self.config, const.CONFIG_OS_SLED
+                ),
                 license=self._get_license(
                     common.get_license(self.config, const.CONFIG_OS_SLED)
                 ),
@@ -415,9 +447,11 @@ class ImageDiscovery:
             gx_image.operatingSystem = OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_UBUNTU,
-                resourcePolicy=common.get_resource_policy(self.config, const.CONFIG_OS_UBUNTU),
-                copyrightOwnedBy=common.get_copyright_owner(self.config,
-                    const.CONFIG_OS_UBUNTU
+                resourcePolicy=common.get_resource_policy(
+                    self.config, const.CONFIG_OS_UBUNTU
+                ),
+                copyrightOwnedBy=common.get_copyright_owner(
+                    self.config, const.CONFIG_OS_UBUNTU
                 ),
                 license=self._get_license(
                     common.get_license(self.config, const.CONFIG_OS_UBUNTU)
@@ -427,11 +461,11 @@ class ImageDiscovery:
             gx_image.operatingSystem = OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_WINDOWS,
-                resourcePolicy=common.get_resource_policy(self.config,
-                    const.CONFIG_OS_WINDOWS
+                resourcePolicy=common.get_resource_policy(
+                    self.config, const.CONFIG_OS_WINDOWS
                 ),
-                copyrightOwnedBy=common.get_copyright_owner(self.config,
-                    const.CONFIG_OS_WINDOWS
+                copyrightOwnedBy=common.get_copyright_owner(
+                    self.config, const.CONFIG_OS_WINDOWS
                 ),
                 license=self._get_license(
                     common.get_license(self.config, const.CONFIG_OS_WINDOWS)
@@ -441,9 +475,11 @@ class ImageDiscovery:
             gx_image.operatingSystem = OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_CIRROS,
-                resourcePolicy=common.get_resource_policy(self.config, const.CONFIG_OS_CIRROS),
-                copyrightOwnedBy=common.get_copyright_owner(self.config,
-                    const.CONFIG_OS_CIRROS
+                resourcePolicy=common.get_resource_policy(
+                    self.config, const.CONFIG_OS_CIRROS
+                ),
+                copyrightOwnedBy=common.get_copyright_owner(
+                    self.config, const.CONFIG_OS_CIRROS
                 ),
                 license=self._get_license(
                     common.get_license(self.config, const.CONFIG_OS_CIRROS)
@@ -453,11 +489,11 @@ class ImageDiscovery:
             gx_image.operatingSystem = OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_ALMALINUX,
-                resourcePolicy=common.get_resource_policy(self.config,
-                    const.CONFIG_OS_ALMALINUX
+                resourcePolicy=common.get_resource_policy(
+                    self.config, const.CONFIG_OS_ALMALINUX
                 ),
-                copyrightOwnedBy=common.get_copyright_owner(self.config,
-                    const.CONFIG_OS_ALMALINUX
+                copyrightOwnedBy=common.get_copyright_owner(
+                    self.config, const.CONFIG_OS_ALMALINUX
                 ),
                 license=self._get_license(
                     common.get_license(self.config, const.CONFIG_OS_ALMALINUX)
@@ -693,7 +729,7 @@ class ImageDiscovery:
                 gx_image.hypervisorType = HypervisorType.other.text
         except AttributeError as e:
             gx_image.hypervisorType = HypervisorType.other.text
-            #raise MissingMandatoryAttribute(e.args)
+            # raise MissingMandatoryAttribute(e.args)
 
     def _get_signature_algo(self, algo: str) -> str:
         if algo.startswith("SHA-"):

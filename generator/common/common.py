@@ -1,5 +1,6 @@
+from typing import Dict, List
+
 import generator.common.const as const
-from typing import List, Dict
 
 
 def get_copyright_owner(config: Dict, software: str) -> List[str]:

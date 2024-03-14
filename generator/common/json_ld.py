@@ -1,6 +1,7 @@
 """
 Methods and classes needed/useful for JSON-LD serialization.
 """
+
 import inspect
 from datetime import date, datetime
 from typing import List

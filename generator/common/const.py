@@ -53,4 +53,3 @@ CONFIG_HV_KVM = "KVM"
 CONFIG_HV_XEN = "Xen"
 CONFIG_HV_VMW = "vmware"
 CONFIG_HV_HYV = "hyper-v"
-

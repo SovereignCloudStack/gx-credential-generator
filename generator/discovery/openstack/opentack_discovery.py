@@ -36,7 +36,7 @@ class OsCloud:
         @rtype List[JsonLdObject]
         """
         creds = list()
-        #creds.extend(VmDiscovery(self.conn, self.config).discover())
+        # creds.extend(VmDiscovery(self.conn, self.config).discover())
         creds.extend(ServerFlavorDiscovery(self.conn, self.config).discover())
 
         return creds
