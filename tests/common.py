@@ -45,6 +45,14 @@ class OpenstackTestcase(unittest.TestCase):
                          "VirtualResource.license")
         self.assertEqual(ob_1.resourcePolicy, ob_2.resourcePolicy,
                          "VirtualResource.resourcePolicy")
+
+    def check_software_resource(self, ob_1: SoftwareResource, ob_2: SoftwareResource):
+        self.check_virtual_resource(ob_1, ob_2)
+        if ob_1.checksum:
+            self.check_checksum(ob_1.checksum, ob_2.checksum)
+        if ob_1.signature:
+            self.check_signature(ob_1.signature, ob_2.signature)
+        self.assertEqual(ob_1.version, ob_2.version, "SoftwareResource.version")
         self.assertEqual(
             ob_1.patchLevel, ob_2.patchLevel, "SoftwareResource.patchLevel"
         )
