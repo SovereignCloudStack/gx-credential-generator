@@ -1,5 +1,4 @@
-# Depracted - see README.md for up-to-date information
-
+# Deprecated - see README.md for up-to-date information
 
 # gx-credential-generator
 Tools for creating [Gaia-X Crecentials](https://gitlab.com/gaia-x/technical-committee/architecture-document/-/blob/master/architecture_document/gx_conceptual_model.md#gaia-x-credentials), previously known as Self-Descriptions, for SCS compliant cloud infrastructures (OpenStack, k8s, ...)

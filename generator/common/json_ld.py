@@ -1,7 +1,10 @@
 """
 Methods and classes needed/useful for JSON-LD serialization.
 """
+<<<<<<< HEAD
 
+=======
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
 import inspect
 from datetime import date, datetime
 from typing import List

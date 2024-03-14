@@ -1,8 +1,15 @@
 # Auto generated from gaia-x.yaml by pythongen.py version: 0.0.1
+<<<<<<< HEAD
 # Generation date: 2024-03-08T14:43:02
 # Schema: gaia-x
 #
 # id: https://w3id.org/gaia-x/ONTOLOGY_VERSION/gaia-x
+=======
+# Generation date: 2024-01-05T13:21:25
+# Schema: gaia-x
+#
+# id: http://w3id.org/gaia-x/gx-trust-framework/gaia-x
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
 # description:
 # license: https://creativecommons.org/publicdomain/zero/1.0/
 
@@ -57,7 +64,11 @@ version = None
 dataclasses._init_fn = dataclasses_init_fn_with_kwargs
 
 # Namespaces
+<<<<<<< HEAD
 GX = CurieNamespace("gx", "https://w3id.org/gaia-x/ONTOLOGY_VERSION/")
+=======
+GX = CurieNamespace("gx", "http://w3id.org/gaia-x/gx-trust-framework/")
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
 LINKML = CurieNamespace("linkml", "https://w3id.org/linkml/")
 QUDT = CurieNamespace("qudt", "http://qudt.org/vocab/")
 SCHEMA = CurieNamespace("schema", "http://schema.org/")
@@ -462,8 +473,13 @@ class Disk(Device):
     class_model_uri: ClassVar[URIRef] = GX.Disk
 
     diskSize: Union[dict, "MemorySize"] = None
+<<<<<<< HEAD
     diskType: Optional[Union[str, "DiskType"]] = "other"
     diskBusType: Optional[Union[str, "DiskBusType"]] = "other"
+=======
+    diskType: Optional[Union[str, "DiskTypes"]] = "other"
+    diskBusType: Optional[str] = None
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self._is_empty(self.diskSize):
@@ -471,6 +487,7 @@ class Disk(Device):
         if not isinstance(self.diskSize, MemorySize):
             self.diskSize = MemorySize(**as_dict(self.diskSize))
 
+<<<<<<< HEAD
         if self.diskType is not None and not isinstance(self.diskType, DiskType):
             self.diskType = DiskType(self.diskType)
 
@@ -478,6 +495,13 @@ class Disk(Device):
             self.diskBusType, DiskBusType
         ):
             self.diskBusType = DiskBusType(self.diskBusType)
+=======
+        if self.diskType is not None and not isinstance(self.diskType, DiskTypes):
+            self.diskType = DiskTypes(self.diskType)
+
+        if self.diskBusType is not None and not isinstance(self.diskBusType, str):
+            self.diskBusType = str(self.diskBusType)
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
 
         super().__post_init__(**kwargs)
 
@@ -662,7 +686,11 @@ class LatestN(YAMLRoot):
         super().__post_init__(**kwargs)
 
 
+<<<<<<< HEAD
 class InstantiationRequirement(GaiaXEntity):
+=======
+class InstantiationRequirement(YAMLRoot):
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
     """
     A container class to gather all requirements for compute service offering instantiations.
     """
@@ -909,7 +937,11 @@ class Frequency(Quantity):
 @dataclass
 class MemorySize(Quantity):
     """
+<<<<<<< HEAD
     The number of bytes, that can be stored on a digital storage.
+=======
+    The number of bits, that can be stored on a digital storage.
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
     """
 
     _inherited_slots: ClassVar[List[str]] = []
@@ -993,11 +1025,17 @@ class LegalPerson(Participant):
                 [self.registrationNumber] if self.registrationNumber is not None else []
             )
         self.registrationNumber = [
+<<<<<<< HEAD
             (
                 v
                 if isinstance(v, LegalPersonRegistrationNumber)
                 else LegalPersonRegistrationNumber(v)
             )
+=======
+            v
+            if isinstance(v, LegalPersonRegistrationNumber)
+            else LegalPersonRegistrationNumber(v)
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
             for v in self.registrationNumber
         ]
 
@@ -1018,11 +1056,17 @@ class LegalPerson(Participant):
                 else []
             )
         self.parentOrganizationOf = [
+<<<<<<< HEAD
             (
                 v
                 if isinstance(v, LegalPersonRegistrationNumber)
                 else LegalPersonRegistrationNumber(v)
             )
+=======
+            v
+            if isinstance(v, LegalPersonRegistrationNumber)
+            else LegalPersonRegistrationNumber(v)
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
             for v in self.parentOrganizationOf
         ]
 
@@ -1031,11 +1075,17 @@ class LegalPerson(Participant):
                 [self.subOrganisationOf] if self.subOrganisationOf is not None else []
             )
         self.subOrganisationOf = [
+<<<<<<< HEAD
             (
                 v
                 if isinstance(v, LegalPersonRegistrationNumber)
                 else LegalPersonRegistrationNumber(v)
             )
+=======
+            v
+            if isinstance(v, LegalPersonRegistrationNumber)
+            else LegalPersonRegistrationNumber(v)
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
             for v in self.subOrganisationOf
         ]
 
@@ -1160,11 +1210,17 @@ class PhysicalResource(Resource):
                 [self.maintainedBy] if self.maintainedBy is not None else []
             )
         self.maintainedBy = [
+<<<<<<< HEAD
             (
                 v
                 if isinstance(v, LegalPersonRegistrationNumber)
                 else LegalPersonRegistrationNumber(v)
             )
+=======
+            v
+            if isinstance(v, LegalPersonRegistrationNumber)
+            else LegalPersonRegistrationNumber(v)
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
             for v in self.maintainedBy
         ]
 
@@ -1177,11 +1233,17 @@ class PhysicalResource(Resource):
         if not isinstance(self.ownedBy, list):
             self.ownedBy = [self.ownedBy] if self.ownedBy is not None else []
         self.ownedBy = [
+<<<<<<< HEAD
             (
                 v
                 if isinstance(v, LegalPersonRegistrationNumber)
                 else LegalPersonRegistrationNumber(v)
             )
+=======
+            v
+            if isinstance(v, LegalPersonRegistrationNumber)
+            else LegalPersonRegistrationNumber(v)
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
             for v in self.ownedBy
         ]
 
@@ -1190,11 +1252,17 @@ class PhysicalResource(Resource):
                 [self.manufacturedBy] if self.manufacturedBy is not None else []
             )
         self.manufacturedBy = [
+<<<<<<< HEAD
             (
                 v
                 if isinstance(v, LegalPersonRegistrationNumber)
                 else LegalPersonRegistrationNumber(v)
             )
+=======
+            v
+            if isinstance(v, LegalPersonRegistrationNumber)
+            else LegalPersonRegistrationNumber(v)
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
             for v in self.manufacturedBy
         ]
 
@@ -1277,21 +1345,36 @@ class Image(CodeArtifact):
     copyrightOwnedBy: Union[str, List[str]] = None
     license: Union[str, List[str]] = None
     resourcePolicy: Union[str, List[str]] = None
+<<<<<<< HEAD
     fileSize: Optional[Union[dict, MemorySize]] = None
     operatingSystem: Optional[Union[dict, "OperatingSystem"]] = None
     cpuReq: Optional[Union[dict, CPU]] = None
     gpuReq: Optional[Union[dict, GPU]] = None
     ramReq: Optional[Union[dict, Memory]] = None
     videoRamSize: Optional[Union[dict, MemorySize]] = None
+=======
+    fileSize: Optional[Union[dict, "MemorySize"]] = None
+    operatingSystem: Optional[Union[dict, "OperatingSystem"]] = None
+    cpuReq: Optional[Union[dict, CPU]] = None
+    gpuReq: Optional[Union[dict, GPU]] = None
+    ramReq: Optional[Union[dict, "Memory"]] = None
+    videoRamSize: Optional[Union[dict, "MemorySize"]] = None
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
     rootDiskReq: Optional[Union[dict, Disk]] = None
     encryption: Optional[Union[dict, Encryption]] = None
     checkSum: Optional[Union[dict, CheckSum]] = None
     secureBoot: Optional[Union[bool, Bool]] = False
     vPMU: Optional[Union[bool, Bool]] = False
     multiQueues: Optional[Union[bool, Bool]] = False
+<<<<<<< HEAD
     updateStrategy: Optional[Union[dict, UpdateStrategy]] = None
     licenseIncluded: Optional[Union[bool, Bool]] = False
     maintenance: Optional[Union[dict, MaintenanceSubscription]] = None
+=======
+    updateStrategy: Optional[Union[dict, "UpdateStrategy"]] = None
+    licenseIncluded: Optional[Union[bool, Bool]] = False
+    maintenance: Optional[Union[dict, "MaintenanceSubscription"]] = None
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self.fileSize is not None and not isinstance(self.fileSize, MemorySize):
@@ -1522,11 +1605,17 @@ class ServiceOffering(GaiaXEntity):
                 else []
             )
         self.dataProtectionRegime = [
+<<<<<<< HEAD
             (
                 v
                 if isinstance(v, PersonalDataProtectionRegime)
                 else PersonalDataProtectionRegime(v)
             )
+=======
+            v
+            if isinstance(v, PersonalDataProtectionRegime)
+            else PersonalDataProtectionRegime(v)
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
             for v in self.dataProtectionRegime
         ]
 
@@ -1778,9 +1867,15 @@ class DataResource(VirtualResource):
     dataController: Optional[
         Union[Union[dict, Participant], List[Union[dict, Participant]]]
     ] = empty_list()
+<<<<<<< HEAD
     consent: Optional[Union[Union[dict, "Consent"], List[Union[dict, "Consent"]]]] = (
         empty_list()
     )
+=======
+    consent: Optional[
+        Union[Union[dict, "Consent"], List[Union[dict, "Consent"]]]
+    ] = empty_list()
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self._is_empty(self.producedBy):
@@ -1795,11 +1890,17 @@ class DataResource(VirtualResource):
                 [self.exposedThrough] if self.exposedThrough is not None else []
             )
         self.exposedThrough = [
+<<<<<<< HEAD
             (
                 v
                 if isinstance(v, DataExchangeComponent)
                 else DataExchangeComponent(**as_dict(v))
             )
+=======
+            v
+            if isinstance(v, DataExchangeComponent)
+            else DataExchangeComponent(**as_dict(v))
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
             for v in self.exposedThrough
         ]
 
@@ -1905,6 +2006,7 @@ class DataExchangeComponent(YAMLRoot):
     class_model_uri: ClassVar[URIRef] = GX.DataExchangeComponent
 
 
+<<<<<<< HEAD
 class AvailabilityZone(Resource):
     """
     An availability zone is an aggregation of resources - physical and abstract - in a non-redundant setup often
@@ -1988,6 +2090,8 @@ class Region(Resource):
         super().__post_init__(**kwargs)
 
 
+=======
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
 @dataclass
 class VMImage(Image):
     """
@@ -2040,7 +2144,11 @@ class VMImage(Image):
 
 
 @dataclass
+<<<<<<< HEAD
 class ServerFlavor(InstantiationRequirement):
+=======
+class ServerFlavor(YAMLRoot):
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
     """
     Description of the available hardware configuration, such as processor, ram and disk capacities, of a physical or
     virtual servers that can be launched.
@@ -2058,11 +2166,19 @@ class ServerFlavor(InstantiationRequirement):
     bootVolume: Union[dict, Disk] = None
     gpu: Optional[Union[dict, GPU]] = None
     network: Optional[str] = None
+<<<<<<< HEAD
     additionalVolume: Optional[Union[Union[dict, Disk], List[Union[dict, Disk]]]] = (
         empty_list()
     )
     confidentialComputing: Optional[Union[dict, "ConfidentialComputing"]] = None
     hypervisor: Optional[Union[dict, Hypervisor]] = None
+=======
+    additionalVolume: Optional[
+        Union[Union[dict, Disk], List[Union[dict, Disk]]]
+    ] = empty_list()
+    confidentialComputing: Optional[Union[dict, "ConfidentialComputing"]] = None
+    hypervisor: Optional[Union[dict, SoftwareResource]] = None
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
     hardwareAssistedVirtualization: Optional[Union[bool, Bool]] = False
     hwRngTypeOfFlavor: Optional[Union[str, "RNGTypes"]] = "None"
 
@@ -2088,12 +2204,21 @@ class ServerFlavor(InstantiationRequirement):
         if self.network is not None and not isinstance(self.network, str):
             self.network = str(self.network)
 
+<<<<<<< HEAD
         #self._normalize_inlined_as_dict(
         #    slot_name="additionalVolume",
         #    slot_type=Disk,
         #    key_name="diskSize",
         #    keyed=False,
         #)
+=======
+        self._normalize_inlined_as_dict(
+            slot_name="additionalVolume",
+            slot_type=Disk,
+            key_name="diskSize",
+            keyed=False,
+        )
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
 
         if self.confidentialComputing is not None and not isinstance(
             self.confidentialComputing, ConfidentialComputing
@@ -2102,8 +2227,15 @@ class ServerFlavor(InstantiationRequirement):
                 **as_dict(self.confidentialComputing)
             )
 
+<<<<<<< HEAD
         if self.hypervisor is not None and not isinstance(self.hypervisor, Hypervisor):
             self.hypervisor = Hypervisor(**as_dict(self.hypervisor))
+=======
+        if self.hypervisor is not None and not isinstance(
+            self.hypervisor, SoftwareResource
+        ):
+            self.hypervisor = SoftwareResource(**as_dict(self.hypervisor))
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
 
         if self.hardwareAssistedVirtualization is not None and not isinstance(
             self.hardwareAssistedVirtualization, Bool
@@ -2148,7 +2280,10 @@ class ConfidentialComputing(YAMLRoot):
 
 # Enumerations
 class CountryNameAlpha2(EnumDefinitionImpl):
+<<<<<<< HEAD
 
+=======
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
     AF = PermissibleValue(text="AF", description="Alpha2 code for Afghanistan.")
     EG = PermissibleValue(text="EG", description="Alpha2 code for Egypt.")
     AX = PermissibleValue(text="AX", description="Alpha2 code for Aland Islands.")
@@ -2501,7 +2636,10 @@ class CountryNameAlpha2(EnumDefinitionImpl):
 
 
 class CountryNameAlpha3(EnumDefinitionImpl):
+<<<<<<< HEAD
 
+=======
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
     AFG = PermissibleValue(text="AFG", description="Alpha3 code for Afghanistan.")
     ALA = PermissibleValue(text="ALA", description="Alpha3 code for Aland Islands.")
     ALB = PermissibleValue(text="ALB", description="Alpha3 code for Albania.")
@@ -2862,7 +3000,10 @@ class CountryNameAlpha3(EnumDefinitionImpl):
 
 
 class CountryNameNumeric(EnumDefinitionImpl):
+<<<<<<< HEAD
 
+=======
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
     _defn = EnumDefinition(
         name="CountryNameNumeric",
     )
@@ -4213,7 +4354,10 @@ class CountryNameNumeric(EnumDefinitionImpl):
 
 
 class Architectures(EnumDefinitionImpl):
+<<<<<<< HEAD
 
+=======
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
     other = PermissibleValue(
         text="other", description="CPU architecture not specified above."
     )
@@ -4263,6 +4407,7 @@ class Architectures(EnumDefinitionImpl):
 
 
 class EncryptionAlgorithm(EnumDefinitionImpl):
+<<<<<<< HEAD
 
     RSA = PermissibleValue(
         text="RSA",
@@ -4284,6 +4429,13 @@ class EncryptionAlgorithm(EnumDefinitionImpl):
         text="SDA",
         description="""(Static Data Authentication) is a digital signature scheme that works with asymmetric cryptography.""",
     )
+=======
+    RSA = PermissibleValue(text="RSA", description="TBD")
+    AES = PermissibleValue(text="AES", description="TBD")
+    Blowfish = PermissibleValue(text="Blowfish", description="TBD")
+    Twofish = PermissibleValue(text="Twofish", description="TBD")
+    SDA = PermissibleValue(text="SDA", description="TBD")
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
     other = PermissibleValue(
         text="other", description="Algorithm for encryption not further described."
     )
@@ -4294,6 +4446,7 @@ class EncryptionAlgorithm(EnumDefinitionImpl):
 
     @classmethod
     def _addvals(cls):
+<<<<<<< HEAD
         setattr(
             cls,
             "3DES",
@@ -4321,6 +4474,18 @@ class ChecksumAlgorithm(EnumDefinitionImpl):
     other = PermissibleValue(
         text="other",
         description="Algorithm to calculate checksum not further described.",
+=======
+        setattr(cls, "3DES", PermissibleValue(text="3DES", description="TBD"))
+
+
+class ChecksumAlgorithm(EnumDefinitionImpl):
+    md5 = PermissibleValue(text="md5", description="TBD")
+    blake2 = PermissibleValue(text="blake2", description="TBD")
+    blake3 = PermissibleValue(text="blake3", description="TBD")
+    other = PermissibleValue(
+        text="other",
+        description="Algorithm to calcualte checksum not further described.",
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
     )
 
     _defn = EnumDefinition(
@@ -4329,6 +4494,7 @@ class ChecksumAlgorithm(EnumDefinitionImpl):
 
     @classmethod
     def _addvals(cls):
+<<<<<<< HEAD
         setattr(
             cls,
             "sha-1",
@@ -4376,11 +4542,24 @@ class ChecksumAlgorithm(EnumDefinitionImpl):
                 text="ripemd-160",
                 description="""RIPEMD-160 is a hash function from the RIPEMD (RIPE Message Digest) family that generates 160-bit hashes represented as 40-digit hexadecimal numbers.""",
             ),
+=======
+        setattr(cls, "sha-1", PermissibleValue(text="sha-1", description="TBD"))
+        setattr(cls, "sha-224", PermissibleValue(text="sha-224", description="TBD"))
+        setattr(cls, "sha-256", PermissibleValue(text="sha-256", description="TBD"))
+        setattr(cls, "sha-512", PermissibleValue(text="sha-512", description="TBD"))
+        setattr(cls, "sha-384", PermissibleValue(text="sha-384", description="TBD"))
+        setattr(cls, "sha-3", PermissibleValue(text="sha-3", description="TBD"))
+        setattr(
+            cls, "ripemd-160", PermissibleValue(text="ripemd-160", description="TBD")
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
         )
 
 
 class KeyManagement(EnumDefinitionImpl):
+<<<<<<< HEAD
 
+=======
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
     BYOK = PermissibleValue(
         text="BYOK",
         description="bring-your-own-key: Keys created by user and stored in key manager of cloud",
@@ -4400,6 +4579,7 @@ class KeyManagement(EnumDefinitionImpl):
 
 
 class SignatureAlgorithm(EnumDefinitionImpl):
+<<<<<<< HEAD
 
     DSA = PermissibleValue(
         text="DSA",
@@ -4424,6 +4604,10 @@ class SignatureAlgorithm(EnumDefinitionImpl):
         text="ECGDSA",
         description="(Elliptic Curve German Digital Signature Algorithm), variant of the ECDSA algorithm.",
     )
+=======
+    ECDSA = PermissibleValue(text="ECDSA", description="TBD")
+    DSA = PermissibleValue(text="DSA", description="TBD")
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
     other = PermissibleValue(
         text="other",
         description="Algorithm for digital signatures not further described.",
@@ -4438,6 +4622,7 @@ class SignatureAlgorithm(EnumDefinitionImpl):
         setattr(
             cls,
             "RSA-Signature",
+<<<<<<< HEAD
             PermissibleValue(
                 text="RSA-Signature",
                 description="""RSA is a cryptographic system based on public key that can be used both for signing and encryption purposes.""",
@@ -4461,10 +4646,22 @@ class DiskType(EnumDefinitionImpl):
 
     _defn = EnumDefinition(
         name="DiskType",
+=======
+            PermissibleValue(text="RSA-Signature", description="TBD"),
+        )
+
+
+class DiskTypes(EnumDefinitionImpl):
+    other = PermissibleValue(text="other")
+
+    _defn = EnumDefinition(
+        name="DiskTypes",
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
     )
 
     @classmethod
     def _addvals(cls):
+<<<<<<< HEAD
         setattr(
             cls,
             "local HDD",
@@ -4540,6 +4737,19 @@ class DiskBusType(EnumDefinitionImpl):
 
 class GPUInterconnetionTypes(EnumDefinitionImpl):
 
+=======
+        setattr(cls, "local SSD", PermissibleValue(text="local SSD"))
+        setattr(cls, "local HDD", PermissibleValue(text="local HDD"))
+        setattr(
+            cls,
+            "shared network storage",
+            PermissibleValue(text="shared network storage"),
+        )
+        setattr(cls, "high-perf NVMe", PermissibleValue(text="high-perf NVMe"))
+
+
+class GPUInterconnetionTypes(EnumDefinitionImpl):
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
     NVLink = PermissibleValue(text="NVLink")
     RoCE2 = PermissibleValue(text="RoCE2")
     other = PermissibleValue(text="other")
@@ -4618,6 +4828,7 @@ class Validity2(EnumDefinitionImpl):
 
 class GaiaXTermsAndConditions(EnumDefinitionImpl):
     """
+<<<<<<< HEAD
     SHA256 check sum of Gaia-X Terms and Conditions.
     """
 
@@ -8640,6 +8851,769 @@ class SPDX(EnumDefinitionImpl):
                 description="""Visit https://spdx.org/licenses/ZPL-2.1.html for complete details of Zope Public License 2.1""",
             ),
         )
+=======
+    SHA256 check sum of Gaia-X Terms and Conditions.
+    """
+
+    _defn = EnumDefinition(
+        name="GaiaXTermsAndConditions",
+        description="SHA256 check sum of Gaia-X Terms and Conditions.",
+    )
+
+    @classmethod
+    def _addvals(cls):
+        setattr(
+            cls,
+            "4bd7554097444c960292b4726c2efa1373485e8a5565d94d41195214c5e0ceb3",
+            PermissibleValue(
+                text="4bd7554097444c960292b4726c2efa1373485e8a5565d94d41195214c5e0ceb3"
+            ),
+        )
+
+
+class MemoryClasses(EnumDefinitionImpl):
+    DDR4 = PermissibleValue(text="DDR4")
+    DDR5 = PermissibleValue(text="DDR5")
+    GDDR5 = PermissibleValue(text="GDDR5")
+    GDDR6 = PermissibleValue(text="GDDR6")
+    other = PermissibleValue(text="other")
+
+    _defn = EnumDefinition(
+        name="MemoryClasses",
+    )
+
+
+class MemoryRanks(EnumDefinitionImpl):
+    other = PermissibleValue(text="other")
+
+    _defn = EnumDefinition(
+        name="MemoryRanks",
+    )
+
+    @classmethod
+    def _addvals(cls):
+        setattr(cls, "1R RDIMM", PermissibleValue(text="1R RDIMM"))
+        setattr(cls, "2R RDIMM", PermissibleValue(text="2R RDIMM"))
+        setattr(cls, "4R LRDIMM", PermissibleValue(text="4R LRDIMM"))
+        setattr(cls, "8R LRDIMM", PermissibleValue(text="8R LRDIMM"))
+
+
+class PXEDiskType(EnumDefinitionImpl):
+    WINPE = PermissibleValue(text="WINPE")
+    ISO = PermissibleValue(text="ISO")
+
+    _defn = EnumDefinition(
+        name="PXEDiskType",
+    )
+
+
+class SPDX(EnumDefinitionImpl):
+    AAL = PermissibleValue(text="AAL")
+    Abstyles = PermissibleValue(text="Abstyles")
+    ADSL = PermissibleValue(text="ADSL")
+    Afmparse = PermissibleValue(text="Afmparse")
+    Aladdin = PermissibleValue(text="Aladdin")
+    AMDPLPA = PermissibleValue(text="AMDPLPA")
+    AML = PermissibleValue(text="AML")
+    AMPAS = PermissibleValue(text="AMPAS")
+    APAFML = PermissibleValue(text="APAFML")
+    Baekmuk = PermissibleValue(text="Baekmuk")
+    Bahyph = PermissibleValue(text="Bahyph")
+    Barr = PermissibleValue(text="Barr")
+    Beerware = PermissibleValue(text="Beerware")
+    blessing = PermissibleValue(text="blessing")
+    Borceux = PermissibleValue(text="Borceux")
+    Caldera = PermissibleValue(text="Caldera")
+    CFITSIO = PermissibleValue(text="CFITSIO")
+    checkmk = PermissibleValue(text="checkmk")
+    ClArtistic = PermissibleValue(text="ClArtistic")
+    Clips = PermissibleValue(text="Clips")
+    Crossword = PermissibleValue(text="Crossword")
+    CrystalStacker = PermissibleValue(text="CrystalStacker")
+    Cube = PermissibleValue(text="Cube")
+    curl = PermissibleValue(text="curl")
+    diffmark = PermissibleValue(text="diffmark")
+    DOC = PermissibleValue(text="DOC")
+    Dotseqn = PermissibleValue(text="Dotseqn")
+    DSDP = PermissibleValue(text="DSDP")
+    dtoa = PermissibleValue(text="dtoa")
+    dvipdfm = PermissibleValue(text="dvipdfm")
+    eGenix = PermissibleValue(text="eGenix")
+    Entessa = PermissibleValue(text="Entessa")
+    EPICS = PermissibleValue(text="EPICS")
+    EUDatagrid = PermissibleValue(text="EUDatagrid")
+    Eurosym = PermissibleValue(text="Eurosym")
+    Fair = PermissibleValue(text="Fair")
+    FreeImage = PermissibleValue(text="FreeImage")
+    FSFAP = PermissibleValue(text="FSFAP")
+    FSFUL = PermissibleValue(text="FSFUL")
+    FSFULLR = PermissibleValue(text="FSFULLR")
+    FSFULLRWD = PermissibleValue(text="FSFULLRWD")
+    FTL = PermissibleValue(text="FTL")
+    GD = PermissibleValue(text="GD")
+    Giftware = PermissibleValue(text="Giftware")
+    GL2PS = PermissibleValue(text="GL2PS")
+    Glide = PermissibleValue(text="Glide")
+    Glulxe = PermissibleValue(text="Glulxe")
+    GLWTPL = PermissibleValue(text="GLWTPL")
+    gnuplot = PermissibleValue(text="gnuplot")
+    HaskellReport = PermissibleValue(text="HaskellReport")
+    HPND = PermissibleValue(text="HPND")
+    HTMLTIDY = PermissibleValue(text="HTMLTIDY")
+    ICU = PermissibleValue(text="ICU")
+    IJG = PermissibleValue(text="IJG")
+    ImageMagick = PermissibleValue(text="ImageMagick")
+    iMatix = PermissibleValue(text="iMatix")
+    Imlib2 = PermissibleValue(text="Imlib2")
+    Intel = PermissibleValue(text="Intel")
+    IPA = PermissibleValue(text="IPA")
+    ISC = PermissibleValue(text="ISC")
+    Jam = PermissibleValue(text="Jam")
+    JPNIC = PermissibleValue(text="JPNIC")
+    JSON = PermissibleValue(text="JSON")
+    Kazlib = PermissibleValue(text="Kazlib")
+    Latex2e = PermissibleValue(text="Latex2e")
+    Leptonica = PermissibleValue(text="Leptonica")
+    LGPLLR = PermissibleValue(text="LGPLLR")
+    Libpng = PermissibleValue(text="Libpng")
+    libtiff = PermissibleValue(text="libtiff")
+    LOOP = PermissibleValue(text="LOOP")
+    MakeIndex = PermissibleValue(text="MakeIndex")
+    metamail = PermissibleValue(text="metamail")
+    Minpack = PermissibleValue(text="Minpack")
+    MirOS = PermissibleValue(text="MirOS")
+    MIT = PermissibleValue(text="MIT")
+    MITNFA = PermissibleValue(text="MITNFA")
+    Motosoto = PermissibleValue(text="Motosoto")
+    mpich2 = PermissibleValue(text="mpich2")
+    mplus = PermissibleValue(text="mplus")
+    MTLL = PermissibleValue(text="MTLL")
+    Multics = PermissibleValue(text="Multics")
+    Mup = PermissibleValue(text="Mup")
+    Naumen = PermissibleValue(text="Naumen")
+    NCSA = PermissibleValue(text="NCSA")
+    NetCDF = PermissibleValue(text="NetCDF")
+    Newsletr = PermissibleValue(text="Newsletr")
+    NGPL = PermissibleValue(text="NGPL")
+    NLPL = PermissibleValue(text="NLPL")
+    Nokia = PermissibleValue(text="Nokia")
+    NOSL = PermissibleValue(text="NOSL")
+    Noweb = PermissibleValue(text="Noweb")
+    NRL = PermissibleValue(text="NRL")
+    NTP = PermissibleValue(text="NTP")
+    OFFIS = PermissibleValue(text="OFFIS")
+    OGTSL = PermissibleValue(text="OGTSL")
+    OML = PermissibleValue(text="OML")
+    OpenSSL = PermissibleValue(text="OpenSSL")
+    Plexus = PermissibleValue(text="Plexus")
+    PostgreSQL = PermissibleValue(text="PostgreSQL")
+    psfrag = PermissibleValue(text="psfrag")
+    psutils = PermissibleValue(text="psutils")
+    Qhull = PermissibleValue(text="Qhull")
+    Rdisc = PermissibleValue(text="Rdisc")
+    RSCPL = PermissibleValue(text="RSCPL")
+    Ruby = PermissibleValue(text="Ruby")
+    Saxpath = PermissibleValue(text="Saxpath")
+    SCEA = PermissibleValue(text="SCEA")
+    SchemeReport = PermissibleValue(text="SchemeReport")
+    Sendmail = PermissibleValue(text="Sendmail")
+    SGP4 = PermissibleValue(text="SGP4")
+    SISSL = PermissibleValue(text="SISSL")
+    Sleepycat = PermissibleValue(text="Sleepycat")
+    SMLNJ = PermissibleValue(text="SMLNJ")
+    SMPPL = PermissibleValue(text="SMPPL")
+    SNIA = PermissibleValue(text="SNIA")
+    snprintf = PermissibleValue(text="snprintf")
+    SunPro = PermissibleValue(text="SunPro")
+    SWL = PermissibleValue(text="SWL")
+    Symlinks = PermissibleValue(text="Symlinks")
+    TCL = PermissibleValue(text="TCL")
+    TermReadKey = PermissibleValue(text="TermReadKey")
+    TMate = PermissibleValue(text="TMate")
+    TOSL = PermissibleValue(text="TOSL")
+    TPDL = PermissibleValue(text="TPDL")
+    TTWL = PermissibleValue(text="TTWL")
+    UCAR = PermissibleValue(text="UCAR")
+    UnixCrypt = PermissibleValue(text="UnixCrypt")
+    Unlicense = PermissibleValue(text="Unlicense")
+    Vim = PermissibleValue(text="Vim")
+    VOSTROM = PermissibleValue(text="VOSTROM")
+    W3C = PermissibleValue(text="W3C")
+    w3m = PermissibleValue(text="w3m")
+    Wsuipa = PermissibleValue(text="Wsuipa")
+    WTFPL = PermissibleValue(text="WTFPL")
+    X11 = PermissibleValue(text="X11")
+    Xerox = PermissibleValue(text="Xerox")
+    Xfig = PermissibleValue(text="Xfig")
+    xinetd = PermissibleValue(text="xinetd")
+    xlock = PermissibleValue(text="xlock")
+    Xnet = PermissibleValue(text="Xnet")
+    xpp = PermissibleValue(text="xpp")
+    XSkat = PermissibleValue(text="XSkat")
+    Zed = PermissibleValue(text="Zed")
+    Zlib = PermissibleValue(text="Zlib")
+
+    _defn = EnumDefinition(
+        name="SPDX",
+    )
+
+    @classmethod
+    def _addvals(cls):
+        setattr(cls, "0BSD", PermissibleValue(text="0BSD"))
+        setattr(cls, "AdaCore-doc", PermissibleValue(text="AdaCore-doc"))
+        setattr(cls, "Adobe-2006", PermissibleValue(text="Adobe-2006"))
+        setattr(cls, "Adobe-Glyph", PermissibleValue(text="Adobe-Glyph"))
+        setattr(cls, "AFL-1.1", PermissibleValue(text="AFL-1.1"))
+        setattr(cls, "AFL-1.2", PermissibleValue(text="AFL-1.2"))
+        setattr(cls, "AFL-2.0", PermissibleValue(text="AFL-2.0"))
+        setattr(cls, "AFL-2.1", PermissibleValue(text="AFL-2.1"))
+        setattr(cls, "AFL-3.0", PermissibleValue(text="AFL-3.0"))
+        setattr(cls, "AGPL-1.0-only", PermissibleValue(text="AGPL-1.0-only"))
+        setattr(cls, "AGPL-1.0-or-later", PermissibleValue(text="AGPL-1.0-or-later"))
+        setattr(cls, "AGPL-3.0-only", PermissibleValue(text="AGPL-3.0-only"))
+        setattr(cls, "AGPL-3.0-or-later", PermissibleValue(text="AGPL-3.0-or-later"))
+        setattr(cls, "ANTLR-PD", PermissibleValue(text="ANTLR-PD"))
+        setattr(cls, "ANTLR-PD-fallback", PermissibleValue(text="ANTLR-PD-fallback"))
+        setattr(cls, "Apache-1.0", PermissibleValue(text="Apache-1.0"))
+        setattr(cls, "Apache-1.1", PermissibleValue(text="Apache-1.1"))
+        setattr(cls, "Apache-2.0", PermissibleValue(text="Apache-2.0"))
+        setattr(cls, "APL-1.0", PermissibleValue(text="APL-1.0"))
+        setattr(cls, "App-s2p", PermissibleValue(text="App-s2p"))
+        setattr(cls, "APSL-1.0", PermissibleValue(text="APSL-1.0"))
+        setattr(cls, "APSL-1.1", PermissibleValue(text="APSL-1.1"))
+        setattr(cls, "APSL-1.2", PermissibleValue(text="APSL-1.2"))
+        setattr(cls, "APSL-2.0", PermissibleValue(text="APSL-2.0"))
+        setattr(cls, "Arphic-1999", PermissibleValue(text="Arphic-1999"))
+        setattr(cls, "Artistic-1.0", PermissibleValue(text="Artistic-1.0"))
+        setattr(cls, "Artistic-1.0-cl8", PermissibleValue(text="Artistic-1.0-cl8"))
+        setattr(cls, "Artistic-1.0-Perl", PermissibleValue(text="Artistic-1.0-Perl"))
+        setattr(cls, "Artistic-2.0", PermissibleValue(text="Artistic-2.0"))
+        setattr(
+            cls,
+            "ASWF-Digital-Assets-1.0",
+            PermissibleValue(text="ASWF-Digital-Assets-1.0"),
+        )
+        setattr(
+            cls,
+            "ASWF-Digital-Assets-1.1",
+            PermissibleValue(text="ASWF-Digital-Assets-1.1"),
+        )
+        setattr(cls, "Bitstream-Charter", PermissibleValue(text="Bitstream-Charter"))
+        setattr(cls, "Bitstream-Vera", PermissibleValue(text="Bitstream-Vera"))
+        setattr(cls, "BitTorrent-1.0", PermissibleValue(text="BitTorrent-1.0"))
+        setattr(cls, "BitTorrent-1.1", PermissibleValue(text="BitTorrent-1.1"))
+        setattr(cls, "BlueOak-1.0.0", PermissibleValue(text="BlueOak-1.0.0"))
+        setattr(cls, "Boehm-GC", PermissibleValue(text="Boehm-GC"))
+        setattr(
+            cls,
+            "Brian-Gladman-3-Clause",
+            PermissibleValue(text="Brian-Gladman-3-Clause"),
+        )
+        setattr(cls, "BSD-1-Clause", PermissibleValue(text="BSD-1-Clause"))
+        setattr(cls, "BSD-2-Clause", PermissibleValue(text="BSD-2-Clause"))
+        setattr(
+            cls, "BSD-2-Clause-Patent", PermissibleValue(text="BSD-2-Clause-Patent")
+        )
+        setattr(cls, "BSD-2-Clause-Views", PermissibleValue(text="BSD-2-Clause-Views"))
+        setattr(cls, "BSD-3-Clause", PermissibleValue(text="BSD-3-Clause"))
+        setattr(
+            cls,
+            "BSD-3-Clause-Attribution",
+            PermissibleValue(text="BSD-3-Clause-Attribution"),
+        )
+        setattr(cls, "BSD-3-Clause-Clear", PermissibleValue(text="BSD-3-Clause-Clear"))
+        setattr(cls, "BSD-3-Clause-LBNL", PermissibleValue(text="BSD-3-Clause-LBNL"))
+        setattr(
+            cls,
+            "BSD-3-Clause-Modification",
+            PermissibleValue(text="BSD-3-Clause-Modification"),
+        )
+        setattr(
+            cls,
+            "BSD-3-Clause-No-Military-License",
+            PermissibleValue(text="BSD-3-Clause-No-Military-License"),
+        )
+        setattr(
+            cls,
+            "BSD-3-Clause-No-Nuclear-License",
+            PermissibleValue(text="BSD-3-Clause-No-Nuclear-License"),
+        )
+        setattr(
+            cls,
+            "BSD-3-Clause-No-Nuclear-License-2014",
+            PermissibleValue(text="BSD-3-Clause-No-Nuclear-License-2014"),
+        )
+        setattr(
+            cls,
+            "BSD-3-Clause-No-Nuclear-Warranty",
+            PermissibleValue(text="BSD-3-Clause-No-Nuclear-Warranty"),
+        )
+        setattr(
+            cls, "BSD-3-Clause-Open-MPI", PermissibleValue(text="BSD-3-Clause-Open-MPI")
+        )
+        setattr(cls, "BSD-4-Clause", PermissibleValue(text="BSD-4-Clause"))
+        setattr(
+            cls,
+            "BSD-4-Clause-Shortened",
+            PermissibleValue(text="BSD-4-Clause-Shortened"),
+        )
+        setattr(cls, "BSD-4-Clause-UC", PermissibleValue(text="BSD-4-Clause-UC"))
+        setattr(cls, "BSD-4.3RENO", PermissibleValue(text="BSD-4.3RENO"))
+        setattr(cls, "BSD-4.3TAHOE", PermissibleValue(text="BSD-4.3TAHOE"))
+        setattr(
+            cls,
+            "BSD-Advertising-Acknowledgement",
+            PermissibleValue(text="BSD-Advertising-Acknowledgement"),
+        )
+        setattr(
+            cls,
+            "BSD-Attribution-HPND-disclaimer",
+            PermissibleValue(text="BSD-Attribution-HPND-disclaimer"),
+        )
+        setattr(cls, "BSD-Protection", PermissibleValue(text="BSD-Protection"))
+        setattr(cls, "BSD-Source-Code", PermissibleValue(text="BSD-Source-Code"))
+        setattr(cls, "BSL-1.0", PermissibleValue(text="BSL-1.0"))
+        setattr(cls, "BUSL-1.1", PermissibleValue(text="BUSL-1.1"))
+        setattr(cls, "bzip2-1.0.6", PermissibleValue(text="bzip2-1.0.6"))
+        setattr(cls, "C-UDA-1.0", PermissibleValue(text="C-UDA-1.0"))
+        setattr(cls, "CAL-1.0", PermissibleValue(text="CAL-1.0"))
+        setattr(
+            cls,
+            "CAL-1.0-Combined-Work-Exception",
+            PermissibleValue(text="CAL-1.0-Combined-Work-Exception"),
+        )
+        setattr(cls, "CATOSL-1.1", PermissibleValue(text="CATOSL-1.1"))
+        setattr(cls, "CC-BY-1.0", PermissibleValue(text="CC-BY-1.0"))
+        setattr(cls, "CC-BY-2.0", PermissibleValue(text="CC-BY-2.0"))
+        setattr(cls, "CC-BY-2.5", PermissibleValue(text="CC-BY-2.5"))
+        setattr(cls, "CC-BY-2.5-AU", PermissibleValue(text="CC-BY-2.5-AU"))
+        setattr(cls, "CC-BY-3.0", PermissibleValue(text="CC-BY-3.0"))
+        setattr(cls, "CC-BY-3.0-AT", PermissibleValue(text="CC-BY-3.0-AT"))
+        setattr(cls, "CC-BY-3.0-DE", PermissibleValue(text="CC-BY-3.0-DE"))
+        setattr(cls, "CC-BY-3.0-IGO", PermissibleValue(text="CC-BY-3.0-IGO"))
+        setattr(cls, "CC-BY-3.0-NL", PermissibleValue(text="CC-BY-3.0-NL"))
+        setattr(cls, "CC-BY-3.0-US", PermissibleValue(text="CC-BY-3.0-US"))
+        setattr(cls, "CC-BY-4.0", PermissibleValue(text="CC-BY-4.0"))
+        setattr(cls, "CC-BY-NC-1.0", PermissibleValue(text="CC-BY-NC-1.0"))
+        setattr(cls, "CC-BY-NC-2.0", PermissibleValue(text="CC-BY-NC-2.0"))
+        setattr(cls, "CC-BY-NC-2.5", PermissibleValue(text="CC-BY-NC-2.5"))
+        setattr(cls, "CC-BY-NC-3.0", PermissibleValue(text="CC-BY-NC-3.0"))
+        setattr(cls, "CC-BY-NC-3.0-DE", PermissibleValue(text="CC-BY-NC-3.0-DE"))
+        setattr(cls, "CC-BY-NC-4.0", PermissibleValue(text="CC-BY-NC-4.0"))
+        setattr(cls, "CC-BY-NC-ND-1.0", PermissibleValue(text="CC-BY-NC-ND-1.0"))
+        setattr(cls, "CC-BY-NC-ND-2.0", PermissibleValue(text="CC-BY-NC-ND-2.0"))
+        setattr(cls, "CC-BY-NC-ND-2.5", PermissibleValue(text="CC-BY-NC-ND-2.5"))
+        setattr(cls, "CC-BY-NC-ND-3.0", PermissibleValue(text="CC-BY-NC-ND-3.0"))
+        setattr(cls, "CC-BY-NC-ND-3.0-DE", PermissibleValue(text="CC-BY-NC-ND-3.0-DE"))
+        setattr(
+            cls, "CC-BY-NC-ND-3.0-IGO", PermissibleValue(text="CC-BY-NC-ND-3.0-IGO")
+        )
+        setattr(cls, "CC-BY-NC-ND-4.0", PermissibleValue(text="CC-BY-NC-ND-4.0"))
+        setattr(cls, "CC-BY-NC-SA-1.0", PermissibleValue(text="CC-BY-NC-SA-1.0"))
+        setattr(cls, "CC-BY-NC-SA-2.0", PermissibleValue(text="CC-BY-NC-SA-2.0"))
+        setattr(cls, "CC-BY-NC-SA-2.0-DE", PermissibleValue(text="CC-BY-NC-SA-2.0-DE"))
+        setattr(cls, "CC-BY-NC-SA-2.0-FR", PermissibleValue(text="CC-BY-NC-SA-2.0-FR"))
+        setattr(cls, "CC-BY-NC-SA-2.0-UK", PermissibleValue(text="CC-BY-NC-SA-2.0-UK"))
+        setattr(cls, "CC-BY-NC-SA-2.5", PermissibleValue(text="CC-BY-NC-SA-2.5"))
+        setattr(cls, "CC-BY-NC-SA-3.0", PermissibleValue(text="CC-BY-NC-SA-3.0"))
+        setattr(cls, "CC-BY-NC-SA-3.0-DE", PermissibleValue(text="CC-BY-NC-SA-3.0-DE"))
+        setattr(
+            cls, "CC-BY-NC-SA-3.0-IGO", PermissibleValue(text="CC-BY-NC-SA-3.0-IGO")
+        )
+        setattr(cls, "CC-BY-NC-SA-4.0", PermissibleValue(text="CC-BY-NC-SA-4.0"))
+        setattr(cls, "CC-BY-ND-1.0", PermissibleValue(text="CC-BY-ND-1.0"))
+        setattr(cls, "CC-BY-ND-2.0", PermissibleValue(text="CC-BY-ND-2.0"))
+        setattr(cls, "CC-BY-ND-2.5", PermissibleValue(text="CC-BY-ND-2.5"))
+        setattr(cls, "CC-BY-ND-3.0", PermissibleValue(text="CC-BY-ND-3.0"))
+        setattr(cls, "CC-BY-ND-3.0-DE", PermissibleValue(text="CC-BY-ND-3.0-DE"))
+        setattr(cls, "CC-BY-ND-4.0", PermissibleValue(text="CC-BY-ND-4.0"))
+        setattr(cls, "CC-BY-SA-1.0", PermissibleValue(text="CC-BY-SA-1.0"))
+        setattr(cls, "CC-BY-SA-2.0", PermissibleValue(text="CC-BY-SA-2.0"))
+        setattr(cls, "CC-BY-SA-2.0-UK", PermissibleValue(text="CC-BY-SA-2.0-UK"))
+        setattr(cls, "CC-BY-SA-2.1-JP", PermissibleValue(text="CC-BY-SA-2.1-JP"))
+        setattr(cls, "CC-BY-SA-2.5", PermissibleValue(text="CC-BY-SA-2.5"))
+        setattr(cls, "CC-BY-SA-3.0", PermissibleValue(text="CC-BY-SA-3.0"))
+        setattr(cls, "CC-BY-SA-3.0-AT", PermissibleValue(text="CC-BY-SA-3.0-AT"))
+        setattr(cls, "CC-BY-SA-3.0-DE", PermissibleValue(text="CC-BY-SA-3.0-DE"))
+        setattr(cls, "CC-BY-SA-3.0-IGO", PermissibleValue(text="CC-BY-SA-3.0-IGO"))
+        setattr(cls, "CC-BY-SA-4.0", PermissibleValue(text="CC-BY-SA-4.0"))
+        setattr(cls, "CC-PDDC", PermissibleValue(text="CC-PDDC"))
+        setattr(cls, "CC0-1.0", PermissibleValue(text="CC0-1.0"))
+        setattr(cls, "CDDL-1.0", PermissibleValue(text="CDDL-1.0"))
+        setattr(cls, "CDDL-1.1", PermissibleValue(text="CDDL-1.1"))
+        setattr(cls, "CDL-1.0", PermissibleValue(text="CDL-1.0"))
+        setattr(
+            cls, "CDLA-Permissive-1.0", PermissibleValue(text="CDLA-Permissive-1.0")
+        )
+        setattr(
+            cls, "CDLA-Permissive-2.0", PermissibleValue(text="CDLA-Permissive-2.0")
+        )
+        setattr(cls, "CDLA-Sharing-1.0", PermissibleValue(text="CDLA-Sharing-1.0"))
+        setattr(cls, "CECILL-1.0", PermissibleValue(text="CECILL-1.0"))
+        setattr(cls, "CECILL-1.1", PermissibleValue(text="CECILL-1.1"))
+        setattr(cls, "CECILL-2.0", PermissibleValue(text="CECILL-2.0"))
+        setattr(cls, "CECILL-2.1", PermissibleValue(text="CECILL-2.1"))
+        setattr(cls, "CECILL-B", PermissibleValue(text="CECILL-B"))
+        setattr(cls, "CECILL-C", PermissibleValue(text="CECILL-C"))
+        setattr(cls, "CERN-OHL-1.1", PermissibleValue(text="CERN-OHL-1.1"))
+        setattr(cls, "CERN-OHL-1.2", PermissibleValue(text="CERN-OHL-1.2"))
+        setattr(cls, "CERN-OHL-P-2.0", PermissibleValue(text="CERN-OHL-P-2.0"))
+        setattr(cls, "CERN-OHL-S-2.0", PermissibleValue(text="CERN-OHL-S-2.0"))
+        setattr(cls, "CERN-OHL-W-2.0", PermissibleValue(text="CERN-OHL-W-2.0"))
+        setattr(cls, "CMU-Mach", PermissibleValue(text="CMU-Mach"))
+        setattr(cls, "CNRI-Jython", PermissibleValue(text="CNRI-Jython"))
+        setattr(cls, "CNRI-Python", PermissibleValue(text="CNRI-Python"))
+        setattr(
+            cls,
+            "CNRI-Python-GPL-Compatible",
+            PermissibleValue(text="CNRI-Python-GPL-Compatible"),
+        )
+        setattr(cls, "COIL-1.0", PermissibleValue(text="COIL-1.0"))
+        setattr(cls, "Community-Spec-1.0", PermissibleValue(text="Community-Spec-1.0"))
+        setattr(cls, "Condor-1.1", PermissibleValue(text="Condor-1.1"))
+        setattr(
+            cls, "copyleft-next-0.3.0", PermissibleValue(text="copyleft-next-0.3.0")
+        )
+        setattr(
+            cls, "copyleft-next-0.3.1", PermissibleValue(text="copyleft-next-0.3.1")
+        )
+        setattr(
+            cls, "Cornell-Lossless-JPEG", PermissibleValue(text="Cornell-Lossless-JPEG")
+        )
+        setattr(cls, "CPAL-1.0", PermissibleValue(text="CPAL-1.0"))
+        setattr(cls, "CPL-1.0", PermissibleValue(text="CPL-1.0"))
+        setattr(cls, "CPOL-1.02", PermissibleValue(text="CPOL-1.02"))
+        setattr(cls, "CUA-OPL-1.0", PermissibleValue(text="CUA-OPL-1.0"))
+        setattr(cls, "D-FSL-1.0", PermissibleValue(text="D-FSL-1.0"))
+        setattr(cls, "DL-DE-BY-2.0", PermissibleValue(text="DL-DE-BY-2.0"))
+        setattr(cls, "DRL-1.0", PermissibleValue(text="DRL-1.0"))
+        setattr(cls, "ECL-1.0", PermissibleValue(text="ECL-1.0"))
+        setattr(cls, "ECL-2.0", PermissibleValue(text="ECL-2.0"))
+        setattr(cls, "EFL-1.0", PermissibleValue(text="EFL-1.0"))
+        setattr(cls, "EFL-2.0", PermissibleValue(text="EFL-2.0"))
+        setattr(cls, "Elastic-2.0", PermissibleValue(text="Elastic-2.0"))
+        setattr(cls, "EPL-1.0", PermissibleValue(text="EPL-1.0"))
+        setattr(cls, "EPL-2.0", PermissibleValue(text="EPL-2.0"))
+        setattr(cls, "ErlPL-1.1", PermissibleValue(text="ErlPL-1.1"))
+        setattr(cls, "etalab-2.0", PermissibleValue(text="etalab-2.0"))
+        setattr(cls, "EUPL-1.0", PermissibleValue(text="EUPL-1.0"))
+        setattr(cls, "EUPL-1.1", PermissibleValue(text="EUPL-1.1"))
+        setattr(cls, "EUPL-1.2", PermissibleValue(text="EUPL-1.2"))
+        setattr(cls, "FDK-AAC", PermissibleValue(text="FDK-AAC"))
+        setattr(cls, "Frameworx-1.0", PermissibleValue(text="Frameworx-1.0"))
+        setattr(cls, "FreeBSD-DOC", PermissibleValue(text="FreeBSD-DOC"))
+        setattr(
+            cls,
+            "GFDL-1.1-invariants-only",
+            PermissibleValue(text="GFDL-1.1-invariants-only"),
+        )
+        setattr(
+            cls,
+            "GFDL-1.1-invariants-or-later",
+            PermissibleValue(text="GFDL-1.1-invariants-or-later"),
+        )
+        setattr(
+            cls,
+            "GFDL-1.1-no-invariants-only",
+            PermissibleValue(text="GFDL-1.1-no-invariants-only"),
+        )
+        setattr(
+            cls,
+            "GFDL-1.1-no-invariants-or-later",
+            PermissibleValue(text="GFDL-1.1-no-invariants-or-later"),
+        )
+        setattr(cls, "GFDL-1.1-only", PermissibleValue(text="GFDL-1.1-only"))
+        setattr(cls, "GFDL-1.1-or-later", PermissibleValue(text="GFDL-1.1-or-later"))
+        setattr(
+            cls,
+            "GFDL-1.2-invariants-only",
+            PermissibleValue(text="GFDL-1.2-invariants-only"),
+        )
+        setattr(
+            cls,
+            "GFDL-1.2-invariants-or-later",
+            PermissibleValue(text="GFDL-1.2-invariants-or-later"),
+        )
+        setattr(
+            cls,
+            "GFDL-1.2-no-invariants-only",
+            PermissibleValue(text="GFDL-1.2-no-invariants-only"),
+        )
+        setattr(
+            cls,
+            "GFDL-1.2-no-invariants-or-later",
+            PermissibleValue(text="GFDL-1.2-no-invariants-or-later"),
+        )
+        setattr(cls, "GFDL-1.2-only", PermissibleValue(text="GFDL-1.2-only"))
+        setattr(cls, "GFDL-1.2-or-later", PermissibleValue(text="GFDL-1.2-or-later"))
+        setattr(
+            cls,
+            "GFDL-1.3-invariants-only",
+            PermissibleValue(text="GFDL-1.3-invariants-only"),
+        )
+        setattr(
+            cls,
+            "GFDL-1.3-invariants-or-later",
+            PermissibleValue(text="GFDL-1.3-invariants-or-later"),
+        )
+        setattr(
+            cls,
+            "GFDL-1.3-no-invariants-only",
+            PermissibleValue(text="GFDL-1.3-no-invariants-only"),
+        )
+        setattr(
+            cls,
+            "GFDL-1.3-no-invariants-or-later",
+            PermissibleValue(text="GFDL-1.3-no-invariants-or-later"),
+        )
+        setattr(cls, "GFDL-1.3-only", PermissibleValue(text="GFDL-1.3-only"))
+        setattr(cls, "GFDL-1.3-or-later", PermissibleValue(text="GFDL-1.3-or-later"))
+        setattr(cls, "GPL-1.0-only", PermissibleValue(text="GPL-1.0-only"))
+        setattr(cls, "GPL-1.0-or-later", PermissibleValue(text="GPL-1.0-or-later"))
+        setattr(cls, "GPL-2.0-only", PermissibleValue(text="GPL-2.0-only"))
+        setattr(cls, "GPL-2.0-or-later", PermissibleValue(text="GPL-2.0-or-later"))
+        setattr(cls, "GPL-3.0-only", PermissibleValue(text="GPL-3.0-only"))
+        setattr(cls, "GPL-3.0-or-later", PermissibleValue(text="GPL-3.0-or-later"))
+        setattr(cls, "Graphics-Gems", PermissibleValue(text="Graphics-Gems"))
+        setattr(cls, "gSOAP-1.3b", PermissibleValue(text="gSOAP-1.3b"))
+        setattr(cls, "Hippocratic-2.1", PermissibleValue(text="Hippocratic-2.1"))
+        setattr(cls, "HP-1986", PermissibleValue(text="HP-1986"))
+        setattr(cls, "HPND-export-US", PermissibleValue(text="HPND-export-US"))
+        setattr(cls, "HPND-Markus-Kuhn", PermissibleValue(text="HPND-Markus-Kuhn"))
+        setattr(cls, "HPND-sell-variant", PermissibleValue(text="HPND-sell-variant"))
+        setattr(
+            cls,
+            "HPND-sell-variant-MIT-disclaimer",
+            PermissibleValue(text="HPND-sell-variant-MIT-disclaimer"),
+        )
+        setattr(cls, "IBM-pibs", PermissibleValue(text="IBM-pibs"))
+        setattr(
+            cls,
+            "IEC-Code-Components-EULA",
+            PermissibleValue(text="IEC-Code-Components-EULA"),
+        )
+        setattr(cls, "IJG-short", PermissibleValue(text="IJG-short"))
+        setattr(cls, "Info-ZIP", PermissibleValue(text="Info-ZIP"))
+        setattr(cls, "Inner-Net-2.0", PermissibleValue(text="Inner-Net-2.0"))
+        setattr(cls, "Intel-ACPI", PermissibleValue(text="Intel-ACPI"))
+        setattr(cls, "Interbase-1.0", PermissibleValue(text="Interbase-1.0"))
+        setattr(cls, "IPL-1.0", PermissibleValue(text="IPL-1.0"))
+        setattr(cls, "JasPer-2.0", PermissibleValue(text="JasPer-2.0"))
+        setattr(cls, "JPL-image", PermissibleValue(text="JPL-image"))
+        setattr(cls, "Knuth-CTAN", PermissibleValue(text="Knuth-CTAN"))
+        setattr(cls, "LAL-1.2", PermissibleValue(text="LAL-1.2"))
+        setattr(cls, "LAL-1.3", PermissibleValue(text="LAL-1.3"))
+        setattr(
+            cls,
+            "Latex2e-translated-notice",
+            PermissibleValue(text="Latex2e-translated-notice"),
+        )
+        setattr(cls, "LGPL-2.0-only", PermissibleValue(text="LGPL-2.0-only"))
+        setattr(cls, "LGPL-2.0-or-later", PermissibleValue(text="LGPL-2.0-or-later"))
+        setattr(cls, "LGPL-2.1-only", PermissibleValue(text="LGPL-2.1-only"))
+        setattr(cls, "LGPL-2.1-or-later", PermissibleValue(text="LGPL-2.1-or-later"))
+        setattr(cls, "LGPL-3.0-only", PermissibleValue(text="LGPL-3.0-only"))
+        setattr(cls, "LGPL-3.0-or-later", PermissibleValue(text="LGPL-3.0-or-later"))
+        setattr(cls, "libpng-2.0", PermissibleValue(text="libpng-2.0"))
+        setattr(cls, "libselinux-1.0", PermissibleValue(text="libselinux-1.0"))
+        setattr(
+            cls, "libutil-David-Nugent", PermissibleValue(text="libutil-David-Nugent")
+        )
+        setattr(cls, "LiLiQ-P-1.1", PermissibleValue(text="LiLiQ-P-1.1"))
+        setattr(cls, "LiLiQ-R-1.1", PermissibleValue(text="LiLiQ-R-1.1"))
+        setattr(cls, "LiLiQ-Rplus-1.1", PermissibleValue(text="LiLiQ-Rplus-1.1"))
+        setattr(
+            cls,
+            "Linux-man-pages-1-para",
+            PermissibleValue(text="Linux-man-pages-1-para"),
+        )
+        setattr(
+            cls,
+            "Linux-man-pages-copyleft",
+            PermissibleValue(text="Linux-man-pages-copyleft"),
+        )
+        setattr(
+            cls,
+            "Linux-man-pages-copyleft-2-para",
+            PermissibleValue(text="Linux-man-pages-copyleft-2-para"),
+        )
+        setattr(
+            cls,
+            "Linux-man-pages-copyleft-var",
+            PermissibleValue(text="Linux-man-pages-copyleft-var"),
+        )
+        setattr(cls, "Linux-OpenIB", PermissibleValue(text="Linux-OpenIB"))
+        setattr(cls, "LPL-1.0", PermissibleValue(text="LPL-1.0"))
+        setattr(cls, "LPL-1.02", PermissibleValue(text="LPL-1.02"))
+        setattr(cls, "LPPL-1.0", PermissibleValue(text="LPPL-1.0"))
+        setattr(cls, "LPPL-1.1", PermissibleValue(text="LPPL-1.1"))
+        setattr(cls, "LPPL-1.2", PermissibleValue(text="LPPL-1.2"))
+        setattr(cls, "LPPL-1.3a", PermissibleValue(text="LPPL-1.3a"))
+        setattr(cls, "LPPL-1.3c", PermissibleValue(text="LPPL-1.3c"))
+        setattr(
+            cls, "LZMA-SDK-9.11-to-9.20", PermissibleValue(text="LZMA-SDK-9.11-to-9.20")
+        )
+        setattr(cls, "LZMA-SDK-9.22", PermissibleValue(text="LZMA-SDK-9.22"))
+        setattr(cls, "Martin-Birgmeier", PermissibleValue(text="Martin-Birgmeier"))
+        setattr(cls, "MIT-0", PermissibleValue(text="MIT-0"))
+        setattr(cls, "MIT-advertising", PermissibleValue(text="MIT-advertising"))
+        setattr(cls, "MIT-CMU", PermissibleValue(text="MIT-CMU"))
+        setattr(cls, "MIT-enna", PermissibleValue(text="MIT-enna"))
+        setattr(cls, "MIT-feh", PermissibleValue(text="MIT-feh"))
+        setattr(cls, "MIT-Festival", PermissibleValue(text="MIT-Festival"))
+        setattr(cls, "MIT-Modern-Variant", PermissibleValue(text="MIT-Modern-Variant"))
+        setattr(cls, "MIT-open-group", PermissibleValue(text="MIT-open-group"))
+        setattr(cls, "MIT-Wu", PermissibleValue(text="MIT-Wu"))
+        setattr(cls, "mpi-permissive", PermissibleValue(text="mpi-permissive"))
+        setattr(cls, "MPL-1.0", PermissibleValue(text="MPL-1.0"))
+        setattr(cls, "MPL-1.1", PermissibleValue(text="MPL-1.1"))
+        setattr(cls, "MPL-2.0", PermissibleValue(text="MPL-2.0"))
+        setattr(
+            cls,
+            "MPL-2.0-no-copyleft-exception",
+            PermissibleValue(text="MPL-2.0-no-copyleft-exception"),
+        )
+        setattr(cls, "MS-LPL", PermissibleValue(text="MS-LPL"))
+        setattr(cls, "MS-PL", PermissibleValue(text="MS-PL"))
+        setattr(cls, "MS-RL", PermissibleValue(text="MS-RL"))
+        setattr(cls, "MulanPSL-1.0", PermissibleValue(text="MulanPSL-1.0"))
+        setattr(cls, "MulanPSL-2.0", PermissibleValue(text="MulanPSL-2.0"))
+        setattr(cls, "NAIST-2003", PermissibleValue(text="NAIST-2003"))
+        setattr(cls, "NASA-1.3", PermissibleValue(text="NASA-1.3"))
+        setattr(cls, "NBPL-1.0", PermissibleValue(text="NBPL-1.0"))
+        setattr(cls, "NCGL-UK-2.0", PermissibleValue(text="NCGL-UK-2.0"))
+        setattr(cls, "Net-SNMP", PermissibleValue(text="Net-SNMP"))
+        setattr(cls, "NICTA-1.0", PermissibleValue(text="NICTA-1.0"))
+        setattr(cls, "NIST-PD", PermissibleValue(text="NIST-PD"))
+        setattr(cls, "NIST-PD-fallback", PermissibleValue(text="NIST-PD-fallback"))
+        setattr(cls, "NIST-Software", PermissibleValue(text="NIST-Software"))
+        setattr(cls, "NLOD-1.0", PermissibleValue(text="NLOD-1.0"))
+        setattr(cls, "NLOD-2.0", PermissibleValue(text="NLOD-2.0"))
+        setattr(cls, "NPL-1.0", PermissibleValue(text="NPL-1.0"))
+        setattr(cls, "NPL-1.1", PermissibleValue(text="NPL-1.1"))
+        setattr(cls, "NPOSL-3.0", PermissibleValue(text="NPOSL-3.0"))
+        setattr(cls, "NTP-0", PermissibleValue(text="NTP-0"))
+        setattr(cls, "O-UDA-1.0", PermissibleValue(text="O-UDA-1.0"))
+        setattr(cls, "OCCT-PL", PermissibleValue(text="OCCT-PL"))
+        setattr(cls, "OCLC-2.0", PermissibleValue(text="OCLC-2.0"))
+        setattr(cls, "ODbL-1.0", PermissibleValue(text="ODbL-1.0"))
+        setattr(cls, "ODC-By-1.0", PermissibleValue(text="ODC-By-1.0"))
+        setattr(cls, "OFL-1.0", PermissibleValue(text="OFL-1.0"))
+        setattr(cls, "OFL-1.0-no-RFN", PermissibleValue(text="OFL-1.0-no-RFN"))
+        setattr(cls, "OFL-1.0-RFN", PermissibleValue(text="OFL-1.0-RFN"))
+        setattr(cls, "OFL-1.1", PermissibleValue(text="OFL-1.1"))
+        setattr(cls, "OFL-1.1-no-RFN", PermissibleValue(text="OFL-1.1-no-RFN"))
+        setattr(cls, "OFL-1.1-RFN", PermissibleValue(text="OFL-1.1-RFN"))
+        setattr(cls, "OGC-1.0", PermissibleValue(text="OGC-1.0"))
+        setattr(cls, "OGDL-Taiwan-1.0", PermissibleValue(text="OGDL-Taiwan-1.0"))
+        setattr(cls, "OGL-Canada-2.0", PermissibleValue(text="OGL-Canada-2.0"))
+        setattr(cls, "OGL-UK-1.0", PermissibleValue(text="OGL-UK-1.0"))
+        setattr(cls, "OGL-UK-2.0", PermissibleValue(text="OGL-UK-2.0"))
+        setattr(cls, "OGL-UK-3.0", PermissibleValue(text="OGL-UK-3.0"))
+        setattr(cls, "OLDAP-1.1", PermissibleValue(text="OLDAP-1.1"))
+        setattr(cls, "OLDAP-1.2", PermissibleValue(text="OLDAP-1.2"))
+        setattr(cls, "OLDAP-1.3", PermissibleValue(text="OLDAP-1.3"))
+        setattr(cls, "OLDAP-1.4", PermissibleValue(text="OLDAP-1.4"))
+        setattr(cls, "OLDAP-2.0", PermissibleValue(text="OLDAP-2.0"))
+        setattr(cls, "OLDAP-2.0.1", PermissibleValue(text="OLDAP-2.0.1"))
+        setattr(cls, "OLDAP-2.1", PermissibleValue(text="OLDAP-2.1"))
+        setattr(cls, "OLDAP-2.2", PermissibleValue(text="OLDAP-2.2"))
+        setattr(cls, "OLDAP-2.2.1", PermissibleValue(text="OLDAP-2.2.1"))
+        setattr(cls, "OLDAP-2.2.2", PermissibleValue(text="OLDAP-2.2.2"))
+        setattr(cls, "OLDAP-2.3", PermissibleValue(text="OLDAP-2.3"))
+        setattr(cls, "OLDAP-2.4", PermissibleValue(text="OLDAP-2.4"))
+        setattr(cls, "OLDAP-2.5", PermissibleValue(text="OLDAP-2.5"))
+        setattr(cls, "OLDAP-2.6", PermissibleValue(text="OLDAP-2.6"))
+        setattr(cls, "OLDAP-2.7", PermissibleValue(text="OLDAP-2.7"))
+        setattr(cls, "OLDAP-2.8", PermissibleValue(text="OLDAP-2.8"))
+        setattr(cls, "OLFL-1.3", PermissibleValue(text="OLFL-1.3"))
+        setattr(cls, "OpenPBS-2.3", PermissibleValue(text="OpenPBS-2.3"))
+        setattr(cls, "OPL-1.0", PermissibleValue(text="OPL-1.0"))
+        setattr(cls, "OPL-UK-3.0", PermissibleValue(text="OPL-UK-3.0"))
+        setattr(cls, "OPUBL-1.0", PermissibleValue(text="OPUBL-1.0"))
+        setattr(cls, "OSET-PL-2.1", PermissibleValue(text="OSET-PL-2.1"))
+        setattr(cls, "OSL-1.0", PermissibleValue(text="OSL-1.0"))
+        setattr(cls, "OSL-1.1", PermissibleValue(text="OSL-1.1"))
+        setattr(cls, "OSL-2.0", PermissibleValue(text="OSL-2.0"))
+        setattr(cls, "OSL-2.1", PermissibleValue(text="OSL-2.1"))
+        setattr(cls, "OSL-3.0", PermissibleValue(text="OSL-3.0"))
+        setattr(cls, "Parity-6.0.0", PermissibleValue(text="Parity-6.0.0"))
+        setattr(cls, "Parity-7.0.0", PermissibleValue(text="Parity-7.0.0"))
+        setattr(cls, "PDDL-1.0", PermissibleValue(text="PDDL-1.0"))
+        setattr(cls, "PHP-3.0", PermissibleValue(text="PHP-3.0"))
+        setattr(cls, "PHP-3.01", PermissibleValue(text="PHP-3.01"))
+        setattr(
+            cls,
+            "PolyForm-Noncommercial-1.0.0",
+            PermissibleValue(text="PolyForm-Noncommercial-1.0.0"),
+        )
+        setattr(
+            cls,
+            "PolyForm-Small-Business-1.0.0",
+            PermissibleValue(text="PolyForm-Small-Business-1.0.0"),
+        )
+        setattr(cls, "PSF-2.0", PermissibleValue(text="PSF-2.0"))
+        setattr(cls, "Python-2.0", PermissibleValue(text="Python-2.0"))
+        setattr(cls, "Python-2.0.1", PermissibleValue(text="Python-2.0.1"))
+        setattr(cls, "QPL-1.0", PermissibleValue(text="QPL-1.0"))
+        setattr(cls, "QPL-1.0-INRIA-2004", PermissibleValue(text="QPL-1.0-INRIA-2004"))
+        setattr(cls, "RHeCos-1.1", PermissibleValue(text="RHeCos-1.1"))
+        setattr(cls, "RPL-1.1", PermissibleValue(text="RPL-1.1"))
+        setattr(cls, "RPL-1.5", PermissibleValue(text="RPL-1.5"))
+        setattr(cls, "RPSL-1.0", PermissibleValue(text="RPSL-1.0"))
+        setattr(cls, "RSA-MD", PermissibleValue(text="RSA-MD"))
+        setattr(cls, "SAX-PD", PermissibleValue(text="SAX-PD"))
+        setattr(cls, "Sendmail-8.23", PermissibleValue(text="Sendmail-8.23"))
+        setattr(cls, "SGI-B-1.0", PermissibleValue(text="SGI-B-1.0"))
+        setattr(cls, "SGI-B-1.1", PermissibleValue(text="SGI-B-1.1"))
+        setattr(cls, "SGI-B-2.0", PermissibleValue(text="SGI-B-2.0"))
+        setattr(cls, "SHL-0.5", PermissibleValue(text="SHL-0.5"))
+        setattr(cls, "SHL-0.51", PermissibleValue(text="SHL-0.51"))
+        setattr(cls, "SimPL-2.0", PermissibleValue(text="SimPL-2.0"))
+        setattr(cls, "SISSL-1.2", PermissibleValue(text="SISSL-1.2"))
+        setattr(cls, "Spencer-86", PermissibleValue(text="Spencer-86"))
+        setattr(cls, "Spencer-94", PermissibleValue(text="Spencer-94"))
+        setattr(cls, "Spencer-99", PermissibleValue(text="Spencer-99"))
+        setattr(cls, "SPL-1.0", PermissibleValue(text="SPL-1.0"))
+        setattr(cls, "SSH-OpenSSH", PermissibleValue(text="SSH-OpenSSH"))
+        setattr(cls, "SSH-short", PermissibleValue(text="SSH-short"))
+        setattr(cls, "SSPL-1.0", PermissibleValue(text="SSPL-1.0"))
+        setattr(cls, "SugarCRM-1.1.3", PermissibleValue(text="SugarCRM-1.1.3"))
+        setattr(cls, "TAPR-OHL-1.0", PermissibleValue(text="TAPR-OHL-1.0"))
+        setattr(cls, "TCP-wrappers", PermissibleValue(text="TCP-wrappers"))
+        setattr(cls, "TORQUE-1.1", PermissibleValue(text="TORQUE-1.1"))
+        setattr(cls, "TPL-1.0", PermissibleValue(text="TPL-1.0"))
+        setattr(cls, "TU-Berlin-1.0", PermissibleValue(text="TU-Berlin-1.0"))
+        setattr(cls, "TU-Berlin-2.0", PermissibleValue(text="TU-Berlin-2.0"))
+        setattr(cls, "UCL-1.0", PermissibleValue(text="UCL-1.0"))
+        setattr(cls, "Unicode-DFS-2015", PermissibleValue(text="Unicode-DFS-2015"))
+        setattr(cls, "Unicode-DFS-2016", PermissibleValue(text="Unicode-DFS-2016"))
+        setattr(cls, "Unicode-TOU", PermissibleValue(text="Unicode-TOU"))
+        setattr(cls, "UPL-1.0", PermissibleValue(text="UPL-1.0"))
+        setattr(cls, "VSL-1.0", PermissibleValue(text="VSL-1.0"))
+        setattr(cls, "W3C-19980720", PermissibleValue(text="W3C-19980720"))
+        setattr(cls, "W3C-20150513", PermissibleValue(text="W3C-20150513"))
+        setattr(cls, "Watcom-1.0", PermissibleValue(text="Watcom-1.0"))
+        setattr(cls, "Widget-Workshop", PermissibleValue(text="Widget-Workshop"))
+        setattr(
+            cls,
+            "X11-distribute-modifications-variant",
+            PermissibleValue(text="X11-distribute-modifications-variant"),
+        )
+        setattr(cls, "Xdebug-1.03", PermissibleValue(text="Xdebug-1.03"))
+        setattr(cls, "XFree86-1.1", PermissibleValue(text="XFree86-1.1"))
+        setattr(cls, "YPL-1.0", PermissibleValue(text="YPL-1.0"))
+        setattr(cls, "YPL-1.1", PermissibleValue(text="YPL-1.1"))
+        setattr(cls, "Zend-2.0", PermissibleValue(text="Zend-2.0"))
+        setattr(cls, "Zimbra-1.3", PermissibleValue(text="Zimbra-1.3"))
+        setattr(cls, "Zimbra-1.4", PermissibleValue(text="Zimbra-1.4"))
+        setattr(
+            cls, "zlib-acknowledgement", PermissibleValue(text="zlib-acknowledgement")
+        )
+        setattr(cls, "ZPL-1.1", PermissibleValue(text="ZPL-1.1"))
+        setattr(cls, "ZPL-2.0", PermissibleValue(text="ZPL-2.0"))
+        setattr(cls, "ZPL-2.1", PermissibleValue(text="ZPL-2.1"))
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
 
 
 class OSDistribution(EnumDefinitionImpl):
@@ -8687,8 +9661,13 @@ class OSDistribution(EnumDefinitionImpl):
         )
         setattr(
             cls,
+<<<<<<< HEAD
             "SUSE Linux Enterprise Server",
             PermissibleValue(text="SUSE Linux Enterprise Server"),
+=======
+            "SUSE Linux Enterprise Desktop",
+            PermissibleValue(text="SUSE Linux Enterprise Desktop"),
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
         )
         setattr(cls, "Microsoft Windows", PermissibleValue(text="Microsoft Windows"))
 
@@ -8716,7 +9695,10 @@ class HypervisorType(EnumDefinitionImpl):
 
 
 class PersonalDataProtectionRegime(EnumDefinitionImpl):
+<<<<<<< HEAD
 
+=======
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
     GDPR2016 = PermissibleValue(
         text="GDPR2016", description="General Data Protection Regulation / EEA."
     )
@@ -8740,7 +9722,10 @@ class PersonalDataProtectionRegime(EnumDefinitionImpl):
 
 
 class RequestTypes(EnumDefinitionImpl):
+<<<<<<< HEAD
 
+=======
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
     API = PermissibleValue(text="API")
     email = PermissibleValue(text="email")
     webform = PermissibleValue(text="webform")
@@ -8754,7 +9739,10 @@ class RequestTypes(EnumDefinitionImpl):
 
 
 class AccessTypes(EnumDefinitionImpl):
+<<<<<<< HEAD
 
+=======
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
     digital = PermissibleValue(
         text="digital",
         description="Access via digital service, such as e-mail or web form.",
@@ -8770,7 +9758,10 @@ class AccessTypes(EnumDefinitionImpl):
 
 
 class MIMETypes(EnumDefinitionImpl):
+<<<<<<< HEAD
 
+=======
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
     calendar = PermissibleValue(text="calendar")
     cql = PermissibleValue(text="cql")
     css = PermissibleValue(text="css")
@@ -13047,7 +14038,10 @@ class MIMETypes(EnumDefinitionImpl):
 
 
 class ProvisionTypes(EnumDefinitionImpl):
+<<<<<<< HEAD
 
+=======
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
     private = PermissibleValue(
         text="private",
         description="A service, which is provided for one customer exclusively.",
@@ -13067,7 +14061,10 @@ class ProvisionTypes(EnumDefinitionImpl):
 
 
 class TenantSeparation(EnumDefinitionImpl):
+<<<<<<< HEAD
 
+=======
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
     physical = PermissibleValue(text="physical", description="TBD")
 
     _defn = EnumDefinition(
@@ -13148,7 +14145,10 @@ class WatchDogActions(EnumDefinitionImpl):
 
 
 class RNGTypes(EnumDefinitionImpl):
+<<<<<<< HEAD
 
+=======
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
     Quantum = PermissibleValue(
         text="Quantum",
         description="Hardware random generator is based in electronic quantum effects.",
@@ -13195,7 +14195,10 @@ class RNGTypes(EnumDefinitionImpl):
 
 
 class VMDiskType(EnumDefinitionImpl):
+<<<<<<< HEAD
 
+=======
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
     RAW = PermissibleValue(text="RAW")
     QCOW2 = PermissibleValue(text="QCOW2")
     VHD = PermissibleValue(text="VHD")
@@ -13563,7 +14566,11 @@ slots.disk__diskType = Slot(
     curie=GX.curie("diskType"),
     model_uri=GX.disk__diskType,
     domain=None,
+<<<<<<< HEAD
     range=Optional[Union[str, "DiskType"]],
+=======
+    range=Optional[Union[str, "DiskTypes"]],
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
 )
 
 slots.disk__diskBusType = Slot(
@@ -13572,7 +14579,11 @@ slots.disk__diskBusType = Slot(
     curie=GX.curie("diskBusType"),
     model_uri=GX.disk__diskBusType,
     domain=None,
+<<<<<<< HEAD
     range=Optional[Union[str, "DiskBusType"]],
+=======
+    range=Optional[str],
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
 )
 
 slots.endpoint__endpointURL = Slot(
@@ -14460,6 +15471,7 @@ slots.consent__consentWithdrawalContactPoint = Slot(
     range=Union[str, List[str]],
 )
 
+<<<<<<< HEAD
 slots.datacenter__aggregationOfResources = Slot(
     uri=GX.aggregationOfResources,
     name="datacenter__aggregationOfResources",
@@ -14478,6 +15490,8 @@ slots.region__aggregationOfResources = Slot(
     range=Union[Union[dict, Datacenter], List[Union[dict, Datacenter]]],
 )
 
+=======
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
 slots.vMImage__vmImageDiskFormat = Slot(
     uri=GX.vmImageDiskFormat,
     name="vMImage__vmImageDiskFormat",
@@ -14592,7 +15606,11 @@ slots.serverFlavor__hypervisor = Slot(
     curie=GX.curie("hypervisor"),
     model_uri=GX.serverFlavor__hypervisor,
     domain=None,
+<<<<<<< HEAD
     range=Optional[Union[dict, Hypervisor]],
+=======
+    range=Optional[Union[dict, SoftwareResource]],
+>>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
 )
 
 slots.serverFlavor__hardwareAssistedVirtualization = Slot(
