@@ -150,10 +150,10 @@ cloud resources:
     AlmaLinux 8:
       copyright owner:
         - "AlmaLinux OS Foundation"
-        - "ABC"
-      resource policy: "abc"
+        - "ACME Company"
+      resource policy: "allow: all"
       license:
-          - https://www.abc.org
+          - https://www.example.org
 ```
 
 ### Optional Attributes
