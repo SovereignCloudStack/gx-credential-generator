@@ -1,4 +1,4 @@
-# Depracted - see README.md for up-to-date information
+# Deprecated - see README.md for up-to-date information
 
 
 # gx-credential-generator
