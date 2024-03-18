@@ -6,11 +6,8 @@ from datetime import date, datetime
 from typing import List
 from uuid import uuid4
 
-from linkml_runtime.linkml_model.meta import (
-    EnumDefinition,
-    PermissibleValue,
-    PvFormulaOptions,
-)
+from linkml_runtime.linkml_model.meta import (EnumDefinition, PermissibleValue,
+                                              PvFormulaOptions)
 from linkml_runtime.utils.enumerations import EnumDefinitionImpl
 from linkml_runtime.utils.metamodelcore import URI
 from linkml_runtime.utils.yamlutils import YAMLRoot, extended_str

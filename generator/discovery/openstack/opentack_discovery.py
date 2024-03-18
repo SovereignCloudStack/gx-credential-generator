@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
 # vim: set ts=4 sw=4 et:
 #
-<<<<<<< HEAD
 # openstack_discovery.py
-=======
-# openstack_discoverypy
->>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
 """Script to generate GX Credentials in JSON-LD.
 
 (c) Kurt Garloff <garloff@osb-alliance.com>, 5/2023
@@ -18,12 +14,9 @@ from typing import Dict, List
 from openstack.connection import Connection
 
 from generator.common.json_ld import JsonLdObject
-<<<<<<< HEAD
 from generator.discovery.openstack.images_discovery import ImageDiscovery
-from generator.discovery.openstack.server_flavor_discovery import ServerFlavorDiscovery
-=======
-from generator.discovery.openstack.vm_images_discovery import VmDiscovery
->>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
+from generator.discovery.openstack.server_flavor_discovery import \
+    ServerFlavorDiscovery
 
 
 class OsCloud:
@@ -39,21 +32,11 @@ class OsCloud:
     def discover_properties(self) -> List[JsonLdObject]:
         """
         Discover all attributes of OS Cloud.
-
-<<<<<<< HEAD
-        @return: all attributes as list
-        @rtype List[JsonLdObject]
-        """
-        creds = list()
-        # creds.extend(VmDiscovery(self.conn, self.config).discover())
-        creds.extend(ServerFlavorDiscovery(self.conn, self.config).discover())
-=======
         @return: all attributes as list of YAMLRoot
         """
         creds = list()
 
-        vm_dis = VmDiscovery(self.conn, self.config)
+        vm_dis = ImageDiscovery(self.conn, self.config)
         creds.extend(vm_dis.discover_vm_images())
->>>>>>> 67-make-generation-of-vm-image-credentuial-gaia-x-compliant
 
         return creds

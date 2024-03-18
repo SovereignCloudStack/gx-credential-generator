@@ -1,25 +1,19 @@
 import json
+import os
 import unittest
 from datetime import datetime
-import os
 
 import yaml
 from openstack.image.v2.image import Image as OS_Image
 from pyshacl import validate
 
-from generator.common.gx_schema import (
-    CPU,
-    CheckSum,
-    Disk,
-    Memory,
-    MemorySize,
-    OperatingSystem,
-)
+from generator.common.gx_schema import (CPU, CheckSum, Disk, Memory,
+                                        MemorySize, OperatingSystem)
 from generator.common.gx_schema import VMImage as GX_Image
 from generator.common.gx_schema import WatchDogActions
 from generator.common.json_ld import JsonLdObject, to_json_ld
 from generator.discovery.openstack.images_discovery import ImageDiscovery
-from tests.common import OpenstackTestcase, MockConnection
+from tests.common import MockConnection, OpenstackTestcase
 
 
 def _get_gx_images():

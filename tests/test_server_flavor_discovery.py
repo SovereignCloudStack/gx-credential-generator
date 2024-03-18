@@ -9,19 +9,13 @@ from pyshacl import validate
 from generator.common import common, const
 from generator.common.gx_schema import CPU
 from generator.common.gx_schema import Architectures as CpuArch
-from generator.common.gx_schema import (
-    Disk,
-    Frequency,
-    Hypervisor,
-    Memory,
-    MemorySize,
-    DiskType,
-    DiskBusType,
-)
+from generator.common.gx_schema import (Disk, DiskBusType, DiskType, Frequency,
+                                        Hypervisor, Memory, MemorySize)
 from generator.common.gx_schema import ServerFlavor as GX_Flavor
 from generator.common.json_ld import JsonLdObject, to_json_ld
-from generator.discovery.openstack.server_flavor_discovery import ServerFlavorDiscovery
-from tests.common import OpenstackTestcase, MockConnection
+from generator.discovery.openstack.server_flavor_discovery import \
+    ServerFlavorDiscovery
+from tests.common import MockConnection, OpenstackTestcase
 
 
 def _get_gx_flavors():
@@ -39,8 +33,8 @@ def _get_gx_flavors():
                         value=16, unit="https://qudt.org/vocab/unit/MegaBYTE"
                     )
                 ),
-                bootVolume=Disk(diskSize=MemorySize(value=0, unit=const.UNIT_GB))
-            )
+                bootVolume=Disk(diskSize=MemorySize(value=0, unit=const.UNIT_GB)),
+            ),
         ),
         JsonLdObject(
             gx_id="flavor_2",
@@ -53,31 +47,41 @@ def _get_gx_flavors():
                     numberOfCores=4,
                     smtEnabled=True,
                     defaultOversubscriptionRatio=16,
-                    baseFrequency=Frequency(value=3.25, unit=const.UNIT_GHZ)
+                    baseFrequency=Frequency(value=3.25, unit=const.UNIT_GHZ),
                 ),
                 ram=Memory(
                     memorySize=MemorySize(
-                        value=32, unit="https://qudt.org/vocab/unit/MegaBYTE"),
+                        value=32, unit="https://qudt.org/vocab/unit/MegaBYTE"
+                    ),
                     defaultOversubscriptionRatio=2,
-                    eccEnabled=True
+                    eccEnabled=True,
                 ),
-                bootVolume=Disk(diskSize=MemorySize(value=50, unit=const.UNIT_GB),
-                                diskType=DiskType("local SSD")
-                                ),
+                bootVolume=Disk(
+                    diskSize=MemorySize(value=50, unit=const.UNIT_GB),
+                    diskType=DiskType("local SSD"),
+                ),
                 additionalVolume=[
                     Disk(
                         diskSize=MemorySize(value=50, unit=const.UNIT_GB),
-                        diskType=DiskType("local SSD")),
+                        diskType=DiskType("local SSD"),
+                    ),
                     Disk(
                         diskSize=MemorySize(value=50, unit=const.UNIT_GB),
-                        diskType=DiskType("local SSD"))]
-            ))
+                        diskType=DiskType("local SSD"),
+                    ),
+                ],
+            ),
+        ),
     ]
 
 
 def _get_os_flavors():
-    return [OS_Flavor(id="flavor_1", name="ABC", vcpus=2, ram=16, disk=0),
-            OS_Flavor(id="flavor_2", name="SCS-4L-32uo-3x50s-_kvm_z3hh", vcpus=2, ram=16, disk=0)]
+    return [
+        OS_Flavor(id="flavor_1", name="ABC", vcpus=2, ram=16, disk=0),
+        OS_Flavor(
+            id="flavor_2", name="SCS-4L-32uo-3x50s-_kvm_z3hh", vcpus=2, ram=16, disk=0
+        ),
+    ]
 
 
 class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
@@ -177,21 +181,28 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
 
     def test_get_disk_caps(self):
         self.assertEqual(
-            (3, 10, DiskType("local SSD"), DiskBusType("other")), self.discovery._get_disk_caps("3x10s")
+            (3, 10, DiskType("local SSD"), DiskBusType("other")),
+            self.discovery._get_disk_caps("3x10s"),
         )
         self.assertEqual(
-            (1, 10, DiskType("local HDD"), DiskBusType("NVMe")), self.discovery._get_disk_caps("10p")
+            (1, 10, DiskType("local HDD"), DiskBusType("NVMe")),
+            self.discovery._get_disk_caps("10p"),
         )
-        self.assertEqual((1, 10, DiskType("other"), DiskBusType("other")), self.discovery._get_disk_caps("10"))
+        self.assertEqual(
+            (1, 10, DiskType("other"), DiskBusType("other")),
+            self.discovery._get_disk_caps("10"),
+        )
         self.assertEqual(
             (1, 0, DiskType("shared network storage"), DiskBusType("other")),
             self.discovery._get_disk_caps("n"),
         )
         self.assertEqual(
-            (2, 10, DiskType("other"), DiskBusType("other")), self.discovery._get_disk_caps("2x10")
+            (2, 10, DiskType("other"), DiskBusType("other")),
+            self.discovery._get_disk_caps("2x10"),
         )
         self.assertEqual(
-            (2, 10, DiskType("local HDD"), DiskBusType("NVMe")), self.discovery._get_disk_caps("2x10p")
+            (2, 10, DiskType("local HDD"), DiskBusType("NVMe")),
+            self.discovery._get_disk_caps("2x10p"),
         )
 
     def test_get_disks(self):
@@ -333,8 +344,12 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
         self.assertEqual(len(expected_gax_flavors), len(received_gax_flavors))
 
         for flavor_1 in expected_gax_flavors:
-            self.check_flavor(flavor_1.gx_object,
-                              self.get_jsonobject_by_id(flavor_1.gx_id, received_gax_flavors).gx_object)
+            self.check_flavor(
+                flavor_1.gx_object,
+                self.get_jsonobject_by_id(
+                    flavor_1.gx_id, received_gax_flavors
+                ).gx_object,
+            )
 
     def test_json_ld(self):
         cur_dir = os.getcwd()
@@ -345,25 +360,23 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
 
         flavors = self.discovery.discover()
         conforms, _, _ = validate(
-            data_graph=json.dumps(
-                flavors[0],
-                indent=4, default=to_json_ld),
+            data_graph=json.dumps(flavors[0], indent=4, default=to_json_ld),
             shacl_graph=shacl_file,
             data_graph_format="json-ld",
-            shacl_graph_format="ttl"
+            shacl_graph_format="ttl",
         )
         self.assertTrue(conforms)
 
     def _init_gx_flavor(
-            self,
-            ram: int = 32,
-            disk: int = 50,
-            cpu_arc: CpuArch = CpuArch.other,
-            cpu_vendor: str = None,
-            cpu_gen: str = None,
-            cpu_freq: Frequency = None,
-            hw_virt: bool = False,
-            hv: bool = False,
+        self,
+        ram: int = 32,
+        disk: int = 50,
+        cpu_arc: CpuArch = CpuArch.other,
+        cpu_vendor: str = None,
+        cpu_gen: str = None,
+        cpu_freq: Frequency = None,
+        hw_virt: bool = False,
+        hv: bool = False,
     ) -> GX_Flavor:
         if hv:
             return GX_Flavor(

@@ -15,10 +15,11 @@ from openstack.compute.v2.flavor import Flavor as OS_Flavor
 from openstack.connection import Connection
 
 from generator.common import common, const
-from generator.common.gx_schema import CPU, PermissibleValue
+from generator.common.gx_schema import CPU
 from generator.common.gx_schema import Architectures as CpuArch
-from generator.common.gx_schema import (Disk, DiskType, DiskBusType, Frequency, Hypervisor,
-                                        Memory, MemorySize)
+from generator.common.gx_schema import (Disk, DiskBusType, DiskType, Frequency,
+                                        Hypervisor, Memory, MemorySize,
+                                        PermissibleValue)
 from generator.common.gx_schema import ServerFlavor as GX_Flavor
 from generator.common.json_ld import JsonLdObject
 
@@ -64,7 +65,7 @@ class ServerFlavorDiscovery:
         )
 
         if len(disks) > 1:
-            gx_flavor.additionalVolume = additionalVolume=disks[1:]
+            gx_flavor.additionalVolume = additionalVolume = disks[1:]
 
         # Discover optional attributes
         self._parse_optional_flavor_properties(os_flavor, gx_flavor)
@@ -80,7 +81,7 @@ class ServerFlavorDiscovery:
         @return: Gaia-X complinat CPU definition
         @rtype CPU
         """
-        cpu = CPU(cpuArchitecture=CpuArch.other, numberOfCores = os_flavor.vcpus)
+        cpu = CPU(cpuArchitecture=CpuArch.other, numberOfCores=os_flavor.vcpus)
         if os_flavor.name.startswith("SCS-"):
             # parse SCS flavor name
             parts = os_flavor.name.split("-")
@@ -321,8 +322,6 @@ class ServerFlavorDiscovery:
                 gx_flavor.cpu.baseFrequency = Frequency(value=3.25, unit=const.UNIT_GHZ)
             elif suffix.endswith("h"):
                 gx_flavor.cpu.baseFrequency = Frequency(value=2.75, unit=const.UNIT_GHZ)
-
-
 
     def _add_description(self, os_flavor: OS_Flavor, gx_flavor: GX_Flavor) -> None:
         """

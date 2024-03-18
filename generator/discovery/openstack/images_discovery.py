@@ -19,18 +19,10 @@ import generator.common.common as common
 import generator.common.const as const
 from generator.common.gx_schema import CPU, SPDX
 from generator.common.gx_schema import Architectures as CpuArch
-from generator.common.gx_schema import (
-    CheckSum,
-    ChecksumAlgorithm,
-    Disk,
-    HypervisorType,
-    Memory,
-    MemorySize,
-    OperatingSystem,
-    Signature,
-    SignatureAlgorithm,
-    UpdateStrategy,
-)
+from generator.common.gx_schema import (CheckSum, ChecksumAlgorithm, Disk,
+                                        HypervisorType, Memory, MemorySize,
+                                        OperatingSystem, Signature,
+                                        SignatureAlgorithm, UpdateStrategy)
 from generator.common.gx_schema import VMImage as GX_Image
 from generator.common.json_ld import JsonLdObject
 
