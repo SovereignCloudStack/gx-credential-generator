@@ -1,6 +1,7 @@
 import json
 import unittest
 import yaml
+import os
 
 from datetime import datetime
 
@@ -24,105 +25,102 @@ from pyshacl import validate
 from tests.common import OpenstackTestcase
 from tests.common import MockConnection
 
-
-def _get_gx_images():
-    return [JsonLdObject(
-        gx_id='image_1',
-        gx_object=GX_Image(name='Image1', description='Image 1_ext', aggregationOfResources=[],
-                           copyrightOwnedBy=['Canonical'],
-                           license=['https://ubuntu.com/legal/open-source-licences'],
-                           resourcePolicy=['default: allow intent'],
-                           checksum=CheckSum(checkSumCalculation='sha-512',
-                                             checkSumValue='7f8bababc2c2a948'), signature=None,
-                           version=None, patchLevel='1.5.2',
-                           buildDate=datetime(2023, 12, 1, 0, 0), fileSize=None,
-                           operatingSystem=OperatingSystem(name=None, description=None,
-                                                           aggregationOfResources=[],
-                                                           copyrightOwnedBy=['Canonical'],
-                                                           license=[
-                                                               'https://ubuntu.com/legal/open-source-licences'],
-                                                           resourcePolicy=['default: allow intent'],
-                                                           checksum=None, signature=None,
-                                                           version='Stable', patchLevel=None,
-                                                           buildDate=None,
-                                                           osDistribution='Ubuntu'),
-                           cpuReq=CPU(vendor=None, generation=None, defaultOversubscriptionRatio=None,
-                                      supportedOversubscriptionRatio=None,
-                                      cpuArchitecture='x86-64',
-                                      cpuFlag=[], smtEnabled=False, numberOfCores=2, numberOfThreads=4,
-                                      baseFrequency=None,
-                                      boostFrequency=None, lastLevelCacheSize=None,
-                                      thermalDesignPower=None), gpuReq=None,
-                           ramReq=Memory(vendor=None, generation=None, defaultOversubscriptionRatio=None,
-                                         supportedOversubscriptionRatio=None,
-                                         memorySize=MemorySize(value=0.0,
-                                                               unit='https://qudt.org/vocab/unit/MegaBYTE'),
-                                         memoryClass='other', memoryRank='other', eccEnabled=False,
-                                         hardwareEncryption=False),
-                           videoRamSize=MemorySize(value=20.0,
-                                                   unit='https://qudt.org/vocab/unit/MegaBYTE'),
-                           rootDiskReq=Disk(vendor=None, generation=None,
-                                            defaultOversubscriptionRatio=None,
-                                            supportedOversubscriptionRatio=None,
-                                            diskSize=MemorySize(value=21.47483648,
-                                                                unit='https://qudt.org/vocab/unit/GigaBYTE'),
-                                            diskType='other', diskBusType='scsi'), encryption=None,
-                           checkSum=None,
-                           secureBoot=True, vPMU=False, multiQueues=False, updateStrategy=None,
-                           licenseIncluded=False,
-                           maintenance=None, vmImageDiskFormat='RAW',
-                           hypervisorType='other',
-                           hwRngTypeOfImage='None', watchDogAction=WatchDogActions.reset.text)),
-        JsonLdObject(
-            gx_id='image_2',
-            gx_object=GX_Image(name='Image2', description='Image 2', aggregationOfResources=[],
-                               copyrightOwnedBy=['Microsoft Corporation'],
-                               license=['https://www.microsoft.com/licensing'],
-                               resourcePolicy=['default: allow intent'],
-                               checksum=CheckSum(checkSumCalculation='sha-512',
-                                                 checkSumValue='7f8bababc2c2a94880747383750470aee68c7e8840bb8811eaeda1b0ce71d59f40ebb182'),
-                               signature=None,
-                               version=None,
-                               patchLevel=None,
-                               buildDate=datetime(2023, 11, 1, 0, 0),
-                               fileSize=None,
-                               operatingSystem=OperatingSystem(name=None, description=None,
-                                                               aggregationOfResources=[],
-                                                               copyrightOwnedBy=['Microsoft Corporation'],
-                                                               license=['https://www.microsoft.com/licensing'],
-                                                               resourcePolicy=['default: allow intent'],
-                                                               checksum=None, signature=None,
-                                                               version='Stable', patchLevel=None, buildDate=None,
-                                                               osDistribution='Microsoft Windows'),
-                               cpuReq=CPU(vendor=None, generation=None, defaultOversubscriptionRatio=None,
-                                          supportedOversubscriptionRatio=None, cpuArchitecture='x86-64', cpuFlag=[],
-                                          smtEnabled=False, numberOfCores=2, numberOfThreads=4, baseFrequency=None,
-                                          boostFrequency=None, lastLevelCacheSize=None, thermalDesignPower=None),
-                               gpuReq=None,
-                               ramReq=Memory(vendor=None, generation=None, defaultOversubscriptionRatio=None,
-                                             supportedOversubscriptionRatio=None,
-                                             memorySize=MemorySize(value=0.0,
-                                                                   unit='https://qudt.org/vocab/unit/MegaBYTE'),
-                                             memoryClass='other', memoryRank='other',
-                                             eccEnabled=False, hardwareEncryption=False),
-                               videoRamSize=MemorySize(value=20.0, unit='https://qudt.org/vocab/unit/MegaBYTE'),
-                               rootDiskReq=Disk(vendor=None, generation=None, defaultOversubscriptionRatio=None,
-                                                supportedOversubscriptionRatio=None,
-                                                diskSize=MemorySize(value=21.47483648,
-                                                                    unit='https://qudt.org/vocab/unit/GigaBYTE'),
-                                                diskType='other', diskBusType='scsi'),
-                               encryption=None,
-                               checkSum=None,
-                               secureBoot=True,
-                               vPMU=False,
-                               multiQueues=False,
-                               updateStrategy=None,
-                               licenseIncluded=False, maintenance=None, vmImageDiskFormat='RAW', hypervisorType='other',
-                               firmwareType='other', hwRngTypeOfImage='None', watchDogAction='reset'))]
+GX_IMAGE_1 = JsonLdObject(
+    gx_id='image_1',
+    gx_object=GX_Image(name='Image1', description='Image 1_ext', aggregationOfResources=[],
+                       copyrightOwnedBy=['Canonical'],
+                       license=['https://ubuntu.com/legal/open-source-licences'],
+                       resourcePolicy=['default: allow intent'],
+                       checksum=CheckSum(checkSumCalculation='sha-512',
+                                         checkSumValue='7f8bababc2c2a948'), signature=None,
+                       version=None, patchLevel='1.5.2',
+                       buildDate=datetime(2023, 12, 1, 0, 0), fileSize=None,
+                       operatingSystem=OperatingSystem(name=None, description=None,
+                                                       aggregationOfResources=[],
+                                                       copyrightOwnedBy=['Canonical'],
+                                                       license=[
+                                                           'https://ubuntu.com/legal/open-source-licences'],
+                                                       resourcePolicy=['default: allow intent'],
+                                                       checksum=None, signature=None,
+                                                       version='Stable', patchLevel=None,
+                                                       buildDate=None,
+                                                       osDistribution='Ubuntu'),
+                       cpuReq=CPU(vendor=None, generation=None, defaultOversubscriptionRatio=None,
+                                  supportedOversubscriptionRatio=None,
+                                  cpuArchitecture='x86-64',
+                                  cpuFlag=[], smtEnabled=False, numberOfCores=2, numberOfThreads=4,
+                                  baseFrequency=None,
+                                  boostFrequency=None, lastLevelCacheSize=None,
+                                  thermalDesignPower=None), gpuReq=None,
+                       ramReq=Memory(vendor=None, generation=None, defaultOversubscriptionRatio=None,
+                                     supportedOversubscriptionRatio=None,
+                                     memorySize=MemorySize(value=0.0,
+                                                           unit='https://qudt.org/vocab/unit/MegaBYTE'),
+                                     memoryClass='other', memoryRank='other', eccEnabled=False,
+                                     hardwareEncryption=False),
+                       videoRamSize=MemorySize(value=20.0,
+                                               unit='https://qudt.org/vocab/unit/MegaBYTE'),
+                       rootDiskReq=Disk(vendor=None, generation=None,
+                                        defaultOversubscriptionRatio=None,
+                                        supportedOversubscriptionRatio=None,
+                                        diskSize=MemorySize(value=21.47483648,
+                                                            unit='https://qudt.org/vocab/unit/GigaBYTE'),
+                                        diskType='other', diskBusType='scsi'), encryption=None,
+                       checkSum=None,
+                       secureBoot=True, vPMU=False, multiQueues=False, updateStrategy=None,
+                       licenseIncluded=False,
+                       maintenance=None, vmImageDiskFormat='RAW',
+                       hypervisorType='other',
+                       hwRngTypeOfImage='None', watchDogAction=WatchDogActions.reset.text))
+GX_IMAGE_2 = JsonLdObject(
+    gx_id='image_2',
+    gx_object=GX_Image(name='Image2', description='Image 2', aggregationOfResources=[],
+                       copyrightOwnedBy=['Microsoft Corporation'],
+                       license=['https://www.microsoft.com/licensing'],
+                       resourcePolicy=['default: allow intent'],
+                       checksum=CheckSum(checkSumCalculation='sha-512',
+                                         checkSumValue='7f8bababc2c2a94880747383750470aee68c7e8840bb8811eaeda1b0ce71d59f40ebb182'),
+                       signature=None,
+                       version=None,
+                       patchLevel=None,
+                       buildDate=datetime(2023, 11, 1, 0, 0),
+                       fileSize=None,
+                       operatingSystem=OperatingSystem(name=None, description=None,
+                                                       aggregationOfResources=[],
+                                                       copyrightOwnedBy=['Microsoft Corporation'],
+                                                       license=['https://www.microsoft.com/licensing'],
+                                                       resourcePolicy=['default: allow intent'],
+                                                       checksum=None, signature=None,
+                                                       version='Stable', patchLevel=None, buildDate=None,
+                                                       osDistribution='Microsoft Windows'),
+                       cpuReq=CPU(vendor=None, generation=None, defaultOversubscriptionRatio=None,
+                                  supportedOversubscriptionRatio=None, cpuArchitecture='x86-64', cpuFlag=[],
+                                  smtEnabled=False, numberOfCores=2, numberOfThreads=4, baseFrequency=None,
+                                  boostFrequency=None, lastLevelCacheSize=None, thermalDesignPower=None),
+                       gpuReq=None,
+                       ramReq=Memory(vendor=None, generation=None, defaultOversubscriptionRatio=None,
+                                     supportedOversubscriptionRatio=None,
+                                     memorySize=MemorySize(value=0.0,
+                                                           unit='https://qudt.org/vocab/unit/MegaBYTE'),
+                                     memoryClass='other', memoryRank='other',
+                                     eccEnabled=False, hardwareEncryption=False),
+                       videoRamSize=MemorySize(value=20.0, unit='https://qudt.org/vocab/unit/MegaBYTE'),
+                       rootDiskReq=Disk(vendor=None, generation=None, defaultOversubscriptionRatio=None,
+                                        supportedOversubscriptionRatio=None,
+                                        diskSize=MemorySize(value=21.47483648,
+                                                            unit='https://qudt.org/vocab/unit/GigaBYTE'),
+                                        diskType='other', diskBusType='scsi'),
+                       encryption=None,
+                       checkSum=None,
+                       secureBoot=True,
+                       vPMU=False,
+                       multiQueues=False,
+                       updateStrategy=None,
+                       licenseIncluded=False, maintenance=None, vmImageDiskFormat='RAW', hypervisorType='other',
+                       firmwareType='other', hwRngTypeOfImage='None', watchDogAction='reset'))
 
 
-def _get_os_images():
-    return [OS_Image(hw_scsi_model="virtio - scsi",
+OS_IMAGE_1 = OS_Image(hw_scsi_model="virtio - scsi",
                      os_distro="ubuntu",
                      hw_watchdog_action="reset",
                      hw_rng_model="virtio",
@@ -152,6 +150,7 @@ def _get_os_images():
                      signatureValue="f8bababc2c2a948807473837504760432b99a3dac81629da77142328a9f638fe34371f",
                      hashAlgorithm="SHA-224",
                      signatureAlgorithm="ECC-CURVES",
+                     visibility="public",
                      properties={
                          'image_build_date': '2023-12-01',
                          'hotfix_hours': '0',
@@ -160,8 +159,8 @@ def _get_os_images():
                          'replace_frequency': 'monthly',
                          'uuid_validity': 'last-3',
                          'patchlevel': '1.5.2'
-                     }),
-            OS_Image(hw_scsi_model="virtio - scsi",
+                     })
+OS_IMAGE_2 = OS_Image(hw_scsi_model="virtio - scsi",
                      os_distro="windows",
                      hw_watchdog_action="reset",
                      hw_rng_model="virtio",
@@ -188,6 +187,7 @@ def _get_os_images():
                      os_hash_algo="sha512",
                      os_hash_value="7f8bababc2c2a94880747383750470aee68c7e8840bb8811eaeda1b0ce71d59f40ebb182",
                      id="image_2",
+                     visibility="public",
                      properties={
                          'image_build_date': '2023-11-01',
                          'hotfix_hours': '4',
@@ -200,32 +200,36 @@ def _get_os_images():
                          'subscription_required': True,
                          'subscription_included': False,
                          'maintained_until': datetime.strptime("2024-05-31", "%Y-%m-%d")
-                     })]
-
+                     })
 
 class VMImageDiscoveryTestcase(OpenstackTestcase):
     def setUp(self):
-        with open('config/config.yaml', 'r') as config_file:
+        cur_dir = os.getcwd()
+        if cur_dir.endswith("tests"):
+            path = cur_dir[0:-5] + "/config/config.yaml"
+        else:
+            path = cur_dir + "/config/config.yaml"
+        with open(path, "r") as config_file:
             self.config = yaml.safe_load(config_file)
-            self.discovery = VmDiscovery(conn=MockConnection(_get_os_images()), config=self.config)
+            self.discovery = VmDiscovery(conn=MockConnection([OS_IMAGE_1, OS_IMAGE_2]), config=self.config)
 
     def test_discovery_vm_images(self):
         actual_gax_images = self.discovery.discover_vm_images()
-        expected_gax_images = _get_gx_images()
+        self.check_vm_image(GX_IMAGE_1.gx_object, actual_gax_images[0].gx_object)
+        self.check_vm_image(GX_IMAGE_2.gx_object, actual_gax_images[1].gx_object)
 
-        self.assertEqual(len(expected_gax_images), len(expected_gax_images))
-
-        for image_1 in actual_gax_images:
-            for image_2 in expected_gax_images:
-                if image_1.gx_id == image_2.gx_id:
-                    self.check_vm_image(image_1.gx_object, image_2.gx_object)
 
     def test_json_ld(self):
+        cur_dir = os.getcwd()
+        if cur_dir.endswith("tests"):
+            shacl_file = cur_dir + "/gaia-x.shacl.ttl"
+        else:
+            shacl_file = cur_dir + "/tests/gaia-x.shacl.ttl"
 
         conforms, _, _ = validate(data_graph=json.dumps(
-            _get_gx_images()[0],
+            GX_IMAGE_1,
             indent=4, default=to_json_ld),
-            shacl_graph="tests/gaia-x.shacl.ttl",
+            shacl_graph=shacl_file,
             data_graph_format="json-ld",
             shacl_graph_format="ttl"
         )

@@ -23,7 +23,6 @@ class OsCloud:
     def __init__(self, conn: Connection, config: Dict) -> None:
         # import copy
         self.conn = conn
-        self.auth = conn.auth
         self.regions = list(conn.identity.regions())
         self.config = config
 

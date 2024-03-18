@@ -79,7 +79,7 @@ def to_json_ld(obj) -> dict:
         # call to_json_ld for gx_object
         json_ld.update(to_json_ld(gx_object))
         return json_ld
-    elif isinstance(obj, YAMLRoot):
+    if isinstance(obj, YAMLRoot):
         # if YAMLRoot (= all top level classes in Gaia-X Credential Schema)
         # Using one type is sufficient
         # json_ld['@type'] = get_types(obj.__class__)

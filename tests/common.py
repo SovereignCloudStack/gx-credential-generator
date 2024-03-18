@@ -164,13 +164,12 @@ class OpenstackTestcase(unittest.TestCase):
         self.assertEqual(ob_1.licenseIncluded, ob_2.licenseIncluded, "Image.licenseIncluded")
         self.assertEqual(ob_1.maintenance, ob_2.maintenance, "Image.maintenance")
 
-    def check_vm_image(self, ob_1: VMImage, ob_2: VMImage):
-        self.check_image(ob_1, ob_2)
-        self.assertEqual(ob_1.vmImageDiskFormat, str(ob_2.vmImageDiskFormat), "VM_Image.vmImageDiskFormat")
-        self.assertEqual(ob_1.hypervisorType, str(ob_2.hypervisorType), "VM_Image.hypervisorType")
-        self.assertEqual(ob_1.firmwareType, str(ob_2.firmwareType), "VM_Image.firmwareType")
-        self.assertEqual(ob_1.hwRngTypeOfImage, str(ob_2.hwRngTypeOfImage), "VM_Image.hwRngTypeOfImage")
-        self.assertEqual(ob_1.watchDogAction, str(ob_2.watchDogAction), "VM_Image.watchDogAction")
+    def check_vm_image(self, exp: VMImage, act: VMImage):
+        self.check_image(exp, act)
+        self.assertEqual(exp.vmImageDiskFormat, act.vmImageDiskFormat, "VM_Image.vmImageDiskFormat")
+        self.assertEqual(exp.hypervisorType, act.hypervisorType, "VM_Image.hypervisorType")
+        self.assertEqual(exp.firmwareType, act.firmwareType, "VM_Image.firmwareType")
+        self.assertEqual(exp.hwRngTypeOfImage, act.hwRngTypeOfImage, "VM_Image.hwRngTypeOfImage")
 
 
 class MockConnection:

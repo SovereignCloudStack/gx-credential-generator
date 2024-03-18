@@ -29,6 +29,9 @@ from generator.common.gx_schema import (
     Signature,
     SignatureAlgorithm,
     UpdateStrategy,
+    VMDiskType,
+    FirmType,
+    RNGTypes
 )
 from generator.common.gx_schema import VMImage as GX_Image
 from generator.common.json_ld import JsonLdObject
@@ -60,26 +63,22 @@ def _get_cpu_arch(os_image_arch: str) -> str:
 def _add_disk_format(os_image: OS_Image, gx_image: GX_Image) -> None:
     try:
         if os_image.disk_format.lower() == "raw":
-            gx_image.vmImageDiskFormat = "RAW"
+            gx_image.vmImageDiskFormat = VMDiskType("RAW")
         if os_image.disk_format.lower() == "qcow2":
-            gx_image.vmImageDiskFormat = "QCOW2"
+            gx_image.vmImageDiskFormat = VMDiskType("QCOW2")
         if os_image.disk_format.lower() == "vhd":
-            gx_image.vmImageDiskFormat = "VHD"
+            gx_image.vmImageDiskFormat = VMDiskType("VHD")
         if os_image.disk_format.lower() == "iso":
-            gx_image.vmImageDiskFormat = "ISO"
+            gx_image.vmImageDiskFormat = VMDiskType("ISO")
         if os_image.disk_format.lower() == "cvf":
-            gx_image.vmImageDiskFormat = "CVF"
+            gx_image.vmImageDiskFormat = VMDiskType("CVF")
         if os_image.disk_format.lower() == "cva":
-            gx_image.vmImageDiskFormat = "CVA"
+            gx_image.vmImageDiskFormat = VMDiskType("CVA")
     except AttributeError:
         pass
 
 
 class VmDiscovery:
-    # def __init__(self) -> None:
-    #    with open("config/config.yaml", "r") as config_file:
-    #        self.config = yaml.safe_load(config_file)
-
     def __init__(self, conn: Connection, config: Dict) -> None:
         self.conn = conn
         self.config = config
@@ -539,9 +538,9 @@ class VmDiscovery:
         try:
             if not os_image.hw_firmware_type:
                 return
-            gx_image.firmwareType = os_image.hw_firmware_type
+            gx_image.firmwareType = FirmType(os_image.hw_firmware_type)
         except AttributeError:
-            gx_image.firmwareType = const.DEFAULT_FIRMWARE_TYPE
+            gx_image.firmwareType = FirmType(const.DEFAULT_FIRMWARE_TYPE)
 
     def _add_watchdog_action(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
@@ -697,15 +696,15 @@ class VmDiscovery:
     def _add_hypervisor(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
             if os_image.hypervisor_type == "xen":
-                gx_image.hypervisorType = HypervisorType.Xen
+                gx_image.hypervisorType = HypervisorType("Xen")
             elif os_image.hypervisor_type == "quemu":
-                gx_image.hypervisorType = "quemu"
+                gx_image.hypervisorType = HypervisorType("quemu")
             elif os_image.hypervisor_type == "hyperv":
-                gx_image.hypervisorType = "Hyper-V"
+                gx_image.hypervisorType = HypervisorType("Hyper-V")
             else:
-                gx_image.hypervisorType = HypervisorType.other.text
+                gx_image.hypervisorType = HypervisorType("other")
         except AttributeError as e:
-            gx_image.hypervisorType = HypervisorType.other.text
+            gx_image.hypervisorType = HypervisorType("other")
             #raise MissingMandatoryAttribute(e.args)
 
     def _get_signature_algo(self, algo: str) -> str:
@@ -722,4 +721,4 @@ class VmDiscovery:
             pass
 
     def _add_rng_model(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        gx_image.hwRngTypeOfImage = "None"
+        gx_image.hwRngTypeOfImage = RNGTypes("None")
