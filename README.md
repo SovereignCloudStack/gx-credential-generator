@@ -128,25 +128,30 @@ required attribute and check validation result):
 
 ## Docker
 
-The docker environment creates a general and portable environment for the gx-sd-generator module. Before running the container, don't forget to mount your credentials for the correct path. OpenStack-related secret located under `~/.config/openstack`
+The docker environment creates a general and portable environment for the gx-cred-generator module. Before running the container, don't forget to mount your credentials for the correct path. OpenStack-related secret are located under `~/.config/openstack`.
 
 **Example codes:**
 
-Running the gx-sd-generator.py on an example cloud:
-```docker
-docker run -v "<secret_location>:/root/.config/openstack" $(docker build -q .)  ./gx-sd-generator.py --os-cloud gx-h61.1
+First of all, build the image:
+```shell
+docker build -t gx-credential-generator .
+```
+
+Running the `gx-cred-generator.py` on an example cloud:
+```shell
+docker run -v "<secret_location>:/root/.config/openstack" gx-credential-generator ./gx-cred-generator.py --os-cloud gx-h61.1
 ```
 
 Running the container in an interactive mode:
-```docker
-docker run -it -v "${PWD}/os_secret:/root/.config/openstack" $(docker build -q .) test bash
+```shell
+docker run -it -v "<secret_location>:/root/.config/openstack" gx-credential-generator bash
 ```
 
 or you can use the following to create a temp location for the secrets:
 
 ```shell
-mkdir -p os_secret && cp secret1 /os_secret
-docker run -v "${PWD}/os_secret:/root/.config/openstack" $(docker build -q .)  ./gx-sd-generator.py --os-cloud gx-h61.1
+mkdir -p os_secret && cp secret1 ./os_secret
+docker run -v "${PWD}/os_secret:/root/.config/openstack" gx-credential-generator ./gx-cred-generator.py --os-cloud gx-h61.1
 ```
 
 ## Status (2023-05-04)
