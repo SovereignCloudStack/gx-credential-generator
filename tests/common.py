@@ -19,6 +19,7 @@ from generator.common.gx_schema import InstantiationRequirement
 from generator.common.gx_schema import SoftwareResource
 from generator.common.gx_schema import VirtualResource
 from generator.common.gx_schema import VMImage
+from generator.common.json_ld import JsonLdObject
 
 from typing import List
 
@@ -27,6 +28,21 @@ from openstack.compute.v2.flavor import Flavor as OS_Flavor
 
 
 class OpenstackTestcase(unittest.TestCase):
+
+    def get_jsonobject_by_id(self, id: str, objects: List[JsonLdObject]) -> JsonLdObject:
+        """
+        Return for JSON LD object with given id in given list.
+        @param id: id of JSON LD object to be returned
+        @type id: str
+        @param objects: list of JSON LD objects
+        @type objects: List[JsonLdObject]
+        @return: JSON LD object with given id if any, else None
+        @rtype JsonLdObject
+        """
+        for o in objects:
+            if o.gx_id == id:
+                return o
+
     def check_gaia_x_entity(self, ob_1: GaiaXEntity, ob_2: GaiaXEntity):
         self.assertEqual(ob_1.name, ob_2.name,
                          "GaiaXEntity.name")

@@ -1,7 +1,7 @@
 import json
 import unittest
 import yaml
-
+import os
 from datetime import datetime
 
 from generator.common.json_ld import JsonLdObject
@@ -22,7 +22,7 @@ from openstack.image.v2.image import Image as OS_Image
 from pyshacl import validate
 
 from tests.common import OpenstackTestcase
-from tests.common import TestConnection
+from tests.common import MockConnection
 
 
 def _get_gx_images():
@@ -66,7 +66,7 @@ def _get_gx_images():
                                             supportedOversubscriptionRatio=None,
                                             diskSize=MemorySize(value=21.47483648,
                                                                 unit='https://qudt.org/vocab/unit/GigaBYTE'),
-                                            diskType='other', diskBusType='scsi'), encryption=None,
+                                            diskType='other', diskBusType='SCSI'), encryption=None,
                            checkSum=None,
                            secureBoot=True, vPMU=False, multiQueues=False, updateStrategy=None,
                            licenseIncluded=False,
@@ -110,7 +110,7 @@ def _get_gx_images():
                                                 supportedOversubscriptionRatio=None,
                                                 diskSize=MemorySize(value=21.47483648,
                                                                     unit='https://qudt.org/vocab/unit/GigaBYTE'),
-                                                diskType='other', diskBusType='scsi'),
+                                                diskType='other', diskBusType='SCSI'),
                                encryption=None,
                                checkSum=None,
                                secureBoot=True,
@@ -132,7 +132,7 @@ def _get_os_images():
                      hw_vif_multiqueue_enabled=True,
                      hw_pmu=False,
                      hw_firmware_type="bios",
-                     hw_disk_bus="scsi",
+                     hw_disk_bus="SCSI",
                      hw_cpu_cores=2,
                      hw_cpu_threads=4,
                      architecture="x86_64",
@@ -171,7 +171,7 @@ def _get_os_images():
                      hw_vif_multiqueue_enabled=True,
                      hw_pmu=False,
                      hw_firmware_type="bios",
-                     hw_disk_bus="scsi",
+                     hw_disk_bus="SCSI",
                      hw_cpu_cores=2,
                      hw_cpu_threads=4,
                      architecture="x86_64",
@@ -205,9 +205,14 @@ def _get_os_images():
 
 class VMImageDiscoveryTestcase(OpenstackTestcase):
     def setUp(self):
-        with open('config/config.yaml', 'r') as config_file:
+        cur_dir = os.getcwd()
+        if cur_dir.endswith("tests"):
+            path = cur_dir[0:-5] + "/config/config.yaml"
+        else:
+            path = cur_dir + "/config/config.yaml"
+        with open(path, "r") as config_file:
             self.config = yaml.safe_load(config_file)
-            self.discovery = VmDiscovery(conn=TestConnection(_get_os_images()), config=self.config)
+            self.discovery = VmDiscovery(conn=MockConnection(_get_os_images()), config=self.config)
 
     def test_discovery_vm_images(self):
         actual_gax_images = self.discovery.discover_vm_images()
@@ -221,11 +226,16 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
                     self.check_vm_image(image_1.gx_object, image_2.gx_object)
 
     def test_json_ld(self):
+        cur_dir = os.getcwd()
+        if cur_dir.endswith("tests"):
+            shacl_file = cur_dir + "/gaia-x.shacl.ttl"
+        else:
+            shacl_file = cur_dir + "/tests/gaia-x.shacl.ttl"
 
         conforms, _, _ = validate(data_graph=json.dumps(
             _get_gx_images()[0],
             indent=4, default=to_json_ld),
-            shacl_graph="tests/gaia-x.shacl.ttl",
+            shacl_graph=shacl_file,
             data_graph_format="json-ld",
             shacl_graph_format="ttl"
         )
