@@ -37,27 +37,23 @@ from generator.common.gx_schema import VMImage as GX_Image
 from generator.common.json_ld import JsonLdObject
 
 
+ARCH_LOOKUP = {
+    'i686': 'x86-32',
+    'x86_64': 'x86-64',
+    'ia64': 'x86-64',
+    'aarch6': 'AArch-32',
+    'alpha': 'RISC-V',
+    'armv7l': 'RISC-V',
+    'lm32': 'RISC-V',
+    'openrisc': 'RISC-V',
+    'parisc': 'RISC-V',
+    'parisc64': 'RISC-V',
+    'unicore32': 'RISC-V',
+}
+
+
 def _get_cpu_arch(os_image_arch: str) -> str:
-    try:
-        if os_image_arch == "i686":
-            return "x86-32"
-        if os_image_arch in ["x86_64", "ia64"]:
-            return "x86-64"
-        if os_image_arch == "aarch6":
-            return "AArch-32"
-        if os_image_arch in [
-            "alpha",
-            "armv7l",
-            "lm32",
-            "openrisc",
-            "parisc",
-            "parisc64",
-            "unicore32",
-        ]:
-            return "RISC-V"
-        return CpuArch.other.text
-    except AttributeError as e:
-        return CpuArch.other.text
+    return ARCH_LOOKUP.get(os_image_arch, CpuArch.other.text)
 
 
 def _add_disk_format(os_image: OS_Image, gx_image: GX_Image) -> None:
