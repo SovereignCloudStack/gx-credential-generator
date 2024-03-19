@@ -195,8 +195,7 @@ mkdir -p os_secret && cp secret1 /os_secret
 docker run -v "${PWD}/os_secret:/root/.config/openstack" $(docker build -q .)  ./gx-sd-generator.py --os-cloud gx-h61.1
 ```
 
-Generated SelfDescriptions could be validated against their schemas (shapes) by the 
-
+Generated Self-Descriptions could be validated against their schemas (shapes) by the 
 simple SD validator script. Visit the `sd` directory and try to validate your 
 generated SD. Find the examples in `sd` directory and do the validation as follows:
 ```bash
