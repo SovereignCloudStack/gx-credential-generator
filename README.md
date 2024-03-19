@@ -72,15 +72,7 @@ b. Generate Gaia-X Credentials
 ```bash
    python3 cli.py openstack <os-cloud>
    ```
-[//]: <> (- To store OpenStack properties as several credentials in wallet
-   ```bash
-   python3 cli.py openstack <os-cloud> --wallet
-   ```)
 
-[//]: <> (- To omit to print OpenStack properties on screen and to store OpenStack properties as credential in wallet
-   ```bash
-   python3 cli.py openstack <os-cloud> --wallet --no-print
-   ```)
 
 ### K8s
 Generate Gaia-X Credentials
@@ -164,12 +156,6 @@ Similar to mandatory attributes, GX Credential Schemas supports optional attribu
 
 GX Credential schema allows to describe cloud resources, such VM images, in a fine granular manner, by using attribute `aggregationOf`. This attribute refers a list of GX credentials either as [DID](https://www.w3.org/TR/did-core/) or as file path relative to generators working directory. The latter is copied to cloud resource's credentials. For more details on GX credential schema and its attributes, please refer [Gaia-X Service Characteristics GitLab](https://gitlab.com/gaia-x/technical-committee/service-characteristics)   
 
-[//]: <> (### Wallets)
-[//]: <> (Wallets are digital secure storages to store Verifiable Credentials, like GX credentials. GX generator stores generated GX credentials in all configured wallets. Wallets are configured in section `wallets`. The following wallets are supported:)
-
-[//]: <> (- File System:
-  - Stores credentials on dedicated folder in disk. Use this wallet for testing purpose only.
-) 
 
 
 ## Docker
