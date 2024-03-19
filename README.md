@@ -86,7 +86,7 @@ b. Generate Gaia-X Credentials
 Generate Gaia-X Credentials
    - To print K8s properties ... 
    ```bash
-   ./gx-sd-generator.py k8s
+   ./gx-cred-generator.py k8s
    ```
 ### Airflow Pipeline
 Start the gaiax-pipeline (deprecated)
