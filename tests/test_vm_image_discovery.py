@@ -3,6 +3,8 @@ import unittest
 import yaml
 import os
 
+
+from pathlib import Path
 from datetime import datetime
 
 from generator.common.json_ld import JsonLdObject
@@ -24,6 +26,7 @@ from pyshacl import validate
 
 from tests.common import OpenstackTestcase
 from tests.common import MockConnection
+import tests.common
 
 GX_IMAGE_1 = JsonLdObject(
     gx_id='image_1',
@@ -204,27 +207,28 @@ OS_IMAGE_2 = OS_Image(hw_scsi_model="virtio - scsi",
 
 class VMImageDiscoveryTestcase(OpenstackTestcase):
     def setUp(self):
-        cur_dir = os.getcwd()
-        if cur_dir.endswith("tests"):
-            path = cur_dir[0:-5] + "/config/config.yaml"
+        current_dir = Path(__file__).parent
+        if current_dir.name == "tests":
+            config_file = str(Path(current_dir.parent, "config/config.yaml"))
         else:
-            path = cur_dir + "/config/config.yaml"
-        with open(path, "r") as config_file:
+            config_file = str(Path(current_dir, "config/config.yaml"))
+
+        with open(config_file, "r") as config_file:
             self.config = yaml.safe_load(config_file)
             self.discovery = VmDiscovery(conn=MockConnection([OS_IMAGE_1, OS_IMAGE_2]), config=self.config)
 
     def test_discovery_vm_images(self):
         actual_gax_images = self.discovery.discover_vm_images()
-        self.check_vm_image(GX_IMAGE_1.gx_object, actual_gax_images[0].gx_object)
-        self.check_vm_image(GX_IMAGE_2.gx_object, actual_gax_images[1].gx_object)
+        self.assert_vm_image(GX_IMAGE_1.gx_object, actual_gax_images[0].gx_object)
+        self.assert_vm_image(GX_IMAGE_2.gx_object, actual_gax_images[1].gx_object)
 
 
     def test_json_ld(self):
-        cur_dir = os.getcwd()
-        if cur_dir.endswith("tests"):
-            shacl_file = cur_dir + "/gaia-x.shacl.ttl"
+        current_dir = Path(__file__).parent
+        if current_dir.name == "tests":
+            shacl_file = str(Path(current_dir, "gaia-x.shacl.ttl"))
         else:
-            shacl_file = cur_dir + "/tests/gaia-x.shacl.ttl"
+            shacl_file = str(Path(current_dir, "tests/gaia-x.shacl.ttl"))
 
         conforms, _, _ = validate(data_graph=json.dumps(
             GX_IMAGE_1,
