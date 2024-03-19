@@ -157,6 +157,7 @@ def get_types(gx_object: type) -> List[type]:
         try:
             types.append(base.class_class_curie)
         except AttributeError:
+            # class has no attribute, called "class_class_curie"
             pass
     return types
 
