@@ -130,7 +130,7 @@ Providers are able to change default values. In doing so, attribute values for *
 
 #### CopyrightOwner, License and ResourcePolicy of VM images
 
-`copyrigthowner`, `license` and `resourcePolicy` are mandatory attributes for VM Images and their operating systems. As these values are not accessible from OpenStack cloud, default values are used. The values for operating system are defined in section `operating system` with one section for each operating system. Operating systems are refered by name, e.g. for Alpine Linux. 
+`copyrigthowner`, `license` and `resourcePolicy` are mandatory attributes for VM Images and their operating systems. As these values are not accessible from OpenStack cloud, default values are used. The values for operating system are defined in the section `operating system` with one subsection for each operating system. Operating systems are referred by name, e.g. for Alpine Linux:
 
 ```yaml
 default:
