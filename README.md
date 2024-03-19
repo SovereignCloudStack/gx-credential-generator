@@ -82,7 +82,7 @@ b. Generate Gaia-X Credentials
    python3 cli.py openstack <os-cloud> --wallet --no-print
    ```)
 
-### K88
+### K8s
 Generate Gaia-X Credentials
    - To print K8s properties ... 
    ```bash
