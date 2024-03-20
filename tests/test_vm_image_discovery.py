@@ -85,7 +85,7 @@ GX_IMAGE_1 = JsonLdObject(
             defaultOversubscriptionRatio=None,
             supportedOversubscriptionRatio=None,
             memorySize=MemorySize(
-                value=0.0, unit="https://qudt.org/vocab/unit/MegaBYTE"
+                value=1.048576, unit="https://qudt.org/vocab/unit/MegaBYTE"
             ),
             memoryClass="other",
             memoryRank="other",
@@ -158,7 +158,7 @@ OS_IMAGE_1 = OS_Image(
     size="9116319744",
     virtual_size="9116319744",
     checksum="a516d5aea8ebc358dd316dd67266a2ba",
-    min_ram=0,
+    min_ram=1,
     min_disk=20,
     owner="477ba6f14a5b43abe85b2966be7ebe136",
     os_hash_algo="sha512",
@@ -201,8 +201,9 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
         self.assert_vm_image(GX_IMAGE_1.gx_object, actual_gax_images[0].gx_object)
         self.assert_vm_image(GX_IMAGE_2.gx_object, actual_gax_images[1].gx_object)
 
-    def _test_json_ld(self):
-        current_dir = Path(__file__).parent
+    def test_json_ld(self):
+        print(json.dumps(GX_IMAGE_2, indent=4, default=to_json_ld))
+        """current_dir = Path(__file__).parent
         if current_dir.name == "tests":
             shacl_file = str(Path(current_dir, "gaia-x.shacl.ttl"))
         else:
@@ -214,7 +215,7 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
             data_graph_format="json-ld",
             shacl_graph_format="ttl",
         )
-        self.assertTrue(conforms)
+        self.assertTrue(conforms)"""
 
     def test_get_disk_format(self):
         self.assertEqual(

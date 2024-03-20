@@ -288,7 +288,6 @@ class VmDiscovery:
 
     def _get_operation_system(self, os_image: OS_Image) -> OperatingSystem:
         # Copyright owner and license not supported as Image properties, currently --> Default values from config are used
-
         if os_image.os_distro.lower() == "arch":
             return OperatingSystem(
                 version=os_image.os_version,
