@@ -1,5 +1,5 @@
 # gx-credential-generator
-Tool for creating [Gaia-X Crecentials](https://gitlab.com/gaia-x/technical-committee/architecture-document/-/blob/master/architecture_document/gx_conceptual_model.md#gaia-x-credentials), previously known as Gaia-X Self-Descriptions, for SCS compliant cloud infrastructures (OpenStack, k8s, ...)
+Tool for creating [Gaia-X Credentials](https://gitlab.com/gaia-x/technical-committee/architecture-document/-/blob/master/architecture_document/gx_conceptual_model.md#gaia-x-credentials), previously known as Gaia-X Self-Descriptions, for SCS compliant cloud infrastructures (OpenStack, k8s, ...)
 
 ## Introduction
 

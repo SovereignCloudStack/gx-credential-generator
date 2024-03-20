@@ -9,13 +9,14 @@ SPDX-License-Identifier: EPL-2.0
 """
 
 from datetime import datetime
-from typing import Dict, List, Union
+from typing import List, Union
 
 from linkml_runtime.utils.metamodelcore import URI
 from openstack.connection import Connection
 from openstack.image.v2.image import Image as OS_Image
 
 import generator.common.const as const
+from generator.common.config import Config
 from generator.common.gx_schema import CPU, SPDX
 from generator.common.gx_schema import Architectures as CpuArch
 from generator.common.gx_schema import (
@@ -31,11 +32,14 @@ from generator.common.gx_schema import (
     UpdateStrategy,
     VMDiskType,
     FirmType,
-    RNGTypes
+    RNGTypes,
+    WatchDogActions,
+    UpdateFrequency,
+    MaintenanceSubscription,
+    DiskBusType
 )
 from generator.common.gx_schema import VMImage as GX_Image
 from generator.common.json_ld import JsonLdObject
-
 
 ARCH_LOOKUP = {
     'i686': 'x86-32',
@@ -51,33 +55,59 @@ ARCH_LOOKUP = {
     'unicore32': 'RISC-V',
 }
 
+DISK_BUS_LOOKUP = {
+    'sata': 'SATA',
+    'pata': 'PATA',
+    'scsi': 'SCSI',
+    'sas': 'SAS',
+    'nvme': 'NVMe',
+}
 
-def _get_cpu_arch(os_image_arch: str) -> str:
-    return ARCH_LOOKUP.get(os_image_arch, CpuArch.other.text)
+DISK_LOOKUP = {
+    'raw': 'RAW',
+    'qcow2': 'QCOW2',
+    'vhd': 'VHD',
+    'iso': 'ISO',
+    'cvf': 'CVF',
+    'cva': 'CVA',
+}
 
+FIRM_WARE_LOOKUP = {
+    'bios': 'BIOS',
+    'uefi': 'UEFI'
+}
 
-def _add_disk_format(os_image: OS_Image, gx_image: GX_Image) -> None:
-    try:
-        if os_image.disk_format.lower() == "raw":
-            gx_image.vmImageDiskFormat = VMDiskType("RAW")
-        if os_image.disk_format.lower() == "qcow2":
-            gx_image.vmImageDiskFormat = VMDiskType("QCOW2")
-        if os_image.disk_format.lower() == "vhd":
-            gx_image.vmImageDiskFormat = VMDiskType("VHD")
-        if os_image.disk_format.lower() == "iso":
-            gx_image.vmImageDiskFormat = VMDiskType("ISO")
-        if os_image.disk_format.lower() == "cvf":
-            gx_image.vmImageDiskFormat = VMDiskType("CVF")
-        if os_image.disk_format.lower() == "cva":
-            gx_image.vmImageDiskFormat = VMDiskType("CVA")
-    except AttributeError:
-        pass
+WATCH_DOG_LOOKUP = {
+    'disabled': 'disabled',
+    'reset': 'reset',
+    'poweroff': 'poweroff',
+    'pause': 'pause',
+}
+
+HASH_ALGO_LOOKUP = {
+    'sha512': 'sha-512',
+    'sha224': 'sha-224',
+    'sha256': 'sha-256',
+    'sha384': 'sha-384',
+    'sha-3': 'sha-3',
+    'md5': 'md5',
+    'ripemd-160': 'ripemd-160',
+    'blake2': 'blake2',
+    'blake3': 'blake3',
+}
+HYPER_LOOKUP = {
+    'xen': 'Xen',
+    'quemu': 'quemu',
+    'hyperv': 'Hyper - V',
+    'kvm': 'KVM',
+    'esxi': 'ESXi'
+}
 
 
 class VmDiscovery:
-    def __init__(self, conn: Connection, config: Dict) -> None:
+    def __init__(self, conn: Connection, conf: Config) -> None:
         self.conn = conn
-        self.config = config
+        self.conf = conf
 
     # def collect_vm_images(self, conn: Connection) -> List[str]:
     def discover_vm_images(self) -> List[JsonLdObject]:
@@ -110,349 +140,394 @@ class VmDiscovery:
         )
 
         # Discover optional attributes
-        self._add_secure_boot(os_image, gx_image)
-        self._add_firmeware_type(os_image, gx_image)
-        self._add_watchdog_action(os_image, gx_image)
-        self._add_vmpu(os_image, gx_image)
-        self._add_video_ram(os_image, gx_image)
-        self._add_multiqueue_enabled(os_image, gx_image)
-        self._add_update_strategy(os_image, gx_image)
-        self._add_name(os_image, gx_image)
-        self._add_description(os_image, gx_image)
-        self._add_cpu_req(os_image, gx_image)
-        self._add_min_ram_req(os_image, gx_image)
-        self._add_min_disk_req(os_image, gx_image)
-        self._add_operation_system_info(os_image, gx_image)
-        self._add_build_date(os_image, gx_image)
-        self._add_license_included(os_image, gx_image)
-        self._add_patch_level(os_image, gx_image)
-        self._add_version(os_image, gx_image)
-        self._add_checksum(os_image, gx_image)
-        self._add_signature(os_image, gx_image)
-        self._add_hypervisor(os_image, gx_image)
-        self._add_aggregation_of(os_image, gx_image)
-        self._add_rng_model(os_image, gx_image)
-        _add_disk_format(os_image, gx_image)
+        gx_image.vmImageDiskFormat = self._get_disk_format(os_image)
+        gx_image.secureBoot = self._get_secure_boot(os_image)
+        gx_image.firmwareType = self._get_firmeware_type(os_image)
+        gx_image.watchDogAction = self._get_watchdog_action(os_image)
+        gx_image.vPMU = self._get_vmpu(os_image)
+        gx_image.cpuReq = self._get_cpu_req(os_image)
+        gx_image.multiQueues = self._get_multiqueue_enabled(os_image)
+        gx_image.checksum = self._get_checksum(os_image)
+        gx_image.hwRngTypeOfImage = self._get_rng_model(os_image)
+        gx_image.videoRamSize = self._get_video_ram_size(os_image)
+        gx_image.file_size = self._get_file_size(os_image)
+        gx_image.updateStrategy = self._get_update_strategy(os_image)
+        gx_image.description = self._get_description(os_image)
+        gx_image.name = self._get_name(os_image)
+        gx_image.ramReq = self._get_min_ram_req(os_image)
+        gx_image.rootDiskReq = self._get_min_disk_req(os_image)
+        gx_image.operatingSystem = self._get_operation_system(os_image)
+        gx_image.buildDate = self._get_build_date(os_image)
+        gx_image.licenseIncluded = self._get_license_included(os_image)
+        gx_image.patchLevel = self._get_patch_level(os_image)
+        gx_image.version = self._get_version(os_image)
+        gx_image.maintenance = self._get_maintenance(os_image)
+        gx_image.signature = self._get_signature(os_image)
+        gx_image.hypervisorType = self._get_hypervisor_type(os_image)
 
         # Discover mandatory attribute
         self._add_license(os_image, gx_image)
-        self._add_copyrigthowner(os_image, gx_image)
+        self._add_copyright_owner(os_image, gx_image)
         self._add_resource_policy(os_image, gx_image)
 
         return gx_image
 
-    def _add_cpu_req(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        cpu = CPU(cpuArchitecture=_get_cpu_arch(os_image.architecture))
+    @staticmethod
+    def _get_disk_format(os_image: OS_Image) -> VMDiskType:
+        if os_image.disk_format:
+            return VMDiskType(DISK_LOOKUP.get(os_image.disk_format.lower(), VMDiskType.RAW.text))
+        else:
+            return VMDiskType("RAW")
 
-        try:
+    def _get_secure_boot(self, os_image: OS_Image) -> bool:
+        if os_image.needs_secure_boot:
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def _get_firmeware_type(os_image: OS_Image) -> FirmType:
+        if os_image.properties and "hw_firmware_type" in os_image.properties:
+            return FirmType(FIRM_WARE_LOOKUP.get(os_image.properties['hw_firmware_type'].lower(), FirmType.other))
+        else:
+            return FirmType("other")
+
+    @staticmethod
+    def _get_watchdog_action(os_image: OS_Image) -> WatchDogActions:
+        if os_image.hw_watchdog_action:
+            return WatchDogActions(WATCH_DOG_LOOKUP.get(os_image.hw_watchdog_action.lower(), WatchDogActions.disabled))
+        return WatchDogActions("disabled")
+
+    @staticmethod
+    def _get_vmpu(os_image: OS_Image) -> bool:
+        if os_image.properties and "hw_pmu" in os_image.properties:
+            return os_image.properties['hw_pmu']
+        else:
+            return False
+
+    @staticmethod
+    def _get_cpu_req(os_image: OS_Image) -> CPU:
+        cpu = CPU(cpuArchitecture=CpuArch(ARCH_LOOKUP.get(os_image.architecture, CpuArch.other.text)))
+
+        if hasattr(os_image, "hw_cpu_cores"):
             cpu.numberOfCores = os_image.hw_cpu_cores
-        except AttributeError:
-            pass
-        try:
+        if hasattr(os_image, "hw_cpu_threads"):
             cpu.numberOfThreads = os_image.hw_cpu_threads
-        except AttributeError:
-            pass
+        return cpu
 
-        gx_image.cpuReq = cpu
+    @staticmethod
+    def _get_multiqueue_enabled(os_image: OS_Image) -> bool:
+        if os_image.is_hw_vif_multiqueue_enabled:
+            return os_image.is_hw_vif_multiqueue_enabled
+        else:
+            return False
 
-    def _add_min_ram_req(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        # Memory size tend to be measured in MB (1,000,000 bytes) and not MiB (1.048576 bytes) the RAM industry.
-        # But OpenStack uses MiB.
-        try:
-            size = MemorySize(
-                value=float(os_image.min_ram * 1.048576), unit=const.UNIT_MB
-            )
-            mem_req = Memory(memorySize=size)
-            try:
-                mem_req.hardwareEncryption = os_image.hw_mem_encryption
-            except AttributeError:
-                pass
-            gx_image.ramReq = mem_req
-        except AttributeError as e:
-            pass
-            #raise MissingMandatoryAttribute(e.args)
+    @staticmethod
+    def _get_file_size(os_image: OS_Image) -> MemorySize:
+        if os_image.size:
+            return MemorySize(value=float(os_image.size * 1.073741824), unit=const.UNIT_GB)
 
+    @staticmethod
+    def _get_checksum(os_image: OS_Image) -> CheckSum:
+        if os_image.hash_value:
+            return CheckSum(checkSumValue=os_image.hash_value,
+                            checkSumCalculation=ChecksumAlgorithm(
+                                HASH_ALGO_LOOKUP.get(os_image.hash_algo.lower(), ChecksumAlgorithm.other)))
 
-    def _add_min_disk_req(self, image: OS_Image, gx_image: GX_Image) -> None:
-        try:
-            size = MemorySize(
-                value=float(image.min_disk * 1.073741824), unit=const.UNIT_GB
-            )
-            gx_image.rootDiskReq = Disk(diskSize=size, diskBusType=image.hw_disk_bus)
-        except AttributeError as e:
-            #raise MissingMandatoryAttribute(e.args)
-            pass
+    @staticmethod
+    def _get_rng_model(os_image: OS_Image) -> RNGTypes:
+        return RNGTypes("None")
 
-    def _add_operation_system_info(
-        self, os_image: OS_Image, gx_image: GX_Image
-    ) -> None:
+    @staticmethod
+    def _get_min_ram_req(os_image: OS_Image) -> Memory:
+        if os_image.min_ram is not None:
+            # Memory size tend to be measured in MB (1,000,000 bytes) and not MiB (1.048576 bytes) the RAM industry.
+            # But OpenStack uses MiB.
+            mem = Memory(memorySize=MemorySize(value=float(os_image.min_ram * 1.048576), unit=const.UNIT_MB))
+            if os_image.properties and "hw_mem_encryption" in os_image.properties:
+                mem.hardwareEncryption = os_image.properties['hw_mem_encryption']
+            return mem
+
+    @staticmethod
+    def _get_min_disk_req(os_image: OS_Image) -> Disk:
+        if os_image.min_disk is not None:
+            disk = Disk(diskSize=MemorySize(
+                value=float(os_image.min_disk * 1.073741824), unit=const.UNIT_GB
+            ))
+            if os_image.hw_disk_bus:
+                disk.diskBusType = DiskBusType(DISK_BUS_LOOKUP.get(os_image.hw_disk_bus.lower(), "other"))
+            else:
+                disk.diskBusType = DiskBusType("other")
+            return disk
+
+    def _get_operation_system(
+            self, os_image: OS_Image
+    ) -> OperatingSystem:
         # Copyright owner and license not supported as Image properties, currently --> Default values from config are used
 
-        if os_image.os_distro == "arch":
-            gx_image.operatingSystem = OperatingSystem(
+        if os_image.os_distro.lower() == "arch":
+            return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_ARCH,
                 resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_ARCH),
-                copyrightOwnedBy=self._get_copyrightowner_for_os(const.CONFIG_OS_ARCH),
-                license=self._get_license(
+                copyrightOwnedBy=self._get_copyright_owner_for_os(const.CONFIG_OS_ARCH),
+                license=self._get_license_list(
                     self._get_license_for_os(const.CONFIG_OS_ARCH)
                 ),
             )
-        elif os_image.os_distro == "centos":
-            gx_image.operatingSystem = OperatingSystem(
+        elif os_image.os_distro.lower() == "centos":
+            return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_CENTOS,
                 resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_CENTOS),
-                copyrightOwnedBy=self._get_copyrightowner_for_os(
+                copyrightOwnedBy=self._get_copyright_owner_for_os(
                     const.CONFIG_OS_CENTOS
                 ),
-                license=self._get_license(
+                license=self._get_license_list(
                     self._get_license_for_os(const.CONFIG_OS_CENTOS)
                 ),
             )
-        elif os_image.os_distro == "debian":
-            gx_image.operatingSystem = OperatingSystem(
+        elif os_image.os_distro.lower() == "debian":
+            return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_DEBIAN,
                 resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_DEBIAN),
-                copyrightOwnedBy=self._get_copyrightowner_for_os(
+                copyrightOwnedBy=self._get_copyright_owner_for_os(
                     const.CONFIG_OS_DEBIAN
                 ),
-                license=self._get_license(
+                license=self._get_license_list(
                     self._get_license_for_os(const.CONFIG_OS_DEBIAN)
                 ),
             )
-        elif os_image.os_distro == "fedora":
-            gx_image.operatingSystem = OperatingSystem(
+        elif os_image.os_distro.lower()  == "fedora":
+            return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_FEDORA,
                 resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_FEDORA),
-                copyrightOwnedBy=self._get_copyrightowner_for_os(
+                copyrightOwnedBy=self._get_copyright_owner_for_os(
                     const.CONFIG_OS_FEDORA
                 ),
-                license=self._get_license(
+                license=self._get_license_list(
                     self._get_license_for_os(const.CONFIG_OS_FEDORA)
                 ),
             )
-        elif os_image.os_distro == "freebsd":
-            gx_image.operatingSystem = OperatingSystem(
+        elif os_image.os_distro.lower() == "freebsd":
+            return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_FREEBSD,
                 resourcePolicy=self._get_resource_policy_for_os(
                     const.CONFIG_OS_FREEBSD
                 ),
-                copyrightOwnedBy=self._get_copyrightowner_for_os(
+                copyrightOwnedBy=self._get_copyright_owner_for_os(
                     const.CONFIG_OS_FREEBSD
                 ),
-                license=self._get_license(
+                license=self._get_license_list(
                     self._get_license_for_os(const.CONFIG_OS_FREEBSD)
                 ),
             )
-        elif os_image.os_distro == "gentoo":
-            gx_image.operatingSystem = OperatingSystem(
+        elif os_image.os_distro.lower() == "gentoo":
+            return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_GENTOO,
                 resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_GENTOO),
-                copyrightOwnedBy=self._get_copyrightowner_for_os(
+                copyrightOwnedBy=self._get_copyright_owner_for_os(
                     const.CONFIG_OS_GENTOO
                 ),
-                license=self._get_license(
+                license=self._get_license_list(
                     self._get_license_for_os(const.CONFIG_OS_GENTOO)
                 ),
             )
-        elif os_image.os_distro == "mandrake":
-            gx_image.operatingSystem = OperatingSystem(
+        elif os_image.os_distro.lower() == "mandrake":
+            return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_MANDRAKE,
                 resourcePolicy=self._get_resource_policy_for_os(
                     const.CONFIG_OS_MANDRAKE
                 ),
-                copyrightOwnedBy=self._get_copyrightowner_for_os(
+                copyrightOwnedBy=self._get_copyright_owner_for_os(
                     const.CONFIG_OS_MANDRAKE
                 ),
-                license=self._get_license(
+                license=self._get_license_list(
                     self._get_license_for_os(const.CONFIG_OS_MANDRAKE)
                 ),
             )
-        elif os_image.os_distro == "mandriva":
-            gx_image.operatingSystem = OperatingSystem(
+        elif os_image.os_distro.lower() == "mandriva":
+            return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_MANDRIVA,
                 resourcePolicy=self._get_resource_policy_for_os(
                     const.CONFIG_OS_MANDRIVA
                 ),
-                copyrightOwnedBy=self._get_copyrightowner_for_os(
+                copyrightOwnedBy=self._get_copyright_owner_for_os(
                     const.CONFIG_OS_MANDRIVA
                 ),
-                license=self._get_license(
+                license=self._get_license_list(
                     self._get_license_for_os(const.CONFIG_OS_MANDRIVA)
                 ),
             )
-        elif os_image.os_distro == "mes":
-            gx_image.operatingSystem = OperatingSystem(
+        elif os_image.os_distro.lower() == "mes":
+            return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_MES,
                 resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_MES),
-                copyrightOwnedBy=self._get_copyrightowner_for_os(const.CONFIG_OS_MES),
-                license=self._get_license(
-                    self._get_license_for_os(const.CONFIG_OS_MES)
-                ),
-            )
-        elif os_image.os_distro == "msdos":
-            gx_image.operatingSystem = OperatingSystem(
+                copyrightOwnedBy=self._get_copyright_owner_for_os(const.CONFIG_OS_MES),
+                license=self._get_license_list(
+                    self._get_license_for_os(const.CONFIG_OS_MES)))
+        elif os_image.os_distro.lower() == "msdos":
+            return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_MSDOS,
                 resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_MSDOS),
-                copyrightOwnedBy=self._get_copyrightowner_for_os(const.CONFIG_OS_MSDOS),
-                license=self._get_license(
+                copyrightOwnedBy=self._get_copyright_owner_for_os(const.CONFIG_OS_MSDOS),
+                license=self._get_license_list(
                     self._get_license_for_os(const.CONFIG_OS_MSDOS)
                 ),
             )
-        elif os_image.os_distro == "netbsd":
-            gx_image.operatingSystem = OperatingSystem(
+        elif os_image.os_distro.lower() == "netbsd":
+            return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_NETBSD,
                 resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_NETBSD),
-                copyrightOwnedBy=self._get_copyrightowner_for_os(
+                copyrightOwnedBy=self._get_copyright_owner_for_os(
                     const.CONFIG_OS_NETBSD
                 ),
-                license=self._get_license(
+                license=self._get_license_list(
                     self._get_license_for_os(const.CONFIG_OS_NETBSD)
                 ),
             )
-        elif os_image.os_distro == "netware":
-            gx_image.operatingSystem = OperatingSystem(
+        elif os_image.os_distro.lower() == "netware":
+            return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_NOVELL,
                 resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_NOVELL),
-                copyrightOwnedBy=self._get_copyrightowner_for_os(
+                copyrightOwnedBy=self._get_copyright_owner_for_os(
                     const.CONFIG_OS_NOVELL
                 ),
-                license=self._get_license(
+                license=self._get_license_list(
                     self._get_license_for_os(const.CONFIG_OS_NOVELL)
                 ),
             )
-        elif os_image.os_distro == "openbsd":
-            gx_image.operatingSystem = OperatingSystem(
+        elif os_image.os_distro.lower() == "openbsd":
+            return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_OPENBSD,
                 resourcePolicy=self._get_resource_policy_for_os(
                     const.CONFIG_OS_OPENBSD
                 ),
-                copyrightOwnedBy=self._get_copyrightowner_for_os(
+                copyrightOwnedBy=self._get_copyright_owner_for_os(
                     const.CONFIG_OS_OPENBSD
                 ),
-                license=self._get_license(
+                license=self._get_license_list(
                     self._get_license_for_os(const.CONFIG_OS_OPENBSD)
                 ),
             )
-        elif os_image.os_distro == "opensolaris":
-            gx_image.operatingSystem = OperatingSystem(
+        elif os_image.os_distro.lower() == "opensolaris":
+            return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_SOLARIS,
                 resourcePolicy=self._get_resource_policy_for_os(
                     const.CONFIG_OS_SOLARIS
                 ),
-                copyrightOwnedBy=self._get_copyrightowner_for_os(
+                copyrightOwnedBy=self._get_copyright_owner_for_os(
                     const.CONFIG_OS_SOLARIS
                 ),
-                license=self._get_license(
+                license=self._get_license_list(
                     self._get_license_for_os(const.CONFIG_OS_SOLARIS)
                 ),
             )
-        elif os_image.os_distro == "opensuse":
-            gx_image.operatingSystem = OperatingSystem(
+        elif os_image.os_distro.lower() == "opensuse":
+            return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_OPEN_SUSE,
                 resourcePolicy=self._get_resource_policy_for_os(
                     const.CONFIG_OS_OPEN_SUSE
                 ),
-                copyrightOwnedBy=self._get_copyrightowner_for_os(
+                copyrightOwnedBy=self._get_copyright_owner_for_os(
                     const.CONFIG_OS_OPEN_SUSE
                 ),
-                license=self._get_license(
+                license=self._get_license_list(
                     self._get_license_for_os(const.CONFIG_OS_OPEN_SUSE)
                 ),
             )
-        elif os_image.os_distro == "rocky":
-            gx_image.operatingSystem = OperatingSystem(
+        elif os_image.os_distro.lower() == "rocky":
+            return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_ROCKY,
                 resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_ROCKY),
-                copyrightOwnedBy=self._get_copyrightowner_for_os(const.CONFIG_OS_ROCKY),
-                license=self._get_license(
+                copyrightOwnedBy=self._get_copyright_owner_for_os(const.CONFIG_OS_ROCKY),
+                license=self._get_license_list(
                     self._get_license_for_os(const.CONFIG_OS_ROCKY)
                 ),
             )
-        elif os_image.os_distro == "rhel":
-            gx_image.operatingSystem = OperatingSystem(
+        elif os_image.os_distro.lower() == "rhel":
+            return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_RHEL,
                 resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_RHEL),
-                copyrightOwnedBy=self._get_copyrightowner_for_os(const.CONFIG_OS_RHEL),
-                license=self._get_license(
+                copyrightOwnedBy=self._get_copyright_owner_for_os(const.CONFIG_OS_RHEL),
+                license=self._get_license_list(
                     self._get_license_for_os(const.CONFIG_OS_RHEL)
                 ),
             )
-        elif os_image.os_distro == "sled":
-            gx_image.operatingSystem = OperatingSystem(
+        elif os_image.os_distro.lower() == "sled":
+            return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_SLED,
                 resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_SLED),
-                copyrightOwnedBy=self._get_copyrightowner_for_os(const.CONFIG_OS_SLED),
-                license=self._get_license(
+                copyrightOwnedBy=self._get_copyright_owner_for_os(const.CONFIG_OS_SLED),
+                license=self._get_license_list(
                     self._get_license_for_os(const.CONFIG_OS_SLED)
                 ),
             )
-        elif os_image.os_distro == "ubuntu":
-            gx_image.operatingSystem = OperatingSystem(
+        elif os_image.os_distro.lower() == "ubuntu":
+            return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_UBUNTU,
                 resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_UBUNTU),
-                copyrightOwnedBy=self._get_copyrightowner_for_os(
+                copyrightOwnedBy=self._get_copyright_owner_for_os(
                     const.CONFIG_OS_UBUNTU
                 ),
-                license=self._get_license(
+                license=self._get_license_list(
                     self._get_license_for_os(const.CONFIG_OS_UBUNTU)
                 ),
             )
-        elif os_image.os_distro == "windows":
-            gx_image.operatingSystem = OperatingSystem(
+        elif os_image.os_distro.lower() == "windows":
+            return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_WINDOWS,
                 resourcePolicy=self._get_resource_policy_for_os(
                     const.CONFIG_OS_WINDOWS
                 ),
-                copyrightOwnedBy=self._get_copyrightowner_for_os(
+                copyrightOwnedBy=self._get_copyright_owner_for_os(
                     const.CONFIG_OS_WINDOWS
                 ),
-                license=self._get_license(
+                license=self._get_license_list(
                     self._get_license_for_os(const.CONFIG_OS_WINDOWS)
                 ),
             )
-        elif os_image.os_distro == "cirros":
-            gx_image.operatingSystem = OperatingSystem(
+        elif os_image.os_distro.lower() == "cirros":
+            return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_CIRROS,
                 resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_CIRROS),
-                copyrightOwnedBy=self._get_copyrightowner_for_os(
+                copyrightOwnedBy=self._get_copyright_owner_for_os(
                     const.CONFIG_OS_CIRROS
                 ),
-                license=self._get_license(
+                license=self._get_license_list(
                     self._get_license_for_os(const.CONFIG_OS_CIRROS)
                 ),
             )
-        elif os_image.os_distro == "almalinux":
-            gx_image.operatingSystem = OperatingSystem(
+        elif os_image.os_distro.lower() == "almalinux":
+            return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_ALMALINUX,
                 resourcePolicy=self._get_resource_policy_for_os(
                     const.CONFIG_OS_ALMALINUX
                 ),
-                copyrightOwnedBy=self._get_copyrightowner_for_os(
+                copyrightOwnedBy=self._get_copyright_owner_for_os(
                     const.CONFIG_OS_ALMALINUX
                 ),
-                license=self._get_license(
+                license=self._get_license_list(
                     self._get_license_for_os(const.CONFIG_OS_ALMALINUX)
                 ),
             )
@@ -464,55 +539,43 @@ class VmDiscovery:
             )
 
     def _get_resource_policy_for_os(self, os: str) -> str:
-        try:
-            return self.config[const.CONFIG_DEFAULT][const.CONFIG_OPERATING_SYSTEM][
-                const.CONFIG_RESOURCE_POLICY
-            ]
-        except KeyError:
-            return const.DEFAULT_RESOURCE_POLICY
+        return self.conf.get_value(
+            [const.CONFIG_DEFAULT, const.CONFIG_OPERATING_SYSTEM, os, const.CONFIG_RESOURCE_POLICY])
 
-    def _get_copyrightowner_for_os(self, os: str) -> List[str]:
-        return self.config[const.CONFIG_DEFAULT][const.CONFIG_OPERATING_SYSTEM][os][
-            const.CONFIG_COPYRIGHT
-        ]
+    def _get_copyright_owner_for_os(self, os: str) -> List[str]:
+        return self.conf.get_value([const.CONFIG_DEFAULT, const.CONFIG_OPERATING_SYSTEM, os, const.CONFIG_COPYRIGHT])
 
     def _get_license_for_os(self, os: str) -> List[str]:
-        return self.config[const.CONFIG_DEFAULT][const.CONFIG_OPERATING_SYSTEM][os][
-            const.CONFIG_LICENSE
-        ]
+        return self.conf.get_value([const.CONFIG_DEFAULT, const.CONFIG_OPERATING_SYSTEM, os, const.CONFIG_LICENSE])
 
-    def _add_copyrigthowner(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        # check if comfig contains image's specific copyright owner
+    def _add_copyright_owner(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
-            gx_image.copyrightOwnedBy = self.config[const.CONFIG_CLOUD_RESOURCES][
-                const.CONFIG_OWN_IMAGES
-            ][os_image.name][const.CONFIG_COPYRIGHT]
+            gx_image.copyrightOwnedBy= self.conf.get_value([const.CONFIG_CLOUD_RESOURCES,const.CONFIG_OWN_IMAGES, os_image.name, const.CONFIG_COPYRIGHT])
         except KeyError:
+            # copyright owner not found in config, use default one
             gx_image.copyrightOwnedBy = gx_image.operatingSystem.copyrightOwnedBy
 
     def _add_license(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         # read mandatory attributes from config or use default values
         try:
-            # check if comfig contains image's specific license
-            gx_image.license = self.config[const.CONFIG_CLOUD_RESOURCES][
-                const.CONFIG_OWN_IMAGES
-            ][os_image.name][const.CONFIG_LICENSE]
+            # config contains image's specific license
+            gx_image.license = self.conf.get_value([const.CONFIG_CLOUD_RESOURCES, const.CONFIG_OWN_IMAGES, os_image.name,const.CONFIG_LICENSE])
         except KeyError:
+            # license owner not found in config, use default one
             gx_image.license = gx_image.operatingSystem.license
 
     def _add_resource_policy(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         # read mandatory attributes from config or use default values
         try:
             # check if comfig contains image's specific resource policy
-            gx_image.resourcePolicy = self.config[const.CONFIG_CLOUD_RESOURCES][
-                const.CONFIG_OWN_IMAGES
-            ][os_image.name][const.CONFIG_RESOURCE_POLICY]
+            gx_image.resourcePolicy = self.conf.get_value([const.CONFIG_CLOUD_RESOURCES, const.CONFIG_OWN_IMAGES, os_image.name, const.CONFIG_RESOURCE_POLICY])
         except KeyError:
-            gx_image.resourcePolicy = [const.DEFAULT_RESOURCE_POLICY]
+            # license owner not found in config, use default one
+            gx_image.resourcePolicy = const.DEFAULT_RESOURCE_POLICY
 
-    def _get_license(self, licenses: List[str]) -> List[Union[str, SPDX]]:
+    @staticmethod
+    def _get_license_list(licenses: List[str]) -> List[Union[str, SPDX]]:
         license_list = list()
-
         for lic in licenses:
             if lic.startswith("http"):
                 license_list.append(URI(lic))
@@ -520,199 +583,86 @@ class VmDiscovery:
                 license_list.append(lic)
         return license_list
 
-    def _add_secure_boot(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        try:
-            if not os_image.needs_secure_boot:
-                return
-            gx_image.secureBoot = os_image.needs_secure_boot
-        except AttributeError:
-            pass
+    @staticmethod
+    def _get_video_ram_size(os_image: OS_Image) -> MemorySize:
+        if os_image.hw_video_ram:
+            return MemorySize(
+                value=float(os_image.hw_video_ram), unit=const.UNIT_MB)
 
-    def _add_firmeware_type(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        try:
-            if not os_image.hw_firmware_type:
-                return
-            gx_image.firmwareType = FirmType(os_image.hw_firmware_type)
-        except AttributeError:
-            gx_image.firmwareType = FirmType(const.DEFAULT_FIRMWARE_TYPE)
+    @staticmethod
+    def _get_update_strategy(os_image: OS_Image) -> UpdateStrategy:
+        if os_image.properties and "replace_frequency" in os_image.properties:
+            update_strategy = UpdateStrategy()
+            update_strategy.replaceFrequency = UpdateFrequency(os_image.properties["replace_frequency"])
+            update_strategy.oldVersionsValidUntil = os_image.properties["uuid_validity"]
+            update_strategy.providedUntil = os_image.properties["provided_until"]
+            if "hotfix_hours" in os_image.properties:
+                update_strategy.hotfixHours = os_image.properties["hotfix_hours"]
+            return update_strategy
 
-    def _add_watchdog_action(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        try:
-            if not os_image.hw_watchdog_action:
-                return
-            gx_image.watchDogAction = os_image.hw_watchdog_action
-        except AttributeError:
-            pass
-
-    def _add_vmpu(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        try:
-            if not os_image.hw_pmu:
-                return
-            gx_image.vPMU = os_image.hw_pmu
-        except AttributeError:
-            pass
-
-    def _add_video_ram(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        try:
-            if not os_image.hw_video_ram:
-                return
-            gx_image.videoRamSize = MemorySize(
-                value=float(os_image.hw_video_ram), unit=const.UNIT_MB
-            )
-        except AttributeError:
-            pass
-
-    def _add_multiqueue_enabled(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        try:
-            if not os_image.hw_vif_multiqueue_enabled:
-                return
-            gx_image.multiQueues = os_image.hw_vif_multiqueue_enabled
-        except AttributeError:
-            pass
-
-    def _add_update_strategy(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        os_image.updateStrategy = UpdateStrategy()
-
-        # collect mandatory attributes
-        try:
-            os_image.updateStrategy.replaceFrequency = os_image.properties[
-                "replace_frequency"
-            ]
-            os_image.updateStrategy.oldVersionsValidUntil = os_image.properties[
-                "uuid_validity"
-            ]
-            os_image.updateStrategy.providedUntil = os_image.properties[
-                "provided_until"
-            ]
-        except KeyError as e:
-            pass
-
-        # collect optional attributes
-        try:
-            os_image.updateStrategy.hotfixHours = os_image.properties["hotfix_hours"]
-        except KeyError:
-            pass
-
-    def _add_description(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        try:
-            gx_image.description = os_image.properties["image_description"]
-        except KeyError:
-            pass
-        try:
-            gx_image.description = (
-                gx_image.description
-                + " Managed by "
-                + os_image.properties["managed_by_VENDOR"]
-            )
-        except KeyError:
-            pass
-
-    def _add_name(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        try:
-            if not os_image.name:
-                return
-            gx_image.name = os_image.name
-        except KeyError:
-            pass
-
-    def _add_build_date(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        try:
-            gx_image.buildDate = datetime.strptime(
-                os_image.properties["image_build_date"], "%Y-%m-%d"
-            )
-        except KeyError:
-            pass
-
-    def _add_license_included(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        try:
-            gx_image.licenseIncluded = os_image.properties["licenseIncluded"]
-        except KeyError:
-            pass
-
-    def _add_patch_level(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        try:
-            gx_image.patchLevel = os_image.properties["patchlevel"]
-        except KeyError:
-            pass
-
-    def _add_version(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        try:
-            gx_image.version = os_image.properties["internal_version"]
-        except KeyError:
-            pass
-
-    def _add_checksum(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        try:
-            algo = self._get_checksum_algo(os_image.hash_algo)
-            value = os_image.hash_value
-            gx_image.checksum = CheckSum(checkSumValue=value, checkSumCalculation=algo)
-        except AttributeError:
-            pass
-
-    def _get_checksum_algo(self, algo: str) -> str:
-        if algo == "sha512":
-            return "sha-512"
-        if algo == "sha224":
-            return "sha-224"
-        if algo == "sha256":
-            return "sha-256"
-        if algo == "sha384":
-            return "sha-384"
-        if algo in ["sha-3", "md5", "ripemd-160", "blake2", "blake3"]:
-            return algo
-        return ChecksumAlgorithm.other.text
-
-    def _add_maintenance_until(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        try:
-            gx_image.maintenance = os_image.properties["maintained_until"]
-        except KeyError:
-            pass
-
-    def _add_file_size(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        gx_image.file = MemorySize(
-            value=float(os_image.size * 1.073741824), unit=const.UNIT_GB
-        )
-
-    def _add_signature(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        try:
-            gx_image.signature = Signature(
-                signatureValue=os_image.img_signature,
-                hashAlgorithm=self._get_checksum_algo(
-                    os_image.img_signature_hash_method
-                ),
-                signatureAlgorithm=self._get_signature_algo(
-                    os_image.img_signature_key_type
-                ),
-            )
-        except AttributeError:
-            pass
-
-    def _add_hypervisor(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        try:
-            if os_image.hypervisor_type == "xen":
-                gx_image.hypervisorType = HypervisorType("Xen")
-            elif os_image.hypervisor_type == "quemu":
-                gx_image.hypervisorType = HypervisorType("quemu")
-            elif os_image.hypervisor_type == "hyperv":
-                gx_image.hypervisorType = HypervisorType("Hyper-V")
+    @staticmethod
+    def _get_description(os_image: OS_Image) -> str:
+        if os_image.properties and "image_description" in os_image.properties:
+            if "managed_by_VENDOR" in os_image.properties:
+                return os_image.properties["image_description"] + " Managed by " + os_image.properties[
+                    "managed_by_VENDOR"]
             else:
-                gx_image.hypervisorType = HypervisorType("other")
-        except AttributeError as e:
-            gx_image.hypervisorType = HypervisorType("other")
-            #raise MissingMandatoryAttribute(e.args)
+                return os_image.properties["image_description"]
 
-    def _get_signature_algo(self, algo: str) -> str:
-        if algo.startswith("SHA-"):
-            return "RSA-Signature"
-        return SignatureAlgorithm.other.text
+    @staticmethod
+    def _get_name(os_image: OS_Image) -> str:
+        if os_image.name:
+            return os_image.name
 
-    def _add_aggregation_of(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        try:
-            gx_image.aggregationOfResources = self.config[const.CONFIG_OWN_IMAGES][
-                os_image.name
-            ][const.CONFIG_AGGREGATION_OF]
-        except KeyError:
-            pass
+    @staticmethod
+    def _get_build_date(os_image: OS_Image) -> datetime:
+        if os_image.properties and "image_build_date" in os_image.properties:
+            return datetime.strptime(
+                os_image.properties["image_build_date"], "%Y-%m-%d")
 
-    def _add_rng_model(self, os_image: OS_Image, gx_image: GX_Image) -> None:
-        gx_image.hwRngTypeOfImage = RNGTypes("None")
+    @staticmethod
+    def _get_license_included(os_image: OS_Image) -> bool:
+        if os_image.properties and "licenseIncluded" in os_image.properties:
+            return os_image.properties["licenseIncluded"]
+        return False
+
+    @staticmethod
+    def _get_patch_level(os_image: OS_Image) -> str:
+        if os_image.properties and "patchlevel" in os_image.properties:
+            return os_image.properties["patchlevel"]
+
+    @staticmethod
+    def _get_version(os_image: OS_Image) -> str:
+        if os_image.properties and "internal_version" in os_image.properties:
+            return os_image.properties["internal_version"]
+
+    @staticmethod
+    def _get_maintenance(os_image: OS_Image) -> MaintenanceSubscription:
+        main = MaintenanceSubscription(subscriptionRequired=False, subscriptionIncluded=False)
+        if os_image.properties and "subscription_required" in os_image.properties:
+            main.subscriptionRequired = os_image.properties["subscription_required"]
+        if os_image.properties and "subscription_included" in os_image.properties:
+            main.subscriptionIncluded = os_image.properties["subscription_included"]
+        if os_image.properties and "maintained_until" in os_image.properties:
+            main.maintainedUntil = os_image.properties["maintained_until"].strftime("%Y-%m-%d")
+        return main
+
+    @staticmethod
+    def _get_signature(os_image: OS_Image) -> Signature:
+        if os_image.properties and "img_signature" in os_image.properties:
+            value = os_image.properties["img_signature"]
+            hash_algo = ChecksumAlgorithm(
+                HASH_ALGO_LOOKUP.get(os_image.properties["img_signature_hash_method"].lower(), ChecksumAlgorithm.other.text))
+            sig_algo = SignatureAlgorithm.other
+            if os_image.properties["img_signature_key_type"].lower().startswith("sha-"):
+                sig_algo = "RSA-Signature"
+            return Signature(
+                signatureValue=value,
+                hashAlgorithm=hash_algo,
+                signatureAlgorithm=sig_algo)
+
+    @staticmethod
+    def _get_hypervisor_type(os_image: OS_Image) -> HypervisorType:
+        if os_image.hypervisor_type:
+            return HypervisorType(HYPER_LOOKUP.get(os_image.hypervisor_type.lower(), HypervisorType.other))
+        return HypervisorType("other")

@@ -15,12 +15,13 @@ from openstack.connection import Connection
 
 from generator.common.json_ld import JsonLdObject
 from generator.discovery.openstack.vm_images_discovery import VmDiscovery
+from generator.common.config import Config
 
 
 class OsCloud:
     "Abstraction for openStack cloud with all its services."
 
-    def __init__(self, conn: Connection, config: Dict) -> None:
+    def __init__(self, conn: Connection, config: Config) -> None:
         # import copy
         self.conn = conn
         self.regions = list(conn.identity.regions())
