@@ -691,9 +691,7 @@ class VmDiscovery:
 
     @staticmethod
     def _get_license_included(os_image: OS_Image) -> bool:
-        if os_image.properties and "licenseIncluded" in os_image.properties:
-            return os_image.properties["licenseIncluded"]
-        return False
+        return os_image.properties and os_image.properties.get("licenseIncluded", False)
 
     @staticmethod
     def _get_patch_level(os_image: OS_Image) -> str:
