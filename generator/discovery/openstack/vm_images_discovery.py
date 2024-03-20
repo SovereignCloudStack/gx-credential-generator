@@ -171,7 +171,7 @@ class VmDiscovery:
 
     @staticmethod
     def _get_disk_format(os_image: OS_Image) -> VMDiskType:
-        if os_image.disk_format:
+        if os_image.disk_format is not None:
             return VMDiskType(
                 DISK_LOOKUP.get(os_image.disk_format.lower(), VMDiskType.RAW.text)
             )
