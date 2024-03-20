@@ -1,5 +1,4 @@
 import json
-import os
 import unittest
 from datetime import date, datetime
 from pathlib import Path
@@ -8,7 +7,6 @@ import yaml
 from openstack.image.v2.image import Image as OS_Image
 from pyshacl import validate
 
-import tests.common
 from generator.common import const
 from generator.common.config import Config
 from generator.common.gx_schema import (
@@ -24,8 +22,6 @@ from generator.common.gx_schema import (
     OperatingSystem,
     RNGTypes,
     Signature,
-    SignatureAlgorithm,
-    UpdateFrequency,
     UpdateStrategy,
     VMDiskType,
 )
