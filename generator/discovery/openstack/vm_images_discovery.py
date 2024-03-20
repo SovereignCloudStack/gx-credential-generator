@@ -36,9 +36,9 @@ from generator.common.gx_schema import (
     UpdateFrequency,
     UpdateStrategy,
     VMDiskType,
+WatchDogActions
 )
 from generator.common.gx_schema import VMImage as GX_Image
-from generator.common.gx_schema import WatchDogActions
 from generator.common.json_ld import JsonLdObject
 
 ARCH_LOOKUP = {
@@ -56,29 +56,29 @@ ARCH_LOOKUP = {
 }
 
 DISK_BUS_LOOKUP = {
-    "sata": "SATA",
-    "pata": "PATA",
-    "scsi": "SCSI",
-    "sas": "SAS",
-    "nvme": "NVMe",
+    "sata": DiskBusType.SATA,
+    "pata": DiskBusType.PATA,
+    "scsi": DiskBusType.SCSI,
+    "sas": DiskBusType.SAS,
+    "nvme": DiskBusType.NVMe,
 }
 
 DISK_LOOKUP = {
-    "raw": "RAW",
-    "qcow2": "QCOW2",
-    "vhd": "VHD",
-    "iso": "ISO",
-    "cvf": "CVF",
-    "cva": "CVA",
+    "raw": VMDiskType.RAW,
+    "qcow2": VMDiskType.QCOW2,
+    "vhd": VMDiskType.VHD,
+    "iso": VMDiskType.ISO,
+    "cvf": VMDiskType.CVF,
+    "cva": VMDiskType.CVA,
 }
 
-FIRM_WARE_LOOKUP = {"bios": "BIOS", "uefi": "UEFI"}
+FIRM_WARE_LOOKUP = {"bios": FirmType.BIOS, "uefi": FirmType.UEFI}
 
 WATCH_DOG_LOOKUP = {
-    "disabled": "disabled",
-    "reset": "reset",
-    "poweroff": "poweroff",
-    "pause": "pause",
+    "disabled": WatchDogActions.disabled,
+    "reset": WatchDogActions.reset,
+    "poweroff": WatchDogActions.poweroff,
+    "pause": WatchDogActions.pause,
 }
 
 HASH_ALGO_LOOKUP = {
@@ -89,15 +89,15 @@ HASH_ALGO_LOOKUP = {
     "sha-3": "sha-3",
     "md5": "md5",
     "ripemd-160": "ripemd-160",
-    "blake2": "blake2",
-    "blake3": "blake3",
+    "blake2": ChecksumAlgorithm.blake2,
+    "blake3": ChecksumAlgorithm.blake3,
 }
 HYPER_LOOKUP = {
-    "xen": "Xen",
-    "quemu": "quemu",
+    "xen": HypervisorType.Xen,
+    "quemu": HypervisorType.quemu,
     "hyperv": "Hyper - V",
-    "kvm": "KVM",
-    "esxi": "ESXi",
+    "kvm": HypervisorType.KVM,
+    "esxi": HypervisorType.ESXi,
 }
 
 
@@ -173,25 +173,21 @@ class VmDiscovery:
     def _get_disk_format(os_image: OS_Image) -> VMDiskType:
         if os_image.disk_format:
             return VMDiskType(
-                DISK_LOOKUP.get(os_image.disk_format.lower(), VMDiskType.RAW.text)
+                DISK_LOOKUP.get(os_image.disk_format.lower(), VMDiskType.RAW)
             )
         else:
             return VMDiskType("RAW")
 
     @staticmethod
-    def _get_secure_boot(self, os_image: OS_Image) -> bool:
+    def _get_secure_boot(os_image: OS_Image) -> bool:
         return bool(os_image.needs_secure_boot)
 
     @staticmethod
     def _get_firmeware_type(os_image: OS_Image) -> FirmType:
         if os_image.properties and "hw_firmware_type" in os_image.properties:
-            return FirmType(
-                FIRM_WARE_LOOKUP.get(
-                    os_image.properties["hw_firmware_type"].lower(), FirmType.other
-                )
-            )
+            return FirmType(FIRM_WARE_LOOKUP.get(os_image.properties["hw_firmware_type"].lower(), FirmType.other))
         else:
-            return FirmType("other")
+            return FirmType(FirmType.other)
 
     @staticmethod
     def _get_watchdog_action(os_image: OS_Image) -> WatchDogActions:
@@ -214,7 +210,7 @@ class VmDiscovery:
     def _get_cpu_req(os_image: OS_Image) -> CPU:
         cpu = CPU(
             cpuArchitecture=CpuArch(
-                ARCH_LOOKUP.get(os_image.architecture, CpuArch.other.text)
+                ARCH_LOOKUP.get(os_image.architecture, CpuArch.other)
             )
         )
 
@@ -731,7 +727,7 @@ class VmDiscovery:
             hash_algo = ChecksumAlgorithm(
                 HASH_ALGO_LOOKUP.get(
                     os_image.properties["img_signature_hash_method"].lower(),
-                    ChecksumAlgorithm.other.text,
+                    ChecksumAlgorithm.other,
                 )
             )
             sig_algo = SignatureAlgorithm.other

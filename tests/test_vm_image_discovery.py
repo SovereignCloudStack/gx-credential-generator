@@ -202,7 +202,7 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
         self.assert_vm_image(GX_IMAGE_2.gx_object, actual_gax_images[1].gx_object)
 
     def test_json_ld(self):
-        print(json.dumps(GX_IMAGE_2, indent=4, default=to_json_ld))
+        print(json.dumps(GX_IMAGE_1, indent=4, default=to_json_ld))
         """current_dir = Path(__file__).parent
         if current_dir.name == "tests":
             shacl_file = str(Path(current_dir, "gaia-x.shacl.ttl"))
@@ -247,19 +247,19 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
 
     def test_get_firmeware_type(self):
         self.assertEqual(
-            FirmType("BIOS"),
+            FirmType(FirmType.BIOS),
             self.discovery._get_firmeware_type(OS_Image(hw_firmware_type="BIOS")),
         )
         self.assertEqual(
-            FirmType("BIOS"),
+            FirmType(FirmType.BIOS),
             self.discovery._get_firmeware_type(OS_Image(hw_firmware_type="bioS")),
         )
         self.assertEqual(
-            FirmType("other"),
+            FirmType(FirmType.other),
             self.discovery._get_firmeware_type(OS_Image(hw_firmware_type="foo")),
         )
         self.assertEqual(
-            FirmType("other"), self.discovery._get_firmeware_type(OS_Image())
+            FirmType(FirmType.other), self.discovery._get_firmeware_type(OS_Image())
         )
 
     def test_get_watchdog_action(self):
