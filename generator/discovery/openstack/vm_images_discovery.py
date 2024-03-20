@@ -178,11 +178,9 @@ class VmDiscovery:
         else:
             return VMDiskType("RAW")
 
+    @staticmethod
     def _get_secure_boot(self, os_image: OS_Image) -> bool:
-        if os_image.needs_secure_boot:
-            return True
-        else:
-            return False
+        return bool(os_image.needs_secure_boot)
 
     @staticmethod
     def _get_firmeware_type(os_image: OS_Image) -> FirmType:
