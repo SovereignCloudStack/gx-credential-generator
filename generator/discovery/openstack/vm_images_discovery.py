@@ -23,84 +23,81 @@ from generator.common.gx_schema import (
     CheckSum,
     ChecksumAlgorithm,
     Disk,
+    DiskBusType,
+    FirmType,
     HypervisorType,
+    MaintenanceSubscription,
     Memory,
     MemorySize,
     OperatingSystem,
+    RNGTypes,
     Signature,
     SignatureAlgorithm,
+    UpdateFrequency,
     UpdateStrategy,
     VMDiskType,
-    FirmType,
-    RNGTypes,
-    WatchDogActions,
-    UpdateFrequency,
-    MaintenanceSubscription,
-    DiskBusType
 )
 from generator.common.gx_schema import VMImage as GX_Image
+from generator.common.gx_schema import WatchDogActions
 from generator.common.json_ld import JsonLdObject
 
 ARCH_LOOKUP = {
-    'i686': 'x86-32',
-    'x86_64': 'x86-64',
-    'ia64': 'x86-64',
-    'aarch6': 'AArch-32',
-    'alpha': 'RISC-V',
-    'armv7l': 'RISC-V',
-    'lm32': 'RISC-V',
-    'openrisc': 'RISC-V',
-    'parisc': 'RISC-V',
-    'parisc64': 'RISC-V',
-    'unicore32': 'RISC-V',
+    "i686": "x86-32",
+    "x86_64": "x86-64",
+    "ia64": "x86-64",
+    "aarch6": "AArch-32",
+    "alpha": "RISC-V",
+    "armv7l": "RISC-V",
+    "lm32": "RISC-V",
+    "openrisc": "RISC-V",
+    "parisc": "RISC-V",
+    "parisc64": "RISC-V",
+    "unicore32": "RISC-V",
 }
 
 DISK_BUS_LOOKUP = {
-    'sata': 'SATA',
-    'pata': 'PATA',
-    'scsi': 'SCSI',
-    'sas': 'SAS',
-    'nvme': 'NVMe',
+    "sata": "SATA",
+    "pata": "PATA",
+    "scsi": "SCSI",
+    "sas": "SAS",
+    "nvme": "NVMe",
 }
 
 DISK_LOOKUP = {
-    'raw': 'RAW',
-    'qcow2': 'QCOW2',
-    'vhd': 'VHD',
-    'iso': 'ISO',
-    'cvf': 'CVF',
-    'cva': 'CVA',
+    "raw": "RAW",
+    "qcow2": "QCOW2",
+    "vhd": "VHD",
+    "iso": "ISO",
+    "cvf": "CVF",
+    "cva": "CVA",
 }
 
-FIRM_WARE_LOOKUP = {
-    'bios': 'BIOS',
-    'uefi': 'UEFI'
-}
+FIRM_WARE_LOOKUP = {"bios": "BIOS", "uefi": "UEFI"}
 
 WATCH_DOG_LOOKUP = {
-    'disabled': 'disabled',
-    'reset': 'reset',
-    'poweroff': 'poweroff',
-    'pause': 'pause',
+    "disabled": "disabled",
+    "reset": "reset",
+    "poweroff": "poweroff",
+    "pause": "pause",
 }
 
 HASH_ALGO_LOOKUP = {
-    'sha512': 'sha-512',
-    'sha224': 'sha-224',
-    'sha256': 'sha-256',
-    'sha384': 'sha-384',
-    'sha-3': 'sha-3',
-    'md5': 'md5',
-    'ripemd-160': 'ripemd-160',
-    'blake2': 'blake2',
-    'blake3': 'blake3',
+    "sha512": "sha-512",
+    "sha224": "sha-224",
+    "sha256": "sha-256",
+    "sha384": "sha-384",
+    "sha-3": "sha-3",
+    "md5": "md5",
+    "ripemd-160": "ripemd-160",
+    "blake2": "blake2",
+    "blake3": "blake3",
 }
 HYPER_LOOKUP = {
-    'xen': 'Xen',
-    'quemu': 'quemu',
-    'hyperv': 'Hyper - V',
-    'kvm': 'KVM',
-    'esxi': 'ESXi'
+    "xen": "Xen",
+    "quemu": "quemu",
+    "hyperv": "Hyper - V",
+    "kvm": "KVM",
+    "esxi": "ESXi",
 }
 
 
@@ -120,7 +117,7 @@ class VmDiscovery:
         return [
             JsonLdObject(self._convert_to_gx_image(image), gx_id=image.id)
             for image in self.conn.list_images()
-            if image.visibility == 'public'
+            if image.visibility == "public"
         ]
 
     def _convert_to_gx_image(self, os_image: OS_Image) -> GX_Image:
@@ -175,7 +172,9 @@ class VmDiscovery:
     @staticmethod
     def _get_disk_format(os_image: OS_Image) -> VMDiskType:
         if os_image.disk_format:
-            return VMDiskType(DISK_LOOKUP.get(os_image.disk_format.lower(), VMDiskType.RAW.text))
+            return VMDiskType(
+                DISK_LOOKUP.get(os_image.disk_format.lower(), VMDiskType.RAW.text)
+            )
         else:
             return VMDiskType("RAW")
 
@@ -188,26 +187,38 @@ class VmDiscovery:
     @staticmethod
     def _get_firmeware_type(os_image: OS_Image) -> FirmType:
         if os_image.properties and "hw_firmware_type" in os_image.properties:
-            return FirmType(FIRM_WARE_LOOKUP.get(os_image.properties['hw_firmware_type'].lower(), FirmType.other))
+            return FirmType(
+                FIRM_WARE_LOOKUP.get(
+                    os_image.properties["hw_firmware_type"].lower(), FirmType.other
+                )
+            )
         else:
             return FirmType("other")
 
     @staticmethod
     def _get_watchdog_action(os_image: OS_Image) -> WatchDogActions:
         if os_image.hw_watchdog_action:
-            return WatchDogActions(WATCH_DOG_LOOKUP.get(os_image.hw_watchdog_action.lower(), WatchDogActions.disabled))
+            return WatchDogActions(
+                WATCH_DOG_LOOKUP.get(
+                    os_image.hw_watchdog_action.lower(), WatchDogActions.disabled
+                )
+            )
         return WatchDogActions("disabled")
 
     @staticmethod
     def _get_vmpu(os_image: OS_Image) -> bool:
         if os_image.properties and "hw_pmu" in os_image.properties:
-            return os_image.properties['hw_pmu']
+            return os_image.properties["hw_pmu"]
         else:
             return False
 
     @staticmethod
     def _get_cpu_req(os_image: OS_Image) -> CPU:
-        cpu = CPU(cpuArchitecture=CpuArch(ARCH_LOOKUP.get(os_image.architecture, CpuArch.other.text)))
+        cpu = CPU(
+            cpuArchitecture=CpuArch(
+                ARCH_LOOKUP.get(os_image.architecture, CpuArch.other.text)
+            )
+        )
 
         if hasattr(os_image, "hw_cpu_cores"):
             cpu.numberOfCores = os_image.hw_cpu_cores
@@ -225,14 +236,21 @@ class VmDiscovery:
     @staticmethod
     def _get_file_size(os_image: OS_Image) -> MemorySize:
         if os_image.size:
-            return MemorySize(value=float(os_image.size * 1.073741824), unit=const.UNIT_GB)
+            return MemorySize(
+                value=float(os_image.size * 1.073741824), unit=const.UNIT_GB
+            )
 
     @staticmethod
     def _get_checksum(os_image: OS_Image) -> CheckSum:
         if os_image.hash_value:
-            return CheckSum(checkSumValue=os_image.hash_value,
-                            checkSumCalculation=ChecksumAlgorithm(
-                                HASH_ALGO_LOOKUP.get(os_image.hash_algo.lower(), ChecksumAlgorithm.other)))
+            return CheckSum(
+                checkSumValue=os_image.hash_value,
+                checkSumCalculation=ChecksumAlgorithm(
+                    HASH_ALGO_LOOKUP.get(
+                        os_image.hash_algo.lower(), ChecksumAlgorithm.other
+                    )
+                ),
+            )
 
     @staticmethod
     def _get_rng_model(os_image: OS_Image) -> RNGTypes:
@@ -243,26 +261,32 @@ class VmDiscovery:
         if os_image.min_ram is not None:
             # Memory size tend to be measured in MB (1,000,000 bytes) and not MiB (1.048576 bytes) the RAM industry.
             # But OpenStack uses MiB.
-            mem = Memory(memorySize=MemorySize(value=float(os_image.min_ram * 1.048576), unit=const.UNIT_MB))
+            mem = Memory(
+                memorySize=MemorySize(
+                    value=float(os_image.min_ram * 1.048576), unit=const.UNIT_MB
+                )
+            )
             if os_image.properties and "hw_mem_encryption" in os_image.properties:
-                mem.hardwareEncryption = os_image.properties['hw_mem_encryption']
+                mem.hardwareEncryption = os_image.properties["hw_mem_encryption"]
             return mem
 
     @staticmethod
     def _get_min_disk_req(os_image: OS_Image) -> Disk:
         if os_image.min_disk is not None:
-            disk = Disk(diskSize=MemorySize(
-                value=float(os_image.min_disk * 1.073741824), unit=const.UNIT_GB
-            ))
+            disk = Disk(
+                diskSize=MemorySize(
+                    value=float(os_image.min_disk * 1.073741824), unit=const.UNIT_GB
+                )
+            )
             if os_image.hw_disk_bus:
-                disk.diskBusType = DiskBusType(DISK_BUS_LOOKUP.get(os_image.hw_disk_bus.lower(), "other"))
+                disk.diskBusType = DiskBusType(
+                    DISK_BUS_LOOKUP.get(os_image.hw_disk_bus.lower(), "other")
+                )
             else:
                 disk.diskBusType = DiskBusType("other")
             return disk
 
-    def _get_operation_system(
-            self, os_image: OS_Image
-    ) -> OperatingSystem:
+    def _get_operation_system(self, os_image: OS_Image) -> OperatingSystem:
         # Copyright owner and license not supported as Image properties, currently --> Default values from config are used
 
         if os_image.os_distro.lower() == "arch":
@@ -299,7 +323,7 @@ class VmDiscovery:
                     self._get_license_for_os(const.CONFIG_OS_DEBIAN)
                 ),
             )
-        elif os_image.os_distro.lower()  == "fedora":
+        elif os_image.os_distro.lower() == "fedora":
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_FEDORA,
@@ -372,13 +396,17 @@ class VmDiscovery:
                 resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_MES),
                 copyrightOwnedBy=self._get_copyright_owner_for_os(const.CONFIG_OS_MES),
                 license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_MES)))
+                    self._get_license_for_os(const.CONFIG_OS_MES)
+                ),
+            )
         elif os_image.os_distro.lower() == "msdos":
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_MSDOS,
                 resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_MSDOS),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(const.CONFIG_OS_MSDOS),
+                copyrightOwnedBy=self._get_copyright_owner_for_os(
+                    const.CONFIG_OS_MSDOS
+                ),
                 license=self._get_license_list(
                     self._get_license_for_os(const.CONFIG_OS_MSDOS)
                 ),
@@ -454,7 +482,9 @@ class VmDiscovery:
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_ROCKY,
                 resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_ROCKY),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(const.CONFIG_OS_ROCKY),
+                copyrightOwnedBy=self._get_copyright_owner_for_os(
+                    const.CONFIG_OS_ROCKY
+                ),
                 license=self._get_license_list(
                     self._get_license_for_os(const.CONFIG_OS_ROCKY)
                 ),
@@ -540,17 +570,44 @@ class VmDiscovery:
 
     def _get_resource_policy_for_os(self, os: str) -> str:
         return self.conf.get_value(
-            [const.CONFIG_DEFAULT, const.CONFIG_OPERATING_SYSTEM, os, const.CONFIG_RESOURCE_POLICY])
+            [
+                const.CONFIG_DEFAULT,
+                const.CONFIG_OPERATING_SYSTEM,
+                os,
+                const.CONFIG_RESOURCE_POLICY,
+            ]
+        )
 
     def _get_copyright_owner_for_os(self, os: str) -> List[str]:
-        return self.conf.get_value([const.CONFIG_DEFAULT, const.CONFIG_OPERATING_SYSTEM, os, const.CONFIG_COPYRIGHT])
+        return self.conf.get_value(
+            [
+                const.CONFIG_DEFAULT,
+                const.CONFIG_OPERATING_SYSTEM,
+                os,
+                const.CONFIG_COPYRIGHT,
+            ]
+        )
 
     def _get_license_for_os(self, os: str) -> List[str]:
-        return self.conf.get_value([const.CONFIG_DEFAULT, const.CONFIG_OPERATING_SYSTEM, os, const.CONFIG_LICENSE])
+        return self.conf.get_value(
+            [
+                const.CONFIG_DEFAULT,
+                const.CONFIG_OPERATING_SYSTEM,
+                os,
+                const.CONFIG_LICENSE,
+            ]
+        )
 
     def _add_copyright_owner(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         try:
-            gx_image.copyrightOwnedBy= self.conf.get_value([const.CONFIG_CLOUD_RESOURCES,const.CONFIG_OWN_IMAGES, os_image.name, const.CONFIG_COPYRIGHT])
+            gx_image.copyrightOwnedBy = self.conf.get_value(
+                [
+                    const.CONFIG_CLOUD_RESOURCES,
+                    const.CONFIG_OWN_IMAGES,
+                    os_image.name,
+                    const.CONFIG_COPYRIGHT,
+                ]
+            )
         except KeyError:
             # copyright owner not found in config, use default one
             gx_image.copyrightOwnedBy = gx_image.operatingSystem.copyrightOwnedBy
@@ -559,7 +616,14 @@ class VmDiscovery:
         # read mandatory attributes from config or use default values
         try:
             # config contains image's specific license
-            gx_image.license = self.conf.get_value([const.CONFIG_CLOUD_RESOURCES, const.CONFIG_OWN_IMAGES, os_image.name,const.CONFIG_LICENSE])
+            gx_image.license = self.conf.get_value(
+                [
+                    const.CONFIG_CLOUD_RESOURCES,
+                    const.CONFIG_OWN_IMAGES,
+                    os_image.name,
+                    const.CONFIG_LICENSE,
+                ]
+            )
         except KeyError:
             # license owner not found in config, use default one
             gx_image.license = gx_image.operatingSystem.license
@@ -568,7 +632,14 @@ class VmDiscovery:
         # read mandatory attributes from config or use default values
         try:
             # check if comfig contains image's specific resource policy
-            gx_image.resourcePolicy = self.conf.get_value([const.CONFIG_CLOUD_RESOURCES, const.CONFIG_OWN_IMAGES, os_image.name, const.CONFIG_RESOURCE_POLICY])
+            gx_image.resourcePolicy = self.conf.get_value(
+                [
+                    const.CONFIG_CLOUD_RESOURCES,
+                    const.CONFIG_OWN_IMAGES,
+                    os_image.name,
+                    const.CONFIG_RESOURCE_POLICY,
+                ]
+            )
         except KeyError:
             # license owner not found in config, use default one
             gx_image.resourcePolicy = const.DEFAULT_RESOURCE_POLICY
@@ -586,14 +657,15 @@ class VmDiscovery:
     @staticmethod
     def _get_video_ram_size(os_image: OS_Image) -> MemorySize:
         if os_image.hw_video_ram:
-            return MemorySize(
-                value=float(os_image.hw_video_ram), unit=const.UNIT_MB)
+            return MemorySize(value=float(os_image.hw_video_ram), unit=const.UNIT_MB)
 
     @staticmethod
     def _get_update_strategy(os_image: OS_Image) -> UpdateStrategy:
         if os_image.properties and "replace_frequency" in os_image.properties:
             update_strategy = UpdateStrategy()
-            update_strategy.replaceFrequency = UpdateFrequency(os_image.properties["replace_frequency"])
+            update_strategy.replaceFrequency = UpdateFrequency(
+                os_image.properties["replace_frequency"]
+            )
             update_strategy.oldVersionsValidUntil = os_image.properties["uuid_validity"]
             update_strategy.providedUntil = os_image.properties["provided_until"]
             if "hotfix_hours" in os_image.properties:
@@ -604,8 +676,11 @@ class VmDiscovery:
     def _get_description(os_image: OS_Image) -> str:
         if os_image.properties and "image_description" in os_image.properties:
             if "managed_by_VENDOR" in os_image.properties:
-                return os_image.properties["image_description"] + " Managed by " + os_image.properties[
-                    "managed_by_VENDOR"]
+                return (
+                    os_image.properties["image_description"]
+                    + " Managed by "
+                    + os_image.properties["managed_by_VENDOR"]
+                )
             else:
                 return os_image.properties["image_description"]
 
@@ -618,7 +693,8 @@ class VmDiscovery:
     def _get_build_date(os_image: OS_Image) -> datetime:
         if os_image.properties and "image_build_date" in os_image.properties:
             return datetime.strptime(
-                os_image.properties["image_build_date"], "%Y-%m-%d")
+                os_image.properties["image_build_date"], "%Y-%m-%d"
+            )
 
     @staticmethod
     def _get_license_included(os_image: OS_Image) -> bool:
@@ -638,13 +714,17 @@ class VmDiscovery:
 
     @staticmethod
     def _get_maintenance(os_image: OS_Image) -> MaintenanceSubscription:
-        main = MaintenanceSubscription(subscriptionRequired=False, subscriptionIncluded=False)
+        main = MaintenanceSubscription(
+            subscriptionRequired=False, subscriptionIncluded=False
+        )
         if os_image.properties and "subscription_required" in os_image.properties:
             main.subscriptionRequired = os_image.properties["subscription_required"]
         if os_image.properties and "subscription_included" in os_image.properties:
             main.subscriptionIncluded = os_image.properties["subscription_included"]
         if os_image.properties and "maintained_until" in os_image.properties:
-            main.maintainedUntil = os_image.properties["maintained_until"].strftime("%Y-%m-%d")
+            main.maintainedUntil = os_image.properties["maintained_until"].strftime(
+                "%Y-%m-%d"
+            )
         return main
 
     @staticmethod
@@ -652,17 +732,24 @@ class VmDiscovery:
         if os_image.properties and "img_signature" in os_image.properties:
             value = os_image.properties["img_signature"]
             hash_algo = ChecksumAlgorithm(
-                HASH_ALGO_LOOKUP.get(os_image.properties["img_signature_hash_method"].lower(), ChecksumAlgorithm.other.text))
+                HASH_ALGO_LOOKUP.get(
+                    os_image.properties["img_signature_hash_method"].lower(),
+                    ChecksumAlgorithm.other.text,
+                )
+            )
             sig_algo = SignatureAlgorithm.other
             if os_image.properties["img_signature_key_type"].lower().startswith("sha-"):
                 sig_algo = "RSA-Signature"
             return Signature(
                 signatureValue=value,
                 hashAlgorithm=hash_algo,
-                signatureAlgorithm=sig_algo)
+                signatureAlgorithm=sig_algo,
+            )
 
     @staticmethod
     def _get_hypervisor_type(os_image: OS_Image) -> HypervisorType:
         if os_image.hypervisor_type:
-            return HypervisorType(HYPER_LOOKUP.get(os_image.hypervisor_type.lower(), HypervisorType.other))
+            return HypervisorType(
+                HYPER_LOOKUP.get(os_image.hypervisor_type.lower(), HypervisorType.other)
+            )
         return HypervisorType("other")
