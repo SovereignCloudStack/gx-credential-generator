@@ -18,6 +18,7 @@ import openstack as os
 import yaml
 
 import generator.common.json_ld as json_ld
+from generator.common.config import Config
 
 from generator.discovery.openstack.openstack_discovery import OsCloud
 
@@ -26,11 +27,9 @@ import rdflib
 SHAPES_FILE_FORMAT = "turtle"
 DATA_FILE_FORMAT = "json-ld"
 
-
 @click.group()
-def cli():
+def cli_commands():
     pass
-
 
 @click.command()
 @click.option(
@@ -63,14 +62,16 @@ def openstack(cloud, timeout, config):
     with open(config, "r") as config_file:
         # init everything
         config_dict = yaml.safe_load(config_file)
-        os_cloud = OsCloud(conn, config_dict)
+        os_cloud = OsCloud(conn, Config(config_dict))
 
         # run discovery
         creds = os_cloud.discover_properties()
 
         props = json_ld.get_json_ld_context()
         props["@graph"] = creds
+        json_text = json.dumps(props, indent=4, default=json_ld.to_json_ld)
         print(json.dumps(props, indent=4, default=json_ld.to_json_ld))
+
 
 
 @click.command()
@@ -86,8 +87,9 @@ def load_file(filepath, file_format=DATA_FILE_FORMAT):
     return graph
 
 
-cli.add_command(openstack)
-cli.add_command(kubernetes)
+cli_commands.add_command(openstack)
+cli_commands.add_command(kubernetes)
+
 
 if __name__ == "__main__":
-    cli()
+    cli_commands()

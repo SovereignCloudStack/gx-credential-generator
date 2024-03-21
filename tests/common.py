@@ -1,5 +1,8 @@
 import unittest
+from pathlib import Path
 from typing import List
+from generator.common.config import Config
+import yaml
 
 from generator.common.gx_schema import (
     CPU,
@@ -20,6 +23,19 @@ from generator.common.gx_schema import (
     VirtualResource,
     VMImage,
 )
+
+
+def get_config_path() -> str:
+    current_dir = Path(__file__).parent
+    if current_dir.name == "tests":
+        return str(Path(current_dir.parent, "config/config.yaml"))
+    else:
+        return str(Path(current_dir, "config/config.yaml"))
+
+
+def get_config() -> Config:
+    with open(get_config_path(), "r") as config_file:
+        return Config(yaml.safe_load(config_file))
 
 
 class OpenstackTestcase(unittest.TestCase):
@@ -242,3 +258,6 @@ class MockConnection:
 
     def list_images(self):
         return self.images
+
+    def authorize(self):
+        pass

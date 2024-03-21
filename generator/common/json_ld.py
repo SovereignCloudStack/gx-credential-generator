@@ -89,6 +89,7 @@ def to_json_ld(obj) -> dict:
         except AttributeError:
             pass
         for key, value in obj.__dict__.items():
+            #print(key)
             # serialize each attribute of object
             if value is None or value == [] or value == {}:
                 # skip emtpy values

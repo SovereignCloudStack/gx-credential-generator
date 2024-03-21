@@ -36,10 +36,19 @@ from generator.common.gx_schema import (
     UpdateFrequency,
     UpdateStrategy,
     VMDiskType,
-WatchDogActions
+    Validity1,
+Validity2,
+    WatchDogActions,
+LatestN
 )
 from generator.common.gx_schema import VMImage as GX_Image
 from generator.common.json_ld import JsonLdObject
+
+VALID_UNTIL_LOOKUP = {
+    'none': Validity1.none,
+    'notice': Validity1.notice,
+    'forever': Validity2.forever
+}
 
 ARCH_LOOKUP = {
     "i686": "x86-32",
@@ -184,14 +193,14 @@ class VmDiscovery:
 
     @staticmethod
     def _get_firmeware_type(os_image: OS_Image) -> FirmType:
-        if os_image.properties and "hw_firmware_type" in os_image.properties:
+        if os_image.properties is not None and "hw_firmware_type" in os_image.properties:
             return FirmType(FIRM_WARE_LOOKUP.get(os_image.properties["hw_firmware_type"].lower(), FirmType.other))
         else:
             return FirmType(FirmType.other)
 
     @staticmethod
     def _get_watchdog_action(os_image: OS_Image) -> WatchDogActions:
-        if os_image.hw_watchdog_action:
+        if os_image.hw_watchdog_action is not None:
             return WatchDogActions(
                 WATCH_DOG_LOOKUP.get(
                     os_image.hw_watchdog_action.lower(), WatchDogActions.disabled
@@ -201,7 +210,7 @@ class VmDiscovery:
 
     @staticmethod
     def _get_vmpu(os_image: OS_Image) -> bool:
-        if os_image.properties and "hw_pmu" in os_image.properties:
+        if os_image.properties is not None and "hw_pmu" in os_image.properties:
             return os_image.properties["hw_pmu"]
         else:
             return False
@@ -222,21 +231,18 @@ class VmDiscovery:
 
     @staticmethod
     def _get_multiqueue_enabled(os_image: OS_Image) -> bool:
-        if os_image.is_hw_vif_multiqueue_enabled:
-            return os_image.is_hw_vif_multiqueue_enabled
-        else:
-            return False
+        return bool(os_image.is_hw_vif_multiqueue_enabled)
 
     @staticmethod
     def _get_file_size(os_image: OS_Image) -> MemorySize:
-        if os_image.size:
+        if os_image.size is not None:
             return MemorySize(
                 value=float(os_image.size * 1.073741824), unit=const.UNIT_GB
             )
 
     @staticmethod
     def _get_checksum(os_image: OS_Image) -> CheckSum:
-        if os_image.hash_value:
+        if os_image.hash_value is not None:
             return CheckSum(
                 checkSumValue=os_image.hash_value,
                 checkSumCalculation=ChecksumAlgorithm(
@@ -649,25 +655,30 @@ class VmDiscovery:
 
     @staticmethod
     def _get_video_ram_size(os_image: OS_Image) -> MemorySize:
-        if os_image.hw_video_ram:
+        if os_image.hw_video_ram is not None:
             return MemorySize(value=float(os_image.hw_video_ram), unit=const.UNIT_MB)
 
     @staticmethod
     def _get_update_strategy(os_image: OS_Image) -> UpdateStrategy:
-        if os_image.properties and "replace_frequency" in os_image.properties:
+        if os_image.properties is not None and "replace_frequency" in os_image.properties:
             update_strategy = UpdateStrategy()
             update_strategy.replaceFrequency = UpdateFrequency(
                 os_image.properties["replace_frequency"]
             )
-            update_strategy.oldVersionsValidUntil = os_image.properties["uuid_validity"]
+            #valid_until = VALID_UNTIL_LOOKUP.get(os_image.properties["uuid_validity"])
+            if os_image.properties["uuid_validity"].lower().startswith("latest-"):
+                update_strategy.oldVersionsValidUntil = LatestN(int(os_image.properties["uuid_validity"][-1]))
+            else:
+                update_strategy.oldVersionsValidUntil = VALID_UNTIL_LOOKUP.get(os_image.properties["uuid_validity"])
             update_strategy.providedUntil = os_image.properties["provided_until"]
             if "hotfix_hours" in os_image.properties:
-                update_strategy.hotfixHours = os_image.properties["hotfix_hours"]
+                update_strategy.hotfixHours = int(os_image.properties["hotfix_hours"])
             return update_strategy
+
 
     @staticmethod
     def _get_description(os_image: OS_Image) -> str:
-        if os_image.properties and "image_description" in os_image.properties:
+        if os_image.properties is not None and "image_description" in os_image.properties:
             if "managed_by_VENDOR" in os_image.properties:
                 return (
                     os_image.properties["image_description"]
@@ -679,30 +690,30 @@ class VmDiscovery:
 
     @staticmethod
     def _get_name(os_image: OS_Image) -> str:
-        if os_image.name:
+        if os_image.name is not None:
             return os_image.name
 
     @staticmethod
     def _get_build_date(os_image: OS_Image) -> datetime:
-        if os_image.properties and "image_build_date" in os_image.properties:
+        if os_image.properties is not None and "image_build_date" in os_image.properties:
             return datetime.strptime(
                 os_image.properties["image_build_date"], "%Y-%m-%d"
             )
 
     @staticmethod
     def _get_license_included(os_image: OS_Image) -> bool:
-        if os_image.properties and "licenseIncluded" in os_image.properties:
+        if os_image.properties is not None and "licenseIncluded" in os_image.properties:
             return os_image.properties["licenseIncluded"]
         return False
 
     @staticmethod
     def _get_patch_level(os_image: OS_Image) -> str:
-        if os_image.properties and "patchlevel" in os_image.properties:
+        if os_image.properties is not None and "patchlevel" in os_image.properties:
             return os_image.properties["patchlevel"]
 
     @staticmethod
     def _get_version(os_image: OS_Image) -> str:
-        if os_image.properties and "internal_version" in os_image.properties:
+        if os_image.properties is not None and "internal_version" in os_image.properties:
             return os_image.properties["internal_version"]
 
     @staticmethod
@@ -710,19 +721,17 @@ class VmDiscovery:
         main = MaintenanceSubscription(
             subscriptionRequired=False, subscriptionIncluded=False
         )
-        if os_image.properties and "subscription_required" in os_image.properties:
+        if os_image.properties is not None and "subscription_required" in os_image.properties:
             main.subscriptionRequired = os_image.properties["subscription_required"]
-        if os_image.properties and "subscription_included" in os_image.properties:
+        if os_image.properties is not None and "subscription_included" in os_image.properties:
             main.subscriptionIncluded = os_image.properties["subscription_included"]
-        if os_image.properties and "maintained_until" in os_image.properties:
-            main.maintainedUntil = os_image.properties["maintained_until"].strftime(
-                "%Y-%m-%d"
-            )
+        if os_image.properties is not None and "maintained_until" in os_image.properties:
+            main.maintainedUntil = os_image.properties["maintained_until"]
         return main
 
     @staticmethod
     def _get_signature(os_image: OS_Image) -> Signature:
-        if os_image.properties and "img_signature" in os_image.properties:
+        if os_image.properties is not None and "img_signature" in os_image.properties:
             value = os_image.properties["img_signature"]
             hash_algo = ChecksumAlgorithm(
                 HASH_ALGO_LOOKUP.get(
@@ -741,7 +750,7 @@ class VmDiscovery:
 
     @staticmethod
     def _get_hypervisor_type(os_image: OS_Image) -> HypervisorType:
-        if os_image.hypervisor_type:
+        if os_image.hypervisor_type is not None:
             return HypervisorType(
                 HYPER_LOOKUP.get(os_image.hypervisor_type.lower(), HypervisorType.other)
             )

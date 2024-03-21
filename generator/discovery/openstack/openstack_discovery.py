@@ -24,7 +24,7 @@ class OsCloud:
     def __init__(self, conn: Connection, config: Config) -> None:
         # import copy
         self.conn = conn
-        self.regions = list(conn.identity.regions())
+        #self.regions = list(conn.identity.regions())
         self.config = config
 
     def discover_properties(self) -> List[JsonLdObject]:

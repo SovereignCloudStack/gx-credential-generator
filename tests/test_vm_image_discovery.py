@@ -5,7 +5,6 @@ from pathlib import Path
 
 import yaml
 from openstack.image.v2.image import Image as OS_Image
-from pyshacl import validate
 
 from generator.common import const
 from generator.common.config import Config
@@ -24,12 +23,13 @@ from generator.common.gx_schema import (
     Signature,
     UpdateStrategy,
     VMDiskType,
+LatestN
 )
 from generator.common.gx_schema import VMImage as GX_Image
 from generator.common.gx_schema import WatchDogActions
-from generator.common.json_ld import JsonLdObject, to_json_ld
+from generator.common.json_ld import JsonLdObject, to_json_ld, get_json_ld_context
 from generator.discovery.openstack.vm_images_discovery import VmDiscovery
-from tests.common import MockConnection, OpenstackTestcase
+from tests.common import MockConnection, OpenstackTestcase, get_config_path
 
 GX_IMAGE_1 = JsonLdObject(
     gx_id="image_1",
@@ -184,17 +184,9 @@ OS_IMAGE_2 = OS_Image(os_distro="windows", id="image_2", visibility="public")
 
 class VMImageDiscoveryTestcase(OpenstackTestcase):
     def setUp(self):
-        current_dir = Path(__file__).parent
-        if current_dir.name == "tests":
-            config_file = str(Path(current_dir.parent, "config/config.yaml"))
-        else:
-            config_file = str(Path(current_dir, "config/config.yaml"))
-
-        with open(config_file, "r") as config_file:
-            self.config = yaml.safe_load(config_file)
-            self.discovery = VmDiscovery(
-                conn=MockConnection([OS_IMAGE_1, OS_IMAGE_2]), conf=Config(self.config)
-            )
+        self.discovery = VmDiscovery(
+            conn=MockConnection([OS_IMAGE_1, OS_IMAGE_2]), conf=get_config_path()
+        )
 
     def test_discovery_vm_images(self):
         actual_gax_images = self.discovery.discover_vm_images()
@@ -202,6 +194,7 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
         self.assert_vm_image(GX_IMAGE_2.gx_object, actual_gax_images[1].gx_object)
 
     def test_json_ld(self):
+        print(get_json_ld_context())
         print(json.dumps(GX_IMAGE_1, indent=4, default=to_json_ld))
         """current_dir = Path(__file__).parent
         if current_dir.name == "tests":
@@ -368,14 +361,14 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
         self.assertEqual(
             UpdateStrategy(
                 replaceFrequency="yearly",
-                oldVersionsValidUntil="notice",
+                oldVersionsValidUntil=LatestN(4),
                 providedUntil="notice",
                 hotfixHours=5,
             ),
             self.discovery._get_update_strategy(
                 OS_Image(
                     replace_frequency="yearly",
-                    uuid_validity="notice",
+                    uuid_validity="lastest-4",
                     provided_until="notice",
                     hotfix_hours=5,
                 )
