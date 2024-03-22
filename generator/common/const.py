@@ -9,7 +9,6 @@ DEFAULT_WATCHDOG_ACTION = "none"
 UNIT_MB = "https://qudt.org/vocab/unit/MegaBYTE"
 UNIT_GB = "https://qudt.org/vocab/unit/GigaBYTE"
 
-
 CONFIG_VM_IMAGE = "vm image"
 CONFIG_RESOURCE_POLICY = "resource policy"
 CONFIG_LICENSE = "license"
@@ -22,7 +21,6 @@ CONFIG_DEFAULT = "default"
 CONFIG_CLOUD_RESOURCES = "cloud resources:"
 CONFIG_FILESYSTEM_WALLET = "filesystem"
 CONFIG_XFSC_WALLET = "xfsc"
-
 
 CONFIG_OS_ALP = "Alpine Linux"
 CONFIG_OS_ARCH = "Arch Linux"
@@ -47,3 +45,5 @@ CONFIG_OS_UBUNTU = "Ubuntu"
 CONFIG_OS_WINDOWS = "Microsoft Windows"
 CONFIG_OS_CIRROS = "CirrOS"
 CONFIG_OS_ALMALINUX = "AlmaLinux"
+
+CONFIG_FILE = "config/config.yaml"

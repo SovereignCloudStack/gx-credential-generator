@@ -15,21 +15,21 @@ import sys
 
 import click
 import openstack as os
+import rdflib
 import yaml
 
 import generator.common.json_ld as json_ld
 from generator.common.config import Config
-
 from generator.discovery.openstack.openstack_discovery import OsCloud
-
-import rdflib
 
 SHAPES_FILE_FORMAT = "turtle"
 DATA_FILE_FORMAT = "json-ld"
 
+
 @click.group()
 def cli_commands():
     pass
+
 
 @click.command()
 @click.option(
@@ -73,23 +73,20 @@ def openstack(cloud, timeout, config):
         print(json.dumps(props, indent=4, default=json_ld.to_json_ld))
 
 
-
 @click.command()
 def kubernetes():
     """Generates Gaia-X Credentials for kubernetes."""
     pass
 
 
-def load_file(filepath, file_format=DATA_FILE_FORMAT):
-    """Load file in a given format"""
-    graph = rdflib.Graph()
-    graph.parse(filepath, format=file_format)
-    return graph
-
+# def load_file(filepath, file_format=DATA_FILE_FORMAT):
+#    """Load file in a given format"""
+#    graph = rdflib.Graph()
+#    graph.parse(filepath, format=file_format)
+#    return graph
 
 cli_commands.add_command(openstack)
 cli_commands.add_command(kubernetes)
-
 
 if __name__ == "__main__":
     cli_commands()

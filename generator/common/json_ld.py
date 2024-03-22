@@ -6,11 +6,7 @@ from datetime import date, datetime
 from typing import List
 from uuid import uuid4
 
-from linkml_runtime.linkml_model.meta import (
-    EnumDefinition,
-    PermissibleValue,
-    PvFormulaOptions,
-)
+from linkml_runtime.linkml_model.meta import EnumDefinition, PermissibleValue, PvFormulaOptions
 from linkml_runtime.utils.enumerations import EnumDefinitionImpl
 from linkml_runtime.utils.metamodelcore import URI
 from linkml_runtime.utils.yamlutils import YAMLRoot, extended_str
@@ -89,7 +85,7 @@ def to_json_ld(obj) -> dict:
         except AttributeError:
             pass
         for key, value in obj.__dict__.items():
-            #print(key)
+            # print(key)
             # serialize each attribute of object
             if value is None or value == [] or value == {}:
                 # skip emtpy values
@@ -114,7 +110,7 @@ def to_json_ld(obj) -> dict:
         return {"@type": "xsd:dateTime", "@value": obj.strftime("%Y-%m-%dT%H:%M:%S")}
     elif isinstance(obj, date):
         # add type for date
-        return {"@type": "xsd:date", "@value": obj}
+        return {"@type": "xsd:date", "@value": obj.strftime("%Y-%m-%d")}
     elif isinstance(obj, float):
         # add type for float
         return {"@type": "xsd:float", "@value": obj}
@@ -145,7 +141,7 @@ def get_slot_curie(slot_name: str, gx_object: object) -> str:
             return getattr(slots, slot_name).curie
 
 
-def get_types(gx_object: type) -> List[type]:
+def get_json_ld_types(gx_object: type) -> List[type]:
     """
     Return all types as curie of given GX_OBJECT. Types are instance's class as well as all super classes.
     @param gx_object: GX object, whose type is to be retrieved

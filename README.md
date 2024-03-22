@@ -1,5 +1,7 @@
 # gx-credential-generator
-Tool for creating [Gaia-X Credentials](https://gitlab.com/gaia-x/technical-committee/architecture-document/-/blob/master/architecture_document/gx_conceptual_model.md#gaia-x-credentials), previously known as Gaia-X Self-Descriptions, for SCS compliant cloud infrastructures (OpenStack, k8s, ...)
+Tool for creating [Gaia-X Credentials](https://gitlab.com/gaia-x/technical-committee/architecture-document/-/blob/master/architecture_document/gx_conceptual_model.md#gaia-x-credentials), previously known as Gaia-X Self-Descriptions, for SCS-compliant cloud infrastructures (OpenStack, k8s, ...)
+
+**NOTE**: Gx-Credential Generator is work in progress, currently, and documentation may be not up-to-date.
 
 ## Introduction
 
@@ -10,7 +12,7 @@ assuming that we have access to it (as normal tenant user).
 We read the OpenStack catalog to collect
 - public VM Images
 
-This then should be output as GX compliant credential in JSON-LD for the Gaia-X catalogue.
+This then should be output as GX-compliant credential in JSON-LD for the Gaia-X catalogue.
 
 ### k8s
 We want to collect discoverable information from a k8s cloud,
@@ -122,7 +124,7 @@ Providers are able to change default values. In doing so, attribute values for *
 
 #### CopyrightOwner, License and ResourcePolicy of VM images
 
-`copyrigthowner`, `license` and `resourcePolicy` are mandatory attributes for VM Images and their operating systems. As these values are not accessible from OpenStack cloud, default values are used. The values for operating system are defined in the section `operating system` with one subsection for each operating system. Operating systems are referred by name, e.g. for Alpine Linux:
+`copyrightOwner`, `license` and `resourcePolicy` are mandatory attributes for VM Images and their operating systems. As these values are not accessible from OpenStack cloud, default values are used. The values for operating system are defined in the section `operating system` with one subsection for each operating system. Operating systems are referred by name, e.g. for Alpine Linux:
 
 ```yaml
 default:
@@ -134,7 +136,7 @@ default:
         - https://gitlab.alpinelinux.org/alpine/aports/-/issues/9074
 ```
 
-By default, generator uses operating system values for VM Image as well. I.e. by default, VM Image and operating system have the same values for `copyrigthOwner`, `license` and `resourcePolicy`. Providers are able to change values for each VM image, individually. Therefore, the section `own images` in `cloud resources` exists. To set individual values for a specific VM image, add a new section, started by image's name (as defined in OpenStack cloud) to configuration file. The following example defines ìndividual values for `copyrigthOwner`, `license` and `resourcePolicy` for VM image called `AlmaLinux 8`.
+By default, generator uses operating system values for VM Image as well. I.e. by default, VM Image and operating system have the same values for `copyrigth owner`, `license` and `resourcePolicy`. Providers are able to change values for each VM image, individually. Therefore, the section `own images` in `cloud resources` exists. To set individual values for a specific VM image, add a new section, started by image's name (as defined in OpenStack cloud) to configuration file. The following example defines ìndividual values for `copyrightOwner`, `license` and `resourcePolicy` for VM image called `AlmaLinux 8`.
 
 ```yaml
 cloud resources:
@@ -150,8 +152,7 @@ cloud resources:
 
 ### Optional Attributes
 
-Similar to mandatory attributes, GX Credential Schemas supports optional attributes, whose values can not be retrieved from OpenStack cloud. These values can be set in configuration file in section `cloud resources` as well.
-
+As with mandatory attributes, GX Credential Schemas supports optional attributes whose values can not be retrieved from OpenStack. These values can be set in the section `cloud resources` as well.
 #### AggregationOf of VM Images
 
 GX Credential schema allows to describe cloud resources, such VM images, in a fine granular manner, by using attribute `aggregationOf`. This attribute refers a list of GX credentials either as [DID](https://www.w3.org/TR/did-core/) or as file path relative to generators working directory. The latter is copied to cloud resource's credentials. For more details on GX credential schema and its attributes, please refer [Gaia-X Service Characteristics GitLab](https://gitlab.com/gaia-x/technical-committee/service-characteristics)   
@@ -179,13 +180,6 @@ or you can use the following to create a temp location for the secrets:
 ```shell
 mkdir -p os_secret && cp secret1 /os_secret
 docker run -v "${PWD}/os_secret:/root/.config/openstack" $(docker build -q .)  ./gx-sd-generator.py --os-cloud gx-h61.1
-```
-
-Generated Self-Descriptions could be validated against their schemas (shapes) by the 
-simple SD validator script. Visit the `sd` directory and try to validate your 
-generated SD. Find the examples in `sd` directory and do the validation as follows:
-```bash
-./sd/validate.py sd/example.jsonld sd/example.ttl
 ```
 
 ## Status (2023-05-04)

@@ -1,0 +1,156 @@
+{
+    "@context": {
+        "gx": "https://w3id.org/gaia-x/ONTOLOGY_VERSION/",
+        "qudt": "http://qudt.org/vocab/",
+        "schema": "http://schema.org/",
+        "vcard": "http://www.w3.org/2006/vcard/ns#",
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
+        "ex": "https://example.com/"
+    },
+    "@graph": [
+        {
+            "@id": "ex:image_2",
+            "@type": "gx:VMImage",
+            "gx:name": "Image2",
+            "gx:description": "Image 2",
+            "gx:copyrightOwnedBy": [
+                "Microsoft Corporation"
+            ],
+            "gx:license": [
+                {
+                    "@type": "xsd:anyURI",
+                    "@value": "https://www.microsoft.com/licensing"
+                }
+            ],
+            "gx:resourcePolicy": "default: allow intent",
+            "gx:checksum": {
+                "@type": "gx:CheckSum",
+                "gx:checkSumCalculation": "sha-512",
+                "gx:checkSumValue": "7f8bababc2c2a94880747383750470aee68c7e8840bb8811eaeda1b0ce71d59f40ebb182"
+            },
+            "gx:patchLevel": "1.5.2",
+            "gx:buildDate": {
+                "@type": "xsd:dateTime",
+                "@value": "2023-11-01T00:00:00"
+            },
+            "gx:operatingSystem": {
+                "@type": "gx:OperatingSystem",
+                "gx:copyrightOwnedBy": [
+                    "Microsoft Corporation"
+                ],
+                "gx:license": [
+                    {
+                        "@type": "xsd:anyURI",
+                        "@value": "https://www.microsoft.com/licensing"
+                    }
+                ],
+                "gx:resourcePolicy": [
+                    "default: allow intent"
+                ],
+                "gx:version": "Stable",
+                "gx:osDistribution": "Microsoft Windows"
+            },
+            "gx:cpuReq": {
+                "@type": "gx:CPU",
+                "gx:cpuArchitecture": "x86-64",
+                "gx:smtEnabled": {
+                    "@type": "xsd:boolean",
+                    "@value": false
+                },
+                "gx:numberOfCores": 2,
+                "gx:numberOfThreads": 4
+            },
+            "gx:ramReq": {
+                "@type": "gx:Memory",
+                "gx:memorySize": {
+                    "@type": "gx:MemorySize",
+                    "qudt:value": {
+                        "@type": "xsd:float",
+                        "@value": 1.048576
+                    },
+                    "qudt:unit": "https://qudt.org/vocab/unit/MegaBYTE"
+                },
+                "gx:memoryClass": "other",
+                "gx:memoryRank": "other",
+                "gx:eccEnabled": {
+                    "@type": "xsd:boolean",
+                    "@value": false
+                },
+                "gx:hardwareEncryption": {
+                    "@type": "xsd:boolean",
+                    "@value": false
+                }
+            },
+            "gx:videoRamSize": {
+                "@type": "gx:MemorySize",
+                "qudt:value": {
+                    "@type": "xsd:float",
+                    "@value": 20.0
+                },
+                "qudt:unit": "https://qudt.org/vocab/unit/MegaBYTE"
+            },
+            "gx:rootDiskReq": {
+                "@type": "gx:Disk",
+                "gx:diskSize": {
+                    "@type": "gx:MemorySize",
+                    "qudt:value": {
+                        "@type": "xsd:float",
+                        "@value": 21.47483648
+                    },
+                    "qudt:unit": "https://qudt.org/vocab/unit/GigaBYTE"
+                },
+                "gx:diskType": "other",
+                "gx:diskBusType": "SCSI"
+            },
+            "gx:secureBoot": {
+                "@type": "xsd:boolean",
+                "@value": true
+            },
+            "gx:vPMU": {
+                "@type": "xsd:boolean",
+                "@value": false
+            },
+            "gx:multiQueues": {
+                "@type": "xsd:boolean",
+                "@value": true
+            },
+            "gx:updateStrategy": {
+                "@type": "gx:UpdateStrategy",
+                "gx:replaceFrequency": "weekly",
+                "gx:providedUntil": "none"
+            },
+            "gx:licenseIncluded": {
+                "@type": "xsd:boolean",
+                "@value": false
+            },
+            "gx:maintenance": {
+                "@type": "gx:MaintenanceSubscription",
+                "gx:subscriptionIncluded": {
+                    "@type": "xsd:boolean",
+                    "@value": false
+                },
+                "gx:subscriptionRequired": {
+                    "@type": "xsd:boolean",
+                    "@value": true
+                },
+                "gx:maintainedUntil": {
+                    "@type": "xsd:date",
+                    "@value": "2024-05-31"
+                }
+            },
+            "gx:vmImageDiskFormat": "RAW",
+            "gx:hypervisorType": "other",
+            "gx:firmwareType": "other",
+            "gx:hwRngTypeOfImage": "None",
+            "gx:watchDogAction": "reset",
+            "null": {
+                "@type": "gx:MemorySize",
+                "qudt:value": {
+                    "@type": "xsd:float",
+                    "@value": 9788573790.089773
+                },
+                "qudt:unit": "https://qudt.org/vocab/unit/GigaBYTE"
+            }
+        }
+    ]
+}

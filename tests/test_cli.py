@@ -1,14 +1,13 @@
+import json
 import unittest
-import cli
-import unittest
-from tests.common import MockConnection, get_config_path, get_config#
-from generator.discovery.openstack.openstack_discovery import OsCloud
-from openstack.image.v2.image import Image as OS_Image
-from datetime import datetime, date
-from unittest.mock import MagicMock, patch
-import openstack
+from unittest.mock import patch
+
 from click.testing import CliRunner
-import foo
+from openstack.image.v2.image import Image as OS_Image
+
+import cli
+from generator.common import const
+from tests.common import MockConnection, get_absolute_path
 
 OS_IMAGE_1 = OS_Image(
     hw_scsi_model="virtio - scsi",
@@ -49,33 +48,31 @@ OS_IMAGE_1 = OS_Image(
         "license_included": False,
         "subscription_required": True,
         "subscription_included": False,
-        "maintained_until": date(2024, 5, 31)
+        "maintained_until": "2024-05-31",
     },
 )
 
+
 class CliTestCase(unittest.TestCase):
-
-    def test_vm_image(self):
-
-
-    @patch('openstack.connect')
+    @patch("openstack.connect")
     def test_openstack(self, os_connect):
         # Mock openstack calls
         os_connect.return_value = MockConnection(images=[OS_IMAGE_1])
         runner = CliRunner()
-        result = runner.invoke(cli.openstack, "myCloud --config="+get_config_path())
-        #self.assertIsNone(result.exception)
-        #self.assertEqual(0, result.exit_code)
-        self.assertEqual("", result.output)
-    def test_load_file(self):
-        # TODO: Implement test case
-        pass
+        result = runner.invoke(
+            cli.openstack, "myCloud --config=" + get_absolute_path(const.CONFIG_FILE)
+        )
+        self.assertIsNone(result.exception)
+        self.assertEqual(0, result.exit_code)
+        with open(get_absolute_path("tests/data/vm_image_2.json"), "r") as json_file:
+            expected_output = json.load(json_file)
+            received_outout = json.loads(result.output)
+            self.assertEqual(expected_output, received_outout)
 
     def test_kubernetes(self):
         # TODO: Implement test case
         pass
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
