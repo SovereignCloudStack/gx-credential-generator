@@ -140,11 +140,11 @@ class VmDiscovery:
 
         @return: list of VM images
         """
-        return [
-            JsonLdObject(self._convert_to_gx_image(image), gx_id=image.id)
-            for image in self.conn.list_images()
-            if image.visibility == "public"
-        ]
+        images = []
+        for image in self.conn.list_images():
+            if image.visibility == "public":
+                images.append(image)
+        return images
 
     def _convert_to_gx_image(self, os_image: OS_Image) -> GX_Image:
         """
@@ -601,8 +601,14 @@ class VmDiscovery:
                     update_strategy.providedUntil = PROVIDED_UNTIL_LOOKUP.get(provided_until)
             else:
                 update_strategy.providedUntil = None
-            if "hotfix_hours" in os_image.properties and os_image.properties["hotfix_hours"] >= 0:
-                update_strategy.hotfixHours = int(os_image.properties["hotfix_hours"])
+            if "hotfix_hours" in os_image.properties and os_image.properties["hotfix_hours"]:
+                try:
+                    hot_h = int(os_image.properties["hotfix_hours"])
+                    if hot_h >= 0:
+                        update_strategy.hotfixHours = int(os_image.properties["hotfix_hours"])
+                except ValueError:
+                    # int cast fails
+                    pass
             return update_strategy
 
     @staticmethod
