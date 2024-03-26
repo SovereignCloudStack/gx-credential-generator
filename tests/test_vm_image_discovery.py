@@ -1,8 +1,6 @@
-import json
 import unittest
 from datetime import date, datetime
 
-from linkml_runtime.utils.metamodelcore import XSDDate
 from openstack.image.v2.image import Image as OS_Image
 
 from generator.common import const
@@ -25,7 +23,7 @@ from generator.common.gx_schema import (
 )
 from generator.common.gx_schema import VMImage as GX_Image
 from generator.common.gx_schema import WatchDogActions
-from generator.common.json_ld import JsonLdObject, get_json_ld_context, to_json_ld
+from generator.common.json_ld import JsonLdObject
 from generator.discovery.openstack.vm_images_discovery import VmDiscovery
 from tests.common import MockConnection, OpenstackTestcase, get_config
 
@@ -196,7 +194,7 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
         )
 
     def test_discovery_vm_images(self):
-        actual_gax_images = self.discovery.discover_vm_images()
+        actual_gax_images = self.discovery.discover()
         self.assert_vm_image(GX_IMAGE_1.gx_object, actual_gax_images[0].gx_object)
         self.assert_vm_image(GX_IMAGE_2.gx_object, actual_gax_images[1].gx_object)
 

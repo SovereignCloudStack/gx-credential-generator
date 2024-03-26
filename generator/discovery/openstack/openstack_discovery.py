@@ -1,42 +1,33 @@
-#!/usr/bin/env python3
-# vim: set ts=4 sw=4 et:
-#
-# openstack_discovery.py
-"""Script to generate GX Credentials in JSON-LD.
-
-(c) Kurt Garloff <garloff@osb-alliance.com>, 5/2023
-(c) Anja Strunk <anja.strunk@cloudandheat.com>, 1/2024
-SPDX-License-Identifier: EPL-2.0
-"""
-
+from abc import ABCMeta,abstractmethod
 from typing import List
 
 from openstack.connection import Connection
 
+from generator.common import const
 from generator.common.config import Config
 from generator.common.json_ld import JsonLdObject
-from generator.discovery.openstack.vm_images_discovery import VmDiscovery
 
 
-class OsCloud:
-    """Abstraction for openStack cloud with all its services."""
+class OpenStackDiscovery(metaclass=ABCMeta):
 
-    def __init__(self, conn: Connection, config: Config) -> None:
-        # import copy
+    def __init__(self, conn: Connection, conf: Config) -> None:
         self.conn = conn
-        # self.regions = list(conn.identity.regions())
-        self.config = config
+        self.conf = conf
+    @abstractmethod
+    def discover(self) -> List[JsonLdObject]:
+        pass
 
-    def discover_properties(self) -> List[JsonLdObject]:
-        """
-        Discover all attributes of OS Cloud.
+    import generator.common.const as const
 
-        @return: all attributes as list
-        @rtype List[JsonLdObject]
-        """
-        creds = list()
+    def get_copyright_owner(self, software: str) -> List[str]:
+        return self.conf.get_value([const.COMFIG_SOFTWARE, software, const.CONFIG_COPYRIGHT])
 
-        vm_dis = VmDiscovery(self.conn, self.config)
-        creds.extend(vm_dis.discover_vm_images())
+    def get_license(self, software: str) -> List[str]:
+        return self.conf.get_value([const.COMFIG_SOFTWARE,software,const.CONFIG_LICENSE])
 
-        return creds
+    def get_resource_policy(self, software: str) -> List[str]:
+        return self.conf.get_value([const.COMFIG_SOFTWARE,software,const.CONFIG_RESOURCE_POLICY])
+
+
+
+

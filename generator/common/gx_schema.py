@@ -2862,12 +2862,12 @@ class ServerFlavor(InstantiationRequirement):
         if self.network is not None and not isinstance(self.network, str):
             self.network = str(self.network)
 
-        self._normalize_inlined_as_dict(
-            slot_name="additionalVolume",
-            slot_type=Disk,
-            key_name="diskSize",
-            keyed=False,
-        )
+        #self._normalize_inlined_as_dict(
+        #    slot_name="additionalVolume",
+        #    slot_type=Disk,
+        #    key_name="diskSize",
+        #    keyed=False,
+        #)
 
         if self.confidentialComputing is not None and not isinstance(
             self.confidentialComputing, ConfidentialComputing

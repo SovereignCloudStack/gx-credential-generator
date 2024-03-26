@@ -4,6 +4,7 @@ from unittest.mock import patch
 
 from click.testing import CliRunner
 from openstack.image.v2.image import Image as OS_Image
+from openstack.compute.v2.flavor import Flavor as OS_Flavor
 
 import cli
 from generator.common import const
@@ -52,19 +53,23 @@ OS_IMAGE_1 = OS_Image(
     },
 )
 
+OS_FLAVOR_1 = OS_Flavor(
+    id="flavor_2", name="SCS-4L-32uo-3x50s-_kvm_z3hh", vcpus=2, ram=16, disk=0
+)
+
 
 class CliTestCase(unittest.TestCase):
     @patch("openstack.connect")
     def test_openstack(self, os_connect):
         # Mock openstack calls
-        os_connect.return_value = MockConnection(images=[OS_IMAGE_1])
+        os_connect.return_value = MockConnection(images=[OS_IMAGE_1], flavors=[OS_FLAVOR_1])
         runner = CliRunner()
         result = runner.invoke(
             cli.openstack, "myCloud --config=" + get_absolute_path(const.CONFIG_FILE)
         )
         self.assertIsNone(result.exception)
         self.assertEqual(0, result.exit_code)
-        with open(get_absolute_path("tests/data/vm_image_2.json"), "r") as json_file:
+        with open(get_absolute_path("tests/data/credential.json"), "r") as json_file:
             expected_output = json.load(json_file)
             received_outout = json.loads(result.output)
             self.assertEqual(expected_output, received_outout)
