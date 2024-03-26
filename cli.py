@@ -15,12 +15,11 @@ import sys
 
 import click
 import openstack as os
-import rdflib
 import yaml
 
 import generator.common.json_ld as json_ld
 from generator.common.config import Config
-from generator.discovery.openstack.openstack_discovery import OsCloud
+from generator.discovery.openstack.discovery import OsCloud
 
 SHAPES_FILE_FORMAT = "turtle"
 DATA_FILE_FORMAT = "json-ld"
@@ -65,11 +64,10 @@ def openstack(cloud, timeout, config):
         os_cloud = OsCloud(conn, Config(config_dict))
 
         # run discovery
-        creds = os_cloud.discover_properties()
+        creds = os_cloud.discover()
 
         props = json_ld.get_json_ld_context()
         props["@graph"] = creds
-        json_text = json.dumps(props, indent=4, default=json_ld.to_json_ld)
         print(json.dumps(props, indent=4, default=json_ld.to_json_ld))
 
 

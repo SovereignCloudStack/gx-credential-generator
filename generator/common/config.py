@@ -1,6 +1,7 @@
 from typing import List
 
 
+
 def _get_value(config, keys: List[str]):
     if not keys:
         return config
@@ -19,3 +20,4 @@ class Config:
 
     def get_value(self, keys: List[str]):
         return _get_value(self.config, keys)
+
