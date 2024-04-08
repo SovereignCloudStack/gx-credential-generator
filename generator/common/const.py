@@ -20,7 +20,7 @@ CONFIG_AGGREGATION_OF = "aggregation of"
 CONFIG_WALLETS = "wallets"
 CONFIG_DEFAULT = "default"
 CONFIG_CLOUD_RESOURCES = "cloud resources:"
-COMFIG_SOFTWARE = "software resources"
+CONFIG_SOFTWARE = "software resources"
 CONFIG_FILESYSTEM_WALLET = "filesystem"
 CONFIG_XFSC_WALLET = "xfsc"
 
