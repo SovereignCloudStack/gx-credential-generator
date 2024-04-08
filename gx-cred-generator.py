@@ -3,7 +3,7 @@
 #
 # gx-sd-generator.py
 """Script to generate Gaia-X JSON-LD for credentials.
-  Uses openstack-discovery.py and k8s-discovery.py to
+  Uses openstack-openstack_discovery.py and k8s-openstack_discovery.py to
   collect the data.
 
 (c) Kurt Garloff <garloff@osb-alliance.com>, 5/2023

@@ -7,20 +7,31 @@ SPDX-License-Identifier: EPL-2.0
 import re
 from typing import List, Tuple
 
-from generator.discovery.openstack.openstack_discovery import OpenStackDiscovery
 from openstack.compute.v2.flavor import Flavor as OS_Flavor
+from openstack.connection import Connection
 
 from generator.common import const
+from generator.common.config import Config
 from generator.common.gx_schema import CPU
 from generator.common.gx_schema import Architectures as CpuArch
-from generator.common.gx_schema import (Disk, DiskBusType, DiskType, Frequency,
-                                        Hypervisor, Memory, MemorySize,
-                                        PermissibleValue)
+from generator.common.gx_schema import (
+    Disk,
+    DiskBusType,
+    DiskType,
+    Frequency,
+    Hypervisor,
+    Memory,
+    MemorySize,
+)
 from generator.common.gx_schema import ServerFlavor as GX_Flavor
 from generator.common.json_ld import JsonLdObject
 
 
-class ServerFlavorDiscovery(OpenStackDiscovery):
+class ServerFlavorDiscovery:
+    def __init__(self, conn: Connection, conf: Config) -> None:
+        self.conn = conn
+        self.conf = conf
+
     def discover(self) -> List[JsonLdObject]:
         """
         Return one JsonLdObject for each public server flavor discovery at openstack cloud.
@@ -215,45 +226,30 @@ class ServerFlavorDiscovery(OpenStackDiscovery):
             elif suffix == "kvm":
                 gx_flavor.hypervisor = Hypervisor(
                     hypervisorType="KVM",
-                    copyrightOwnedBy=self.get_copyright_owner(
-                        const.CONFIG_HV_KVM
-                    ),
-                    license=self.get_license(const.CONFIG_HV_KVM),
-                    resourcePolicy=self.get_resource_policy(
-                        const.CONFIG_HV_KVM
-                    ),
+                    copyrightOwnedBy=self.conf.get_copyright_owner(const.CONFIG_HV_KVM),
+                    license=self.conf.get_license(const.CONFIG_HV_KVM),
+                    resourcePolicy=self.conf.get_resource_policy(const.CONFIG_HV_KVM),
                 )
             elif suffix == "xen":
                 gx_flavor.hypervisor = Hypervisor(
                     hypervisorType="Xen",
-                    copyrightOwnedBy=self.get_copyright_owner(const.CONFIG_HV_XEN
-                    ),
-                    license=self.get_license(const.CONFIG_HV_XEN),
-                    resourcePolicy=self.get_resource_policy(
-                        const.CONFIG_HV_XEN
-                    ),
+                    copyrightOwnedBy=self.conf.get_copyright_owner(const.CONFIG_HV_XEN),
+                    license=self.conf.get_license(const.CONFIG_HV_XEN),
+                    resourcePolicy=self.conf.get_resource_policy(const.CONFIG_HV_XEN),
                 )
             elif suffix == "vmw":
                 gx_flavor.hypervisor = Hypervisor(
                     hypervisorType="KVM",
-                    copyrightOwnedBy=self.get_copyright_owner(
-                        const.CONFIG_HV_VMW
-                    ),
-                    license=self.get_license(const.CONFIG_HV_VMW),
-                    resourcePolicy=self.get_resource_policy(
-                        const.CONFIG_HV_VMW
-                    ),
+                    copyrightOwnedBy=self.conf.get_copyright_owner(const.CONFIG_HV_VMW),
+                    license=self.conf.get_license(const.CONFIG_HV_VMW),
+                    resourcePolicy=self.conf.get_resource_policy(const.CONFIG_HV_VMW),
                 )
             elif suffix == "hyv":
                 gx_flavor.hypervisor = Hypervisor(
                     hypervisorType="Hyper-V",
-                    copyrightOwnedBy=self.get_copyright_owner(
-                        const.CONFIG_HV_HYV
-                    ),
-                    license=self.get_license(const.CONFIG_HV_HYV),
-                    resourcePolicy=self.get_resource_policy(
-                        const.CONFIG_HV_HYV
-                    ),
+                    copyrightOwnedBy=self.conf.get_copyright_owner(const.CONFIG_HV_HYV),
+                    license=self.conf.get_license(const.CONFIG_HV_HYV),
+                    resourcePolicy=self.conf.get_resource_policy(const.CONFIG_HV_HYV),
                 )
             # parse hardware assisted virtualization
             elif suffix == "hwv":

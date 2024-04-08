@@ -19,7 +19,7 @@ import yaml
 
 import generator.common.json_ld as json_ld
 from generator.common.config import Config
-from generator.discovery.openstack.discovery import OsCloud
+from generator.discovery.openstack.openstack_discovery import OsCloud
 
 SHAPES_FILE_FORMAT = "turtle"
 DATA_FILE_FORMAT = "json-ld"

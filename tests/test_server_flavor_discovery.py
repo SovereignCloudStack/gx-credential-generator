@@ -331,9 +331,9 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
         if hv:
             gx_flavor.hypervisor = Hypervisor(
                 hypervisorType="KVM",
-                copyrightOwnedBy=self.discovery.get_copyright_owner(const.CONFIG_HV_KVM),
-                license=self.discovery.get_license(const.CONFIG_HV_KVM),
-                resourcePolicy=self.discovery.get_resource_policy(const.CONFIG_HV_KVM))
+                copyrightOwnedBy=self.discovery.conf.get_copyright_owner(const.CONFIG_HV_KVM),
+                license=self.discovery.conf.get_license(const.CONFIG_HV_KVM),
+                resourcePolicy=self.discovery.conf.get_resource_policy(const.CONFIG_HV_KVM))
 
         return gx_flavor
 
