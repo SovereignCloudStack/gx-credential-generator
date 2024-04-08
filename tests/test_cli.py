@@ -71,8 +71,24 @@ class CliTestCase(unittest.TestCase):
         self.assertEqual(0, result.exit_code)
         with open(get_absolute_path("tests/data/credential.json"), "r") as json_file:
             expected_output = json.load(json_file)
-            received_outout = json.loads(result.output)
-            self.assertEqual(expected_output, received_outout)
+            received_output = json.loads(result.output)
+            self.assertEqual(expected_output, received_output)
+
+    @patch("openstack.connect")
+    def test_openstack_empty(self, os_connect):
+        # Mock openstack calls
+        os_connect.return_value = MockConnection()
+        runner = CliRunner()
+        result = runner.invoke(
+            cli.openstack, "myCloud --config=" + get_absolute_path(const.CONFIG_FILE)
+        )
+
+        self.assertIsNone(result.exception)
+        self.assertEqual(0, result.exit_code)
+        with open(get_absolute_path("tests/data/empty_credential.json"), "r") as json_file:
+            expected_output = json.load(json_file)
+            received_output = json.loads(result.output)
+            self.assertEqual(expected_output, received_output)
 
     def test_kubernetes(self):
         # TODO: Implement test case

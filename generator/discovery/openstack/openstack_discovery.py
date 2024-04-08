@@ -32,15 +32,7 @@ class OsCloud:
         @return: all attributes as list
         @rtype List[JsonLdObject]
         """
-        creds = list()
-
-        vi_dis = VmDiscovery(self.conn, self.config)
-        images = vi_dis.discover()
-        if images:
-            creds.extend(images)
-        sf_dis = ServerFlavorDiscovery(self.conn, self.config)
-        flavors = sf_dis.discover()
-        if flavors:
-            creds.extend(sf_dis.discover())
-
-        return creds
+        return (
+            VmDiscovery(self.conn, self.config).discover()
+            + ServerFlavorDiscovery(self.conn, self.config).discover()
+        )
