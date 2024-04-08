@@ -73,7 +73,7 @@ class ServerFlavorDiscovery(OpenStackDiscovery):
         if os_flavor.name.startswith("SCS-"):
             # parse SCS flavor name, second part contains CPU properties
             parts = os_flavor.name.split("-")
-            if len(parts) >= 2 and re.search("\d[V,T,C,L]$", parts[1]):
+            if len(parts) >= 2 and re.search(r"\d[V,T,C,L]$", parts[1]):
                 cpu_suffix = parts[1][-1]
                 cpu.numberOfCores = int(parts[1][-2])
                 if cpu_suffix.endswith("i"):
