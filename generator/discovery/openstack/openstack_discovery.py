@@ -13,6 +13,7 @@ class OpenStackDiscovery(metaclass=ABCMeta):
     def __init__(self, conn: Connection, conf: Config) -> None:
         self.conn = conn
         self.conf = conf
+
     @abstractmethod
     def discover(self) -> List[JsonLdObject]:
         pass
