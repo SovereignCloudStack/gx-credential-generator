@@ -5,3 +5,4 @@ click
 pyshacl
 linkml
 rdflib
+apache-airflow
