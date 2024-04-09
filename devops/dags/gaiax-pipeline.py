@@ -1,9 +1,8 @@
-from datetime import timedelta
-from datetime import datetime
+import logging
+from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-import logging
 
 
 def extract():

@@ -12,12 +12,13 @@ These can then be dumped as YAML or as Gaia-X JSON-LD Self-Description.
 SPDX-License-Identifier: EPL-2.0
 """
 
-import sys
-import os
 import getopt
 import json
-import yaml
+import os
+import sys
+
 import openstack
+import yaml
 
 # Global variables
 if "OS_CLOUD" in os.environ:

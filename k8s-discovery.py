@@ -14,7 +14,8 @@ SPDX-License-Identifier: EPL-2.0
 import os
 import sys
 
-from kubernetes import client, config as cfg
+from kubernetes import client
+from kubernetes import config as cfg
 
 # Global variables
 if "KUBECONFIG" in os.environ:

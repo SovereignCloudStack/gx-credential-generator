@@ -5,25 +5,12 @@ from typing import List
 import yaml
 
 from generator.common.config import Config
-from generator.common.gx_schema import (
-    CPU,
-    GPU,
-    CheckSum,
-    CodeArtifact,
-    Device,
-    Disk,
-    Encryption,
-    GaiaXEntity,
-    Hypervisor,
-    Image,
-    Memory,
-    OperatingSystem,
-    Resource,
-    Signature,
-    SoftwareResource,
-    VirtualResource,
-    VMImage,
-)
+from generator.common.gx_schema import (CPU, GPU, CheckSum, CodeArtifact,
+                                        Device, Disk, Encryption, GaiaXEntity,
+                                        Hypervisor, Image, Memory,
+                                        OperatingSystem, Resource, Signature,
+                                        SoftwareResource, VirtualResource,
+                                        VMImage)
 
 
 def get_absolute_path(relative_path: str) -> str:

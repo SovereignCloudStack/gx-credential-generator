@@ -11,12 +11,12 @@ SPDX-License-Identifier: EPL-2.0
 """
 
 import getopt
+import importlib
 import json
 import sys
-import yaml
 from time import time
 
-import importlib
+import yaml
 
 ostack = importlib.import_module("openstack-discovery")
 k8s = importlib.import_module("k8s-discovery")
