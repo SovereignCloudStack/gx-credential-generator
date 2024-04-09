@@ -724,76 +724,70 @@ class VmDiscovery:
             if "managed_by_VENDOR" in os_image.properties:
                 return os_image.properties["image_description"] + " Managed by " + os_image.properties[
                     "managed_by_VENDOR"]
-        else:
-            return os_image.properties["image_description"]
+            else:
+                return os_image.properties["image_description"]
 
+    @staticmethod
+    def _get_name(os_image: OS_Image) -> str:
+        return os_image.name or None
 
-@staticmethod
-def _get_name(os_image: OS_Image) -> str:
-    return os_image.name or None
-
-
-@staticmethod
-def _get_build_date(os_image: OS_Image) -> datetime:
-    if os_image.properties is not None and "image_build_date" in os_image.properties:
-        return datetime.strptime(
-            os_image.properties["image_build_date"], "%Y-%m-%d"
-        )
-
-
-@staticmethod
-def _get_license_included(os_image: OS_Image) -> bool:
-    return os_image.properties and os_image.properties.get("licenseIncluded", False)
-
-
-@staticmethod
-def _get_patch_level(os_image: OS_Image) -> str:
-    return os_image.properties and os_image.properties.get("patchlevel", None)
-
-
-@staticmethod
-def _get_version(os_image: OS_Image) -> str:
-    return os_image.properties and os_image.properties.get("internal_version", None)
-
-
-@staticmethod
-def _get_maintenance(os_image: OS_Image) -> MaintenanceSubscription:
-    maint = MaintenanceSubscription(
-        subscriptionRequired=False, subscriptionIncluded=False
-    )
-    maint.subscriptionIncluded = bool(os_image.properties and os_image.properties.get("subscription_included", None))
-    maint.subscriptionRequired = bool(os_image.properties and os_image.properties.get("subscription_required", None))
-    if os_image.properties is not None and "maintained_until" in os_image.properties:
-        main_until = os_image.properties["maintained_until"]
-        maint.maintainedUntil = datetime.strptime(main_until, "%Y-%m-%d").date()
-    return maint
-
-
-@staticmethod
-def _get_signature(os_image: OS_Image) -> Signature:
-    if os_image.properties is not None and "img_signature" in os_image.properties:
-        value = os_image.properties["img_signature"]
-        hash_algo = ChecksumAlgorithm(
-            HASH_ALGO_LOOKUP.get(
-                os_image.properties["img_signature_hash_method"].lower(),
-                ChecksumAlgorithm.other,
+    @staticmethod
+    def _get_build_date(os_image: OS_Image) -> datetime:
+        if os_image.properties is not None and "image_build_date" in os_image.properties:
+            return datetime.strptime(
+                os_image.properties["image_build_date"], "%Y-%m-%d"
             )
-        )
-        sig_algo = SignatureAlgorithm.other
-        if os_image.properties["img_signature_key_type"].lower().startswith("sha-"):
-            sig_algo = "RSA-Signature"
-        return Signature(
-            signatureValue=value,
-            hashAlgorithm=hash_algo,
-            signatureAlgorithm=sig_algo,
-        )
 
+    @staticmethod
+    def _get_license_included(os_image: OS_Image) -> bool:
+        return os_image.properties and os_image.properties.get("licenseIncluded", False)
 
-@staticmethod
-def _get_hypervisor_type(os_image: OS_Image) -> HypervisorType:
-    if os_image.hypervisor_type is not None:
-        return HypervisorType(
-            HYPER_LOOKUP.get(os_image.hypervisor_type.lower(), HypervisorType.other)
+    @staticmethod
+    def _get_patch_level(os_image: OS_Image) -> str:
+        return os_image.properties and os_image.properties.get("patchlevel", None)
+
+    @staticmethod
+    def _get_version(os_image: OS_Image) -> str:
+        return os_image.properties and os_image.properties.get("internal_version", None)
+
+    @staticmethod
+    def _get_maintenance(os_image: OS_Image) -> MaintenanceSubscription:
+        maint = MaintenanceSubscription(
+            subscriptionRequired=False, subscriptionIncluded=False
         )
-    else:
-        return HypervisorType(HypervisorType.other)
+        maint.subscriptionIncluded = bool(
+            os_image.properties and os_image.properties.get("subscription_included", None))
+        maint.subscriptionRequired = bool(
+            os_image.properties and os_image.properties.get("subscription_required", None))
+        if os_image.properties is not None and "maintained_until" in os_image.properties:
+            main_until = os_image.properties["maintained_until"]
+            maint.maintainedUntil = datetime.strptime(main_until, "%Y-%m-%d").date()
+        return maint
+
+    @staticmethod
+    def _get_signature(os_image: OS_Image) -> Signature:
+        if os_image.properties is not None and "img_signature" in os_image.properties:
+            value = os_image.properties["img_signature"]
+            hash_algo = ChecksumAlgorithm(
+                HASH_ALGO_LOOKUP.get(
+                    os_image.properties["img_signature_hash_method"].lower(),
+                    ChecksumAlgorithm.other,
+                )
+            )
+            sig_algo = SignatureAlgorithm.other
+            if os_image.properties["img_signature_key_type"].lower().startswith("sha-"):
+                sig_algo = "RSA-Signature"
+            return Signature(
+                signatureValue=value,
+                hashAlgorithm=hash_algo,
+                signatureAlgorithm=sig_algo,
+            )
+
+    @staticmethod
+    def _get_hypervisor_type(os_image: OS_Image) -> HypervisorType:
+        if os_image.hypervisor_type is not None:
+            return HypervisorType(
+                HYPER_LOOKUP.get(os_image.hypervisor_type.lower(), HypervisorType.other)
+            )
+        else:
+            return HypervisorType(HypervisorType.other)
