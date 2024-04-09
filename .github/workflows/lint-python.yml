@@ -17,4 +17,13 @@ jobs:
       - run: pip3 install flake8
       - run: flake8 --exclude generator/common/gx_schema.py
 
-# foo
+  check-sorted-imports:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - run: pip3 install isort
+      - run: isort . --check --skip generator/common/gx_schema.py
+
