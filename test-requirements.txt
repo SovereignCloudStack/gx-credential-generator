@@ -4,8 +4,10 @@
 #
 #    pip-compile test-requirements.in
 #
-coverage==7.4.4
-    # via -r test-requirements.in
+coverage[toml]==7.4.4
+    # via
+    #   -r test-requirements.in
+    #   pytest-cov
 exceptiongroup==1.2.0
     # via
     #   -c requirements.txt
@@ -26,7 +28,11 @@ pytest==8.1.1
     # via
     #   -c requirements.txt
     #   -r test-requirements.in
+    #   pytest-cov
+pytest-cov==5.0.0
+    # via -r test-requirements.in
 tomli==2.0.1
     # via
     #   -c requirements.txt
+    #   coverage
     #   pytest
