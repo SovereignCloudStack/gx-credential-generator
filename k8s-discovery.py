@@ -10,6 +10,7 @@ These can then be dumped as YAML or as Gaia-X JSON-LD Self-Description.
 (c) Tecnalia: Raúl Miñón, Ana I. Torre, Gorka Benguria, Gorka Zarate, Juan López de Armentia  <raul.minon@tecnalia.com>, 3/2023 - 4/2023
 SPDX-License-Identifier: EPL-2.0
 """
+
 import os
 import sys
 
@@ -23,7 +24,7 @@ else:
 context = None
 debug = False
 outjson = False
-ofile = '/dev/stdout'
+ofile = "/dev/stdout"
 indent = "  "
 
 
@@ -44,7 +45,9 @@ class ContainerPort:
 
 
 class KubeContainer:
-    def __init__(self, env, c_image, command, image_pull_policy, c_name, ports, volumes):
+    def __init__(
+            self, env, c_image, command, image_pull_policy, c_name, ports, volumes
+    ):
         self.env = env
         self.c_image = c_image
         self.command = command
@@ -55,8 +58,9 @@ class KubeContainer:
 
 
 class KubeNodeCapacity:
-
-    def __init__(self, cpu, ephemeral_storage, hugepages_1Gi, hugepages_2Mi, memory, pods):
+    def __init__(
+            self, cpu, ephemeral_storage, hugepages_1Gi, hugepages_2Mi, memory, pods
+    ):
         self.cpu = cpu
         self.ephemeral_storage = ephemeral_storage
         self.hugepages_1Gi = hugepages_1Gi
@@ -65,7 +69,7 @@ class KubeNodeCapacity:
         self.pods = pods
 
 
-class KubeNode():
+class KubeNode:
     def __init__(self, hostname, internal_ip, capacity):
         self.hostname = hostname
         self.internal_ip = internal_ip
@@ -73,8 +77,21 @@ class KubeNode():
 
 
 class KubePod:
-    def __init__(self, host_ip, pod_i_ps, phase, start_time, qos_class, image, image_id, name, namespace, labels, uid,
-                 containers):
+    def __init__(
+            self,
+            host_ip,
+            pod_i_ps,
+            phase,
+            start_time,
+            qos_class,
+            image,
+            image_id,
+            name,
+            namespace,
+            labels,
+            uid,
+            containers,
+    ):
         self.host_ip = host_ip
         self.pod_i_ps = pod_i_ps
         self.phase = phase
@@ -103,15 +120,21 @@ class KubeCluster:
         for node in nodes.items:
             addresses = node.status.addresses
             cap = node.status.capacity
-            capacity = KubeNodeCapacity(cap['cpu'], cap['ephemeral-storage'], cap['hugepages-1Gi'],
-                                        cap['hugepages-2Mi'], cap['memory'], cap['pods'])
+            capacity = KubeNodeCapacity(
+                cap["cpu"],
+                cap["ephemeral-storage"],
+                cap["hugepages-1Gi"],
+                cap["hugepages-2Mi"],
+                cap["memory"],
+                cap["pods"],
+            )
 
             hostname = None
             internal_ip = None
             for address in addresses:
-                if address.type == 'Hostname':
+                if address.type == "Hostname":
                     hostname = address.address
-                elif address.type == 'InternalIP':
+                elif address.type == "InternalIP":
                     internal_ip = address.address
             self.kube_nodes.append(KubeNode(hostname, internal_ip, capacity))
         pods = conn.list_pod_for_all_namespaces(watch=False)
@@ -143,7 +166,15 @@ class KubeCluster:
                         protocol = port.protocol
                         port_host_ip = port.host_ip
                         host_port = port.host_port
-                        ports.append(ContainerPort(container_port, port_name, protocol, port_host_ip, host_port))
+                        ports.append(
+                            ContainerPort(
+                                container_port,
+                                port_name,
+                                protocol,
+                                port_host_ip,
+                                host_port,
+                            )
+                        )
                 volumes = []
                 if container.volume_mounts:
                     for volume in container.volume_mounts:
@@ -152,11 +183,28 @@ class KubeCluster:
                         read_only = volume.read_only
                         volumes.append(ContainerVolume(mount_path, v_name, read_only))
 
-                containers.append(KubeContainer(env, c_image, command, image_pull_policy, c_name, ports, volumes))
+                containers.append(
+                    KubeContainer(
+                        env, c_image, command, image_pull_policy, c_name, ports, volumes
+                    )
+                )
 
             self.kube_pods.append(
-                KubePod(host_ip, pod_i_ps, phase, start_time, qos_class, image, image_id, name, namespace, labels, uid,
-                        containers))
+                KubePod(
+                    host_ip,
+                    pod_i_ps,
+                    phase,
+                    start_time,
+                    qos_class,
+                    image,
+                    image_id,
+                    name,
+                    namespace,
+                    labels,
+                    uid,
+                    containers,
+                )
+            )
 
     def values(self):
         "dict representing stored data"
@@ -177,13 +225,13 @@ def main(argv):
     "Entry point for main program"
     global cloud, outjson, indent
     global debug, ofile
-    timeout = 12
+    # timeout = 12
     conn = kubeconn(None, None, None)
     my_kube = KubeCluster(conn)
     if ofile == "/dev/stdout":
         print(my_kube, file=sys.stdout)
     else:
-        print(my_kube, file=open(ofile, 'a', encoding="UTF-8"))
+        print(my_kube, file=open(ofile, "a", encoding="UTF-8"))
 
 
 if __name__ == "__main__":

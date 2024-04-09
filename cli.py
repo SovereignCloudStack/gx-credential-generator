@@ -15,7 +15,6 @@ import sys
 
 import click
 import openstack as os
-import rdflib
 import yaml
 
 import generator.common.json_ld as json_ld
@@ -69,7 +68,6 @@ def openstack(cloud, timeout, config):
 
         props = json_ld.get_json_ld_context()
         props["@graph"] = creds
-        json_text = json.dumps(props, indent=4, default=json_ld.to_json_ld)
         print(json.dumps(props, indent=4, default=json_ld.to_json_ld))
 
 

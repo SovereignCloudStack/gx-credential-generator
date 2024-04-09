@@ -1,8 +1,6 @@
-import json
 import unittest
 from datetime import date, datetime
 
-from linkml_runtime.utils.metamodelcore import XSDDate
 from openstack.image.v2.image import Image as OS_Image
 
 from generator.common import const
@@ -25,7 +23,7 @@ from generator.common.gx_schema import (
 )
 from generator.common.gx_schema import VMImage as GX_Image
 from generator.common.gx_schema import WatchDogActions
-from generator.common.json_ld import JsonLdObject, get_json_ld_context, to_json_ld
+from generator.common.json_ld import JsonLdObject
 from generator.discovery.openstack.vm_images_discovery import VmDiscovery
 from tests.common import MockConnection, OpenstackTestcase, get_config
 
@@ -82,19 +80,25 @@ GX_IMAGE_1 = JsonLdObject(
             generation=None,
             defaultOversubscriptionRatio=None,
             supportedOversubscriptionRatio=None,
-            memorySize=MemorySize(value=1.048576, unit="https://qudt.org/vocab/unit/MegaBYTE"),
+            memorySize=MemorySize(
+                value=1.048576, unit="https://qudt.org/vocab/unit/MegaBYTE"
+            ),
             memoryClass="other",
             memoryRank="other",
             eccEnabled=False,
             hardwareEncryption=False,
         ),
-        videoRamSize=MemorySize(value=20.0, unit="https://qudt.org/vocab/unit/MegaBYTE"),
+        videoRamSize=MemorySize(
+            value=20.0, unit="https://qudt.org/vocab/unit/MegaBYTE"
+        ),
         rootDiskReq=Disk(
             vendor=None,
             generation=None,
             defaultOversubscriptionRatio=None,
             supportedOversubscriptionRatio=None,
-            diskSize=MemorySize(value=21.47483648, unit="https://qudt.org/vocab/unit/GigaBYTE"),
+            diskSize=MemorySize(
+                value=21.47483648, unit="https://qudt.org/vocab/unit/GigaBYTE"
+            ),
             diskType="other",
             diskBusType="SCSI",
         ),
@@ -220,8 +224,12 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
         self.assertEqual(VMDiskType("RAW"), self.discovery._get_disk_format(OS_Image()))
 
     def test_get_secure_boot(self):
-        self.assertTrue(self.discovery._get_secure_boot(OS_Image(needs_secure_boot=True)))
-        self.assertFalse(self.discovery._get_secure_boot(OS_Image(needs_secure_boot=False)))
+        self.assertTrue(
+            self.discovery._get_secure_boot(OS_Image(needs_secure_boot=True))
+        )
+        self.assertFalse(
+            self.discovery._get_secure_boot(OS_Image(needs_secure_boot=False))
+        )
         self.assertFalse(self.discovery._get_secure_boot(OS_Image()))
 
     def test_get_firmeware_type(self):
@@ -237,7 +245,9 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
             FirmType(FirmType.other),
             self.discovery._get_firme_ware_type(OS_Image(hw_firmware_type="foo")),
         )
-        self.assertEqual(FirmType(FirmType.other), self.discovery._get_firme_ware_type(OS_Image()))
+        self.assertEqual(
+            FirmType(FirmType.other), self.discovery._get_firme_ware_type(OS_Image())
+        )
 
     def test_get_watchdog_action(self):
         self.assertEqual(
@@ -272,28 +282,40 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
             CPU(cpuArchitecture="x86-64"),
             self.discovery._get_cpu_req(OS_Image(architecture="x86_64")),
         )
-        self.assertEqual(CPU(cpuArchitecture="other"), self.discovery._get_cpu_req(OS_Image()))
+        self.assertEqual(
+            CPU(cpuArchitecture="other"), self.discovery._get_cpu_req(OS_Image())
+        )
 
     def test_get_multiqueue_enabled(self):
         self.assertTrue(
-            self.discovery._get_multiqueue_enabled(OS_Image(is_hw_vif_multiqueue_enabled=True))
+            self.discovery._get_multiqueue_enabled(
+                OS_Image(is_hw_vif_multiqueue_enabled=True)
+            )
         )
         self.assertFalse(
-            self.discovery._get_multiqueue_enabled(OS_Image(is_hw_vif_multiqueue_enabled=False))
+            self.discovery._get_multiqueue_enabled(
+                OS_Image(is_hw_vif_multiqueue_enabled=False)
+            )
         )
         self.assertFalse(self.discovery._get_multiqueue_enabled(OS_Image()))
 
     def test_get_checksum(self):
         self.assertEqual(
-            CheckSum(checkSumValue="a123", checkSumCalculation=ChecksumAlgorithm("md5")),
+            CheckSum(
+                checkSumValue="a123", checkSumCalculation=ChecksumAlgorithm("md5")
+            ),
             self.discovery._get_checksum(OS_Image(hash_value="a123", hash_algo="md5")),
         )
         self.assertEqual(
-            CheckSum(checkSumValue="a123", checkSumCalculation=ChecksumAlgorithm("md5")),
+            CheckSum(
+                checkSumValue="a123", checkSumCalculation=ChecksumAlgorithm("md5")
+            ),
             self.discovery._get_checksum(OS_Image(hash_value="a123", hash_algo="MD5")),
         )
         self.assertEqual(
-            CheckSum(checkSumValue="a123", checkSumCalculation=ChecksumAlgorithm("other")),
+            CheckSum(
+                checkSumValue="a123", checkSumCalculation=ChecksumAlgorithm("other")
+            ),
             self.discovery._get_checksum(OS_Image(hash_value="a123", hash_algo="foo")),
         )
         self.assertIsNone(self.discovery._get_checksum(OS_Image()))
@@ -321,17 +343,19 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
         up_strat.oldVersionsValidUntil = date(2024, 1, 31)
         up_strat.providedUntil = date(2024, 1, 31)
 
-        self.assertEqual(
-            up_strat,
-            self.discovery._get_update_strategy(
-                OS_Image(
-                    replace_frequency="monthly",
-                    uuid_validity="2024-01-31",
-                    provided_until="2024-01-31",
-                    hotfix_hours=5,
-                )
+        (
+            self.assertEqual(
+                up_strat,
+                self.discovery._get_update_strategy(
+                    OS_Image(
+                        replace_frequency="monthly",
+                        uuid_validity="2024-01-31",
+                        provided_until="2024-01-31",
+                        hotfix_hours=5,
+                    )
+                ),
             ),
-        ),
+        )
 
         self.assertEqual(
             UpdateStrategy(
@@ -350,7 +374,9 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
             ),
         )
 
-        up_strat = UpdateStrategy(replaceFrequency="yearly", providedUntil="notice", hotfixHours=5)
+        up_strat = UpdateStrategy(
+            replaceFrequency="yearly", providedUntil="notice", hotfixHours=5
+        )
         up_strat.oldVersionsValidUntil = LatestN(value=3)
         self.assertEqual(
             up_strat,
@@ -409,17 +435,25 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
         self.assertIsNone(self.discovery._get_build_date(OS_Image()))
 
     def test_get_license_included(self):
-        self.assertTrue(self.discovery._get_license_included(OS_Image(licenseIncluded=True)))
-        self.assertFalse(self.discovery._get_license_included(OS_Image(licenseIncluded=False)))
+        self.assertTrue(
+            self.discovery._get_license_included(OS_Image(licenseIncluded=True))
+        )
+        self.assertFalse(
+            self.discovery._get_license_included(OS_Image(licenseIncluded=False))
+        )
         self.assertFalse(self.discovery._get_license_included(OS_Image()))
 
     def test_get_patch_level(self):
-        self.assertEqual("v1.2.0", self.discovery._get_patch_level(OS_Image(patchlevel="v1.2.0")))
+        self.assertEqual(
+            "v1.2.0", self.discovery._get_patch_level(OS_Image(patchlevel="v1.2.0"))
+        )
         self.assertIsNone(self.discovery._get_patch_level(OS_Image(propo1="foo")))
         self.assertIsNone(self.discovery._get_patch_level(OS_Image()))
 
     def test_get_version(self):
-        self.assertEqual("v1.2.0", self.discovery._get_version(OS_Image(internal_version="v1.2.0")))
+        self.assertEqual(
+            "v1.2.0", self.discovery._get_version(OS_Image(internal_version="v1.2.0"))
+        )
         self.assertIsNone(self.discovery._get_version(OS_Image()))
 
     def test_get_maintenance(self):
@@ -440,17 +474,23 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
             ),
         )
         self.assertEqual(
-            MaintenanceSubscription(subscriptionIncluded=True, subscriptionRequired=True),
+            MaintenanceSubscription(
+                subscriptionIncluded=True, subscriptionRequired=True
+            ),
             self.discovery._get_maintenance(
                 OS_Image(subscription_required=True, subscription_included=True)
             ),
         )
         self.assertEqual(
-            MaintenanceSubscription(subscriptionIncluded=False, subscriptionRequired=True),
+            MaintenanceSubscription(
+                subscriptionIncluded=False, subscriptionRequired=True
+            ),
             self.discovery._get_maintenance(OS_Image(subscription_required=True)),
         )
         self.assertEqual(
-            MaintenanceSubscription(subscriptionIncluded=False, subscriptionRequired=False),
+            MaintenanceSubscription(
+                subscriptionIncluded=False, subscriptionRequired=False
+            ),
             self.discovery._get_maintenance(OS_Image()),
         )
 
@@ -517,17 +557,23 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
                 memorySize=MemorySize(1.048576, unit=const.UNIT_MB),
                 hardwareEncryption=True,
             ),
-            self.discovery._get_min_ram_req(OS_Image(min_ram=1, hw_mem_encryption=True)),
+            self.discovery._get_min_ram_req(
+                OS_Image(min_ram=1, hw_mem_encryption=True)
+            ),
         )
         self.assertEqual(
-            Memory(memorySize=MemorySize(0, unit=const.UNIT_MB), hardwareEncryption=False),
+            Memory(
+                memorySize=MemorySize(0, unit=const.UNIT_MB), hardwareEncryption=False
+            ),
             self.discovery._get_min_ram_req(OS_Image(min_ram=0)),
         )
         self.assertIsNone(self.discovery._get_min_ram_req(OS_Image()))
 
     def test_get_min_disk_req(self):
         self.assertEqual(
-            Disk(diskSize=MemorySize(1.073741824, unit=const.UNIT_GB), diskBusType="SATA"),
+            Disk(
+                diskSize=MemorySize(1.073741824, unit=const.UNIT_GB), diskBusType="SATA"
+            ),
             self.discovery._get_min_disk_req(OS_Image(min_disk=1, hw_disk_bus="SATA")),
         )
         self.assertEqual(
@@ -545,7 +591,9 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
                 copyrightOwnedBy="Ian Murdock and others",
                 license=["https://www.debian.org/legal/licenses/index.en.html"],
             ),
-            self.discovery._get_operation_system(OS_Image(os_version="1", os_distro="debian")),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="debian")
+            ),
         )
         self.assertEqual(
             OperatingSystem(
@@ -555,7 +603,9 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
                 copyrightOwnedBy="The FreeBSD Project",
                 license=["GPL-3.0-only", "LGPL-2.0"],
             ),
-            self.discovery._get_operation_system(OS_Image(os_version="1", os_distro="FreeBSD")),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="FreeBSD")
+            ),
         )
 
 

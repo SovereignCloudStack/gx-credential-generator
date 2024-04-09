@@ -1,5 +1,5 @@
 from typing import List
-import os
+
 
 def _get_value(config, keys: List[str]):
     if not keys:
