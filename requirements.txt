@@ -121,7 +121,6 @@ jsonpointer==2.4
     #   jsonschema
 jsonschema[format]==4.21.1
     # via
-    #   jsonschema
     #   linkml
     #   linkml-runtime
 jsonschema-specifications==2023.12.1

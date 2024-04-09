@@ -4,6 +4,8 @@
 #
 #    pip-compile test-requirements.in
 #
+coverage==7.4.4
+    # via -r test-requirements.in
 exceptiongroup==1.2.0
     # via
     #   -c requirements.txt
