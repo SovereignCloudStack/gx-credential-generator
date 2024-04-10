@@ -18,6 +18,7 @@ from generator.common.gx_schema import (
     DiskType,
     Frequency,
     Hypervisor,
+    HypervisorType,
     Memory,
     MemorySize,
 )
@@ -28,10 +29,10 @@ from generator.vendor.flavor_names import Flavorname, parser_v3
 
 # map SCS hypervisor names to corresponding GX type and config key
 HYPERVISOR_LOOKUP = {
-    "kvm": ("KVM", const.CONFIG_HV_KVM),
-    "xen": ("Xen", const.CONFIG_HV_XEN),
-    "vmw": ("KVM", const.CONFIG_HV_VMW),  # FIXME is this correct?
-    "hyv": ("Hyper-V", const.CONFIG_HV_HYV),
+    "kvm": (HypervisorType.KVM, const.CONFIG_HV_KVM),
+    "xen": (HypervisorType.Xen, const.CONFIG_HV_XEN),
+    "vmw": (HypervisorType.other, const.CONFIG_HV_VMW),
+    "hyv": (getattr(HypervisorType, "Hyper-V"), const.CONFIG_HV_HYV),
 }
 # map SCS cpu vendor/architecture letter to architecture, vendor and list of generations
 CPUVENDOR_LOOKUP = {
