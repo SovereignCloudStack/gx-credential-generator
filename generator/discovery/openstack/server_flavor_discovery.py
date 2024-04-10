@@ -122,6 +122,7 @@ class ServerFlavorDiscovery:
         """
         cpu = CPU(cpuArchitecture=CpuArch.other, numberOfCores=os_flavor.vcpus)
         if flavorname:
+            cpu.numberOfCores = flavorname.cpuram.cpus
             cpu.smtEnabled = flavorname.cpuram.cputype != "C"  # FIXME this is unclear to me
             cpu.defaultOversubscriptionRatio = 1
             if flavorname.cpuram.cputype == "V":
@@ -141,6 +142,7 @@ class ServerFlavorDiscovery:
         size = MemorySize(value=float(os_flavor.ram), unit=const.UNIT_MB)
         mem = Memory(memorySize=size)
         if flavorname:
+            mem.memorySize.value = float(flavorname.cpuram.ram)
             mem.eccEnabled = not flavorname.cpuram.raminsecure
             if flavorname.cpuram.ramoversubscribed:
                 mem.defaultOversubscriptionRatio = 2
@@ -208,12 +210,12 @@ class ServerFlavorDiscovery:
             gx_flavor.cpu.cpuArchitecture = CpuArch(arch)
             if vendor is not None:
                 gx_flavor.cpu.vendor = vendor
-            idx = flavorname.cpubrand.generation
+            idx = flavorname.cpubrand.cpugen
             if idx is not None and idx < len(gens):
                 gx_flavor.cpu.generation = gens[idx]
             # parse frequency
-            if flavorname.perf:
-                freq = 0.5 * len(flavorname.perf) + 2.25
+            if flavorname.cpubrand.perf:
+                freq = 0.5 * len(flavorname.cpubrand.perf) + 2.25
                 gx_flavor.cpu.baseFrequency = Frequency(value=freq, unit=const.UNIT_GHZ)
 
     def _add_description(self, os_flavor: OS_Flavor, gx_flavor: GX_Flavor) -> None:
