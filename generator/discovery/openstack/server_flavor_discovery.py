@@ -224,7 +224,5 @@ class ServerFlavorDiscovery:
         @param gx_flavor Gaia-X flavor specification
         @type gx_flavor: ServerFlavor
         """
-        try:
-            gx_flavor.description = os_flavor.description
-        except KeyError:
-            pass
+        gx_flavor.description = os_flavor.description
+    

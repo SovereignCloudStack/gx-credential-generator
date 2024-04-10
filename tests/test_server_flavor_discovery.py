@@ -13,7 +13,7 @@ from generator.discovery.openstack.server_flavor_discovery import \
 from generator.vendor.flavor_names import Flavorname, parser_v3
 from tests.common import MockConnection, OpenstackTestcase, get_config
 
-OS_FLAVOR_1 = OS_Flavor(id="flavor_1", name="ABC", vcpus=2, ram=16, disk=0)
+OS_FLAVOR_1 = OS_Flavor(id="flavor_1", name="ABC", vcpus=2, ram=16, disk=0, description=None)
 OS_FLAVOR_2 = OS_Flavor(
     id="flavor_2", name="SCS-4L-32uo-3x50s_kvm_z3hh", vcpus=2, ram=16, disk=0
 )
@@ -129,12 +129,27 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
             self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C:10n", ram=32, disk=50)).bootVolume,
         )
 
-        # SCS compliant flavor name
+        # SCS compliant flavor names
         gx_flavor = self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C-4-2x10", disk=50))
         self.assertEqual(
             [
                 Disk(diskSize=MemorySize(value=10, unit=const.UNIT_GB)),
                 Disk(diskSize=MemorySize(value=10, unit=const.UNIT_GB)),
+            ],
+            [gx_flavor.bootVolume] + gx_flavor.additionalVolume,
+        )
+        gx_flavor = self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C-4-10p", disk=50))
+        self.assertEqual(
+            [
+                Disk(diskSize=MemorySize(value=10, unit=const.UNIT_GB), diskType=DiskType("local HDD"),
+                     diskBusType=DiskBusType.NVMe)
+            ],
+            [gx_flavor.bootVolume] + gx_flavor.additionalVolume,
+        )
+        gx_flavor = self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C-4-10h", disk=50))
+        self.assertEqual(
+            [
+                Disk(diskSize=MemorySize(value=10, unit=const.UNIT_GB), diskType=DiskType("local HDD"),)
             ],
             [gx_flavor.bootVolume] + gx_flavor.additionalVolume,
         )
@@ -257,14 +272,15 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
         gax_flavor_1 = self._init_gx_flavor(ram=16, disk=0, number_of_cores=2)
 
         gax_flavor_2 = self._init_gx_flavor(ram=16, disk=50, cpu_arc=CpuArch("x86-64"), cpu_vendor="AMD",
-                                            cpu_gen="Zen-3 (Milan)", cpu_freq=Frequency(value=3.25, unit=const.UNIT_GHZ), number_of_cores=2)
+                                            cpu_gen="Zen-3 (Milan)",
+                                            cpu_freq=Frequency(value=3.25, unit=const.UNIT_GHZ), number_of_cores=2)
         gax_flavor_2.cpu.defaultOversubscriptionRatio = 16
         gax_flavor_2.cpu.smtEnabled = True
         gax_flavor_2.ram.eccEnabled = False
         gax_flavor_2.ram.defaultOversubscriptionRatio = 2
         gax_flavor_2.bootVolume = Disk(
-                diskSize=MemorySize(value=50, unit=const.UNIT_GB),
-                diskType=DiskType("local SSD"))
+            diskSize=MemorySize(value=50, unit=const.UNIT_GB),
+            diskType=DiskType("local SSD"))
         gax_flavor_2.additionalVolume = [
             Disk(
                 diskSize=MemorySize(value=50, unit=const.UNIT_GB),
