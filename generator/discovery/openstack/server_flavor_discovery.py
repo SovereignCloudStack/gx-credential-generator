@@ -4,8 +4,7 @@
 SPDX-License-Identifier: EPL-2.0
 """
 
-import re
-from typing import List, Tuple, Optional
+from typing import List, Optional
 
 from openstack.compute.v2.flavor import Flavor as OS_Flavor
 from openstack.connection import Connection
@@ -16,7 +15,6 @@ from generator.common.gx_schema import CPU
 from generator.common.gx_schema import Architectures as CpuArch
 from generator.common.gx_schema import (
     Disk,
-    DiskBusType,
     DiskType,
     Frequency,
     Hypervisor,
@@ -31,9 +29,36 @@ from generator.vendor.flavor_names import Flavorname, parser_v3
 # map SCS hypervisor names to corresponding GX type and config key
 HYPERVISOR_LOOKUP = {
     "kvm": ("KVM", const.CONFIG_HV_KVM),
-    "xen": ("Xen", const.CONFIG_HV_XEN,
+    "xen": ("Xen", const.CONFIG_HV_XEN),
     "vmw": ("KVM", const.CONFIG_HV_VMW),  # FIXME is this correct?
     "hyv": ("Hyper-V", const.CONFIG_HV_HYV),
+}
+# map SCS cpu vendor/architecture letter to architecture, vendor and list of generations
+CPUVENDOR_LOOKUP = {
+    # Intel x86-64
+    "i": (
+        "x86-64",
+        "Intel",
+        ("pre Skylake", "Skylake", "Cascade Lake", "Ice Lake", "Sapphire Rapids"),
+    ),
+    # AMD (Zen) x86-64
+    "z": (
+        "x86-64",
+        "AMD",
+        ("pre Zen", "Zen-1 (Naples)", "Zen-2 (Rome)", "Zen-3 (Milan)", "Zen-4 (Genoa)"),
+    ),
+    # ARM v8+
+    "a": (
+        "AArch-64",
+        "ARM",
+        ("pre Cortex A76", "A76/NeoN1 class", "A78/x1/NeoV1 class", "A71x/NeoN2 (ARMv9)"),
+    ),
+    # RISC-V
+    "r": (
+        "RISC-V",
+        None,
+        (),
+    ),
 }
 
 
@@ -78,7 +103,7 @@ class ServerFlavorDiscovery:
         )
 
         if len(disks) > 1:
-            gx_flavor.additionalVolume = additionalVolume = disks[1:]
+            gx_flavor.additionalVolume = disks[1:]
 
         # Discover optional attributes
         self._parse_optional_flavor_properties(flavorname, gx_flavor)
@@ -178,56 +203,17 @@ class ServerFlavorDiscovery:
         if flavorname.hwvirt and flavorname.hwvirt.hwvirt:
             gx_flavor.hardwareAssistedVirtualization = True
         if flavorname.cpubrand:
-            if flavorname.cpubrand.cpuvendor == "i":
-                # Intel x86-64
-                gx_flavor.cpu.cpuArchitecture = CpuArch("x86-64")
-                gx_flavor.cpu.vendor = "Intel"
-                if flavorname.cpubrand.cpugen == 0:
-                    gx_flavor.cpu.generation = "pre Skylake"
-                elif flavorname.cpubrand.cpugen == 1:
-                    gx_flavor.cpu.generation = "Skylake"
-                elif flavorname.cpubrand.cpugen == 2:
-                    gx_flavor.cpu.generation = "Cascade Lake"
-                elif flavorname.cpubrand.cpugen == 3:
-                    gx_flavor.cpu.generation = "Ice Lake"
-                elif flavorname.cpubrand.cpugen == 4:
-                    gx_flavor.cpu.generation = "Ice Lake"  # FIXME is this correct? (Sapphire Rapids)
-            elif flavorname.cpubrand.cpuvendor == "z":
-                #  	AMD (Zen) x86-64
-                gx_flavor.cpu.cpuArchitecture = CpuArch("x86-64")
-                gx_flavor.cpu.vendor = "AMD"
-                if flavorname.cpubrand.cpugen == 0:
-                    gx_flavor.cpu.generation = "pre Zen"
-                elif flavorname.cpubrand.cpugen == 1:
-                    gx_flavor.cpu.generation = "Zen-1 (Naples)"
-                elif flavorname.cpubrand.cpugen == 2:
-                    gx_flavor.cpu.generation = "Zen-2 (Rome"  # FIXME is this correct? (closing paren)
-                elif flavorname.cpubrand.cpugen == 3:
-                    gx_flavor.cpu.generation = "Zen-3 (Milan)"
-                elif flavorname.cpubrand.cpugen == 4:
-                    gx_flavor.cpu.generation = "Zen-4 (Genoa)"
-            elif flavorname.cpubrand.cpuvendor == "a":
-                #  	ARM v8+
-                gx_flavor.cpu.cpuArchitecture = CpuArch("AArch-64")
-                gx_flavor.cpu.vendor = "ARM"
-                if flavorname.cpubrand.cpugen == 0:
-                    gx_flavor.cpu.generation = "pre Cortex A76"
-                elif flavorname.cpubrand.cpugen == 1:
-                    gx_flavor.cpu.generation = "A76/NeoN1 class"
-                elif flavorname.cpubrand.cpugen == 2:
-                    gx_flavor.cpu.generation = "A78/x1/NeoV1 class"
-                elif flavorname.cpubrand.cpugen == 3:
-                    gx_flavor.cpu.generation = "A71x/NeoN2 (ARMv9)"
-            elif flavorname.cpubrand.cpuvendor == "r":
-                #  	RISC-V
-                gx_flavor.cpu.cpuArchitecture = CpuArch("RISC-V")
+            arch, vendor, gens = CPUVENDOR_LOOKUP[flavorname.cpubrand.cpuvendor]
+            gx_flavor.cpu.cpuArchitecture = CpuArch(arch)
+            if vendor is not None:
+                gx_flavor.cpu.vendor = vendor
+            idx = flavorname.cpubrand.generation
+            if idx is not None and idx < len(gens):
+                gx_flavor.cpu.generation = gens[idx]
             # parse frequency
-            if suffix.perf == "hhh":
-                gx_flavor.cpu.baseFrequency = Frequency(value=3.75, unit=const.UNIT_GHZ)
-            elif suffix.perf == "hh":
-                gx_flavor.cpu.baseFrequency = Frequency(value=3.25, unit=const.UNIT_GHZ)
-            elif suffix.perf == "h":
-                gx_flavor.cpu.baseFrequency = Frequency(value=2.75, unit=const.UNIT_GHZ)
+            if flavorname.perf:
+                freq = 0.5 * len(flavorname.perf) + 2.25
+                gx_flavor.cpu.baseFrequency = Frequency(value=freq, unit=const.UNIT_GHZ)
 
     def _add_description(self, os_flavor: OS_Flavor, gx_flavor: GX_Flavor) -> None:
         """
