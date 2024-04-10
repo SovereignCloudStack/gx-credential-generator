@@ -41,6 +41,8 @@ jobs:
         run: |
           coverage run --omit=tests/*,generator/common/gx_schema.py,*__init__*,generator/vendor/* -m pytest tests
           coverage xml
+          coverage report -m
+        shell: bash
 
       - name: Code Coverage Report
         uses: codecov/codecov-action@v4
