@@ -122,7 +122,6 @@ class ServerFlavorDiscovery:
         """
         cpu = CPU(cpuArchitecture=CpuArch.other, numberOfCores=os_flavor.vcpus)
         if flavorname:
-            cpu.numberOfCores = flavorname.cpuram.cpus
             cpu.smtEnabled = flavorname.cpuram.cputype != "C"  # FIXME this is unclear to me
             cpu.defaultOversubscriptionRatio = 1
             if flavorname.cpuram.cputype == "V":
@@ -142,7 +141,6 @@ class ServerFlavorDiscovery:
         size = MemorySize(value=float(os_flavor.ram), unit=const.UNIT_MB)
         mem = Memory(memorySize=size)
         if flavorname:
-            mem.memorySize.value = float(flavorname.cpuram.ram)
             mem.eccEnabled = not flavorname.cpuram.raminsecure
             if flavorname.cpuram.ramoversubscribed:
                 mem.defaultOversubscriptionRatio = 2
