@@ -92,7 +92,7 @@ class ServerFlavorDiscovery:
 
         try:
             flavorname = parser_v3(os_flavor.name)
-        except ValueError:
+        except ValueError as e:
             flavorname = None
         # Initialize Gaia-X Server Flavor
         disks = self._get_disks(os_flavor, flavorname)

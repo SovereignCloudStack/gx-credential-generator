@@ -54,7 +54,7 @@ OS_IMAGE_1 = OS_Image(
 )
 
 OS_FLAVOR_1 = OS_Flavor(
-    id="flavor_2", name="SCS-4L-32uo-3x50s-_kvm_z3hh", vcpus=2, ram=16, disk=0
+    id="flavor_2", name="SCS-4L-32uo-3x50s_kvm_z3hh", vcpus=2, ram=16, disk=0
 )
 
 

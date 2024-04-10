@@ -27,93 +27,93 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
     def test_get_cpu(self):
         self.assertEqual(
             CPU(cpuArchitecture=CpuArch.other, numberOfCores=0),
-            self.discovery._convert_to_gx(OS_Flavor(name="ABC", ram=10)).cpu,
+            self.discovery._convert_to_gx(OS_Flavor(name="ABC")).cpu,
         )
         self.assertEqual(
             CPU(
                 cpuArchitecture=CpuArch.other,
                 defaultOversubscriptionRatio=1,
-                numberOfCores=2,
+                numberOfCores=4,
             ),
-            self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C-4", ram=10)).cpu,
+            self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C-4", vcpus=4)).cpu,
         )
         self.assertEqual(
             CPU(
                 cpuArchitecture=CpuArch.other,
                 defaultOversubscriptionRatio=1,
-                numberOfCores=2,
+                numberOfCores=4,
                 smtEnabled=True,
             ),
-            self.discovery._convert_to_gx(OS_Flavor(name="SCS-2T-4", ram=10)).cpu,
+            self.discovery._convert_to_gx(OS_Flavor(name="SCS-2T-4", vcpus=4)).cpu,
         )
         self.assertEqual(
             CPU(
                 cpuArchitecture=CpuArch.other,
                 defaultOversubscriptionRatio=5,
-                numberOfCores=2,
+                numberOfCores=4,
                 smtEnabled=True,
             ),
-            self.discovery._convert_to_gx(OS_Flavor(name="SCS-2V-4", ram=10)).cpu,
+            self.discovery._convert_to_gx(OS_Flavor(name="SCS-2V-4", vcpus=4)).cpu,
         )
         self.assertEqual(
             CPU(
                 cpuArchitecture=CpuArch.other,
                 defaultOversubscriptionRatio=16,
-                numberOfCores=2,
+                numberOfCores=4,
                 smtEnabled=True,
             ),
-            self.discovery._convert_to_gx(OS_Flavor(name="SCS-2L-4", ram=10)).cpu,
+            self.discovery._convert_to_gx(OS_Flavor(name="SCS-2L-4", vcpus=4)).cpu,
         )
         self.assertEqual(
             CPU(
                 cpuArchitecture=CpuArch.other,
-                numberOfCores=4,
+                numberOfCores=4
             ),
-            self.discovery._convert_to_gx(OS_Flavor(name="SCS-2:8", ram=10, vcpus=4)).cpu,
+            self.discovery._convert_to_gx(OS_Flavor(name="SCS-2:8", vcpus=4)).cpu,
         )
 
     def test_get_mem(self):
         self.assertEqual(
-            Memory(memorySize=MemorySize(value=4, unit=const.UNIT_MB)),
+            Memory(memorySize=MemorySize(value=10, unit=const.UNIT_MB), eccEnabled=True),
             self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C-4-10n", ram=10)).ram,
         )
         self.assertEqual(
-            Memory(memorySize=MemorySize(value=3.5, unit=const.UNIT_MB)),
+            Memory(memorySize=MemorySize(value=10, unit=const.UNIT_MB), eccEnabled=True),
             self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C-3.5-10n", ram=10)).ram,
         )
         self.assertEqual(
-            Memory(memorySize=MemorySize(value=4, unit=const.UNIT_MB), eccEnabled=True),
+            Memory(memorySize=MemorySize(value=10, unit=const.UNIT_MB), eccEnabled=False),
             self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C-4u-10n", ram=10)).ram,
         )
         self.assertEqual(
             Memory(
-                memorySize=MemorySize(value=4, unit=const.UNIT_MB),
+                memorySize=MemorySize(value=10, unit=const.UNIT_MB), eccEnabled=True,
                 defaultOversubscriptionRatio=2,
             ),
             self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C-4o-10n", ram=10)).ram,
         )
         self.assertEqual(
-            Memory(memorySize=MemorySize(value=10, unit=const.UNIT_MB)),
+            Memory(memorySize=MemorySize(value=10, unit=const.UNIT_MB), eccEnabled=False),
             self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C-4ou-10n", ram=10)).ram,
         )
         self.assertEqual(
             Memory(
-                memorySize=MemorySize(value=4, unit=const.UNIT_MB),
-                eccEnabled=True,
+                memorySize=MemorySize(value=10, unit=const.UNIT_MB),
+                eccEnabled=False,
                 defaultOversubscriptionRatio=2,
             ),
             self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C-4uo-10n", ram=10)).ram,
         )
         self.assertEqual(
-            Memory(memorySize=MemorySize(value=10, unit=const.UNIT_MB)),
+            Memory(memorySize=MemorySize(value=10, unit=const.UNIT_MB), eccEnabled=False),
             self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C_", ram=10)).ram,
         )
         self.assertEqual(
-            Memory(memorySize=MemorySize(value=10, unit=const.UNIT_MB)),
+            Memory(memorySize=MemorySize(value=10, unit=const.UNIT_MB), eccEnabled=False),
             self.discovery._convert_to_gx(OS_Flavor(name="SCS-2V:8", ram=10)).ram,
         )
         self.assertEqual(
-            Memory(memorySize=MemorySize(value=10, unit=const.UNIT_MB)),
+            Memory(memorySize=MemorySize(value=10, unit=const.UNIT_MB), eccEnabled=False),
             self.discovery._convert_to_gx(OS_Flavor(name="test", ram=10)).ram,
         )
 
@@ -256,8 +256,8 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
         # init expected objects
         gax_flavor_1 = self._init_gx_flavor(ram=16, disk=0, number_of_cores=2)
 
-        gax_flavor_2 = self._init_gx_flavor(ram=32, disk=50, cpu_arc=CpuArch("x86-64"), cpu_vendor="AMD",
-                                            cpu_gen="Zen-3 (Milan)", cpu_freq=Frequency(value=3.25, unit=const.UNIT_GHZ), number_of_cores=4)
+        gax_flavor_2 = self._init_gx_flavor(ram=16, disk=50, cpu_arc=CpuArch("x86-64"), cpu_vendor="AMD",
+                                            cpu_gen="Zen-3 (Milan)", cpu_freq=Frequency(value=3.25, unit=const.UNIT_GHZ), number_of_cores=2)
         gax_flavor_2.cpu.defaultOversubscriptionRatio = 16
         gax_flavor_2.cpu.smtEnabled = True
         gax_flavor_2.ram.eccEnabled = False
