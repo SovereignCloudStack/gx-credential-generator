@@ -39,9 +39,8 @@ jobs:
 
       - name: Test with pytest
         run: |
-          #pip install coverage
           coverage run --omit=tests/*,generator/common/gx_schema.py,*__init__*,generator/vendor/* -m pytest tests
-          coverage report xml
+          coverage xml
 
       - name: Code Coverage Report
         uses: codecov/codecov-action@v4
