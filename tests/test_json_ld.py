@@ -1,6 +1,6 @@
 import unittest
 
-from generator.common.gx_schema import GaiaX, GaiaXEntity, InstantiationRequirement, ServerFlavor
+from generator.common.gx_schema import GaiaX, GaiaXEntity, ServerFlavor
 from generator.common.json_ld import get_json_ld_types, get_slot_curie
 
 

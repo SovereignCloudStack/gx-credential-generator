@@ -8,6 +8,7 @@ DEFAULT_WATCHDOG_ACTION = "none"
 
 UNIT_MB = "https://qudt.org/vocab/unit/MegaBYTE"
 UNIT_GB = "https://qudt.org/vocab/unit/GigaBYTE"
+UNIT_GHZ = "https://qudt.org/vocab/unit/GigaHZ"
 
 CONFIG_VM_IMAGE = "vm image"
 CONFIG_RESOURCE_POLICY = "resource policy"
@@ -19,8 +20,10 @@ CONFIG_AGGREGATION_OF = "aggregation of"
 CONFIG_WALLETS = "wallets"
 CONFIG_DEFAULT = "default"
 CONFIG_CLOUD_RESOURCES = "cloud resources:"
+CONFIG_SOFTWARE = "software resources"
 CONFIG_FILESYSTEM_WALLET = "filesystem"
 CONFIG_XFSC_WALLET = "xfsc"
+
 
 CONFIG_OS_ALP = "Alpine Linux"
 CONFIG_OS_ARCH = "Arch Linux"
@@ -45,5 +48,13 @@ CONFIG_OS_UBUNTU = "Ubuntu"
 CONFIG_OS_WINDOWS = "Microsoft Windows"
 CONFIG_OS_CIRROS = "CirrOS"
 CONFIG_OS_ALMALINUX = "AlmaLinux"
+
+CONFIG_HV_KVM = "KVM"
+CONFIG_HV_QUEMU = "quemu"
+CONFIG_HV_XEN = "Xen"
+CONFIG_HV_ESXI = "ESXi"
+CONFIG_HV_CH = "Cloud Hypervisor"
+CONFIG_HV_VMW = "vmware"
+CONFIG_HV_HYV = "hyper-v"
 
 CONFIG_FILE = "config/config.yaml"

@@ -1,121 +1,146 @@
-default:
-  operating system:
-    Alpine Linux:
-      copyright owner: "Alpine Linux"
-      resource policy: "default: allow intent"
-      license:
-        - https://gitlab.alpinelinux.org/alpine/aports/-/issues/9074
-    Arch Linux:
-      copyright owner: "Judd Vinet, Aaron Griffin, Levente Polyák and others"
-      resource policy: "default: allow intent"
-      license:
-        - https://gitlab.archlinux.org/archlinux
-    CentOS Linux:
-      copyright owner: "The CentOS Project and others"
-      resource policy: "default: allow intent"
-      license:
-        - https://github.com/CentOS/
-    Debian:
-      copyright owner: "Ian Murdock and others"
-      resource policy: "default: allow intent"
-      license:
-        - https://www.debian.org/legal/licenses/index.en.html
-    Fedora:
-      copyright owner: "Fedora-Project"
-      resource policy: "default: allow intent"
-      license:
-        - https://docs.fedoraproject.org/en-US/legal/fedora-linux-license/
-    FreeBSD:
-      copyright owner: "The FreeBSD Project"
-      resource policy: "default: allow intent"
-      license:
-        - GPL-3.0-only
-        - LGPL-2.0
-    Gentoo Linux:
-      copyright owner: "Gentoo Foundation, Inc."
-      resource policy: "default: allow intent"
-      license:
-        - https://www.gentoo.org/glep/glep-0076.html
-    Mandrakelinux:
-      copyright owner: "Mandriva Linux"
-      resource policy: "default: allow intent"
-      license:
-        - GPL-3.0-only
-    Mandriva Linux:
-      copyright owner: "Mandriva S. A."
-      resource policy: "default: allow intent"
-      license:
-        - GPL-3.0-only
-    Mandriva Enterprise Server:
-      copyright owner: "Mandriva S. A."
-      resource policy: "default: allow intent"
-      license:
-        - GPL-3.0-only
-    MS-DOS:
-      copyright owner: "Microsoft Corporation"
-      resource policy: "default: allow intent"
-      license:
-        - https://www.microsoft.com/licensing/docs/view/Licensing-Guides
-    NetBSD:
-      copyright owner: "The NetBSD Foundation"
-      resource policy: "default: allow intent"
-      license:
-        - https://www.netbsd.org/about/redistribution.html
-    Novell NetWare:
-      copyright owner: "Micro Focus International"
-      resource policy: "default: allow intent"
-      license:
-        - https://support.novell.com/techcenter/articles/ana19960702.html
-    OpenBSD:
-      copyright owner: "OpenBSD"
-      resource policy: "default: allow intent"
-      license:
-        - https://www.openbsd.org/policy.html
-    OpenSolaris:
-      copyright owner: "Sun Microsystems"
-      resource policy: "default: allow intent"
-      license:
-        - https://opensource.apple.com/source/xnu/xnu-2050.7.9/tools/tests/libMicro/OPENSOLARIS.LICENSE.auto.html
-    openSUSE:
-      copyright owner: "openSUSE contributors & others"
-      resource policy: "default: allow intent"
-      license:
-        - https://en.opensuse.org/openSUSE:License
-    Rocky Linux:
-      copyright owner: "Rocky Enterprise Software Foundation"
-      resource policy: "default: allow intent"
-      license:
-         - https://rockylinux.org/licensing
-    Red Hat Enterprise Linux:
-      copyright owner: "Red Hat, Inc."
-      resource policy: "default: allow intent"
-      license:
-        - https://www.redhat.com/en/store/red-hat-enterprise-linux-server
-    SUSE Linux Enterprise Server:
-      copyright owner: "SUSE"
-      resource policy: "default: allow intent"
-      license:
-        - https://www.suse.com/products/terms_and_conditions.pdf
-    Ubuntu:
-      copyright owner: "Canonical"
-      resource policy: "default: allow intent"
-      license:
-        - https://ubuntu.com/legal/open-source-licences
-    Microsoft Windows:
-      copyright owner: "Microsoft Corporation"
-      resource policy: "default: allow intent"
-      license:
-        - https://www.microsoft.com/licensing
-    CirrOS:
-      copyright owner: "Canonical Ltd."
-      resource policy: "default: allow intent"
-      license:
-        - GPL-2.0-only
-    AlmaLinux:
-      copyright owner: "Canonical Ltd."
-      resource policy: "default: allow intent"
-      license:
-        - https://almalinux.org/p/the-almalinux-os-licensing-policy/
+software resources:
+  Alpine Linux:
+    copyright owner: "Alpine Linux"
+    resource policy: "default: allow intent"
+    license:
+      - https://gitlab.alpinelinux.org/alpine/aports/-/issues/9074
+  Arch Linux:
+    copyright owner: "Judd Vinet, Aaron Griffin, Levente Polyák and others"
+    resource policy: "default: allow intent"
+    license:
+      - https://gitlab.archlinux.org/archlinux
+  CentOS Linux:
+    copyright owner: "The CentOS Project and others"
+    resource policy: "default: allow intent"
+    license:
+      - https://github.com/CentOS/
+  Debian:
+    copyright owner: "Ian Murdock and others"
+    resource policy: "default: allow intent"
+    license:
+      - https://www.debian.org/legal/licenses/index.en.html
+  Fedora:
+    copyright owner: "Fedora-Project"
+    resource policy: "default: allow intent"
+    license:
+      - https://docs.fedoraproject.org/en-US/legal/fedora-linux-license/
+  FreeBSD:
+    copyright owner: "The FreeBSD Project"
+    resource policy: "default: allow intent"
+    license:
+      - GPL-3.0-only
+      - LGPL-2.0
+  Gentoo Linux:
+    copyright owner: "Gentoo Foundation, Inc."
+    resource policy: "default: allow intent"
+    license:
+      - https://www.gentoo.org/glep/glep-0076.html
+  Mandrakelinux:
+    copyright owner: "Mandriva Linux"
+    resource policy: "default: allow intent"
+    license:
+      - GPL-3.0-only
+  Mandriva Linux:
+    copyright owner: "Mandriva S. A."
+    resource policy: "default: allow intent"
+    license:
+      - GPL-3.0-only
+  Mandriva Enterprise Server:
+    copyright owner: "Mandriva S. A."
+    resource policy: "default: allow intent"
+    license:
+      - GPL-3.0-only
+  MS-DOS:
+    copyright owner: "Microsoft Corporation"
+    resource policy: "default: allow intent"
+    license:
+      - https://www.microsoft.com/licensing/docs/view/Licensing-Guides
+  NetBSD:
+    copyright owner: "The NetBSD Foundation"
+    resource policy: "default: allow intent"
+    license:
+      - https://www.netbsd.org/about/redistribution.html
+  Novell NetWare:
+    copyright owner: "Micro Focus International"
+    resource policy: "default: allow intent"
+    license:
+      - https://support.novell.com/techcenter/articles/ana19960702.html
+  OpenBSD:
+    copyright owner: "OpenBSD"
+    resource policy: "default: allow intent"
+    license:
+      - https://www.openbsd.org/policy.html
+  OpenSolaris:
+    copyright owner: "Sun Microsystems"
+    resource policy: "default: allow intent"
+    license:
+      - https://opensource.apple.com/source/xnu/xnu-2050.7.9/tools/tests/libMicro/OPENSOLARIS.LICENSE.auto.html
+  openSUSE:
+    copyright owner: "openSUSE contributors & others"
+    resource policy: "default: allow intent"
+    license:
+      - https://en.opensuse.org/openSUSE:License
+  Rocky Linux:
+    copyright owner: "Rocky Enterprise Software Foundation"
+    resource policy: "default: allow intent"
+    license:
+       - https://rockylinux.org/licensing
+  Red Hat Enterprise Linux:
+    copyright owner: "Red Hat, Inc."
+    resource policy: "default: allow intent"
+    license:
+      - https://www.redhat.com/en/store/red-hat-enterprise-linux-server
+  SUSE Linux Enterprise Server:
+    copyright owner: "SUSE"
+    resource policy: "default: allow intent"
+    license:
+      - https://www.suse.com/products/terms_and_conditions.pdf
+  Ubuntu:
+    copyright owner: "Canonical"
+    resource policy: "default: allow intent"
+    license:
+      - https://ubuntu.com/legal/open-source-licences
+  Microsoft Windows:
+    copyright owner: "Microsoft Corporation"
+    resource policy: "default: allow intent"
+    license:
+      - https://www.microsoft.com/licensing
+  CirrOS:
+    copyright owner: "Canonical Ltd."
+    resource policy: "default: allow intent"
+    license:
+      - GPL-2.0-only
+  AlmaLinux:
+    copyright owner: "Canonical Ltd."
+    resource policy: "default: allow intent"
+    license:
+      - https://almalinux.org/p/the-almalinux-os-licensing-policy/
+  Debian 11:
+    copyright owner: "AlmaLinux OS Foundation"
+    resource policy: "default: allow intent"
+    license:
+      - https://www.debian.org/legal/licenses/
+  KVM:
+    copyright owner: "Qumranet"
+    resource policy: "default: allow intent"
+    license:
+      - GPL-2.0-or-later
+      - LGPL-3.0-or-later
+  Xen:
+    copyright owner: "The Linux Foundation"
+    resource policy: "default: allow intent"
+    license:
+      - GPL-2.0
+  vmware:
+    copyright owner: "Broadcom"
+    resource policy: "default: allow intent"
+    license:
+      - https://www.vmware.com/support/support-resources/licensing.html
+  hyper-v:
+    copyright owner: "Microsoft Corporation"
+    resource policy: "default: allow intent"
+    license:
+      - https://www.microsoft.com/windows-server/pricing
 #cloud resources:
 #  own images:
 #    AlmaLinux 8:
