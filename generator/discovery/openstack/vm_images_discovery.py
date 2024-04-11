@@ -7,7 +7,6 @@
 (c) Anja Strunk <anja.strunk@cloudandheat.com>, 1/2024
 SPDX-License-Identifier: EPL-2.0
 """
-
 from datetime import datetime
 from typing import List, Union
 
@@ -121,7 +120,7 @@ class VmDiscovery:
         self.conf = conf
 
     # def collect_vm_images(self, conn: Connection) -> List[str]:
-    def discover_vm_images(self) -> List[JsonLdObject]:
+    def discover(self) -> List[JsonLdObject]:
         """
         Return one credential for each public VM image offered by openstack cloud.
 
@@ -578,8 +577,7 @@ class VmDiscovery:
     def _get_resource_policy_for_os(self, os: str) -> str:
         return self.conf.get_value(
             [
-                const.CONFIG_DEFAULT,
-                const.CONFIG_OPERATING_SYSTEM,
+                const.CONFIG_SOFTWARE,
                 os,
                 const.CONFIG_RESOURCE_POLICY,
             ]
@@ -588,8 +586,7 @@ class VmDiscovery:
     def _get_copyright_owner_for_os(self, os: str) -> List[str]:
         return self.conf.get_value(
             [
-                const.CONFIG_DEFAULT,
-                const.CONFIG_OPERATING_SYSTEM,
+                const.CONFIG_SOFTWARE,
                 os,
                 const.CONFIG_COPYRIGHT,
             ]
@@ -598,8 +595,7 @@ class VmDiscovery:
     def _get_license_for_os(self, os: str) -> List[str]:
         return self.conf.get_value(
             [
-                const.CONFIG_DEFAULT,
-                const.CONFIG_OPERATING_SYSTEM,
+                const.CONFIG_SOFTWARE,
                 os,
                 const.CONFIG_LICENSE,
             ]

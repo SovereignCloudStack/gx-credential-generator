@@ -188,7 +188,7 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
         )
 
     def test_discovery_vm_images(self):
-        actual_gax_images = self.discovery.discover_vm_images()
+        actual_gax_images = self.discovery.discover()
         self.assert_vm_image(GX_IMAGE_1.gx_object, actual_gax_images[0].gx_object)
         self.assert_vm_image(GX_IMAGE_2.gx_object, actual_gax_images[1].gx_object)
 

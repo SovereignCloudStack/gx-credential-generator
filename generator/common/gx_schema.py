@@ -26,7 +26,7 @@ from linkml_runtime.utils.metamodelcore import (URI, Bool, XSDDate,
                                                 empty_list)
 from linkml_runtime.utils.slot import Slot
 from linkml_runtime.utils.yamlutils import (YAMLRoot, extended_float,
-                                            extended_int, extended_str)
+                                           extended_int, extended_str)
 from rdflib import Namespace, URIRef
 
 metamodel_version = "1.7.0"
@@ -354,7 +354,9 @@ class Device(YAMLRoot):
         if self.supportedOversubscriptionRatio is not None and not isinstance(
             self.supportedOversubscriptionRatio, int
         ):
-            self.supportedOversubscriptionRatio = int(self.supportedOversubscriptionRatio)
+            self.supportedOversubscriptionRatio = int(
+                self.supportedOversubscriptionRatio
+            )
 
         super().__post_init__(**kwargs)
 
@@ -383,7 +385,9 @@ class CPU(Device):
     thermalDesignPower: Optional[Union[dict, "Power"]] = None
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
-        if self.cpuArchitecture is not None and not isinstance(self.cpuArchitecture, Architectures):
+        if self.cpuArchitecture is not None and not isinstance(
+            self.cpuArchitecture, Architectures
+        ):
             self.cpuArchitecture = Architectures(self.cpuArchitecture)
 
         if not isinstance(self.cpuFlag, list):
@@ -396,13 +400,19 @@ class CPU(Device):
         if self.numberOfCores is not None and not isinstance(self.numberOfCores, int):
             self.numberOfCores = int(self.numberOfCores)
 
-        if self.numberOfThreads is not None and not isinstance(self.numberOfThreads, int):
+        if self.numberOfThreads is not None and not isinstance(
+            self.numberOfThreads, int
+        ):
             self.numberOfThreads = int(self.numberOfThreads)
 
-        if self.baseFrequency is not None and not isinstance(self.baseFrequency, Frequency):
+        if self.baseFrequency is not None and not isinstance(
+            self.baseFrequency, Frequency
+        ):
             self.baseFrequency = Frequency(**as_dict(self.baseFrequency))
 
-        if self.boostFrequency is not None and not isinstance(self.boostFrequency, Frequency):
+        if self.boostFrequency is not None and not isinstance(
+            self.boostFrequency, Frequency
+        ):
             self.boostFrequency = Frequency(**as_dict(self.boostFrequency))
 
         if self.lastLevelCacheSize is not None and not isinstance(
@@ -410,7 +420,9 @@ class CPU(Device):
         ):
             self.lastLevelCacheSize = MemorySize(**as_dict(self.lastLevelCacheSize))
 
-        if self.thermalDesignPower is not None and not isinstance(self.thermalDesignPower, Power):
+        if self.thermalDesignPower is not None and not isinstance(
+            self.thermalDesignPower, Power
+        ):
             self.thermalDesignPower = Power(**as_dict(self.thermalDesignPower))
 
         super().__post_init__(**kwargs)
@@ -442,7 +454,9 @@ class Disk(Device):
         if self.diskType is not None and not isinstance(self.diskType, DiskType):
             self.diskType = DiskType(self.diskType)
 
-        if self.diskBusType is not None and not isinstance(self.diskBusType, DiskBusType):
+        if self.diskBusType is not None and not isinstance(
+            self.diskBusType, DiskBusType
+        ):
             self.diskBusType = DiskBusType(self.diskBusType)
 
         super().__post_init__(**kwargs)
@@ -480,7 +494,9 @@ class Endpoint(YAMLRoot):
         if self.endpointURL is not None and not isinstance(self.endpointURL, URI):
             self.endpointURL = URI(self.endpointURL)
 
-        if self.formalDescription is not None and not isinstance(self.formalDescription, str):
+        if self.formalDescription is not None and not isinstance(
+            self.formalDescription, str
+        ):
             self.formalDescription = str(self.formalDescription)
 
         super().__post_init__(**kwargs)
@@ -513,10 +529,14 @@ class GPU(Device):
         ):
             self.gpuInterconnection = GPUInterconnetionTypes(self.gpuInterconnection)
 
-        if self.gpuProcessingUnits is not None and not isinstance(self.gpuProcessingUnits, int):
+        if self.gpuProcessingUnits is not None and not isinstance(
+            self.gpuProcessingUnits, int
+        ):
             self.gpuProcessingUnits = int(self.gpuProcessingUnits)
 
-        if self.gpuPassthrough is not None and not isinstance(self.gpuPassthrough, Bool):
+        if self.gpuPassthrough is not None and not isinstance(
+            self.gpuPassthrough, Bool
+        ):
             self.gpuPassthrough = Bool(self.gpuPassthrough)
 
         super().__post_init__(**kwargs)
@@ -550,7 +570,9 @@ class MaintenanceSubscription(YAMLRoot):
         ):
             self.subscriptionRequired = Bool(self.subscriptionRequired)
 
-        if self.maintainedUntil is not None and not isinstance(self.maintainedUntil, XSDDate):
+        if self.maintainedUntil is not None and not isinstance(
+            self.maintainedUntil, XSDDate
+        ):
             self.maintainedUntil = XSDDate(self.maintainedUntil)
 
         super().__post_init__(**kwargs)
@@ -652,7 +674,9 @@ class Issuer(YAMLRoot):
         if self._is_empty(self.issuerTermsAndConditions):
             self.MissingRequiredField("issuerTermsAndConditions")
         if not isinstance(self.issuerTermsAndConditions, GaiaXTermsAndConditions):
-            self.issuerTermsAndConditions = GaiaXTermsAndConditions(self.issuerTermsAndConditions)
+            self.issuerTermsAndConditions = GaiaXTermsAndConditions(
+                self.issuerTermsAndConditions
+            )
 
         super().__post_init__(**kwargs)
 
@@ -796,7 +820,9 @@ class Memory(Device):
         if not isinstance(self.memorySize, MemorySize):
             self.memorySize = MemorySize(**as_dict(self.memorySize))
 
-        if self.memoryClass is not None and not isinstance(self.memoryClass, MemoryClasses):
+        if self.memoryClass is not None and not isinstance(
+            self.memoryClass, MemoryClasses
+        ):
             self.memoryClass = MemoryClasses(self.memoryClass)
 
         if self.memoryRank is not None and not isinstance(self.memoryRank, MemoryRanks):
@@ -805,7 +831,9 @@ class Memory(Device):
         if self.eccEnabled is not None and not isinstance(self.eccEnabled, Bool):
             self.eccEnabled = Bool(self.eccEnabled)
 
-        if self.hardwareEncryption is not None and not isinstance(self.hardwareEncryption, Bool):
+        if self.hardwareEncryption is not None and not isinstance(
+            self.hardwareEncryption, Bool
+        ):
             self.hardwareEncryption = Bool(self.hardwareEncryption)
 
         super().__post_init__(**kwargs)
@@ -1035,7 +1063,11 @@ class LegalPerson(Participant):
                 [self.registrationNumber] if self.registrationNumber is not None else []
             )
         self.registrationNumber = [
-            v if isinstance(v, LegalPersonRegistrationNumber) else LegalPersonRegistrationNumber(v)
+            (
+                v
+                if isinstance(v, LegalPersonRegistrationNumber)
+                else LegalPersonRegistrationNumber(v)
+            )
             for v in self.registrationNumber
         ]
 
@@ -1051,10 +1083,16 @@ class LegalPerson(Participant):
 
         if not isinstance(self.parentOrganizationOf, list):
             self.parentOrganizationOf = (
-                [self.parentOrganizationOf] if self.parentOrganizationOf is not None else []
+                [self.parentOrganizationOf]
+                if self.parentOrganizationOf is not None
+                else []
             )
         self.parentOrganizationOf = [
-            v if isinstance(v, LegalPersonRegistrationNumber) else LegalPersonRegistrationNumber(v)
+            (
+                v
+                if isinstance(v, LegalPersonRegistrationNumber)
+                else LegalPersonRegistrationNumber(v)
+            )
             for v in self.parentOrganizationOf
         ]
 
@@ -1063,7 +1101,11 @@ class LegalPerson(Participant):
                 [self.subOrganisationOf] if self.subOrganisationOf is not None else []
             )
         self.subOrganisationOf = [
-            v if isinstance(v, LegalPersonRegistrationNumber) else LegalPersonRegistrationNumber(v)
+            (
+                v
+                if isinstance(v, LegalPersonRegistrationNumber)
+                else LegalPersonRegistrationNumber(v)
+            )
             for v in self.subOrganisationOf
         ]
 
@@ -1089,7 +1131,9 @@ class Resource(GaiaXEntity):
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if not isinstance(self.aggregationOfResources, list):
             self.aggregationOfResources = (
-                [self.aggregationOfResources] if self.aggregationOfResources is not None else []
+                [self.aggregationOfResources]
+                if self.aggregationOfResources is not None
+                else []
             )
         self.aggregationOfResources = [
             v if isinstance(v, str) else str(v) for v in self.aggregationOfResources
@@ -1123,7 +1167,9 @@ class VirtualResource(Resource):
             self.copyrightOwnedBy = (
                 [self.copyrightOwnedBy] if self.copyrightOwnedBy is not None else []
             )
-        self.copyrightOwnedBy = [v if isinstance(v, str) else str(v) for v in self.copyrightOwnedBy]
+        self.copyrightOwnedBy = [
+            v if isinstance(v, str) else str(v) for v in self.copyrightOwnedBy
+        ]
 
         if self._is_empty(self.license):
             self.MissingRequiredField("license")
@@ -1134,8 +1180,12 @@ class VirtualResource(Resource):
         if self._is_empty(self.resourcePolicy):
             self.MissingRequiredField("resourcePolicy")
         if not isinstance(self.resourcePolicy, list):
-            self.resourcePolicy = [self.resourcePolicy] if self.resourcePolicy is not None else []
-        self.resourcePolicy = [v if isinstance(v, str) else str(v) for v in self.resourcePolicy]
+            self.resourcePolicy = (
+                [self.resourcePolicy] if self.resourcePolicy is not None else []
+            )
+        self.resourcePolicy = [
+            v if isinstance(v, str) else str(v) for v in self.resourcePolicy
+        ]
 
         super().__post_init__(**kwargs)
 
@@ -1176,9 +1226,15 @@ class PhysicalResource(Resource):
         if self._is_empty(self.maintainedBy):
             self.MissingRequiredField("maintainedBy")
         if not isinstance(self.maintainedBy, list):
-            self.maintainedBy = [self.maintainedBy] if self.maintainedBy is not None else []
+            self.maintainedBy = (
+                [self.maintainedBy] if self.maintainedBy is not None else []
+            )
         self.maintainedBy = [
-            v if isinstance(v, LegalPersonRegistrationNumber) else LegalPersonRegistrationNumber(v)
+            (
+                v
+                if isinstance(v, LegalPersonRegistrationNumber)
+                else LegalPersonRegistrationNumber(v)
+            )
             for v in self.maintainedBy
         ]
 
@@ -1191,14 +1247,24 @@ class PhysicalResource(Resource):
         if not isinstance(self.ownedBy, list):
             self.ownedBy = [self.ownedBy] if self.ownedBy is not None else []
         self.ownedBy = [
-            v if isinstance(v, LegalPersonRegistrationNumber) else LegalPersonRegistrationNumber(v)
+            (
+                v
+                if isinstance(v, LegalPersonRegistrationNumber)
+                else LegalPersonRegistrationNumber(v)
+            )
             for v in self.ownedBy
         ]
 
         if not isinstance(self.manufacturedBy, list):
-            self.manufacturedBy = [self.manufacturedBy] if self.manufacturedBy is not None else []
+            self.manufacturedBy = (
+                [self.manufacturedBy] if self.manufacturedBy is not None else []
+            )
         self.manufacturedBy = [
-            v if isinstance(v, LegalPersonRegistrationNumber) else LegalPersonRegistrationNumber(v)
+            (
+                v
+                if isinstance(v, LegalPersonRegistrationNumber)
+                else LegalPersonRegistrationNumber(v)
+            )
             for v in self.manufacturedBy
         ]
 
@@ -1315,7 +1381,9 @@ class Image(CodeArtifact):
         if self.ramReq is not None and not isinstance(self.ramReq, Memory):
             self.ramReq = Memory(**as_dict(self.ramReq))
 
-        if self.videoRamSize is not None and not isinstance(self.videoRamSize, MemorySize):
+        if self.videoRamSize is not None and not isinstance(
+            self.videoRamSize, MemorySize
+        ):
             self.videoRamSize = MemorySize(**as_dict(self.videoRamSize))
 
         if self.rootDiskReq is not None and not isinstance(self.rootDiskReq, Disk):
@@ -1336,10 +1404,14 @@ class Image(CodeArtifact):
         if self.multiQueues is not None and not isinstance(self.multiQueues, Bool):
             self.multiQueues = Bool(self.multiQueues)
 
-        if self.updateStrategy is not None and not isinstance(self.updateStrategy, UpdateStrategy):
+        if self.updateStrategy is not None and not isinstance(
+            self.updateStrategy, UpdateStrategy
+        ):
             self.updateStrategy = UpdateStrategy(**as_dict(self.updateStrategy))
 
-        if self.licenseIncluded is not None and not isinstance(self.licenseIncluded, Bool):
+        if self.licenseIncluded is not None and not isinstance(
+            self.licenseIncluded, Bool
+        ):
             self.licenseIncluded = Bool(self.licenseIncluded)
 
         if self.maintenance is not None and not isinstance(
@@ -1482,8 +1554,12 @@ class ServiceOffering(GaiaXEntity):
         if self._is_empty(self.servicePolicy):
             self.MissingRequiredField("servicePolicy")
         if not isinstance(self.servicePolicy, list):
-            self.servicePolicy = [self.servicePolicy] if self.servicePolicy is not None else []
-        self.servicePolicy = [v if isinstance(v, str) else str(v) for v in self.servicePolicy]
+            self.servicePolicy = (
+                [self.servicePolicy] if self.servicePolicy is not None else []
+            )
+        self.servicePolicy = [
+            v if isinstance(v, str) else str(v) for v in self.servicePolicy
+        ]
 
         if self._is_empty(self.dataAccountExport):
             self.MissingRequiredField("dataAccountExport")
@@ -1500,7 +1576,9 @@ class ServiceOffering(GaiaXEntity):
 
         if not isinstance(self.aggregationOfResources, list):
             self.aggregationOfResources = (
-                [self.aggregationOfResources] if self.aggregationOfResources is not None else []
+                [self.aggregationOfResources]
+                if self.aggregationOfResources is not None
+                else []
             )
         self.aggregationOfResources = [
             v if isinstance(v, str) else str(v) for v in self.aggregationOfResources
@@ -1508,10 +1586,16 @@ class ServiceOffering(GaiaXEntity):
 
         if not isinstance(self.dataProtectionRegime, list):
             self.dataProtectionRegime = (
-                [self.dataProtectionRegime] if self.dataProtectionRegime is not None else []
+                [self.dataProtectionRegime]
+                if self.dataProtectionRegime is not None
+                else []
             )
         self.dataProtectionRegime = [
-            v if isinstance(v, PersonalDataProtectionRegime) else PersonalDataProtectionRegime(v)
+            (
+                v
+                if isinstance(v, PersonalDataProtectionRegime)
+                else PersonalDataProtectionRegime(v)
+            )
             for v in self.dataProtectionRegime
         ]
 
@@ -1519,7 +1603,9 @@ class ServiceOffering(GaiaXEntity):
             self.keyword = [self.keyword] if self.keyword is not None else []
         self.keyword = [v if isinstance(v, str) else str(v) for v in self.keyword]
 
-        if self.provisionType is not None and not isinstance(self.provisionType, ProvisionTypes):
+        if self.provisionType is not None and not isinstance(
+            self.provisionType, ProvisionTypes
+        ):
             self.provisionType = ProvisionTypes(self.provisionType)
 
         if self.endpoint is not None and not isinstance(self.endpoint, Endpoint):
@@ -1608,7 +1694,9 @@ class VirtualMachineServiceOffering(ComputeServiceOffering):
         Union[dict, "DataAccountExport"], List[Union[dict, "DataAccountExport"]]
     ] = None
     codeArtifact: Union[Union[dict, "VMImage"], List[Union[dict, "VMImage"]]] = None
-    instantiationReq: Union[Union[dict, "ServerFlavor"], List[Union[dict, "ServerFlavor"]]] = None
+    instantiationReq: Union[
+        Union[dict, "ServerFlavor"], List[Union[dict, "ServerFlavor"]]
+    ] = None
     servicePolicy: Union[str, List[str]] = "default:allow intent"
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
@@ -1653,7 +1741,9 @@ class ContainerServiceOffering(ComputeServiceOffering):
     dataAccountExport: Union[
         Union[dict, "DataAccountExport"], List[Union[dict, "DataAccountExport"]]
     ] = None
-    codeArtifact: Union[Union[dict, "ContainerImage"], List[Union[dict, "ContainerImage"]]] = None
+    codeArtifact: Union[
+        Union[dict, "ContainerImage"], List[Union[dict, "ContainerImage"]]
+    ] = None
     instantiationReq: Union[
         Union[dict, "ContainerResourceLimits"],
         List[Union[dict, "ContainerResourceLimits"]],
@@ -1703,7 +1793,9 @@ class BareMetalServiceOffering(ComputeServiceOffering):
         Union[dict, "DataAccountExport"], List[Union[dict, "DataAccountExport"]]
     ] = None
     codeArtifact: Union[Union[dict, PXEImage], List[Union[dict, PXEImage]]] = None
-    instantiationReq: Union[Union[dict, "ServerFlavor"], List[Union[dict, "ServerFlavor"]]] = None
+    instantiationReq: Union[
+        Union[dict, "ServerFlavor"], List[Union[dict, "ServerFlavor"]]
+    ] = None
     servicePolicy: Union[str, List[str]] = "default:allow intent"
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
@@ -1854,7 +1946,9 @@ class DataResource(VirtualResource):
     dataController: Optional[
         Union[Union[dict, Participant], List[Union[dict, Participant]]]
     ] = empty_list()
-    consent: Optional[Union[Union[dict, "Consent"], List[Union[dict, "Consent"]]]] = empty_list()
+    consent: Optional[Union[Union[dict, "Consent"], List[Union[dict, "Consent"]]]] = (
+        empty_list()
+    )
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self._is_empty(self.producedBy):
@@ -1865,9 +1959,15 @@ class DataResource(VirtualResource):
         if self._is_empty(self.exposedThrough):
             self.MissingRequiredField("exposedThrough")
         if not isinstance(self.exposedThrough, list):
-            self.exposedThrough = [self.exposedThrough] if self.exposedThrough is not None else []
+            self.exposedThrough = (
+                [self.exposedThrough] if self.exposedThrough is not None else []
+            )
         self.exposedThrough = [
-            v if isinstance(v, DataExchangeComponent) else DataExchangeComponent(**as_dict(v))
+            (
+                v
+                if isinstance(v, DataExchangeComponent)
+                else DataExchangeComponent(**as_dict(v))
+            )
             for v in self.exposedThrough
         ]
 
@@ -1876,7 +1976,9 @@ class DataResource(VirtualResource):
         if not isinstance(self.containsPII, Bool):
             self.containsPII = Bool(self.containsPII)
 
-        if self.obsoleteDateTime is not None and not isinstance(self.obsoleteDateTime, XSDDateTime):
+        if self.obsoleteDateTime is not None and not isinstance(
+            self.obsoleteDateTime, XSDDateTime
+        ):
             self.obsoleteDateTime = XSDDateTime(self.obsoleteDateTime)
 
         if self.expirationDateTime is not None and not isinstance(
@@ -1885,7 +1987,9 @@ class DataResource(VirtualResource):
             self.expirationDateTime = XSDDateTime(self.expirationDateTime)
 
         if not isinstance(self.dataController, list):
-            self.dataController = [self.dataController] if self.dataController is not None else []
+            self.dataController = (
+                [self.dataController] if self.dataController is not None else []
+            )
         self.dataController = [
             v if isinstance(v, Participant) else Participant(**as_dict(v))
             for v in self.dataController
@@ -1949,7 +2053,8 @@ class Consent(YAMLRoot):
                 else []
             )
         self.consentWithdrawalContactPoint = [
-            v if isinstance(v, str) else str(v) for v in self.consentWithdrawalContactPoint
+            v if isinstance(v, str) else str(v)
+            for v in self.consentWithdrawalContactPoint
         ]
 
         super().__post_init__(**kwargs)
@@ -2009,7 +2114,9 @@ class Datacenter(PhysicalResource):
             self.MissingRequiredField("aggregationOfResources")
         if not isinstance(self.aggregationOfResources, list):
             self.aggregationOfResources = (
-                [self.aggregationOfResources] if self.aggregationOfResources is not None else []
+                [self.aggregationOfResources]
+                if self.aggregationOfResources is not None
+                else []
             )
         self.aggregationOfResources = [
             v if isinstance(v, AvailabilityZone) else AvailabilityZone(**as_dict(v))
@@ -2032,7 +2139,9 @@ class Region(Resource):
     class_name: ClassVar[str] = "Region"
     class_model_uri: ClassVar[URIRef] = GX.Region
 
-    aggregationOfResources: Union[Union[dict, Datacenter], List[Union[dict, Datacenter]]] = None
+    aggregationOfResources: Union[
+        Union[dict, Datacenter], List[Union[dict, Datacenter]]
+    ] = None
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self._is_empty(self.aggregationOfResources):
@@ -2070,7 +2179,9 @@ class ContainerImage(Image):
         if self._is_empty(self.baseContainerImage):
             self.MissingRequiredField("baseContainerImage")
         if not isinstance(self.baseContainerImage, BaseContainerImage):
-            self.baseContainerImage = BaseContainerImage(**as_dict(self.baseContainerImage))
+            self.baseContainerImage = BaseContainerImage(
+                **as_dict(self.baseContainerImage)
+            )
 
         if self._is_empty(self.containerFormat):
             self.MissingRequiredField("containerFormat")
@@ -2133,7 +2244,9 @@ class ContainerResourceLimits(InstantiationRequirement):
     memoryLimit: Optional[Union[dict, MemorySize]] = None
     gpuRequirements: Optional[Union[dict, GPU]] = None
     gpuLimit: Optional[int] = None
-    confidentialComputingTechnology: Optional[Union[dict, "ConfidentialComputing"]] = None
+    confidentialComputingTechnology: Optional[Union[dict, "ConfidentialComputing"]] = (
+        None
+    )
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self._is_empty(self.confidential):
@@ -2141,19 +2254,29 @@ class ContainerResourceLimits(InstantiationRequirement):
         if not isinstance(self.confidential, Bool):
             self.confidential = Bool(self.confidential)
 
-        if self.cpuRequirements is not None and not isinstance(self.cpuRequirements, CPU):
+        if self.cpuRequirements is not None and not isinstance(
+            self.cpuRequirements, CPU
+        ):
             self.cpuRequirements = CPU(**as_dict(self.cpuRequirements))
 
-        if self.numberOfCoresLimit is not None and not isinstance(self.numberOfCoresLimit, int):
+        if self.numberOfCoresLimit is not None and not isinstance(
+            self.numberOfCoresLimit, int
+        ):
             self.numberOfCoresLimit = int(self.numberOfCoresLimit)
 
-        if self.memoryRequirements is not None and not isinstance(self.memoryRequirements, Memory):
+        if self.memoryRequirements is not None and not isinstance(
+            self.memoryRequirements, Memory
+        ):
             self.memoryRequirements = Memory(**as_dict(self.memoryRequirements))
 
-        if self.memoryLimit is not None and not isinstance(self.memoryLimit, MemorySize):
+        if self.memoryLimit is not None and not isinstance(
+            self.memoryLimit, MemorySize
+        ):
             self.memoryLimit = MemorySize(**as_dict(self.memoryLimit))
 
-        if self.gpuRequirements is not None and not isinstance(self.gpuRequirements, GPU):
+        if self.gpuRequirements is not None and not isinstance(
+            self.gpuRequirements, GPU
+        ):
             self.gpuRequirements = GPU(**as_dict(self.gpuRequirements))
 
         if self.gpuLimit is not None and not isinstance(self.gpuLimit, int):
@@ -2195,7 +2318,9 @@ class DataProtectionPolicy(YAMLRoot):
         if self._is_empty(self.protectionRetention):
             self.MissingRequiredField("protectionRetention")
         if not isinstance(self.protectionRetention, RetentionDuration):
-            self.protectionRetention = RetentionDuration(**as_dict(self.protectionRetention))
+            self.protectionRetention = RetentionDuration(
+                **as_dict(self.protectionRetention)
+            )
 
         if self.protectionMethod is not None and not isinstance(
             self.protectionMethod, ProtectionMethod
@@ -2229,9 +2354,12 @@ class BackupPolicy(DataProtectionPolicy):
         if self._is_empty(self.backupLocation):
             self.MissingRequiredField("backupLocation")
         if not isinstance(self.backupLocation, list):
-            self.backupLocation = [self.backupLocation] if self.backupLocation is not None else []
+            self.backupLocation = (
+                [self.backupLocation] if self.backupLocation is not None else []
+            )
         self.backupLocation = [
-            v if isinstance(v, Resource) else Resource(**as_dict(v)) for v in self.backupLocation
+            v if isinstance(v, Resource) else Resource(**as_dict(v))
+            for v in self.backupLocation
         ]
 
         self._normalize_inlined_as_dict(
@@ -2293,7 +2421,9 @@ class ReplicationPolicy(DataProtectionPolicy):
     consistencyType: Optional[Union[str, "ConsistencyType"]] = None
     replicaNumber: Optional[Union[int, List[int]]] = empty_list()
     geoReplication: Optional[
-        Union[Union[str, "GeoReplicationScope"], List[Union[str, "GeoReplicationScope"]]]
+        Union[
+            Union[str, "GeoReplicationScope"], List[Union[str, "GeoReplicationScope"]]
+        ]
     ] = empty_list()
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
@@ -2308,11 +2438,17 @@ class ReplicationPolicy(DataProtectionPolicy):
             self.consistencyType = ConsistencyType(self.consistencyType)
 
         if not isinstance(self.replicaNumber, list):
-            self.replicaNumber = [self.replicaNumber] if self.replicaNumber is not None else []
-        self.replicaNumber = [v if isinstance(v, int) else int(v) for v in self.replicaNumber]
+            self.replicaNumber = (
+                [self.replicaNumber] if self.replicaNumber is not None else []
+            )
+        self.replicaNumber = [
+            v if isinstance(v, int) else int(v) for v in self.replicaNumber
+        ]
 
         if not isinstance(self.geoReplication, list):
-            self.geoReplication = [self.geoReplication] if self.geoReplication is not None else []
+            self.geoReplication = (
+                [self.geoReplication] if self.geoReplication is not None else []
+            )
         self.geoReplication = [
             v if isinstance(v, GeoReplicationScope) else GeoReplicationScope(v)
             for v in self.geoReplication
@@ -2343,7 +2479,9 @@ class QoSMetric(YAMLRoot):
         if not isinstance(self.metric, Quantity):
             self.metric = Quantity(**as_dict(self.metric))
 
-        if self.guaranteed is not None and not isinstance(self.guaranteed, FloatPercentage):
+        if self.guaranteed is not None and not isinstance(
+            self.guaranteed, FloatPercentage
+        ):
             self.guaranteed = FloatPercentage(**as_dict(self.guaranteed))
 
         super().__post_init__(**kwargs)
@@ -2368,10 +2506,14 @@ class StorageQoS(YAMLRoot):
     storageAvailability: Optional[Union[dict, FloatPercentage]] = None
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
-        if self.storageThroughput is not None and not isinstance(self.storageThroughput, QoSMetric):
+        if self.storageThroughput is not None and not isinstance(
+            self.storageThroughput, QoSMetric
+        ):
             self.storageThroughput = QoSMetric(**as_dict(self.storageThroughput))
 
-        if self.storageLatency is not None and not isinstance(self.storageLatency, QoSMetric):
+        if self.storageLatency is not None and not isinstance(
+            self.storageLatency, QoSMetric
+        ):
             self.storageLatency = QoSMetric(**as_dict(self.storageLatency))
 
         if self.storageIOPS is not None and not isinstance(self.storageIOPS, QoSMetric):
@@ -2380,7 +2522,9 @@ class StorageQoS(YAMLRoot):
         if self.storageAvailability is not None and not isinstance(
             self.storageAvailability, FloatPercentage
         ):
-            self.storageAvailability = FloatPercentage(**as_dict(self.storageAvailability))
+            self.storageAvailability = FloatPercentage(
+                **as_dict(self.storageAvailability)
+            )
 
         super().__post_init__(**kwargs)
 
@@ -2398,12 +2542,18 @@ class StorageConfiguration(InstantiationRequirement):
     class_name: ClassVar[str] = "StorageConfiguration"
     class_model_uri: ClassVar[URIRef] = GX.StorageConfiguration
 
-    storageEncryption: Union[Union[dict, Encryption], List[Union[dict, Encryption]]] = None
+    storageEncryption: Union[Union[dict, Encryption], List[Union[dict, Encryption]]] = (
+        None
+    )
     storageCompression: Optional[
-        Union[Union[str, "CompressionAlgorithm"], List[Union[str, "CompressionAlgorithm"]]]
+        Union[
+            Union[str, "CompressionAlgorithm"], List[Union[str, "CompressionAlgorithm"]]
+        ]
     ] = empty_list()
     storageDeduplication: Optional[
-        Union[Union[str, "DeduplicationMethod"], List[Union[str, "DeduplicationMethod"]]]
+        Union[
+            Union[str, "DeduplicationMethod"], List[Union[str, "DeduplicationMethod"]]
+        ]
     ] = empty_list()
     storageRedundancyMechanism: Optional[
         Union[
@@ -2412,7 +2562,9 @@ class StorageConfiguration(InstantiationRequirement):
         ]
     ] = empty_list()
     storageProtection: Optional[
-        Union[Union[dict, DataProtectionPolicy], List[Union[dict, DataProtectionPolicy]]]
+        Union[
+            Union[dict, DataProtectionPolicy], List[Union[dict, DataProtectionPolicy]]
+        ]
     ] = empty_list()
     storageQoS: Optional[
         Union[Union[dict, StorageQoS], List[Union[dict, StorageQoS]]]
@@ -2442,7 +2594,9 @@ class StorageConfiguration(InstantiationRequirement):
 
         if not isinstance(self.storageDeduplication, list):
             self.storageDeduplication = (
-                [self.storageDeduplication] if self.storageDeduplication is not None else []
+                [self.storageDeduplication]
+                if self.storageDeduplication is not None
+                else []
             )
         self.storageDeduplication = [
             v if isinstance(v, DeduplicationMethod) else DeduplicationMethod(v)
@@ -2456,7 +2610,11 @@ class StorageConfiguration(InstantiationRequirement):
                 else []
             )
         self.storageRedundancyMechanism = [
-            v if isinstance(v, StorageRedundancyMechanism) else StorageRedundancyMechanism(v)
+            (
+                v
+                if isinstance(v, StorageRedundancyMechanism)
+                else StorageRedundancyMechanism(v)
+            )
             for v in self.storageRedundancyMechanism
         ]
 
@@ -2470,7 +2628,8 @@ class StorageConfiguration(InstantiationRequirement):
         if not isinstance(self.storageQoS, list):
             self.storageQoS = [self.storageQoS] if self.storageQoS is not None else []
         self.storageQoS = [
-            v if isinstance(v, StorageQoS) else StorageQoS(**as_dict(v)) for v in self.storageQoS
+            v if isinstance(v, StorageQoS) else StorageQoS(**as_dict(v))
+            for v in self.storageQoS
         ]
 
         self._normalize_inlined_as_dict(
@@ -2493,7 +2652,9 @@ class FileStorageConfiguration(StorageConfiguration):
     class_name: ClassVar[str] = "FileStorageConfiguration"
     class_model_uri: ClassVar[URIRef] = GX.FileStorageConfiguration
 
-    storageEncryption: Union[Union[dict, Encryption], List[Union[dict, Encryption]]] = None
+    storageEncryption: Union[Union[dict, Encryption], List[Union[dict, Encryption]]] = (
+        None
+    )
     fileSystemType: Optional[
         Union[Union[str, "FileSystemType"], List[Union[str, "FileSystemType"]]]
     ] = empty_list()
@@ -2503,14 +2664,19 @@ class FileStorageConfiguration(StorageConfiguration):
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if not isinstance(self.fileSystemType, list):
-            self.fileSystemType = [self.fileSystemType] if self.fileSystemType is not None else []
+            self.fileSystemType = (
+                [self.fileSystemType] if self.fileSystemType is not None else []
+            )
         self.fileSystemType = [
-            v if isinstance(v, FileSystemType) else FileSystemType(v) for v in self.fileSystemType
+            v if isinstance(v, FileSystemType) else FileSystemType(v)
+            for v in self.fileSystemType
         ]
 
         if not isinstance(self.highLevelAccessProtocol, list):
             self.highLevelAccessProtocol = (
-                [self.highLevelAccessProtocol] if self.highLevelAccessProtocol is not None else []
+                [self.highLevelAccessProtocol]
+                if self.highLevelAccessProtocol is not None
+                else []
             )
         self.highLevelAccessProtocol = [
             v if isinstance(v, FileAccessProtocol) else FileAccessProtocol(v)
@@ -2533,7 +2699,9 @@ class BlockStorageConfiguration(StorageConfiguration):
     class_name: ClassVar[str] = "BlockStorageConfiguration"
     class_model_uri: ClassVar[URIRef] = GX.BlockStorageConfiguration
 
-    storageEncryption: Union[Union[dict, Encryption], List[Union[dict, Encryption]]] = None
+    storageEncryption: Union[Union[dict, Encryption], List[Union[dict, Encryption]]] = (
+        None
+    )
     blockStorageTechnology: Optional[
         Union[
             Union[str, "BlockStorageTechnology"],
@@ -2541,13 +2709,17 @@ class BlockStorageConfiguration(StorageConfiguration):
         ]
     ] = empty_list()
     lowLevelBlockAccessProtocol: Optional[
-        Union[Union[str, "BlockAccessProtocol"], List[Union[str, "BlockAccessProtocol"]]]
+        Union[
+            Union[str, "BlockAccessProtocol"], List[Union[str, "BlockAccessProtocol"]]
+        ]
     ] = empty_list()
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if not isinstance(self.blockStorageTechnology, list):
             self.blockStorageTechnology = (
-                [self.blockStorageTechnology] if self.blockStorageTechnology is not None else []
+                [self.blockStorageTechnology]
+                if self.blockStorageTechnology is not None
+                else []
             )
         self.blockStorageTechnology = [
             v if isinstance(v, BlockStorageTechnology) else BlockStorageTechnology(v)
@@ -2602,15 +2774,23 @@ class StorageServiceOffering(InfrastructureServiceOffering):
         if self._is_empty(self.storageConfiguration):
             self.MissingRequiredField("storageConfiguration")
         if not isinstance(self.storageConfiguration, StorageConfiguration):
-            self.storageConfiguration = StorageConfiguration(**as_dict(self.storageConfiguration))
+            self.storageConfiguration = StorageConfiguration(
+                **as_dict(self.storageConfiguration)
+            )
 
-        if self.minimumSize is not None and not isinstance(self.minimumSize, MemorySize):
+        if self.minimumSize is not None and not isinstance(
+            self.minimumSize, MemorySize
+        ):
             self.minimumSize = MemorySize(**as_dict(self.minimumSize))
 
-        if self.maximumSize is not None and not isinstance(self.maximumSize, MemorySize):
+        if self.maximumSize is not None and not isinstance(
+            self.maximumSize, MemorySize
+        ):
             self.maximumSize = MemorySize(**as_dict(self.maximumSize))
 
-        if self.lifetimeManagement is not None and not isinstance(self.lifetimeManagement, int):
+        if self.lifetimeManagement is not None and not isinstance(
+            self.lifetimeManagement, int
+        ):
             self.lifetimeManagement = int(self.lifetimeManagement)
 
         if self.versioning is not None and not isinstance(self.versioning, Bool):
@@ -2665,7 +2845,9 @@ class FileStorageServiceOffering(StorageServiceOffering):
                 **as_dict(self.storageConfiguration)
             )
 
-        if self.accessSemantics is not None and not isinstance(self.accessSemantics, Bool):
+        if self.accessSemantics is not None and not isinstance(
+            self.accessSemantics, Bool
+        ):
             self.accessSemantics = Bool(self.accessSemantics)
 
         if not isinstance(self.accessAttributes, list):
@@ -2761,10 +2943,13 @@ class ObjectStorageServiceOffering(StorageServiceOffering):
 
         if not isinstance(self.objectAPICompatibility, list):
             self.objectAPICompatibility = (
-                [self.objectAPICompatibility] if self.objectAPICompatibility is not None else []
+                [self.objectAPICompatibility]
+                if self.objectAPICompatibility is not None
+                else []
             )
         self.objectAPICompatibility = [
-            v if isinstance(v, StorageAPI) else StorageAPI(v) for v in self.objectAPICompatibility
+            v if isinstance(v, StorageAPI) else StorageAPI(v)
+            for v in self.objectAPICompatibility
         ]
 
         super().__post_init__(**kwargs)
@@ -2798,16 +2983,24 @@ class VMImage(Image):
         ):
             self.vmImageDiskFormat = VMDiskType(self.vmImageDiskFormat)
 
-        if self.hypervisorType is not None and not isinstance(self.hypervisorType, HypervisorType):
+        if self.hypervisorType is not None and not isinstance(
+            self.hypervisorType, HypervisorType
+        ):
             self.hypervisorType = HypervisorType(self.hypervisorType)
 
-        if self.firmwareType is not None and not isinstance(self.firmwareType, FirmType):
+        if self.firmwareType is not None and not isinstance(
+            self.firmwareType, FirmType
+        ):
             self.firmwareType = FirmType(self.firmwareType)
 
-        if self.hwRngTypeOfImage is not None and not isinstance(self.hwRngTypeOfImage, RNGTypes):
+        if self.hwRngTypeOfImage is not None and not isinstance(
+            self.hwRngTypeOfImage, RNGTypes
+        ):
             self.hwRngTypeOfImage = RNGTypes(self.hwRngTypeOfImage)
 
-        if self.watchDogAction is not None and not isinstance(self.watchDogAction, WatchDogActions):
+        if self.watchDogAction is not None and not isinstance(
+            self.watchDogAction, WatchDogActions
+        ):
             self.watchDogAction = WatchDogActions(self.watchDogAction)
 
         super().__post_init__(**kwargs)
@@ -2832,7 +3025,9 @@ class ServerFlavor(InstantiationRequirement):
     bootVolume: Union[dict, Disk] = None
     gpu: Optional[Union[dict, GPU]] = None
     network: Optional[str] = None
-    additionalVolume: Optional[Union[Union[dict, Disk], List[Union[dict, Disk]]]] = empty_list()
+    additionalVolume: Optional[Union[Union[dict, Disk], List[Union[dict, Disk]]]] = (
+        empty_list()
+    )
     confidentialComputing: Optional[Union[dict, "ConfidentialComputing"]] = None
     hypervisor: Optional[Union[dict, Hypervisor]] = None
     hardwareAssistedVirtualization: Optional[Union[bool, Bool]] = False
@@ -2860,12 +3055,12 @@ class ServerFlavor(InstantiationRequirement):
         if self.network is not None and not isinstance(self.network, str):
             self.network = str(self.network)
 
-        self._normalize_inlined_as_dict(
-            slot_name="additionalVolume",
-            slot_type=Disk,
-            key_name="diskSize",
-            keyed=False,
-        )
+        # self._normalize_inlined_as_dict(
+        #    slot_name="additionalVolume",
+        #    slot_type=Disk,
+        #    key_name="diskSize",
+        #    keyed=False,
+        # )
 
         if self.confidentialComputing is not None and not isinstance(
             self.confidentialComputing, ConfidentialComputing
@@ -2880,9 +3075,13 @@ class ServerFlavor(InstantiationRequirement):
         if self.hardwareAssistedVirtualization is not None and not isinstance(
             self.hardwareAssistedVirtualization, Bool
         ):
-            self.hardwareAssistedVirtualization = Bool(self.hardwareAssistedVirtualization)
+            self.hardwareAssistedVirtualization = Bool(
+                self.hardwareAssistedVirtualization
+            )
 
-        if self.hwRngTypeOfFlavor is not None and not isinstance(self.hwRngTypeOfFlavor, RNGTypes):
+        if self.hwRngTypeOfFlavor is not None and not isinstance(
+            self.hwRngTypeOfFlavor, RNGTypes
+        ):
             self.hwRngTypeOfFlavor = RNGTypes(self.hwRngTypeOfFlavor)
 
         super().__post_init__(**kwargs)
@@ -2921,7 +3120,9 @@ class CountryNameAlpha2(EnumDefinitionImpl):
     AX = PermissibleValue(text="AX", description="Alpha2 code for Aland Islands.")
     AL = PermissibleValue(text="AL", description="Alpha2 code for Albania.")
     DZ = PermissibleValue(text="DZ", description="Alpha2 code for Algeria.")
-    VI = PermissibleValue(text="VI", description="Alpha2 code for Virgin Islands (U.S.).")
+    VI = PermissibleValue(
+        text="VI", description="Alpha2 code for Virgin Islands (U.S.)."
+    )
     UM = PermissibleValue(
         text="UM",
         description="Alpha2 code for United States Minor Outlying Islands (the).",
@@ -2933,7 +3134,9 @@ class CountryNameAlpha2(EnumDefinitionImpl):
     AQ = PermissibleValue(text="AQ", description="Alpha2 code for Antarctica.")
     AG = PermissibleValue(text="AG", description="Alpha2 code for Antigua and Barbuda.")
     GQ = PermissibleValue(text="GQ", description="Alpha2 code for Equatorial Guinea.")
-    SY = PermissibleValue(text="SY", description="Alpha2 code for Syrian Arab Republic.")
+    SY = PermissibleValue(
+        text="SY", description="Alpha2 code for Syrian Arab Republic."
+    )
     AR = PermissibleValue(text="AR", description="Alpha2 code for Argentina.")
     AM = PermissibleValue(text="AM", description="Alpha2 code for Armenia.")
     AW = PermissibleValue(text="AW", description="Alpha2 code for Aruba.")
@@ -2955,11 +3158,15 @@ class CountryNameAlpha2(EnumDefinitionImpl):
     BQ = PermissibleValue(
         text="BQ", description="Alpha2 code for Bonaire, Sint Eustatius and Saba."
     )
-    BA = PermissibleValue(text="BA", description="Alpha2 code for Bosnia and Herzegovina.")
+    BA = PermissibleValue(
+        text="BA", description="Alpha2 code for Bosnia and Herzegovina."
+    )
     BW = PermissibleValue(text="BW", description="Alpha2 code for Botswana.")
     BV = PermissibleValue(text="BV", description="Alpha2 code for Bouvet Island.")
     BR = PermissibleValue(text="BR", description="Alpha2 code for Brazil.")
-    VG = PermissibleValue(text="VG", description="Alpha2 code for Virgin Islands (British).")
+    VG = PermissibleValue(
+        text="VG", description="Alpha2 code for Virgin Islands (British)."
+    )
     IO = PermissibleValue(
         text="IO", description="Alpha2 code for British Indian Ocean Territory (the)."
     )
@@ -2987,10 +3194,14 @@ class CountryNameAlpha2(EnumDefinitionImpl):
     )
     DE = PermissibleValue(text="DE", description="Alpha2 code for Germany.")
     DM = PermissibleValue(text="DM", description="Alpha2 code for Dominica.")
-    DO = PermissibleValue(text="DO", description="Alpha2 code for Dominican Republic (the).")
+    DO = PermissibleValue(
+        text="DO", description="Alpha2 code for Dominican Republic (the)."
+    )
     DJ = PermissibleValue(text="DJ", description="Alpha2 code for Djibouti.")
     EC = PermissibleValue(text="EC", description="Alpha2 code for Ecuador.")
-    MK = PermissibleValue(text="MK", description="Alpha2 code for Republic of North Macedonia.")
+    MK = PermissibleValue(
+        text="MK", description="Alpha2 code for Republic of North Macedonia."
+    )
     SV = PermissibleValue(text="SV", description="Alpha2 code for El Salvador.")
     ER = PermissibleValue(text="ER", description="Alpha2 code for Eritrea.")
     EE = PermissibleValue(text="EE", description="Alpha2 code for Estonia.")
@@ -3035,7 +3246,9 @@ class CountryNameAlpha2(EnumDefinitionImpl):
     IM = PermissibleValue(text="IM", description="Alpha2 code for Isle of Man.")
     IQ = PermissibleValue(text="IQ", description="Alpha2 code for Iraq.")
     IE = PermissibleValue(text="IE", description="Alpha2 code for Ireland.")
-    IR = PermissibleValue(text="IR", description="Alpha2 code for Iran (Islamic Republic of).")
+    IR = PermissibleValue(
+        text="IR", description="Alpha2 code for Iran (Islamic Republic of)."
+    )
     IS = PermissibleValue(text="IS", description="Alpha2 code for Iceland.")
     IL = PermissibleValue(text="IL", description="Alpha2 code for Israel.")
     IT = PermissibleValue(text="IT", description="Alpha2 code for Italy.")
@@ -3044,7 +3257,9 @@ class CountryNameAlpha2(EnumDefinitionImpl):
     YE = PermissibleValue(text="YE", description="Alpha2 code for Yemen.")
     JE = PermissibleValue(text="JE", description="Alpha2 code for Jersey.")
     JO = PermissibleValue(text="JO", description="Alpha2 code for Jordan.")
-    KY = PermissibleValue(text="KY", description="Alpha2 code for Cayman Islands (the).")
+    KY = PermissibleValue(
+        text="KY", description="Alpha2 code for Cayman Islands (the)."
+    )
     KH = PermissibleValue(text="KH", description="Alpha2 code for Cambodia.")
     CM = PermissibleValue(text="CM", description="Alpha2 code for Cameroon.")
     CA = PermissibleValue(text="CA", description="Alpha2 code for Canada.")
@@ -3053,7 +3268,9 @@ class CountryNameAlpha2(EnumDefinitionImpl):
     KE = PermissibleValue(text="KE", description="Alpha2 code for Kenya.")
     KG = PermissibleValue(text="KG", description="Alpha2 code for Kyrgyzstan.")
     KI = PermissibleValue(text="KI", description="Alpha2 code for Kiribati.")
-    CC = PermissibleValue(text="CC", description="Alpha2 code for Cocos (Keeling) Islands (the).")
+    CC = PermissibleValue(
+        text="CC", description="Alpha2 code for Cocos (Keeling) Islands (the)."
+    )
     CO = PermissibleValue(text="CO", description="Alpha2 code for Colombia.")
     KM = PermissibleValue(text="KM", description="Alpha2 code for Comoros (the).")
     CG = PermissibleValue(text="CG", description="Alpha2 code for Congo (the).")
@@ -3075,9 +3292,13 @@ class CountryNameAlpha2(EnumDefinitionImpl):
     MV = PermissibleValue(text="MV", description="Alpha2 code for Maldives.")
     ML = PermissibleValue(text="ML", description="Alpha2 code for Mali.")
     MT = PermissibleValue(text="MT", description="Alpha2 code for Malta.")
-    MP = PermissibleValue(text="MP", description="Alpha2 code for Northern Mariana Islands (the).")
+    MP = PermissibleValue(
+        text="MP", description="Alpha2 code for Northern Mariana Islands (the)."
+    )
     MA = PermissibleValue(text="MA", description="Alpha2 code for Morocco.")
-    MH = PermissibleValue(text="MH", description="Alpha2 code for Marshall Islands (the).")
+    MH = PermissibleValue(
+        text="MH", description="Alpha2 code for Marshall Islands (the)."
+    )
     MQ = PermissibleValue(text="MQ", description="Alpha2 code for Martinique.")
     MR = PermissibleValue(text="MR", description="Alpha2 code for Mauritania.")
     MU = PermissibleValue(text="MU", description="Alpha2 code for Mauritius.")
@@ -3117,17 +3338,25 @@ class CountryNameAlpha2(EnumDefinitionImpl):
     PL = PermissibleValue(text="PL", description="Alpha2 code for Poland.")
     PT = PermissibleValue(text="PT", description="Alpha2 code for Portugal.")
     PR = PermissibleValue(text="PR", description="Alpha2 code for Puerto Rico.")
-    KR = PermissibleValue(text="KR", description="Alpha2 code for Korea (the Republic of).")
-    MD = PermissibleValue(text="MD", description="Alpha2 code for Moldova (the Republic of).")
+    KR = PermissibleValue(
+        text="KR", description="Alpha2 code for Korea (the Republic of)."
+    )
+    MD = PermissibleValue(
+        text="MD", description="Alpha2 code for Moldova (the Republic of)."
+    )
     RE = PermissibleValue(text="RE", description="Alpha2 code for Reunion.")
     RW = PermissibleValue(text="RW", description="Alpha2 code for Rwanda.")
     RO = PermissibleValue(text="RO", description="Alpha2 code for Romania.")
-    RU = PermissibleValue(text="RU", description="Alpha2 code for Russian Federation (the).")
+    RU = PermissibleValue(
+        text="RU", description="Alpha2 code for Russian Federation (the)."
+    )
     SB = PermissibleValue(text="SB", description="Alpha2 code for Solomon Islands.")
     ZM = PermissibleValue(text="ZM", description="Alpha2 code for Zambia.")
     WS = PermissibleValue(text="WS", description="Alpha2 code for Samoa.")
     SM = PermissibleValue(text="SM", description="Alpha2 code for San Marino.")
-    ST = PermissibleValue(text="ST", description="Alpha2 code for Sao Tome and Principe.")
+    ST = PermissibleValue(
+        text="ST", description="Alpha2 code for Sao Tome and Principe."
+    )
     SA = PermissibleValue(text="SA", description="Alpha2 code for Saudi Arabia.")
     SE = PermissibleValue(text="SE", description="Alpha2 code for Sweden.")
     CH = PermissibleValue(text="CH", description="Alpha2 code for Switzerland.")
@@ -3147,11 +3376,19 @@ class CountryNameAlpha2(EnumDefinitionImpl):
         text="SH",
         description="Alpha2 code for Saint Helena, Ascension and Tristan da Cunha.",
     )
-    KN = PermissibleValue(text="KN", description="Alpha2 code for Saint Kitts and Nevis.")
+    KN = PermissibleValue(
+        text="KN", description="Alpha2 code for Saint Kitts and Nevis."
+    )
     LC = PermissibleValue(text="LC", description="Alpha2 code for Saint Lucia.")
-    MF = PermissibleValue(text="MF", description="Alpha2 code for Saint Martin (French part).")
-    SX = PermissibleValue(text="SX", description="Alpha2 code for Sint Maarten (Dutch part).")
-    PM = PermissibleValue(text="PM", description="Alpha2 code for Saint Pierre and Miquelon.")
+    MF = PermissibleValue(
+        text="MF", description="Alpha2 code for Saint Martin (French part)."
+    )
+    SX = PermissibleValue(
+        text="SX", description="Alpha2 code for Sint Maarten (Dutch part)."
+    )
+    PM = PermissibleValue(
+        text="PM", description="Alpha2 code for Saint Pierre and Miquelon."
+    )
     VC = PermissibleValue(
         text="VC", description="Alpha2 code for Saint Vincent and the Grenadines."
     )
@@ -3163,10 +3400,14 @@ class CountryNameAlpha2(EnumDefinitionImpl):
     )
     SS = PermissibleValue(text="SS", description="Alpha2 code for South Sudan.")
     SR = PermissibleValue(text="SR", description="Alpha2 code for Suriname.")
-    SJ = PermissibleValue(text="SJ", description="Alpha2 code for Svalbard and Jan Mayen.")
+    SJ = PermissibleValue(
+        text="SJ", description="Alpha2 code for Svalbard and Jan Mayen."
+    )
     SZ = PermissibleValue(text="SZ", description="Alpha2 code for Eswatini.")
     TJ = PermissibleValue(text="TJ", description="Alpha2 code for Tajikistan.")
-    TW = PermissibleValue(text="TW", description="Alpha2 code for Taiwan (Province of China).")
+    TW = PermissibleValue(
+        text="TW", description="Alpha2 code for Taiwan (Province of China)."
+    )
     TH = PermissibleValue(text="TH", description="Alpha2 code for Thailand.")
     TL = PermissibleValue(text="TL", description="Alpha2 code for Timor-Leste.")
     TG = PermissibleValue(text="TG", description="Alpha2 code for Togo.")
@@ -3178,7 +3419,9 @@ class CountryNameAlpha2(EnumDefinitionImpl):
     TN = PermissibleValue(text="TN", description="Alpha2 code for Tunisia.")
     TR = PermissibleValue(text="TR", description="Alpha2 code for Turkey.")
     TM = PermissibleValue(text="TM", description="Alpha2 code for Turkmenistan.")
-    TC = PermissibleValue(text="TC", description="Alpha2 code for Turks and Caicos Islands (the).")
+    TC = PermissibleValue(
+        text="TC", description="Alpha2 code for Turks and Caicos Islands (the)."
+    )
     TV = PermissibleValue(text="TV", description="Alpha2 code for Tuvalu.")
     UG = PermissibleValue(text="UG", description="Alpha2 code for Uganda.")
     UA = PermissibleValue(text="UA", description="Alpha2 code for Ukraine.")
@@ -3187,9 +3430,15 @@ class CountryNameAlpha2(EnumDefinitionImpl):
     UZ = PermissibleValue(text="UZ", description="Alpha2 code for Uzbekistan.")
     VU = PermissibleValue(text="VU", description="Alpha2 code for Vanuatu.")
     VA = PermissibleValue(text="VA", description="Alpha2 code for Holy See (the).")
-    AE = PermissibleValue(text="AE", description="Alpha2 code for United Arab Emirates (the).")
-    TZ = PermissibleValue(text="TZ", description="Alpha2 code for Tanzania, United Republic of.")
-    US = PermissibleValue(text="US", description="Alpha2 code for United States of America (the).")
+    AE = PermissibleValue(
+        text="AE", description="Alpha2 code for United Arab Emirates (the)."
+    )
+    TZ = PermissibleValue(
+        text="TZ", description="Alpha2 code for Tanzania, United Republic of."
+    )
+    US = PermissibleValue(
+        text="US", description="Alpha2 code for United States of America (the)."
+    )
     GB = PermissibleValue(
         text="GB",
         description="Alpha2 code for United Kingdom of Great Britain and Northern Ireland (the).",
@@ -3199,7 +3448,9 @@ class CountryNameAlpha2(EnumDefinitionImpl):
     CX = PermissibleValue(text="CX", description="Alpha2 code for Christmas Island.")
     BY = PermissibleValue(text="BY", description="Alpha2 code for Belarus.")
     EH = PermissibleValue(text="EH", description="Alpha2 code for Western Sahara.")
-    CF = PermissibleValue(text="CF", description="Alpha2 code for Central African Republic (the).")
+    CF = PermissibleValue(
+        text="CF", description="Alpha2 code for Central African Republic (the)."
+    )
     CY = PermissibleValue(text="CY", description="Alpha2 code for Cyprus.")
 
     _defn = EnumDefinition(
@@ -3225,7 +3476,9 @@ class CountryNameAlpha3(EnumDefinitionImpl):
     AGO = PermissibleValue(text="AGO", description="Alpha3 code for Angola.")
     AIA = PermissibleValue(text="AIA", description="Alpha3 code for Anguilla.")
     ATA = PermissibleValue(text="ATA", description="Alpha3 code for Antarctica.")
-    ATG = PermissibleValue(text="ATG", description="Alpha3 code for Antigua and Barbuda.")
+    ATG = PermissibleValue(
+        text="ATG", description="Alpha3 code for Antigua and Barbuda."
+    )
     ARG = PermissibleValue(text="ARG", description="Alpha3 code for Argentina.")
     ARM = PermissibleValue(text="ARM", description="Alpha3 code for Armenia.")
     ABW = PermissibleValue(text="ABW", description="Alpha3 code for Aruba.")
@@ -3248,7 +3501,9 @@ class CountryNameAlpha3(EnumDefinitionImpl):
     BES = PermissibleValue(
         text="BES", description="Alpha3 code for Bonaire, Sint Eustatius and Saba."
     )
-    BIH = PermissibleValue(text="BIH", description="Alpha3 code for Bosnia and Herzegovina.")
+    BIH = PermissibleValue(
+        text="BIH", description="Alpha3 code for Bosnia and Herzegovina."
+    )
     BWA = PermissibleValue(text="BWA", description="Alpha3 code for Botswana.")
     BVT = PermissibleValue(text="BVT", description="Alpha3 code for Bouvet Island.")
     BRA = PermissibleValue(text="BRA", description="Alpha3 code for Brazil.")
@@ -3263,7 +3518,9 @@ class CountryNameAlpha3(EnumDefinitionImpl):
     CMR = PermissibleValue(text="CMR", description="Alpha3 code for Cameroon.")
     CAN = PermissibleValue(text="CAN", description="Alpha3 code for Canada.")
     CPV = PermissibleValue(text="CPV", description="Alpha3 code for Cabo Verde.")
-    CYM = PermissibleValue(text="CYM", description="Alpha3 code for Cayman Islands (the).")
+    CYM = PermissibleValue(
+        text="CYM", description="Alpha3 code for Cayman Islands (the)."
+    )
     CAF = PermissibleValue(
         text="CAF", description="Alpha3 code for Central African Republic (the)."
     )
@@ -3271,7 +3528,9 @@ class CountryNameAlpha3(EnumDefinitionImpl):
     CHL = PermissibleValue(text="CHL", description="Alpha3 code for Chile.")
     CHN = PermissibleValue(text="CHN", description="Alpha3 code for China.")
     CXR = PermissibleValue(text="CXR", description="Alpha3 code for Christmas Island.")
-    CCK = PermissibleValue(text="CCK", description="Alpha3 code for Cocos (Keeling) Islands (the).")
+    CCK = PermissibleValue(
+        text="CCK", description="Alpha3 code for Cocos (Keeling) Islands (the)."
+    )
     COL = PermissibleValue(text="COL", description="Alpha3 code for Colombia.")
     COM = PermissibleValue(text="COM", description="Alpha3 code for Comoros (the).")
     COG = PermissibleValue(text="COG", description="Alpha3 code for Congo (the).")
@@ -3279,7 +3538,9 @@ class CountryNameAlpha3(EnumDefinitionImpl):
         text="COD",
         description="Alpha3 code for Congo (the Democratic Republic of the).",
     )
-    COK = PermissibleValue(text="COK", description="Alpha3 code for Cook Islands (the).")
+    COK = PermissibleValue(
+        text="COK", description="Alpha3 code for Cook Islands (the)."
+    )
     CRI = PermissibleValue(text="CRI", description="Alpha3 code for Costa Rica.")
     CIV = PermissibleValue(text="CIV", description="Alpha3 code for Cote dIvoire.")
     HRV = PermissibleValue(text="HRV", description="Alpha3 code for Croatia.")
@@ -3290,7 +3551,9 @@ class CountryNameAlpha3(EnumDefinitionImpl):
     DNK = PermissibleValue(text="DNK", description="Alpha3 code for Denmark.")
     DJI = PermissibleValue(text="DJI", description="Alpha3 code for Djibouti.")
     DMA = PermissibleValue(text="DMA", description="Alpha3 code for Dominica.")
-    DOM = PermissibleValue(text="DOM", description="Alpha3 code for Dominican Republic (the).")
+    DOM = PermissibleValue(
+        text="DOM", description="Alpha3 code for Dominican Republic (the)."
+    )
     ECU = PermissibleValue(text="ECU", description="Alpha3 code for Ecuador.")
     EGY = PermissibleValue(text="EGY", description="Alpha3 code for Egypt.")
     SLV = PermissibleValue(text="SLV", description="Alpha3 code for El Salvador.")
@@ -3301,7 +3564,9 @@ class CountryNameAlpha3(EnumDefinitionImpl):
     FLK = PermissibleValue(
         text="FLK", description="Alpha3 code for Falkland Islands (the) [Malvinas]."
     )
-    FRO = PermissibleValue(text="FRO", description="Alpha3 code for Faroe Islands (the).")
+    FRO = PermissibleValue(
+        text="FRO", description="Alpha3 code for Faroe Islands (the)."
+    )
     FJI = PermissibleValue(text="FJI", description="Alpha3 code for Fiji.")
     FIN = PermissibleValue(text="FIN", description="Alpha3 code for Finland.")
     FRA = PermissibleValue(text="FRA", description="Alpha3 code for France.")
@@ -3337,7 +3602,9 @@ class CountryNameAlpha3(EnumDefinitionImpl):
     ISL = PermissibleValue(text="ISL", description="Alpha3 code for Iceland.")
     IND = PermissibleValue(text="IND", description="Alpha3 code for India.")
     IDN = PermissibleValue(text="IDN", description="Alpha3 code for Indonesia.")
-    IRN = PermissibleValue(text="IRN", description="Alpha3 code for Iran (Islamic Republic of).")
+    IRN = PermissibleValue(
+        text="IRN", description="Alpha3 code for Iran (Islamic Republic of)."
+    )
     IRQ = PermissibleValue(text="IRQ", description="Alpha3 code for Iraq.")
     IRL = PermissibleValue(text="IRL", description="Alpha3 code for Ireland.")
     IMN = PermissibleValue(text="IMN", description="Alpha3 code for Isle of Man.")
@@ -3354,7 +3621,9 @@ class CountryNameAlpha3(EnumDefinitionImpl):
         text="PRK",
         description="Alpha3 code for Korea (the Democratic Peoples Republic of).",
     )
-    KOR = PermissibleValue(text="KOR", description="Alpha3 code for Korea (the Republic of).")
+    KOR = PermissibleValue(
+        text="KOR", description="Alpha3 code for Korea (the Republic of)."
+    )
     KWT = PermissibleValue(text="KWT", description="Alpha3 code for Kuwait.")
     KGZ = PermissibleValue(text="KGZ", description="Alpha3 code for Kyrgyzstan.")
     LAO = PermissibleValue(
@@ -3369,14 +3638,18 @@ class CountryNameAlpha3(EnumDefinitionImpl):
     LTU = PermissibleValue(text="LTU", description="Alpha3 code for Lithuania.")
     LUX = PermissibleValue(text="LUX", description="Alpha3 code for Luxembourg.")
     MAC = PermissibleValue(text="MAC", description="Alpha3 code for Macao.")
-    MKD = PermissibleValue(text="MKD", description="Alpha3 code for Republic of North Macedonia.")
+    MKD = PermissibleValue(
+        text="MKD", description="Alpha3 code for Republic of North Macedonia."
+    )
     MDG = PermissibleValue(text="MDG", description="Alpha3 code for Madagascar.")
     MWI = PermissibleValue(text="MWI", description="Alpha3 code for Malawi.")
     MYS = PermissibleValue(text="MYS", description="Alpha3 code for Malaysia.")
     MDV = PermissibleValue(text="MDV", description="Alpha3 code for Maldives.")
     MLI = PermissibleValue(text="MLI", description="Alpha3 code for Mali.")
     MLT = PermissibleValue(text="MLT", description="Alpha3 code for Malta.")
-    MHL = PermissibleValue(text="MHL", description="Alpha3 code for Marshall Islands (the).")
+    MHL = PermissibleValue(
+        text="MHL", description="Alpha3 code for Marshall Islands (the)."
+    )
     MTQ = PermissibleValue(text="MTQ", description="Alpha3 code for Martinique.")
     MRT = PermissibleValue(text="MRT", description="Alpha3 code for Mauritania.")
     MUS = PermissibleValue(text="MUS", description="Alpha3 code for Mauritius.")
@@ -3385,7 +3658,9 @@ class CountryNameAlpha3(EnumDefinitionImpl):
     FSM = PermissibleValue(
         text="FSM", description="Alpha3 code for Micronesia (Federated States of)."
     )
-    MDA = PermissibleValue(text="MDA", description="Alpha3 code for Moldova (the Republic of).")
+    MDA = PermissibleValue(
+        text="MDA", description="Alpha3 code for Moldova (the Republic of)."
+    )
     MCO = PermissibleValue(text="MCO", description="Alpha3 code for Monaco.")
     MNG = PermissibleValue(text="MNG", description="Alpha3 code for Mongolia.")
     MNE = PermissibleValue(text="MNE", description="Alpha3 code for Montenegro.")
@@ -3411,7 +3686,9 @@ class CountryNameAlpha3(EnumDefinitionImpl):
     OMN = PermissibleValue(text="OMN", description="Alpha3 code for Oman.")
     PAK = PermissibleValue(text="PAK", description="Alpha3 code for Pakistan.")
     PLW = PermissibleValue(text="PLW", description="Alpha3 code for Palau.")
-    PSE = PermissibleValue(text="PSE", description="Alpha3 code for Palestine, State of.")
+    PSE = PermissibleValue(
+        text="PSE", description="Alpha3 code for Palestine, State of."
+    )
     PAN = PermissibleValue(text="PAN", description="Alpha3 code for Panama.")
     PNG = PermissibleValue(text="PNG", description="Alpha3 code for Papua New Guinea.")
     PRY = PermissibleValue(text="PRY", description="Alpha3 code for Paraguay.")
@@ -3425,29 +3702,41 @@ class CountryNameAlpha3(EnumDefinitionImpl):
     SRB = PermissibleValue(text="SRB", description="Alpha3 code for Serbia.")
     REU = PermissibleValue(text="REU", description="Alpha3 code for Reunion.")
     ROU = PermissibleValue(text="ROU", description="Alpha3 code for Romania.")
-    RUS = PermissibleValue(text="RUS", description="Alpha3 code for Russian Federation (the).")
+    RUS = PermissibleValue(
+        text="RUS", description="Alpha3 code for Russian Federation (the)."
+    )
     RWA = PermissibleValue(text="RWA", description="Alpha3 code for Rwanda.")
     BLM = PermissibleValue(text="BLM", description="Alpha3 code for Saint Barthelemy.")
     SHN = PermissibleValue(
         text="SHN",
         description="Alpha3 code for Saint Helena, Ascension and Tristan da Cunha.",
     )
-    KNA = PermissibleValue(text="KNA", description="Alpha3 code for Saint Kitts and Nevis.")
+    KNA = PermissibleValue(
+        text="KNA", description="Alpha3 code for Saint Kitts and Nevis."
+    )
     LCA = PermissibleValue(text="LCA", description="Alpha3 code for Saint Lucia.")
-    MAF = PermissibleValue(text="MAF", description="Alpha3 code for Saint Martin (French part).")
-    SPM = PermissibleValue(text="SPM", description="Alpha3 code for Saint Pierre and Miquelon.")
+    MAF = PermissibleValue(
+        text="MAF", description="Alpha3 code for Saint Martin (French part)."
+    )
+    SPM = PermissibleValue(
+        text="SPM", description="Alpha3 code for Saint Pierre and Miquelon."
+    )
     VCT = PermissibleValue(
         text="VCT", description="Alpha3 code for Saint Vincent and the Grenadines."
     )
     WSM = PermissibleValue(text="WSM", description="Alpha3 code for Samoa.")
     SMR = PermissibleValue(text="SMR", description="Alpha3 code for San Marino.")
-    STP = PermissibleValue(text="STP", description="Alpha3 code for Sao Tome and Principe.")
+    STP = PermissibleValue(
+        text="STP", description="Alpha3 code for Sao Tome and Principe."
+    )
     SAU = PermissibleValue(text="SAU", description="Alpha3 code for Saudi Arabia.")
     SEN = PermissibleValue(text="SEN", description="Alpha3 code for Senegal.")
     SYC = PermissibleValue(text="SYC", description="Alpha3 code for Seychelles.")
     SLE = PermissibleValue(text="SLE", description="Alpha3 code for Sierra Leone.")
     SGP = PermissibleValue(text="SGP", description="Alpha3 code for Singapore.")
-    SXM = PermissibleValue(text="SXM", description="Alpha3 code for Sint Maarten (Dutch part).")
+    SXM = PermissibleValue(
+        text="SXM", description="Alpha3 code for Sint Maarten (Dutch part)."
+    )
     SVK = PermissibleValue(text="SVK", description="Alpha3 code for Slovakia.")
     SVN = PermissibleValue(text="SVN", description="Alpha3 code for Slovenia.")
     SLB = PermissibleValue(text="SLB", description="Alpha3 code for Solomon Islands.")
@@ -3462,20 +3751,30 @@ class CountryNameAlpha3(EnumDefinitionImpl):
     LKA = PermissibleValue(text="LKA", description="Alpha3 code for Sri Lanka.")
     SDN = PermissibleValue(text="SDN", description="Alpha3 code for Sudan (the).")
     SUR = PermissibleValue(text="SUR", description="Alpha3 code for Suriname.")
-    SJM = PermissibleValue(text="SJM", description="Alpha3 code for Svalbard and Jan Mayen.")
+    SJM = PermissibleValue(
+        text="SJM", description="Alpha3 code for Svalbard and Jan Mayen."
+    )
     SWZ = PermissibleValue(text="SWZ", description="Alpha3 code for Eswatini.")
     SWE = PermissibleValue(text="SWE", description="Alpha3 code for Sweden.")
     CHE = PermissibleValue(text="CHE", description="Alpha3 code for Switzerland.")
-    SYR = PermissibleValue(text="SYR", description="Alpha3 code for Syrian Arab Republic.")
-    TWN = PermissibleValue(text="TWN", description="Alpha3 code for Taiwan (Province of China).")
+    SYR = PermissibleValue(
+        text="SYR", description="Alpha3 code for Syrian Arab Republic."
+    )
+    TWN = PermissibleValue(
+        text="TWN", description="Alpha3 code for Taiwan (Province of China)."
+    )
     TJK = PermissibleValue(text="TJK", description="Alpha3 code for Tajikistan.")
-    TZA = PermissibleValue(text="TZA", description="Alpha3 code for Tanzania, United Republic of.")
+    TZA = PermissibleValue(
+        text="TZA", description="Alpha3 code for Tanzania, United Republic of."
+    )
     THA = PermissibleValue(text="THA", description="Alpha3 code for Thailand.")
     TLS = PermissibleValue(text="TLS", description="Alpha3 code for Timor-Leste.")
     TGO = PermissibleValue(text="TGO", description="Alpha3 code for Togo.")
     TKL = PermissibleValue(text="TKL", description="Alpha3 code for Tokelau.")
     TON = PermissibleValue(text="TON", description="Alpha3 code for Tonga.")
-    TTO = PermissibleValue(text="TTO", description="Alpha3 code for Trinidad and Tobago.")
+    TTO = PermissibleValue(
+        text="TTO", description="Alpha3 code for Trinidad and Tobago."
+    )
     TUN = PermissibleValue(text="TUN", description="Alpha3 code for Tunisia.")
     TUR = PermissibleValue(text="TUR", description="Alpha3 code for Turkey.")
     XTX = PermissibleValue(
@@ -3488,7 +3787,9 @@ class CountryNameAlpha3(EnumDefinitionImpl):
     TUV = PermissibleValue(text="TUV", description="Alpha3 code for Tuvalu.")
     UGA = PermissibleValue(text="UGA", description="Alpha3 code for Uganda.")
     UKR = PermissibleValue(text="UKR", description="Alpha3 code for Ukraine.")
-    ARE = PermissibleValue(text="ARE", description="Alpha3 code for United Arab Emirates (the).")
+    ARE = PermissibleValue(
+        text="ARE", description="Alpha3 code for United Arab Emirates (the)."
+    )
     GBR = PermissibleValue(
         text="GBR",
         description="Alpha3 code for United Kingdom of Great Britain and Northern Ireland (the).",
@@ -3507,8 +3808,12 @@ class CountryNameAlpha3(EnumDefinitionImpl):
         text="VEN", description="Alpha3 code for Venezuela (Bolivarian Republic of)."
     )
     VNM = PermissibleValue(text="VNM", description="Alpha3 code for Viet Nam.")
-    VGB = PermissibleValue(text="VGB", description="Alpha3 code for Virgin Islands (British).")
-    VIR = PermissibleValue(text="VIR", description="Alpha3 code for Virgin Islands (U.S.).")
+    VGB = PermissibleValue(
+        text="VGB", description="Alpha3 code for Virgin Islands (British)."
+    )
+    VIR = PermissibleValue(
+        text="VIR", description="Alpha3 code for Virgin Islands (U.S.)."
+    )
     WLF = PermissibleValue(text="WLF", description="Alpha3 code for Wallis and Futuna.")
     ESH = PermissibleValue(text="ESH", description="Alpha3 code for Western Sahara.")
     YEM = PermissibleValue(text="YEM", description="Alpha3 code for Yemen.")
@@ -3556,7 +3861,9 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "850",
-            PermissibleValue(text="850", description="Numeric code for Virgin Islands (U.S.)."),
+            PermissibleValue(
+                text="850", description="Numeric code for Virgin Islands (U.S.)."
+            ),
         )
         setattr(
             cls,
@@ -3594,17 +3901,23 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "028",
-            PermissibleValue(text="028", description="Numeric code for Antigua and Barbuda."),
+            PermissibleValue(
+                text="028", description="Numeric code for Antigua and Barbuda."
+            ),
         )
         setattr(
             cls,
             "226",
-            PermissibleValue(text="226", description="Numeric code for Equatorial Guinea."),
+            PermissibleValue(
+                text="226", description="Numeric code for Equatorial Guinea."
+            ),
         )
         setattr(
             cls,
             "760",
-            PermissibleValue(text="760", description="Numeric code for Syrian Arab Republic."),
+            PermissibleValue(
+                text="760", description="Numeric code for Syrian Arab Republic."
+            ),
         )
         setattr(
             cls,
@@ -3689,7 +4002,9 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "092",
-            PermissibleValue(text="092", description="Numeric code for Virgin Islands (British)."),
+            PermissibleValue(
+                text="092", description="Numeric code for Virgin Islands (British)."
+            ),
         )
         setattr(
             cls,
@@ -3727,7 +4042,9 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "184",
-            PermissibleValue(text="184", description="Numeric code for Cook Islands (the)."),
+            PermissibleValue(
+                text="184", description="Numeric code for Cook Islands (the)."
+            ),
         )
         setattr(
             cls,
@@ -3786,7 +4103,9 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "214",
-            PermissibleValue(text="214", description="Numeric code for Dominican Republic (the)."),
+            PermissibleValue(
+                text="214", description="Numeric code for Dominican Republic (the)."
+            ),
         )
         setattr(
             cls,
@@ -3831,7 +4150,9 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "234",
-            PermissibleValue(text="234", description="Numeric code for Faroe Islands (the)."),
+            PermissibleValue(
+                text="234", description="Numeric code for Faroe Islands (the)."
+            ),
         )
         setattr(
             cls,
@@ -3872,7 +4193,9 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "258",
-            PermissibleValue(text="258", description="Numeric code for French Polynesia."),
+            PermissibleValue(
+                text="258", description="Numeric code for French Polynesia."
+            ),
         )
         setattr(
             cls,
@@ -4047,7 +4370,9 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "136",
-            PermissibleValue(text="136", description="Numeric code for Cayman Islands (the)."),
+            PermissibleValue(
+                text="136", description="Numeric code for Cayman Islands (the)."
+            ),
         )
         setattr(
             cls,
@@ -4218,7 +4543,9 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "584",
-            PermissibleValue(text="584", description="Numeric code for Marshall Islands (the)."),
+            PermissibleValue(
+                text="584", description="Numeric code for Marshall Islands (the)."
+            ),
         )
         setattr(
             cls,
@@ -4308,7 +4635,9 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "528",
-            PermissibleValue(text="528", description="Numeric code for Netherlands (the)."),
+            PermissibleValue(
+                text="528", description="Numeric code for Netherlands (the)."
+            ),
         )
         setattr(
             cls,
@@ -4328,7 +4657,9 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "574",
-            PermissibleValue(text="574", description="Numeric code for Norfolk Island."),
+            PermissibleValue(
+                text="574", description="Numeric code for Norfolk Island."
+            ),
         )
         setattr(
             cls,
@@ -4358,7 +4689,9 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "275",
-            PermissibleValue(text="275", description="Numeric code for Palestine, State of."),
+            PermissibleValue(
+                text="275", description="Numeric code for Palestine, State of."
+            ),
         )
         setattr(
             cls,
@@ -4368,7 +4701,9 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "598",
-            PermissibleValue(text="598", description="Numeric code for Papua New Guinea."),
+            PermissibleValue(
+                text="598", description="Numeric code for Papua New Guinea."
+            ),
         )
         setattr(
             cls,
@@ -4383,7 +4718,9 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "608",
-            PermissibleValue(text="608", description="Numeric code for Philippines (the)."),
+            PermissibleValue(
+                text="608", description="Numeric code for Philippines (the)."
+            ),
         )
         setattr(
             cls,
@@ -4416,12 +4753,16 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "410",
-            PermissibleValue(text="410", description="Numeric code for Korea (the Republic of)."),
+            PermissibleValue(
+                text="410", description="Numeric code for Korea (the Republic of)."
+            ),
         )
         setattr(
             cls,
             "498",
-            PermissibleValue(text="498", description="Numeric code for Moldova (the Republic of)."),
+            PermissibleValue(
+                text="498", description="Numeric code for Moldova (the Republic of)."
+            ),
         )
         setattr(
             cls,
@@ -4441,12 +4782,16 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "643",
-            PermissibleValue(text="643", description="Numeric code for Russian Federation (the)."),
+            PermissibleValue(
+                text="643", description="Numeric code for Russian Federation (the)."
+            ),
         )
         setattr(
             cls,
             "090",
-            PermissibleValue(text="090", description="Numeric code for Solomon Islands."),
+            PermissibleValue(
+                text="090", description="Numeric code for Solomon Islands."
+            ),
         )
         setattr(
             cls,
@@ -4466,7 +4811,9 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "678",
-            PermissibleValue(text="678", description="Numeric code for Sao Tome and Principe."),
+            PermissibleValue(
+                text="678", description="Numeric code for Sao Tome and Principe."
+            ),
         )
         setattr(
             cls,
@@ -4541,7 +4888,9 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "652",
-            PermissibleValue(text="652", description="Numeric code for Saint Barthelemy."),
+            PermissibleValue(
+                text="652", description="Numeric code for Saint Barthelemy."
+            ),
         )
         setattr(
             cls,
@@ -4554,7 +4903,9 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "659",
-            PermissibleValue(text="659", description="Numeric code for Saint Kitts and Nevis."),
+            PermissibleValue(
+                text="659", description="Numeric code for Saint Kitts and Nevis."
+            ),
         )
         setattr(
             cls,
@@ -4571,12 +4922,16 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "534",
-            PermissibleValue(text="534", description="Numeric code for Sint Maarten (Dutch part)."),
+            PermissibleValue(
+                text="534", description="Numeric code for Sint Maarten (Dutch part)."
+            ),
         )
         setattr(
             cls,
             "666",
-            PermissibleValue(text="666", description="Numeric code for Saint Pierre and Miquelon."),
+            PermissibleValue(
+                text="666", description="Numeric code for Saint Pierre and Miquelon."
+            ),
         )
         setattr(
             cls,
@@ -4617,7 +4972,9 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "744",
-            PermissibleValue(text="744", description="Numeric code for Svalbard and Jan Mayen."),
+            PermissibleValue(
+                text="744", description="Numeric code for Svalbard and Jan Mayen."
+            ),
         )
         setattr(
             cls,
@@ -4664,7 +5021,9 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "780",
-            PermissibleValue(text="780", description="Numeric code for Trinidad and Tobago."),
+            PermissibleValue(
+                text="780", description="Numeric code for Trinidad and Tobago."
+            ),
         )
         setattr(
             cls,
@@ -4737,7 +5096,9 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "336",
-            PermissibleValue(text="336", description="Numeric code for Holy See (the)."),
+            PermissibleValue(
+                text="336", description="Numeric code for Holy See (the)."
+            ),
         )
         setattr(
             cls,
@@ -4777,12 +5138,16 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "876",
-            PermissibleValue(text="876", description="Numeric code for Wallis and Futuna."),
+            PermissibleValue(
+                text="876", description="Numeric code for Wallis and Futuna."
+            ),
         )
         setattr(
             cls,
             "162",
-            PermissibleValue(text="162", description="Numeric code for Christmas Island."),
+            PermissibleValue(
+                text="162", description="Numeric code for Christmas Island."
+            ),
         )
         setattr(
             cls,
@@ -4792,7 +5157,9 @@ class CountryNameNumeric(EnumDefinitionImpl):
         setattr(
             cls,
             "732",
-            PermissibleValue(text="732", description="Numeric code for Western Sahara."),
+            PermissibleValue(
+                text="732", description="Numeric code for Western Sahara."
+            ),
         )
         setattr(
             cls,
@@ -4810,7 +5177,9 @@ class CountryNameNumeric(EnumDefinitionImpl):
 
 
 class Architectures(EnumDefinitionImpl):
-    other = PermissibleValue(text="other", description="CPU architecture not specified above.")
+    other = PermissibleValue(
+        text="other", description="CPU architecture not specified above."
+    )
 
     _defn = EnumDefinition(
         name="Architectures",
@@ -4821,22 +5190,30 @@ class Architectures(EnumDefinitionImpl):
         setattr(
             cls,
             "x86-32",
-            PermissibleValue(text="x86-32", description="32 bit version of x86 architecture."),
+            PermissibleValue(
+                text="x86-32", description="32 bit version of x86 architecture."
+            ),
         )
         setattr(
             cls,
             "x86-64",
-            PermissibleValue(text="x86-64", description="64 bit version of x86 architecture."),
+            PermissibleValue(
+                text="x86-64", description="64 bit version of x86 architecture."
+            ),
         )
         setattr(
             cls,
             "AArch-32",
-            PermissibleValue(text="AArch-32", description="32-bit version of ARM architecture."),
+            PermissibleValue(
+                text="AArch-32", description="32-bit version of ARM architecture."
+            ),
         )
         setattr(
             cls,
             "AArch-64",
-            PermissibleValue(text="AArch-64", description="64-bit version of ARM architecture."),
+            PermissibleValue(
+                text="AArch-64", description="64-bit version of ARM architecture."
+            ),
         )
         setattr(
             cls,
@@ -5036,7 +5413,9 @@ class SignatureAlgorithm(EnumDefinitionImpl):
 
 
 class DiskType(EnumDefinitionImpl):
-    other = PermissibleValue(text="other", description="Storage device no further described.")
+    other = PermissibleValue(
+        text="other", description="Storage device no further described."
+    )
 
     _defn = EnumDefinition(
         name="DiskType",
@@ -5107,7 +5486,9 @@ class DiskBusType(EnumDefinitionImpl):
         text="NVMe",
         description="""The Non-volatile Memory Express interface is designed to address tasks that require high-performance computing environments.""",
     )
-    other = PermissibleValue(text="other", description="Disk controller no further described.")
+    other = PermissibleValue(
+        text="other", description="Disk controller no further described."
+    )
 
     _defn = EnumDefinition(
         name="DiskBusType",
@@ -5236,7 +5617,9 @@ class MemoryClasses(EnumDefinitionImpl):
         text="GDDR6",
         description="Evolution of GDDR5 memory, designed for high-performance computing.",
     )
-    other = PermissibleValue(text="other", description="Memory class no further described.")
+    other = PermissibleValue(
+        text="other", description="Memory class no further described."
+    )
 
     _defn = EnumDefinition(
         name="MemoryClasses",
@@ -5263,7 +5646,9 @@ class MemoryClasses(EnumDefinitionImpl):
 
 
 class MemoryRanks(EnumDefinitionImpl):
-    other = PermissibleValue(text="other", description="Memory rank no further described.")
+    other = PermissibleValue(
+        text="other", description="Memory rank no further described."
+    )
 
     _defn = EnumDefinition(
         name="MemoryRanks",
@@ -9509,19 +9894,27 @@ class MIMETypes(EnumDefinitionImpl):
         )
         setattr(cls, "grammar-ref-list", PermissibleValue(text="grammar-ref-list"))
         setattr(cls, "jcr-cnd", PermissibleValue(text="jcr-cnd"))
-        setattr(cls, "provenance-notation", PermissibleValue(text="provenance-notation"))
-        setattr(cls, "prs.fallenstein.rst", PermissibleValue(text="prs.fallenstein.rst"))
+        setattr(
+            cls, "provenance-notation", PermissibleValue(text="provenance-notation")
+        )
+        setattr(
+            cls, "prs.fallenstein.rst", PermissibleValue(text="prs.fallenstein.rst")
+        )
         setattr(cls, "prs.lines.tag", PermissibleValue(text="prs.lines.tag"))
         setattr(cls, "prs.prop.logic", PermissibleValue(text="prs.prop.logic"))
         setattr(cls, "rfc822-headers", PermissibleValue(text="rfc822-headers"))
         setattr(cls, "rtp-enc-aescm128", PermissibleValue(text="rtp-enc-aescm128"))
-        setattr(cls, "tab-separated-values", PermissibleValue(text="tab-separated-values"))
+        setattr(
+            cls, "tab-separated-values", PermissibleValue(text="tab-separated-values")
+        )
         setattr(cls, "uri-list", PermissibleValue(text="uri-list"))
         setattr(cls, "vnd.a", PermissibleValue(text="vnd.a"))
         setattr(cls, "vnd.abc", PermissibleValue(text="vnd.abc"))
         setattr(cls, "vnd.ascii-art", PermissibleValue(text="vnd.ascii-art"))
         setattr(cls, "vnd.curl", PermissibleValue(text="vnd.curl"))
-        setattr(cls, "vnd.debian.copyright", PermissibleValue(text="vnd.debian.copyright"))
+        setattr(
+            cls, "vnd.debian.copyright", PermissibleValue(text="vnd.debian.copyright")
+        )
         setattr(cls, "vnd.DMClientScript", PermissibleValue(text="vnd.DMClientScript"))
         setattr(cls, "vnd.dvb.subtitle", PermissibleValue(text="vnd.dvb.subtitle"))
         setattr(
@@ -9547,8 +9940,12 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "vnd.IPTC.NewsML", PermissibleValue(text="vnd.IPTC.NewsML"))
         setattr(cls, "vnd.IPTC.NITF", PermissibleValue(text="vnd.IPTC.NITF"))
         setattr(cls, "vnd.latex-z", PermissibleValue(text="vnd.latex-z"))
-        setattr(cls, "vnd.motorola.reflex", PermissibleValue(text="vnd.motorola.reflex"))
-        setattr(cls, "vnd.ms-mediapackage", PermissibleValue(text="vnd.ms-mediapackage"))
+        setattr(
+            cls, "vnd.motorola.reflex", PermissibleValue(text="vnd.motorola.reflex")
+        )
+        setattr(
+            cls, "vnd.ms-mediapackage", PermissibleValue(text="vnd.ms-mediapackage")
+        )
         setattr(
             cls,
             "vnd.net2phone.commcenter.command",
@@ -9559,8 +9956,12 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.radisys.msml-basic-layout",
             PermissibleValue(text="vnd.radisys.msml-basic-layout"),
         )
-        setattr(cls, "vnd.senx.warpscript", PermissibleValue(text="vnd.senx.warpscript"))
-        setattr(cls, "vnd.si.uricatalogue", PermissibleValue(text="vnd.si.uricatalogue"))
+        setattr(
+            cls, "vnd.senx.warpscript", PermissibleValue(text="vnd.senx.warpscript")
+        )
+        setattr(
+            cls, "vnd.si.uricatalogue", PermissibleValue(text="vnd.si.uricatalogue")
+        )
         setattr(
             cls,
             "vnd.sun.j2me.app-descriptor",
@@ -9595,14 +9996,18 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "aif+cbor", PermissibleValue(text="aif+cbor"))
         setattr(cls, "aif+json", PermissibleValue(text="aif+json"))
         setattr(cls, "alto-cdni+json", PermissibleValue(text="alto-cdni+json"))
-        setattr(cls, "alto-cdnifilter+json", PermissibleValue(text="alto-cdnifilter+json"))
+        setattr(
+            cls, "alto-cdnifilter+json", PermissibleValue(text="alto-cdnifilter+json")
+        )
         setattr(cls, "alto-costmap+json", PermissibleValue(text="alto-costmap+json"))
         setattr(
             cls,
             "alto-costmapfilter+json",
             PermissibleValue(text="alto-costmapfilter+json"),
         )
-        setattr(cls, "alto-directory+json", PermissibleValue(text="alto-directory+json"))
+        setattr(
+            cls, "alto-directory+json", PermissibleValue(text="alto-directory+json")
+        )
         setattr(
             cls,
             "alto-endpointprop+json",
@@ -9629,7 +10034,9 @@ class MIMETypes(EnumDefinitionImpl):
             "alto-networkmapfilter+json",
             PermissibleValue(text="alto-networkmapfilter+json"),
         )
-        setattr(cls, "alto-networkmap+json", PermissibleValue(text="alto-networkmap+json"))
+        setattr(
+            cls, "alto-networkmap+json", PermissibleValue(text="alto-networkmap+json")
+        )
         setattr(cls, "alto-propmap+json", PermissibleValue(text="alto-propmap+json"))
         setattr(
             cls,
@@ -9662,8 +10069,12 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "atsc-rdt+json", PermissibleValue(text="atsc-rdt+json"))
         setattr(cls, "atsc-rsat+xml", PermissibleValue(text="atsc-rsat+xml"))
         setattr(cls, "auth-policy+xml", PermissibleValue(text="auth-policy+xml"))
-        setattr(cls, "automationml-aml+xml", PermissibleValue(text="automationml-aml+xml"))
-        setattr(cls, "automationml-amlx+zip", PermissibleValue(text="automationml-amlx+zip"))
+        setattr(
+            cls, "automationml-aml+xml", PermissibleValue(text="automationml-aml+xml")
+        )
+        setattr(
+            cls, "automationml-amlx+zip", PermissibleValue(text="automationml-amlx+zip")
+        )
         setattr(cls, "bacnet-xdd+zip", PermissibleValue(text="bacnet-xdd+zip"))
         setattr(cls, "batch-SMTP", PermissibleValue(text="batch-SMTP"))
         setattr(cls, "beep+xml", PermissibleValue(text="beep+xml"))
@@ -9696,7 +10107,9 @@ class MIMETypes(EnumDefinitionImpl):
             "concise-problem-details+cbor",
             PermissibleValue(text="concise-problem-details+cbor"),
         )
-        setattr(cls, "conference-info+xml", PermissibleValue(text="conference-info+xml"))
+        setattr(
+            cls, "conference-info+xml", PermissibleValue(text="conference-info+xml")
+        )
         setattr(cls, "cpl+xml", PermissibleValue(text="cpl+xml"))
         setattr(cls, "cose-key", PermissibleValue(text="cose-key"))
         setattr(cls, "cose-key-set", PermissibleValue(text="cose-key-set"))
@@ -9779,7 +10192,9 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "emotionml+xml", PermissibleValue(text="emotionml+xml"))
         setattr(cls, "epp+xml", PermissibleValue(text="epp+xml"))
         setattr(cls, "epub+zip", PermissibleValue(text="epub+zip"))
-        setattr(cls, "expect-ct-report+json", PermissibleValue(text="expect-ct-report+json"))
+        setattr(
+            cls, "expect-ct-report+json", PermissibleValue(text="expect-ct-report+json")
+        )
         setattr(cls, "fdt+xml", PermissibleValue(text="fdt+xml"))
         setattr(cls, "fhir+json", PermissibleValue(text="fhir+json"))
         setattr(cls, "fhir+xml", PermissibleValue(text="fhir+xml"))
@@ -9807,7 +10222,9 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "gml+xml", PermissibleValue(text="gml+xml"))
         setattr(cls, "held+xml", PermissibleValue(text="held+xml"))
         setattr(cls, "hl7v2+xml", PermissibleValue(text="hl7v2+xml"))
-        setattr(cls, "ibe-key-request+xml", PermissibleValue(text="ibe-key-request+xml"))
+        setattr(
+            cls, "ibe-key-request+xml", PermissibleValue(text="ibe-key-request+xml")
+        )
         setattr(cls, "ibe-pkg-reply+xml", PermissibleValue(text="ibe-pkg-reply+xml"))
         setattr(cls, "ibe-pp-data", PermissibleValue(text="ibe-pp-data"))
         setattr(cls, "im-iscomposing+xml", PermissibleValue(text="im-iscomposing+xml"))
@@ -9858,9 +10275,13 @@ class MIMETypes(EnumDefinitionImpl):
             "mbms-associated-procedure-description+xml",
             PermissibleValue(text="mbms-associated-procedure-description+xml"),
         )
-        setattr(cls, "mbms-deregister+xml", PermissibleValue(text="mbms-deregister+xml"))
+        setattr(
+            cls, "mbms-deregister+xml", PermissibleValue(text="mbms-deregister+xml")
+        )
         setattr(cls, "mbms-envelope+xml", PermissibleValue(text="mbms-envelope+xml"))
-        setattr(cls, "mbms-msk-response+xml", PermissibleValue(text="mbms-msk-response+xml"))
+        setattr(
+            cls, "mbms-msk-response+xml", PermissibleValue(text="mbms-msk-response+xml")
+        )
         setattr(cls, "mbms-msk+xml", PermissibleValue(text="mbms-msk+xml"))
         setattr(
             cls,
@@ -9925,8 +10346,12 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "news-groupinfo", PermissibleValue(text="news-groupinfo"))
         setattr(cls, "news-transmission", PermissibleValue(text="news-transmission"))
         setattr(cls, "nlsml+xml", PermissibleValue(text="nlsml+xml"))
-        setattr(cls, "oauth-authz-req+jwt", PermissibleValue(text="oauth-authz-req+jwt"))
-        setattr(cls, "oblivious-dns-message", PermissibleValue(text="oblivious-dns-message"))
+        setattr(
+            cls, "oauth-authz-req+jwt", PermissibleValue(text="oauth-authz-req+jwt")
+        )
+        setattr(
+            cls, "oblivious-dns-message", PermissibleValue(text="oblivious-dns-message")
+        )
         setattr(cls, "ocsp-request", PermissibleValue(text="ocsp-request"))
         setattr(cls, "ocsp-response", PermissibleValue(text="ocsp-response"))
         setattr(cls, "octet-stream", PermissibleValue(text="octet-stream"))
@@ -9936,8 +10361,12 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "opc-nodeset+xml", PermissibleValue(text="opc-nodeset+xml"))
         setattr(cls, "p21+zip", PermissibleValue(text="p21+zip"))
         setattr(cls, "p2p-overlay+xml", PermissibleValue(text="p2p-overlay+xml"))
-        setattr(cls, "patch-ops-error+xml", PermissibleValue(text="patch-ops-error+xml"))
-        setattr(cls, "pem-certificate-chain", PermissibleValue(text="pem-certificate-chain"))
+        setattr(
+            cls, "patch-ops-error+xml", PermissibleValue(text="patch-ops-error+xml")
+        )
+        setattr(
+            cls, "pem-certificate-chain", PermissibleValue(text="pem-certificate-chain")
+        )
         setattr(cls, "pgp-encrypted", PermissibleValue(text="pgp-encrypted"))
         setattr(cls, "pgp-keys", PermissibleValue(text="pgp-keys"))
         setattr(cls, "pgp-signature", PermissibleValue(text="pgp-signature"))
@@ -9974,7 +10403,9 @@ class MIMETypes(EnumDefinitionImpl):
             "prs.implied-executable",
             PermissibleValue(text="prs.implied-executable"),
         )
-        setattr(cls, "prs.implied-structure", PermissibleValue(text="prs.implied-structure"))
+        setattr(
+            cls, "prs.implied-structure", PermissibleValue(text="prs.implied-structure")
+        )
         setattr(cls, "prs.nprend", PermissibleValue(text="prs.nprend"))
         setattr(cls, "prs.plucker", PermissibleValue(text="prs.plucker"))
         setattr(cls, "prs.rdf-xml-crypt", PermissibleValue(text="prs.rdf-xml-crypt"))
@@ -10087,23 +10518,31 @@ class MIMETypes(EnumDefinitionImpl):
             "tamp-apex-update-confirm",
             PermissibleValue(text="tamp-apex-update-confirm"),
         )
-        setattr(cls, "tamp-community-update", PermissibleValue(text="tamp-community-update"))
+        setattr(
+            cls, "tamp-community-update", PermissibleValue(text="tamp-community-update")
+        )
         setattr(
             cls,
             "tamp-community-update-confirm",
             PermissibleValue(text="tamp-community-update-confirm"),
         )
         setattr(cls, "tamp-error", PermissibleValue(text="tamp-error"))
-        setattr(cls, "tamp-sequence-adjust", PermissibleValue(text="tamp-sequence-adjust"))
+        setattr(
+            cls, "tamp-sequence-adjust", PermissibleValue(text="tamp-sequence-adjust")
+        )
         setattr(
             cls,
             "tamp-sequence-adjust-confirm",
             PermissibleValue(text="tamp-sequence-adjust-confirm"),
         )
         setattr(cls, "tamp-status-query", PermissibleValue(text="tamp-status-query"))
-        setattr(cls, "tamp-status-response", PermissibleValue(text="tamp-status-response"))
+        setattr(
+            cls, "tamp-status-response", PermissibleValue(text="tamp-status-response")
+        )
         setattr(cls, "tamp-update", PermissibleValue(text="tamp-update"))
-        setattr(cls, "tamp-update-confirm", PermissibleValue(text="tamp-update-confirm"))
+        setattr(
+            cls, "tamp-update-confirm", PermissibleValue(text="tamp-update-confirm")
+        )
         setattr(cls, "taxii+json", PermissibleValue(text="taxii+json"))
         setattr(cls, "td+json", PermissibleValue(text="td+json"))
         setattr(cls, "tei+xml", PermissibleValue(text="tei+xml"))
@@ -10119,14 +10558,18 @@ class MIMETypes(EnumDefinitionImpl):
             "token-introspection+jwt",
             PermissibleValue(text="token-introspection+jwt"),
         )
-        setattr(cls, "trickle-ice-sdpfrag", PermissibleValue(text="trickle-ice-sdpfrag"))
+        setattr(
+            cls, "trickle-ice-sdpfrag", PermissibleValue(text="trickle-ice-sdpfrag")
+        )
         setattr(cls, "ttml+xml", PermissibleValue(text="ttml+xml"))
         setattr(cls, "tve-trigger", PermissibleValue(text="tve-trigger"))
         setattr(cls, "tzif-leap", PermissibleValue(text="tzif-leap"))
         setattr(cls, "urc-grpsheet+xml", PermissibleValue(text="urc-grpsheet+xml"))
         setattr(cls, "urc-ressheet+xml", PermissibleValue(text="urc-ressheet+xml"))
         setattr(cls, "urc-targetdesc+xml", PermissibleValue(text="urc-targetdesc+xml"))
-        setattr(cls, "urc-uisocketdesc+xml", PermissibleValue(text="urc-uisocketdesc+xml"))
+        setattr(
+            cls, "urc-uisocketdesc+xml", PermissibleValue(text="urc-uisocketdesc+xml")
+        )
         setattr(cls, "vcard+json", PermissibleValue(text="vcard+json"))
         setattr(cls, "vcard+xml", PermissibleValue(text="vcard+xml"))
         setattr(
@@ -10313,12 +10756,20 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.3gpp.mcvideo-user-profile+xml",
             PermissibleValue(text="vnd.3gpp.mcvideo-user-profile+xml"),
         )
-        setattr(cls, "vnd.3gpp.mid-call+xml", PermissibleValue(text="vnd.3gpp.mid-call+xml"))
+        setattr(
+            cls, "vnd.3gpp.mid-call+xml", PermissibleValue(text="vnd.3gpp.mid-call+xml")
+        )
         setattr(cls, "vnd.3gpp.ngap", PermissibleValue(text="vnd.3gpp.ngap"))
         setattr(cls, "vnd.3gpp.pfcp", PermissibleValue(text="vnd.3gpp.pfcp"))
-        setattr(cls, "vnd.3gpp.pic-bw-large", PermissibleValue(text="vnd.3gpp.pic-bw-large"))
-        setattr(cls, "vnd.3gpp.pic-bw-small", PermissibleValue(text="vnd.3gpp.pic-bw-small"))
-        setattr(cls, "vnd.3gpp.pic-bw-var", PermissibleValue(text="vnd.3gpp.pic-bw-var"))
+        setattr(
+            cls, "vnd.3gpp.pic-bw-large", PermissibleValue(text="vnd.3gpp.pic-bw-large")
+        )
+        setattr(
+            cls, "vnd.3gpp.pic-bw-small", PermissibleValue(text="vnd.3gpp.pic-bw-small")
+        )
+        setattr(
+            cls, "vnd.3gpp.pic-bw-var", PermissibleValue(text="vnd.3gpp.pic-bw-var")
+        )
         setattr(
             cls,
             "vnd.3gpp-prose-pc3a+xml",
@@ -10399,7 +10850,9 @@ class MIMETypes(EnumDefinitionImpl):
             PermissibleValue(text="vnd.3gpp.state-and-event-info+xml"),
         )
         setattr(cls, "vnd.3gpp.ussd+xml", PermissibleValue(text="vnd.3gpp.ussd+xml"))
-        setattr(cls, "vnd.3gpp.vae-info+xml", PermissibleValue(text="vnd.3gpp.vae-info+xml"))
+        setattr(
+            cls, "vnd.3gpp.vae-info+xml", PermissibleValue(text="vnd.3gpp.vae-info+xml")
+        )
         setattr(
             cls,
             "vnd.3gpp-v2x-local-service-information",
@@ -10418,18 +10871,28 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.3lightssoftware.imagescal",
             PermissibleValue(text="vnd.3lightssoftware.imagescal"),
         )
-        setattr(cls, "vnd.3M.Post-it-Notes", PermissibleValue(text="vnd.3M.Post-it-Notes"))
-        setattr(cls, "vnd.accpac.simply.aso", PermissibleValue(text="vnd.accpac.simply.aso"))
-        setattr(cls, "vnd.accpac.simply.imp", PermissibleValue(text="vnd.accpac.simply.imp"))
+        setattr(
+            cls, "vnd.3M.Post-it-Notes", PermissibleValue(text="vnd.3M.Post-it-Notes")
+        )
+        setattr(
+            cls, "vnd.accpac.simply.aso", PermissibleValue(text="vnd.accpac.simply.aso")
+        )
+        setattr(
+            cls, "vnd.accpac.simply.imp", PermissibleValue(text="vnd.accpac.simply.imp")
+        )
         setattr(
             cls,
             "vnd.acm.addressxfer+json",
             PermissibleValue(text="vnd.acm.addressxfer+json"),
         )
-        setattr(cls, "vnd.acm.chatbot+json", PermissibleValue(text="vnd.acm.chatbot+json"))
+        setattr(
+            cls, "vnd.acm.chatbot+json", PermissibleValue(text="vnd.acm.chatbot+json")
+        )
         setattr(cls, "vnd.acucobol", PermissibleValue(text="vnd.acucobol"))
         setattr(cls, "vnd.acucorp", PermissibleValue(text="vnd.acucorp"))
-        setattr(cls, "vnd.adobe.flash.movie", PermissibleValue(text="vnd.adobe.flash.movie"))
+        setattr(
+            cls, "vnd.adobe.flash.movie", PermissibleValue(text="vnd.adobe.flash.movie")
+        )
         setattr(
             cls,
             "vnd.adobe.formscentral.fcdt",
@@ -10443,7 +10906,9 @@ class MIMETypes(EnumDefinitionImpl):
         )
         setattr(cls, "vnd.adobe.xdp+xml", PermissibleValue(text="vnd.adobe.xdp+xml"))
         setattr(cls, "vnd.aether.imp", PermissibleValue(text="vnd.aether.imp"))
-        setattr(cls, "vnd.afpc.afplinedata", PermissibleValue(text="vnd.afpc.afplinedata"))
+        setattr(
+            cls, "vnd.afpc.afplinedata", PermissibleValue(text="vnd.afpc.afplinedata")
+        )
         setattr(
             cls,
             "vnd.afpc.afplinedata-pagedef",
@@ -10454,7 +10919,9 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.afpc.cmoca-cmresource",
             PermissibleValue(text="vnd.afpc.cmoca-cmresource"),
         )
-        setattr(cls, "vnd.afpc.foca-charset", PermissibleValue(text="vnd.afpc.foca-charset"))
+        setattr(
+            cls, "vnd.afpc.foca-charset", PermissibleValue(text="vnd.afpc.foca-charset")
+        )
         setattr(
             cls,
             "vnd.afpc.foca-codedfont",
@@ -10521,7 +10988,9 @@ class MIMETypes(EnumDefinitionImpl):
             PermissibleValue(text="vnd.americandynamics.acc"),
         )
         setattr(cls, "vnd.amiga.ami", PermissibleValue(text="vnd.amiga.ami"))
-        setattr(cls, "vnd.amundsen.maze+xml", PermissibleValue(text="vnd.amundsen.maze+xml"))
+        setattr(
+            cls, "vnd.amundsen.maze+xml", PermissibleValue(text="vnd.amundsen.maze+xml")
+        )
         setattr(cls, "vnd.android.ota", PermissibleValue(text="vnd.android.ota"))
         setattr(cls, "vnd.anki", PermissibleValue(text="vnd.anki"))
         setattr(
@@ -10534,7 +11003,9 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.antix.game-component",
             PermissibleValue(text="vnd.antix.game-component"),
         )
-        setattr(cls, "vnd.apache.arrow.file", PermissibleValue(text="vnd.apache.arrow.file"))
+        setattr(
+            cls, "vnd.apache.arrow.file", PermissibleValue(text="vnd.apache.arrow.file")
+        )
         setattr(
             cls,
             "vnd.apache.arrow.stream",
@@ -10599,11 +11070,17 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "vnd.autopackage", PermissibleValue(text="vnd.autopackage"))
         setattr(cls, "vnd.avalon+json", PermissibleValue(text="vnd.avalon+json"))
         setattr(cls, "vnd.avistar+xml", PermissibleValue(text="vnd.avistar+xml"))
-        setattr(cls, "vnd.balsamiq.bmml+xml", PermissibleValue(text="vnd.balsamiq.bmml+xml"))
-        setattr(cls, "vnd.banana-accounting", PermissibleValue(text="vnd.banana-accounting"))
+        setattr(
+            cls, "vnd.balsamiq.bmml+xml", PermissibleValue(text="vnd.balsamiq.bmml+xml")
+        )
+        setattr(
+            cls, "vnd.banana-accounting", PermissibleValue(text="vnd.banana-accounting")
+        )
         setattr(cls, "vnd.bbf.usp.error", PermissibleValue(text="vnd.bbf.usp.error"))
         setattr(cls, "vnd.bbf.usp.msg", PermissibleValue(text="vnd.bbf.usp.msg"))
-        setattr(cls, "vnd.bbf.usp.msg+json", PermissibleValue(text="vnd.bbf.usp.msg+json"))
+        setattr(
+            cls, "vnd.bbf.usp.msg+json", PermissibleValue(text="vnd.bbf.usp.msg+json")
+        )
         setattr(cls, "vnd.balsamiq.bmpr", PermissibleValue(text="vnd.balsamiq.bmpr"))
         setattr(
             cls,
@@ -10620,20 +11097,30 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.belightsoft.lhzl+zip",
             PermissibleValue(text="vnd.belightsoft.lhzl+zip"),
         )
-        setattr(cls, "vnd.bint.med-content", PermissibleValue(text="vnd.bint.med-content"))
+        setattr(
+            cls, "vnd.bint.med-content", PermissibleValue(text="vnd.bint.med-content")
+        )
         setattr(cls, "vnd.biopax.rdf+xml", PermissibleValue(text="vnd.biopax.rdf+xml"))
         setattr(
             cls,
             "vnd.blink-idb-value-wrapper",
             PermissibleValue(text="vnd.blink-idb-value-wrapper"),
         )
-        setattr(cls, "vnd.blueice.multipass", PermissibleValue(text="vnd.blueice.multipass"))
-        setattr(cls, "vnd.bluetooth.ep.oob", PermissibleValue(text="vnd.bluetooth.ep.oob"))
-        setattr(cls, "vnd.bluetooth.le.oob", PermissibleValue(text="vnd.bluetooth.le.oob"))
+        setattr(
+            cls, "vnd.blueice.multipass", PermissibleValue(text="vnd.blueice.multipass")
+        )
+        setattr(
+            cls, "vnd.bluetooth.ep.oob", PermissibleValue(text="vnd.bluetooth.ep.oob")
+        )
+        setattr(
+            cls, "vnd.bluetooth.le.oob", PermissibleValue(text="vnd.bluetooth.le.oob")
+        )
         setattr(cls, "vnd.bmi", PermissibleValue(text="vnd.bmi"))
         setattr(cls, "vnd.bpf", PermissibleValue(text="vnd.bpf"))
         setattr(cls, "vnd.bpf3", PermissibleValue(text="vnd.bpf3"))
-        setattr(cls, "vnd.businessobjects", PermissibleValue(text="vnd.businessobjects"))
+        setattr(
+            cls, "vnd.businessobjects", PermissibleValue(text="vnd.businessobjects")
+        )
         setattr(cls, "vnd.byu.uapi+json", PermissibleValue(text="vnd.byu.uapi+json"))
         setattr(cls, "vnd.cab-jscript", PermissibleValue(text="vnd.cab-jscript"))
         setattr(cls, "vnd.canon-cpdl", PermissibleValue(text="vnd.canon-cpdl"))
@@ -10662,7 +11149,9 @@ class MIMETypes(EnumDefinitionImpl):
         )
         setattr(cls, "vnd.ciedi", PermissibleValue(text="vnd.ciedi"))
         setattr(cls, "vnd.cinderella", PermissibleValue(text="vnd.cinderella"))
-        setattr(cls, "vnd.cirpack.isdn-ext", PermissibleValue(text="vnd.cirpack.isdn-ext"))
+        setattr(
+            cls, "vnd.cirpack.isdn-ext", PermissibleValue(text="vnd.cirpack.isdn-ext")
+        )
         setattr(
             cls,
             "vnd.citationstyles.style+xml",
@@ -10732,7 +11221,9 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.collection.doc+json",
             PermissibleValue(text="vnd.collection.doc+json"),
         )
-        setattr(cls, "vnd.collection+json", PermissibleValue(text="vnd.collection+json"))
+        setattr(
+            cls, "vnd.collection+json", PermissibleValue(text="vnd.collection+json")
+        )
         setattr(
             cls,
             "vnd.collection.next+json",
@@ -10740,7 +11231,9 @@ class MIMETypes(EnumDefinitionImpl):
         )
         setattr(cls, "vnd.comicbook-rar", PermissibleValue(text="vnd.comicbook-rar"))
         setattr(cls, "vnd.comicbook+zip", PermissibleValue(text="vnd.comicbook+zip"))
-        setattr(cls, "vnd.commerce-battelle", PermissibleValue(text="vnd.commerce-battelle"))
+        setattr(
+            cls, "vnd.commerce-battelle", PermissibleValue(text="vnd.commerce-battelle")
+        )
         setattr(cls, "vnd.commonspace", PermissibleValue(text="vnd.commonspace"))
         setattr(
             cls,
@@ -10775,18 +11268,26 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.criticaltools.wbs+xml",
             PermissibleValue(text="vnd.criticaltools.wbs+xml"),
         )
-        setattr(cls, "vnd.cryptii.pipe+json", PermissibleValue(text="vnd.cryptii.pipe+json"))
-        setattr(cls, "vnd.crypto-shade-file", PermissibleValue(text="vnd.crypto-shade-file"))
+        setattr(
+            cls, "vnd.cryptii.pipe+json", PermissibleValue(text="vnd.cryptii.pipe+json")
+        )
+        setattr(
+            cls, "vnd.crypto-shade-file", PermissibleValue(text="vnd.crypto-shade-file")
+        )
         setattr(
             cls,
             "vnd.cryptomator.encrypted",
             PermissibleValue(text="vnd.cryptomator.encrypted"),
         )
-        setattr(cls, "vnd.cryptomator.vault", PermissibleValue(text="vnd.cryptomator.vault"))
+        setattr(
+            cls, "vnd.cryptomator.vault", PermissibleValue(text="vnd.cryptomator.vault")
+        )
         setattr(cls, "vnd.ctc-posml", PermissibleValue(text="vnd.ctc-posml"))
         setattr(cls, "vnd.ctct.ws+xml", PermissibleValue(text="vnd.ctct.ws+xml"))
         setattr(cls, "vnd.cups-pdf", PermissibleValue(text="vnd.cups-pdf"))
-        setattr(cls, "vnd.cups-postscript", PermissibleValue(text="vnd.cups-postscript"))
+        setattr(
+            cls, "vnd.cups-postscript", PermissibleValue(text="vnd.cups-postscript")
+        )
         setattr(cls, "vnd.cups-ppd", PermissibleValue(text="vnd.cups-ppd"))
         setattr(cls, "vnd.cups-raster", PermissibleValue(text="vnd.cups-raster"))
         setattr(cls, "vnd.cups-raw", PermissibleValue(text="vnd.cups-raw"))
@@ -10806,10 +11307,16 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "vnd.d3m-dataset", PermissibleValue(text="vnd.d3m-dataset"))
         setattr(cls, "vnd.d3m-problem", PermissibleValue(text="vnd.d3m-problem"))
         setattr(cls, "vnd.dart", PermissibleValue(text="vnd.dart"))
-        setattr(cls, "vnd.data-vision.rdz", PermissibleValue(text="vnd.data-vision.rdz"))
+        setattr(
+            cls, "vnd.data-vision.rdz", PermissibleValue(text="vnd.data-vision.rdz")
+        )
         setattr(cls, "vnd.datalog", PermissibleValue(text="vnd.datalog"))
-        setattr(cls, "vnd.datapackage+json", PermissibleValue(text="vnd.datapackage+json"))
-        setattr(cls, "vnd.dataresource+json", PermissibleValue(text="vnd.dataresource+json"))
+        setattr(
+            cls, "vnd.datapackage+json", PermissibleValue(text="vnd.datapackage+json")
+        )
+        setattr(
+            cls, "vnd.dataresource+json", PermissibleValue(text="vnd.dataresource+json")
+        )
         setattr(cls, "vnd.dbf", PermissibleValue(text="vnd.dbf"))
         setattr(
             cls,
@@ -10818,7 +11325,9 @@ class MIMETypes(EnumDefinitionImpl):
         )
         setattr(cls, "vnd.dece.data", PermissibleValue(text="vnd.dece.data"))
         setattr(cls, "vnd.dece.ttml+xml", PermissibleValue(text="vnd.dece.ttml+xml"))
-        setattr(cls, "vnd.dece.unspecified", PermissibleValue(text="vnd.dece.unspecified"))
+        setattr(
+            cls, "vnd.dece.unspecified", PermissibleValue(text="vnd.dece.unspecified")
+        )
         setattr(cls, "vnd.dece.zip", PermissibleValue(text="vnd.dece.zip"))
         setattr(
             cls,
@@ -10831,7 +11340,9 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.dir-bi.plate-dl-nosuffix",
             PermissibleValue(text="vnd.dir-bi.plate-dl-nosuffix"),
         )
-        setattr(cls, "vnd.dm.delegation+xml", PermissibleValue(text="vnd.dm.delegation+xml"))
+        setattr(
+            cls, "vnd.dm.delegation+xml", PermissibleValue(text="vnd.dm.delegation+xml")
+        )
         setattr(cls, "vnd.dna", PermissibleValue(text="vnd.dna"))
         setattr(cls, "vnd.document+json", PermissibleValue(text="vnd.document+json"))
         setattr(cls, "vnd.dolby.mobile.1", PermissibleValue(text="vnd.dolby.mobile.1"))
@@ -10845,25 +11356,33 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "vnd.dreamfactory", PermissibleValue(text="vnd.dreamfactory"))
         setattr(cls, "vnd.drive+json", PermissibleValue(text="vnd.drive+json"))
         setattr(cls, "vnd.dtg.local", PermissibleValue(text="vnd.dtg.local"))
-        setattr(cls, "vnd.dtg.local.flash", PermissibleValue(text="vnd.dtg.local.flash"))
+        setattr(
+            cls, "vnd.dtg.local.flash", PermissibleValue(text="vnd.dtg.local.flash")
+        )
         setattr(cls, "vnd.dtg.local.html", PermissibleValue(text="vnd.dtg.local.html"))
         setattr(cls, "vnd.dvb.ait", PermissibleValue(text="vnd.dvb.ait"))
         setattr(cls, "vnd.dvb.dvbisl+xml", PermissibleValue(text="vnd.dvb.dvbisl+xml"))
         setattr(cls, "vnd.dvb.dvbj", PermissibleValue(text="vnd.dvb.dvbj"))
-        setattr(cls, "vnd.dvb.esgcontainer", PermissibleValue(text="vnd.dvb.esgcontainer"))
+        setattr(
+            cls, "vnd.dvb.esgcontainer", PermissibleValue(text="vnd.dvb.esgcontainer")
+        )
         setattr(
             cls,
             "vnd.dvb.ipdcdftnotifaccess",
             PermissibleValue(text="vnd.dvb.ipdcdftnotifaccess"),
         )
-        setattr(cls, "vnd.dvb.ipdcesgaccess", PermissibleValue(text="vnd.dvb.ipdcesgaccess"))
+        setattr(
+            cls, "vnd.dvb.ipdcesgaccess", PermissibleValue(text="vnd.dvb.ipdcesgaccess")
+        )
         setattr(
             cls,
             "vnd.dvb.ipdcesgaccess2",
             PermissibleValue(text="vnd.dvb.ipdcesgaccess2"),
         )
         setattr(cls, "vnd.dvb.ipdcesgpdd", PermissibleValue(text="vnd.dvb.ipdcesgpdd"))
-        setattr(cls, "vnd.dvb.ipdcroaming", PermissibleValue(text="vnd.dvb.ipdcroaming"))
+        setattr(
+            cls, "vnd.dvb.ipdcroaming", PermissibleValue(text="vnd.dvb.ipdcroaming")
+        )
         setattr(
             cls,
             "vnd.dvb.iptv.alfec-base",
@@ -10932,7 +11451,9 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.ecowin.filerequest",
             PermissibleValue(text="vnd.ecowin.filerequest"),
         )
-        setattr(cls, "vnd.ecowin.fileupdate", PermissibleValue(text="vnd.ecowin.fileupdate"))
+        setattr(
+            cls, "vnd.ecowin.fileupdate", PermissibleValue(text="vnd.ecowin.fileupdate")
+        )
         setattr(cls, "vnd.ecowin.series", PermissibleValue(text="vnd.ecowin.series"))
         setattr(
             cls,
@@ -10954,10 +11475,14 @@ class MIMETypes(EnumDefinitionImpl):
         )
         setattr(cls, "vnd.enliven", PermissibleValue(text="vnd.enliven"))
         setattr(cls, "vnd.enphase.envoy", PermissibleValue(text="vnd.enphase.envoy"))
-        setattr(cls, "vnd.eprints.data+xml", PermissibleValue(text="vnd.eprints.data+xml"))
+        setattr(
+            cls, "vnd.eprints.data+xml", PermissibleValue(text="vnd.eprints.data+xml")
+        )
         setattr(cls, "vnd.epson.esf", PermissibleValue(text="vnd.epson.esf"))
         setattr(cls, "vnd.epson.msf", PermissibleValue(text="vnd.epson.msf"))
-        setattr(cls, "vnd.epson.quickanime", PermissibleValue(text="vnd.epson.quickanime"))
+        setattr(
+            cls, "vnd.epson.quickanime", PermissibleValue(text="vnd.epson.quickanime")
+        )
         setattr(cls, "vnd.epson.salt", PermissibleValue(text="vnd.epson.salt"))
         setattr(cls, "vnd.epson.ssf", PermissibleValue(text="vnd.epson.ssf"))
         setattr(
@@ -10965,11 +11490,17 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.ericsson.quickcall",
             PermissibleValue(text="vnd.ericsson.quickcall"),
         )
-        setattr(cls, "vnd.espass-espass+zip", PermissibleValue(text="vnd.espass-espass+zip"))
+        setattr(
+            cls, "vnd.espass-espass+zip", PermissibleValue(text="vnd.espass-espass+zip")
+        )
         setattr(cls, "vnd.eszigno3+xml", PermissibleValue(text="vnd.eszigno3+xml"))
         setattr(cls, "vnd.etsi.aoc+xml", PermissibleValue(text="vnd.etsi.aoc+xml"))
-        setattr(cls, "vnd.etsi.asic-s+zip", PermissibleValue(text="vnd.etsi.asic-s+zip"))
-        setattr(cls, "vnd.etsi.asic-e+zip", PermissibleValue(text="vnd.etsi.asic-e+zip"))
+        setattr(
+            cls, "vnd.etsi.asic-s+zip", PermissibleValue(text="vnd.etsi.asic-s+zip")
+        )
+        setattr(
+            cls, "vnd.etsi.asic-e+zip", PermissibleValue(text="vnd.etsi.asic-e+zip")
+        )
         setattr(cls, "vnd.etsi.cug+xml", PermissibleValue(text="vnd.etsi.cug+xml"))
         setattr(
             cls,
@@ -11006,7 +11537,9 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.etsi.iptvservice+xml",
             PermissibleValue(text="vnd.etsi.iptvservice+xml"),
         )
-        setattr(cls, "vnd.etsi.iptvsync+xml", PermissibleValue(text="vnd.etsi.iptvsync+xml"))
+        setattr(
+            cls, "vnd.etsi.iptvsync+xml", PermissibleValue(text="vnd.etsi.iptvsync+xml")
+        )
         setattr(
             cls,
             "vnd.etsi.iptvueprofile+xml",
@@ -11021,7 +11554,9 @@ class MIMETypes(EnumDefinitionImpl):
         )
         setattr(cls, "vnd.etsi.pstn+xml", PermissibleValue(text="vnd.etsi.pstn+xml"))
         setattr(cls, "vnd.etsi.sci+xml", PermissibleValue(text="vnd.etsi.sci+xml"))
-        setattr(cls, "vnd.etsi.simservs+xml", PermissibleValue(text="vnd.etsi.simservs+xml"))
+        setattr(
+            cls, "vnd.etsi.simservs+xml", PermissibleValue(text="vnd.etsi.simservs+xml")
+        )
         setattr(
             cls,
             "vnd.etsi.timestamp-token",
@@ -11045,16 +11580,22 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.evolv.ecig.settings",
             PermissibleValue(text="vnd.evolv.ecig.settings"),
         )
-        setattr(cls, "vnd.evolv.ecig.theme", PermissibleValue(text="vnd.evolv.ecig.theme"))
+        setattr(
+            cls, "vnd.evolv.ecig.theme", PermissibleValue(text="vnd.evolv.ecig.theme")
+        )
         setattr(
             cls,
             "vnd.exstream-empower+zip",
             PermissibleValue(text="vnd.exstream-empower+zip"),
         )
-        setattr(cls, "vnd.exstream-package", PermissibleValue(text="vnd.exstream-package"))
+        setattr(
+            cls, "vnd.exstream-package", PermissibleValue(text="vnd.exstream-package")
+        )
         setattr(cls, "vnd.ezpix-album", PermissibleValue(text="vnd.ezpix-album"))
         setattr(cls, "vnd.ezpix-package", PermissibleValue(text="vnd.ezpix-package"))
-        setattr(cls, "vnd.f-secure.mobile", PermissibleValue(text="vnd.f-secure.mobile"))
+        setattr(
+            cls, "vnd.f-secure.mobile", PermissibleValue(text="vnd.f-secure.mobile")
+        )
         setattr(
             cls,
             "vnd.fastcopy-disk-image",
@@ -11119,10 +11660,16 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "vnd.fujitsu.oasys", PermissibleValue(text="vnd.fujitsu.oasys"))
         setattr(cls, "vnd.fujitsu.oasys2", PermissibleValue(text="vnd.fujitsu.oasys2"))
         setattr(cls, "vnd.fujitsu.oasys3", PermissibleValue(text="vnd.fujitsu.oasys3"))
-        setattr(cls, "vnd.fujitsu.oasysgp", PermissibleValue(text="vnd.fujitsu.oasysgp"))
-        setattr(cls, "vnd.fujitsu.oasysprs", PermissibleValue(text="vnd.fujitsu.oasysprs"))
+        setattr(
+            cls, "vnd.fujitsu.oasysgp", PermissibleValue(text="vnd.fujitsu.oasysgp")
+        )
+        setattr(
+            cls, "vnd.fujitsu.oasysprs", PermissibleValue(text="vnd.fujitsu.oasysprs")
+        )
         setattr(cls, "vnd.fujixerox.ART4", PermissibleValue(text="vnd.fujixerox.ART4"))
-        setattr(cls, "vnd.fujixerox.ART-EX", PermissibleValue(text="vnd.fujixerox.ART-EX"))
+        setattr(
+            cls, "vnd.fujixerox.ART-EX", PermissibleValue(text="vnd.fujixerox.ART-EX")
+        )
         setattr(cls, "vnd.fujixerox.ddd", PermissibleValue(text="vnd.fujixerox.ddd"))
         setattr(
             cls,
@@ -11144,9 +11691,13 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "vnd.futoin+cbor", PermissibleValue(text="vnd.futoin+cbor"))
         setattr(cls, "vnd.futoin+json", PermissibleValue(text="vnd.futoin+json"))
         setattr(cls, "vnd.fuzzysheet", PermissibleValue(text="vnd.fuzzysheet"))
-        setattr(cls, "vnd.genomatix.tuxedo", PermissibleValue(text="vnd.genomatix.tuxedo"))
+        setattr(
+            cls, "vnd.genomatix.tuxedo", PermissibleValue(text="vnd.genomatix.tuxedo")
+        )
         setattr(cls, "vnd.genozip", PermissibleValue(text="vnd.genozip"))
-        setattr(cls, "vnd.gentics.grd+json", PermissibleValue(text="vnd.gentics.grd+json"))
+        setattr(
+            cls, "vnd.gentics.grd+json", PermissibleValue(text="vnd.gentics.grd+json")
+        )
         setattr(
             cls,
             "vnd.gentoo.catmetadata+xml",
@@ -11155,7 +11706,9 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "vnd.gentoo.ebuild", PermissibleValue(text="vnd.gentoo.ebuild"))
         setattr(cls, "vnd.gentoo.eclass", PermissibleValue(text="vnd.gentoo.eclass"))
         setattr(cls, "vnd.gentoo.gpkg", PermissibleValue(text="vnd.gentoo.gpkg"))
-        setattr(cls, "vnd.gentoo.manifest", PermissibleValue(text="vnd.gentoo.manifest"))
+        setattr(
+            cls, "vnd.gentoo.manifest", PermissibleValue(text="vnd.gentoo.manifest")
+        )
         setattr(cls, "vnd.gentoo.xpak", PermissibleValue(text="vnd.gentoo.xpak"))
         setattr(
             cls,
@@ -11175,9 +11728,13 @@ class MIMETypes(EnumDefinitionImpl):
             PermissibleValue(text="vnd.geocube+xml (OBSOLETED by request)"),
         )
         setattr(cls, "vnd.geogebra.file", PermissibleValue(text="vnd.geogebra.file"))
-        setattr(cls, "vnd.geogebra.slides", PermissibleValue(text="vnd.geogebra.slides"))
+        setattr(
+            cls, "vnd.geogebra.slides", PermissibleValue(text="vnd.geogebra.slides")
+        )
         setattr(cls, "vnd.geogebra.tool", PermissibleValue(text="vnd.geogebra.tool"))
-        setattr(cls, "vnd.geometry-explorer", PermissibleValue(text="vnd.geometry-explorer"))
+        setattr(
+            cls, "vnd.geometry-explorer", PermissibleValue(text="vnd.geometry-explorer")
+        )
         setattr(cls, "vnd.geonext", PermissibleValue(text="vnd.geonext"))
         setattr(cls, "vnd.geoplan", PermissibleValue(text="vnd.geoplan"))
         setattr(cls, "vnd.geospace", PermissibleValue(text="vnd.geospace"))
@@ -11192,7 +11749,9 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.globalplatform.card-content-mgt-response",
             PermissibleValue(text="vnd.globalplatform.card-content-mgt-response"),
         )
-        setattr(cls, "vnd.gmx - DEPRECATED", PermissibleValue(text="vnd.gmx - DEPRECATED"))
+        setattr(
+            cls, "vnd.gmx - DEPRECATED", PermissibleValue(text="vnd.gmx - DEPRECATED")
+        )
         setattr(
             cls,
             "vnd.gnu.taler.exchange+json",
@@ -11208,9 +11767,15 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.google-earth.kml+xml",
             PermissibleValue(text="vnd.google-earth.kml+xml"),
         )
-        setattr(cls, "vnd.google-earth.kmz", PermissibleValue(text="vnd.google-earth.kmz"))
-        setattr(cls, "vnd.gov.sk.e-form+xml", PermissibleValue(text="vnd.gov.sk.e-form+xml"))
-        setattr(cls, "vnd.gov.sk.e-form+zip", PermissibleValue(text="vnd.gov.sk.e-form+zip"))
+        setattr(
+            cls, "vnd.google-earth.kmz", PermissibleValue(text="vnd.google-earth.kmz")
+        )
+        setattr(
+            cls, "vnd.gov.sk.e-form+xml", PermissibleValue(text="vnd.gov.sk.e-form+xml")
+        )
+        setattr(
+            cls, "vnd.gov.sk.e-form+zip", PermissibleValue(text="vnd.gov.sk.e-form+zip")
+        )
         setattr(
             cls,
             "vnd.gov.sk.xmldatacontainer+xml",
@@ -11226,7 +11791,9 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.groove-identity-message",
             PermissibleValue(text="vnd.groove-identity-message"),
         )
-        setattr(cls, "vnd.groove-injector", PermissibleValue(text="vnd.groove-injector"))
+        setattr(
+            cls, "vnd.groove-injector", PermissibleValue(text="vnd.groove-injector")
+        )
         setattr(
             cls,
             "vnd.groove-tool-message",
@@ -11250,7 +11817,9 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "vnd.hcl-bireports", PermissibleValue(text="vnd.hcl-bireports"))
         setattr(cls, "vnd.hdt", PermissibleValue(text="vnd.hdt"))
         setattr(cls, "vnd.heroku+json", PermissibleValue(text="vnd.heroku+json"))
-        setattr(cls, "vnd.hhe.lesson-player", PermissibleValue(text="vnd.hhe.lesson-player"))
+        setattr(
+            cls, "vnd.hhe.lesson-player", PermissibleValue(text="vnd.hhe.lesson-player")
+        )
         setattr(cls, "vnd.hp-HPGL", PermissibleValue(text="vnd.hp-HPGL"))
         setattr(cls, "vnd.hp-hpid", PermissibleValue(text="vnd.hp-hpid"))
         setattr(cls, "vnd.hp-hps", PermissibleValue(text="vnd.hp-hps"))
@@ -11264,10 +11833,16 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.hydrostatix.sof-data",
             PermissibleValue(text="vnd.hydrostatix.sof-data"),
         )
-        setattr(cls, "vnd.hyper-item+json", PermissibleValue(text="vnd.hyper-item+json"))
+        setattr(
+            cls, "vnd.hyper-item+json", PermissibleValue(text="vnd.hyper-item+json")
+        )
         setattr(cls, "vnd.hyper+json", PermissibleValue(text="vnd.hyper+json"))
-        setattr(cls, "vnd.hyperdrive+json", PermissibleValue(text="vnd.hyperdrive+json"))
-        setattr(cls, "vnd.hzn-3d-crossword", PermissibleValue(text="vnd.hzn-3d-crossword"))
+        setattr(
+            cls, "vnd.hyperdrive+json", PermissibleValue(text="vnd.hyperdrive+json")
+        )
+        setattr(
+            cls, "vnd.hzn-3d-crossword", PermissibleValue(text="vnd.hzn-3d-crossword")
+        )
         setattr(
             cls,
             "vnd.ibm.afplinedata (OBSOLETED in favor of vnd.afpc.afplinedata)",
@@ -11311,8 +11886,12 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.imagemeter.image+zip",
             PermissibleValue(text="vnd.imagemeter.image+zip"),
         )
-        setattr(cls, "vnd.immervision-ivp", PermissibleValue(text="vnd.immervision-ivp"))
-        setattr(cls, "vnd.immervision-ivu", PermissibleValue(text="vnd.immervision-ivu"))
+        setattr(
+            cls, "vnd.immervision-ivp", PermissibleValue(text="vnd.immervision-ivp")
+        )
+        setattr(
+            cls, "vnd.immervision-ivu", PermissibleValue(text="vnd.immervision-ivu")
+        )
         setattr(cls, "vnd.ims.imsccv1p1", PermissibleValue(text="vnd.ims.imsccv1p1"))
         setattr(cls, "vnd.ims.imsccv1p2", PermissibleValue(text="vnd.ims.imsccv1p2"))
         setattr(cls, "vnd.ims.imsccv1p3", PermissibleValue(text="vnd.ims.imsccv1p3"))
@@ -11351,7 +11930,9 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.informedcontrol.rms+xml",
             PermissibleValue(text="vnd.informedcontrol.rms+xml"),
         )
-        setattr(cls, "vnd.infotech.project", PermissibleValue(text="vnd.infotech.project"))
+        setattr(
+            cls, "vnd.infotech.project", PermissibleValue(text="vnd.infotech.project")
+        )
         setattr(
             cls,
             "vnd.infotech.project+xml",
@@ -11370,17 +11951,23 @@ class MIMETypes(EnumDefinitionImpl):
             PermissibleValue(text="vnd.innopath.wamp.notification"),
         )
         setattr(cls, "vnd.insors.igm", PermissibleValue(text="vnd.insors.igm"))
-        setattr(cls, "vnd.intercon.formnet", PermissibleValue(text="vnd.intercon.formnet"))
+        setattr(
+            cls, "vnd.intercon.formnet", PermissibleValue(text="vnd.intercon.formnet")
+        )
         setattr(cls, "vnd.intergeo", PermissibleValue(text="vnd.intergeo"))
         setattr(
             cls,
             "vnd.intertrust.digibox",
             PermissibleValue(text="vnd.intertrust.digibox"),
         )
-        setattr(cls, "vnd.intertrust.nncp", PermissibleValue(text="vnd.intertrust.nncp"))
+        setattr(
+            cls, "vnd.intertrust.nncp", PermissibleValue(text="vnd.intertrust.nncp")
+        )
         setattr(cls, "vnd.intu.qbo", PermissibleValue(text="vnd.intu.qbo"))
         setattr(cls, "vnd.intu.qfx", PermissibleValue(text="vnd.intu.qfx"))
-        setattr(cls, "vnd.ipfs.ipns-record", PermissibleValue(text="vnd.ipfs.ipns-record"))
+        setattr(
+            cls, "vnd.ipfs.ipns-record", PermissibleValue(text="vnd.ipfs.ipns-record")
+        )
         setattr(cls, "vnd.ipld.car", PermissibleValue(text="vnd.ipld.car"))
         setattr(cls, "vnd.ipld.dag-cbor", PermissibleValue(text="vnd.ipld.dag-cbor"))
         setattr(cls, "vnd.ipld.dag-json", PermissibleValue(text="vnd.ipld.dag-json"))
@@ -11433,7 +12020,9 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "vnd.is-xpr", PermissibleValue(text="vnd.is-xpr"))
         setattr(cls, "vnd.isac.fcs", PermissibleValue(text="vnd.isac.fcs"))
         setattr(cls, "vnd.jam", PermissibleValue(text="vnd.jam"))
-        setattr(cls, "vnd.iso11783-10+zip", PermissibleValue(text="vnd.iso11783-10+zip"))
+        setattr(
+            cls, "vnd.iso11783-10+zip", PermissibleValue(text="vnd.iso11783-10+zip")
+        )
         setattr(
             cls,
             "vnd.japannet-directory-service",
@@ -11499,7 +12088,9 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "vnd.kidspiration", PermissibleValue(text="vnd.kidspiration"))
         setattr(cls, "vnd.Kinar", PermissibleValue(text="vnd.Kinar"))
         setattr(cls, "vnd.koan", PermissibleValue(text="vnd.koan"))
-        setattr(cls, "vnd.kodak-descriptor", PermissibleValue(text="vnd.kodak-descriptor"))
+        setattr(
+            cls, "vnd.kodak-descriptor", PermissibleValue(text="vnd.kodak-descriptor")
+        )
         setattr(cls, "vnd.las", PermissibleValue(text="vnd.las"))
         setattr(cls, "vnd.las.las+json", PermissibleValue(text="vnd.las.las+json"))
         setattr(cls, "vnd.las.las+xml", PermissibleValue(text="vnd.las.las+xml"))
@@ -11528,12 +12119,20 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "vnd.loom", PermissibleValue(text="vnd.loom"))
         setattr(cls, "vnd.lotus-1-2-3", PermissibleValue(text="vnd.lotus-1-2-3"))
         setattr(cls, "vnd.lotus-approach", PermissibleValue(text="vnd.lotus-approach"))
-        setattr(cls, "vnd.lotus-freelance", PermissibleValue(text="vnd.lotus-freelance"))
+        setattr(
+            cls, "vnd.lotus-freelance", PermissibleValue(text="vnd.lotus-freelance")
+        )
         setattr(cls, "vnd.lotus-notes", PermissibleValue(text="vnd.lotus-notes"))
-        setattr(cls, "vnd.lotus-organizer", PermissibleValue(text="vnd.lotus-organizer"))
-        setattr(cls, "vnd.lotus-screencam", PermissibleValue(text="vnd.lotus-screencam"))
+        setattr(
+            cls, "vnd.lotus-organizer", PermissibleValue(text="vnd.lotus-organizer")
+        )
+        setattr(
+            cls, "vnd.lotus-screencam", PermissibleValue(text="vnd.lotus-screencam")
+        )
         setattr(cls, "vnd.lotus-wordpro", PermissibleValue(text="vnd.lotus-wordpro"))
-        setattr(cls, "vnd.macports.portpkg", PermissibleValue(text="vnd.macports.portpkg"))
+        setattr(
+            cls, "vnd.macports.portpkg", PermissibleValue(text="vnd.macports.portpkg")
+        )
         setattr(
             cls,
             "vnd.mapbox-vector-tile",
@@ -11554,7 +12153,9 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.marlin.drm.license+xml",
             PermissibleValue(text="vnd.marlin.drm.license+xml"),
         )
-        setattr(cls, "vnd.marlin.drm.mdcf", PermissibleValue(text="vnd.marlin.drm.mdcf"))
+        setattr(
+            cls, "vnd.marlin.drm.mdcf", PermissibleValue(text="vnd.marlin.drm.mdcf")
+        )
         setattr(cls, "vnd.mason+json", PermissibleValue(text="vnd.mason+json"))
         setattr(
             cls,
@@ -11667,10 +12268,14 @@ class MIMETypes(EnumDefinitionImpl):
             PermissibleValue(text="vnd.motorola.flexsuite.wem"),
         )
         setattr(cls, "vnd.motorola.iprm", PermissibleValue(text="vnd.motorola.iprm"))
-        setattr(cls, "vnd.mozilla.xul+xml", PermissibleValue(text="vnd.mozilla.xul+xml"))
+        setattr(
+            cls, "vnd.mozilla.xul+xml", PermissibleValue(text="vnd.mozilla.xul+xml")
+        )
         setattr(cls, "vnd.ms-artgalry", PermissibleValue(text="vnd.ms-artgalry"))
         setattr(cls, "vnd.ms-asf", PermissibleValue(text="vnd.ms-asf"))
-        setattr(cls, "vnd.ms-cab-compressed", PermissibleValue(text="vnd.ms-cab-compressed"))
+        setattr(
+            cls, "vnd.ms-cab-compressed", PermissibleValue(text="vnd.ms-cab-compressed")
+        )
         setattr(cls, "vnd.ms-3mfdocument", PermissibleValue(text="vnd.ms-3mfdocument"))
         setattr(cls, "vnd.ms-excel", PermissibleValue(text="vnd.ms-excel"))
         setattr(
@@ -11771,7 +12376,9 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.ms-wmdrm.lic-chlg-req",
             PermissibleValue(text="vnd.ms-wmdrm.lic-chlg-req"),
         )
-        setattr(cls, "vnd.ms-wmdrm.lic-resp", PermissibleValue(text="vnd.ms-wmdrm.lic-resp"))
+        setattr(
+            cls, "vnd.ms-wmdrm.lic-resp", PermissibleValue(text="vnd.ms-wmdrm.lic-resp")
+        )
         setattr(
             cls,
             "vnd.ms-wmdrm.meter-chlg-req",
@@ -11798,7 +12405,9 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "vnd.msa-disk-image", PermissibleValue(text="vnd.msa-disk-image"))
         setattr(cls, "vnd.mseq", PermissibleValue(text="vnd.mseq"))
         setattr(cls, "vnd.msign", PermissibleValue(text="vnd.msign"))
-        setattr(cls, "vnd.multiad.creator", PermissibleValue(text="vnd.multiad.creator"))
+        setattr(
+            cls, "vnd.multiad.creator", PermissibleValue(text="vnd.multiad.creator")
+        )
         setattr(
             cls,
             "vnd.multiad.creator.cif",
@@ -11815,13 +12424,19 @@ class MIMETypes(EnumDefinitionImpl):
         )
         setattr(cls, "vnd.ncd.control", PermissibleValue(text="vnd.ncd.control"))
         setattr(cls, "vnd.ncd.reference", PermissibleValue(text="vnd.ncd.reference"))
-        setattr(cls, "vnd.nearst.inv+json", PermissibleValue(text="vnd.nearst.inv+json"))
+        setattr(
+            cls, "vnd.nearst.inv+json", PermissibleValue(text="vnd.nearst.inv+json")
+        )
         setattr(cls, "vnd.nebumind.line", PermissibleValue(text="vnd.nebumind.line"))
         setattr(cls, "vnd.nervana", PermissibleValue(text="vnd.nervana"))
         setattr(cls, "vnd.netfpx", PermissibleValue(text="vnd.netfpx"))
-        setattr(cls, "vnd.neurolanguage.nlu", PermissibleValue(text="vnd.neurolanguage.nlu"))
+        setattr(
+            cls, "vnd.neurolanguage.nlu", PermissibleValue(text="vnd.neurolanguage.nlu")
+        )
         setattr(cls, "vnd.nimn", PermissibleValue(text="vnd.nimn"))
-        setattr(cls, "vnd.nintendo.snes.rom", PermissibleValue(text="vnd.nintendo.snes.rom"))
+        setattr(
+            cls, "vnd.nintendo.snes.rom", PermissibleValue(text="vnd.nintendo.snes.rom")
+        )
         setattr(
             cls,
             "vnd.nintendo.nitro.rom",
@@ -11833,11 +12448,17 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.noblenet-directory",
             PermissibleValue(text="vnd.noblenet-directory"),
         )
-        setattr(cls, "vnd.noblenet-sealer", PermissibleValue(text="vnd.noblenet-sealer"))
+        setattr(
+            cls, "vnd.noblenet-sealer", PermissibleValue(text="vnd.noblenet-sealer")
+        )
         setattr(cls, "vnd.noblenet-web", PermissibleValue(text="vnd.noblenet-web"))
         setattr(cls, "vnd.nokia.catalogs", PermissibleValue(text="vnd.nokia.catalogs"))
-        setattr(cls, "vnd.nokia.conml+wbxml", PermissibleValue(text="vnd.nokia.conml+wbxml"))
-        setattr(cls, "vnd.nokia.conml+xml", PermissibleValue(text="vnd.nokia.conml+xml"))
+        setattr(
+            cls, "vnd.nokia.conml+wbxml", PermissibleValue(text="vnd.nokia.conml+wbxml")
+        )
+        setattr(
+            cls, "vnd.nokia.conml+xml", PermissibleValue(text="vnd.nokia.conml+xml")
+        )
         setattr(
             cls,
             "vnd.nokia.iptv.config+xml",
@@ -11869,13 +12490,17 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.nokia.n-gage.ac+xml",
             PermissibleValue(text="vnd.nokia.n-gage.ac+xml"),
         )
-        setattr(cls, "vnd.nokia.n-gage.data", PermissibleValue(text="vnd.nokia.n-gage.data"))
+        setattr(
+            cls, "vnd.nokia.n-gage.data", PermissibleValue(text="vnd.nokia.n-gage.data")
+        )
         setattr(
             cls,
             "vnd.nokia.n-gage.symbian.install (OBSOLETE",
             PermissibleValue(text="vnd.nokia.n-gage.symbian.install (OBSOLETE"),
         )
-        setattr(cls, "vnd.nokia.pcd+wbxml", PermissibleValue(text="vnd.nokia.pcd+wbxml"))
+        setattr(
+            cls, "vnd.nokia.pcd+wbxml", PermissibleValue(text="vnd.nokia.pcd+wbxml")
+        )
         setattr(cls, "vnd.nokia.pcd+xml", PermissibleValue(text="vnd.nokia.pcd+xml"))
         setattr(
             cls,
@@ -12035,7 +12660,9 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.oipf.cspg-hexbinary",
             PermissibleValue(text="vnd.oipf.cspg-hexbinary"),
         )
-        setattr(cls, "vnd.oipf.dae.svg+xml", PermissibleValue(text="vnd.oipf.dae.svg+xml"))
+        setattr(
+            cls, "vnd.oipf.dae.svg+xml", PermissibleValue(text="vnd.oipf.dae.svg+xml")
+        )
         setattr(
             cls,
             "vnd.oipf.dae.xhtml+xml",
@@ -12052,7 +12679,9 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.oipf.spdiscovery+xml",
             PermissibleValue(text="vnd.oipf.spdiscovery+xml"),
         )
-        setattr(cls, "vnd.oipf.spdlist+xml", PermissibleValue(text="vnd.oipf.spdlist+xml"))
+        setattr(
+            cls, "vnd.oipf.spdlist+xml", PermissibleValue(text="vnd.oipf.spdlist+xml")
+        )
         setattr(
             cls,
             "vnd.oipf.ueprofile+xml",
@@ -12074,7 +12703,9 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.oma.bcast.drm-trigger+xml",
             PermissibleValue(text="vnd.oma.bcast.drm-trigger+xml"),
         )
-        setattr(cls, "vnd.oma.bcast.imd+xml", PermissibleValue(text="vnd.oma.bcast.imd+xml"))
+        setattr(
+            cls, "vnd.oma.bcast.imd+xml", PermissibleValue(text="vnd.oma.bcast.imd+xml")
+        )
         setattr(cls, "vnd.oma.bcast.ltkm", PermissibleValue(text="vnd.oma.bcast.ltkm"))
         setattr(
             cls,
@@ -12086,7 +12717,9 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.oma.bcast.provisioningtrigger",
             PermissibleValue(text="vnd.oma.bcast.provisioningtrigger"),
         )
-        setattr(cls, "vnd.oma.bcast.sgboot", PermissibleValue(text="vnd.oma.bcast.sgboot"))
+        setattr(
+            cls, "vnd.oma.bcast.sgboot", PermissibleValue(text="vnd.oma.bcast.sgboot")
+        )
         setattr(
             cls,
             "vnd.oma.bcast.sgdd+xml",
@@ -12119,7 +12752,9 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.oma.cab-feature-handler+xml",
             PermissibleValue(text="vnd.oma.cab-feature-handler+xml"),
         )
-        setattr(cls, "vnd.oma.cab-pcc+xml", PermissibleValue(text="vnd.oma.cab-pcc+xml"))
+        setattr(
+            cls, "vnd.oma.cab-pcc+xml", PermissibleValue(text="vnd.oma.cab-pcc+xml")
+        )
         setattr(
             cls,
             "vnd.oma.cab-subs-invite+xml",
@@ -12133,7 +12768,9 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "vnd.oma.dcd", PermissibleValue(text="vnd.oma.dcd"))
         setattr(cls, "vnd.oma.dcdc", PermissibleValue(text="vnd.oma.dcdc"))
         setattr(cls, "vnd.oma.dd2+xml", PermissibleValue(text="vnd.oma.dd2+xml"))
-        setattr(cls, "vnd.oma.drm.risd+xml", PermissibleValue(text="vnd.oma.drm.risd+xml"))
+        setattr(
+            cls, "vnd.oma.drm.risd+xml", PermissibleValue(text="vnd.oma.drm.risd+xml")
+        )
         setattr(
             cls,
             "vnd.oma.group-usage-list+xml",
@@ -12179,11 +12816,19 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.oma.xcap-directory+xml",
             PermissibleValue(text="vnd.oma.xcap-directory+xml"),
         )
-        setattr(cls, "vnd.omads-email+xml", PermissibleValue(text="vnd.omads-email+xml"))
+        setattr(
+            cls, "vnd.omads-email+xml", PermissibleValue(text="vnd.omads-email+xml")
+        )
         setattr(cls, "vnd.omads-file+xml", PermissibleValue(text="vnd.omads-file+xml"))
-        setattr(cls, "vnd.omads-folder+xml", PermissibleValue(text="vnd.omads-folder+xml"))
-        setattr(cls, "vnd.omaloc-supl-init", PermissibleValue(text="vnd.omaloc-supl-init"))
-        setattr(cls, "vnd.oma-scws-config", PermissibleValue(text="vnd.oma-scws-config"))
+        setattr(
+            cls, "vnd.omads-folder+xml", PermissibleValue(text="vnd.omads-folder+xml")
+        )
+        setattr(
+            cls, "vnd.omaloc-supl-init", PermissibleValue(text="vnd.omaloc-supl-init")
+        )
+        setattr(
+            cls, "vnd.oma-scws-config", PermissibleValue(text="vnd.oma-scws-config")
+        )
         setattr(
             cls,
             "vnd.oma-scws-http-request",
@@ -12206,7 +12851,9 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.openblox.game-binary",
             PermissibleValue(text="vnd.openblox.game-binary"),
         )
-        setattr(cls, "vnd.openblox.game+xml", PermissibleValue(text="vnd.openblox.game+xml"))
+        setattr(
+            cls, "vnd.openblox.game+xml", PermissibleValue(text="vnd.openblox.game+xml")
+        )
         setattr(cls, "vnd.openeye.oeb", PermissibleValue(text="vnd.openeye.oeb"))
         setattr(
             cls,
@@ -12221,12 +12868,16 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.custom-properties+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.custom-properties+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.custom-properties+xml"
+            ),
         )
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.customXmlProperties+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.customXmlProperties+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.customXmlProperties+xml"
+            ),
         )
         setattr(
             cls,
@@ -12236,37 +12887,51 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.drawingml.chart+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.drawingml.chart+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.drawingml.chart+xml"
+            ),
         )
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.drawingml.chartshapes+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.drawingml.chartshapes+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.drawingml.chartshapes+xml"
+            ),
         )
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.drawingml.diagramColors+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.drawingml.diagramColors+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.drawingml.diagramColors+xml"
+            ),
         )
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.drawingml.diagramData+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.drawingml.diagramData+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.drawingml.diagramData+xml"
+            ),
         )
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.drawingml.diagramLayout+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.drawingml.diagramLayout+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.drawingml.diagramLayout+xml"
+            ),
         )
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.drawingml.diagramStyle+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.drawingml.diagramStyle+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.drawingml.diagramStyle+xml"
+            ),
         )
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.extended-properties+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.extended-properties+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.extended-properties+xml"
+            ),
         )
         setattr(
             cls,
@@ -12278,7 +12943,9 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.presentationml.comments+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.presentationml.comments+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.presentationml.comments+xml"
+            ),
         )
         setattr(
             cls,
@@ -12304,7 +12971,9 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.presentationml.presentation",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.presentationml.presentation"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.presentationml.presentation"
+            ),
         )
         setattr(
             cls,
@@ -12316,17 +12985,23 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.presentationml.presProps+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.presentationml.presProps+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.presentationml.presProps+xml"
+            ),
         )
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.presentationml.slide",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.presentationml.slide"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.presentationml.slide"
+            ),
         )
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.presentationml.slide+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.presentationml.slide+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.presentationml.slide+xml"
+            ),
         )
         setattr(
             cls,
@@ -12345,7 +13020,9 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.presentationml.slideshow",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.presentationml.slideshow"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.presentationml.slideshow"
+            ),
         )
         setattr(
             cls,
@@ -12371,12 +13048,16 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.presentationml.tags+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.presentationml.tags+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.presentationml.tags+xml"
+            ),
         )
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.presentationml.template",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.presentationml.template"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.presentationml.template"
+            ),
         )
         setattr(
             cls,
@@ -12388,22 +13069,30 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.presentationml.viewProps+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.presentationml.viewProps+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.presentationml.viewProps+xml"
+            ),
         )
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.spreadsheetml.calcChain+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.spreadsheetml.calcChain+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.spreadsheetml.calcChain+xml"
+            ),
         )
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.spreadsheetml.chartsheet+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.spreadsheetml.chartsheet+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.spreadsheetml.chartsheet+xml"
+            ),
         )
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.spreadsheetml.comments+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.spreadsheetml.comments+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.spreadsheetml.comments+xml"
+            ),
         )
         setattr(
             cls,
@@ -12443,12 +13132,16 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.spreadsheetml.pivotTable+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.spreadsheetml.pivotTable+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.spreadsheetml.pivotTable+xml"
+            ),
         )
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.spreadsheetml.queryTable+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.spreadsheetml.queryTable+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.spreadsheetml.queryTable+xml"
+            ),
         )
         setattr(
             cls,
@@ -12474,12 +13167,16 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            ),
         )
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"
+            ),
         )
         setattr(
             cls,
@@ -12491,12 +13188,16 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.spreadsheetml.styles+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"
+            ),
         )
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.spreadsheetml.table+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.spreadsheetml.table+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.spreadsheetml.table+xml"
+            ),
         )
         setattr(
             cls,
@@ -12508,7 +13209,9 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.spreadsheetml.template",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.spreadsheetml.template"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.spreadsheetml.template"
+            ),
         )
         setattr(
             cls,
@@ -12520,7 +13223,9 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.spreadsheetml.userNames+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.spreadsheetml.userNames+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.spreadsheetml.userNames+xml"
+            ),
         )
         setattr(
             cls,
@@ -12532,7 +13237,9 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"
+            ),
         )
         setattr(
             cls,
@@ -12542,7 +13249,9 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.themeOverride+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.themeOverride+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.themeOverride+xml"
+            ),
         )
         setattr(
             cls,
@@ -12559,7 +13268,9 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.wordprocessingml.document",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.wordprocessingml.document"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.wordprocessingml.document"
+            ),
         )
         setattr(
             cls,
@@ -12592,7 +13303,9 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.wordprocessingml.footer+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"
+            ),
         )
         setattr(
             cls,
@@ -12618,12 +13331,16 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.wordprocessingml.styles+xml",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"
+            ),
         )
         setattr(
             cls,
             "vnd.openxmlformats-officedocument.wordprocessingml.template",
-            PermissibleValue(text="vnd.openxmlformats-officedocument.wordprocessingml.template"),
+            PermissibleValue(
+                text="vnd.openxmlformats-officedocument.wordprocessingml.template"
+            ),
         )
         setattr(
             cls,
@@ -12647,7 +13364,9 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(
             cls,
             "vnd.openxmlformats-package.digital-signature-xmlsignature+xml",
-            PermissibleValue(text="vnd.openxmlformats-package.digital-signature-xmlsignature+xml"),
+            PermissibleValue(
+                text="vnd.openxmlformats-package.digital-signature-xmlsignature+xml"
+            ),
         )
         setattr(
             cls,
@@ -12669,14 +13388,20 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "vnd.osgi.bundle", PermissibleValue(text="vnd.osgi.bundle"))
         setattr(cls, "vnd.osgi.dp", PermissibleValue(text="vnd.osgi.dp"))
         setattr(cls, "vnd.osgi.subsystem", PermissibleValue(text="vnd.osgi.subsystem"))
-        setattr(cls, "vnd.otps.ct-kip+xml", PermissibleValue(text="vnd.otps.ct-kip+xml"))
-        setattr(cls, "vnd.oxli.countgraph", PermissibleValue(text="vnd.oxli.countgraph"))
+        setattr(
+            cls, "vnd.otps.ct-kip+xml", PermissibleValue(text="vnd.otps.ct-kip+xml")
+        )
+        setattr(
+            cls, "vnd.oxli.countgraph", PermissibleValue(text="vnd.oxli.countgraph")
+        )
         setattr(cls, "vnd.pagerduty+json", PermissibleValue(text="vnd.pagerduty+json"))
         setattr(cls, "vnd.palm", PermissibleValue(text="vnd.palm"))
         setattr(cls, "vnd.panoply", PermissibleValue(text="vnd.panoply"))
         setattr(cls, "vnd.paos.xml", PermissibleValue(text="vnd.paos.xml"))
         setattr(cls, "vnd.patentdive", PermissibleValue(text="vnd.patentdive"))
-        setattr(cls, "vnd.patientecommsdoc", PermissibleValue(text="vnd.patientecommsdoc"))
+        setattr(
+            cls, "vnd.patientecommsdoc", PermissibleValue(text="vnd.patientecommsdoc")
+        )
         setattr(cls, "vnd.pawaafile", PermissibleValue(text="vnd.pawaafile"))
         setattr(cls, "vnd.pcos", PermissibleValue(text="vnd.pcos"))
         setattr(cls, "vnd.pg.format", PermissibleValue(text="vnd.pg.format"))
@@ -12695,18 +13420,26 @@ class MIMETypes(EnumDefinitionImpl):
         )
         setattr(cls, "vnd.pocketlearn", PermissibleValue(text="vnd.pocketlearn"))
         setattr(cls, "vnd.powerbuilder6", PermissibleValue(text="vnd.powerbuilder6"))
-        setattr(cls, "vnd.powerbuilder6-s", PermissibleValue(text="vnd.powerbuilder6-s"))
+        setattr(
+            cls, "vnd.powerbuilder6-s", PermissibleValue(text="vnd.powerbuilder6-s")
+        )
         setattr(cls, "vnd.powerbuilder7", PermissibleValue(text="vnd.powerbuilder7"))
         setattr(cls, "vnd.powerbuilder75", PermissibleValue(text="vnd.powerbuilder75"))
-        setattr(cls, "vnd.powerbuilder75-s", PermissibleValue(text="vnd.powerbuilder75-s"))
-        setattr(cls, "vnd.powerbuilder7-s", PermissibleValue(text="vnd.powerbuilder7-s"))
+        setattr(
+            cls, "vnd.powerbuilder75-s", PermissibleValue(text="vnd.powerbuilder75-s")
+        )
+        setattr(
+            cls, "vnd.powerbuilder7-s", PermissibleValue(text="vnd.powerbuilder7-s")
+        )
         setattr(cls, "vnd.preminet", PermissibleValue(text="vnd.preminet"))
         setattr(
             cls,
             "vnd.previewsystems.box",
             PermissibleValue(text="vnd.previewsystems.box"),
         )
-        setattr(cls, "vnd.proteus.magazine", PermissibleValue(text="vnd.proteus.magazine"))
+        setattr(
+            cls, "vnd.proteus.magazine", PermissibleValue(text="vnd.proteus.magazine")
+        )
         setattr(cls, "vnd.psfs", PermissibleValue(text="vnd.psfs"))
         setattr(cls, "vnd.pt.mundusmundi", PermissibleValue(text="vnd.pt.mundusmundi"))
         setattr(
@@ -12715,7 +13448,9 @@ class MIMETypes(EnumDefinitionImpl):
             PermissibleValue(text="vnd.publishare-delta-tree"),
         )
         setattr(cls, "vnd.pvi.ptid1", PermissibleValue(text="vnd.pvi.ptid1"))
-        setattr(cls, "vnd.pwg-multiplexed", PermissibleValue(text="vnd.pwg-multiplexed"))
+        setattr(
+            cls, "vnd.pwg-multiplexed", PermissibleValue(text="vnd.pwg-multiplexed")
+        )
         setattr(
             cls,
             "vnd.pwg-xhtml-print+xml",
@@ -12727,13 +13462,17 @@ class MIMETypes(EnumDefinitionImpl):
             PermissibleValue(text="vnd.qualcomm.brew-app-res"),
         )
         setattr(cls, "vnd.quarantainenet", PermissibleValue(text="vnd.quarantainenet"))
-        setattr(cls, "vnd.Quark.QuarkXPress", PermissibleValue(text="vnd.Quark.QuarkXPress"))
+        setattr(
+            cls, "vnd.Quark.QuarkXPress", PermissibleValue(text="vnd.Quark.QuarkXPress")
+        )
         setattr(
             cls,
             "vnd.quobject-quoxdocument",
             PermissibleValue(text="vnd.quobject-quoxdocument"),
         )
-        setattr(cls, "vnd.radisys.moml+xml", PermissibleValue(text="vnd.radisys.moml+xml"))
+        setattr(
+            cls, "vnd.radisys.moml+xml", PermissibleValue(text="vnd.radisys.moml+xml")
+        )
         setattr(
             cls,
             "vnd.radisys.msml-audit-conf+xml",
@@ -12799,7 +13538,9 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.radisys.msml-dialog+xml",
             PermissibleValue(text="vnd.radisys.msml-dialog+xml"),
         )
-        setattr(cls, "vnd.radisys.msml+xml", PermissibleValue(text="vnd.radisys.msml+xml"))
+        setattr(
+            cls, "vnd.radisys.msml+xml", PermissibleValue(text="vnd.radisys.msml+xml")
+        )
         setattr(cls, "vnd.rainstor.data", PermissibleValue(text="vnd.rainstor.data"))
         setattr(cls, "vnd.rapid", PermissibleValue(text="vnd.rapid"))
         setattr(cls, "vnd.rar", PermissibleValue(text="vnd.rar"))
@@ -12815,8 +13556,12 @@ class MIMETypes(EnumDefinitionImpl):
             PermissibleValue(text="vnd.recordare.musicxml+xml"),
         )
         setattr(cls, "vnd.relpipe", PermissibleValue(text="vnd.relpipe"))
-        setattr(cls, "vnd.RenLearn.rlprint", PermissibleValue(text="vnd.RenLearn.rlprint"))
-        setattr(cls, "vnd.resilient.logic", PermissibleValue(text="vnd.resilient.logic"))
+        setattr(
+            cls, "vnd.RenLearn.rlprint", PermissibleValue(text="vnd.RenLearn.rlprint")
+        )
+        setattr(
+            cls, "vnd.resilient.logic", PermissibleValue(text="vnd.resilient.logic")
+        )
         setattr(cls, "vnd.restful+json", PermissibleValue(text="vnd.restful+json"))
         setattr(cls, "vnd.rig.cryptonote", PermissibleValue(text="vnd.rig.cryptonote"))
         setattr(
@@ -12825,7 +13570,9 @@ class MIMETypes(EnumDefinitionImpl):
             PermissibleValue(text="vnd.route66.link66+xml"),
         )
         setattr(cls, "vnd.rs-274x", PermissibleValue(text="vnd.rs-274x"))
-        setattr(cls, "vnd.ruckus.download", PermissibleValue(text="vnd.ruckus.download"))
+        setattr(
+            cls, "vnd.ruckus.download", PermissibleValue(text="vnd.ruckus.download")
+        )
         setattr(cls, "vnd.s3sms", PermissibleValue(text="vnd.s3sms"))
         setattr(
             cls,
@@ -12860,7 +13607,9 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "vnd.sema", PermissibleValue(text="vnd.sema"))
         setattr(cls, "vnd.semd", PermissibleValue(text="vnd.semd"))
         setattr(cls, "vnd.semf", PermissibleValue(text="vnd.semf"))
-        setattr(cls, "vnd.shade-save-file", PermissibleValue(text="vnd.shade-save-file"))
+        setattr(
+            cls, "vnd.shade-save-file", PermissibleValue(text="vnd.shade-save-file")
+        )
         setattr(
             cls,
             "vnd.shana.informed.formdata",
@@ -12881,7 +13630,9 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.shana.informed.package",
             PermissibleValue(text="vnd.shana.informed.package"),
         )
-        setattr(cls, "vnd.shootproof+json", PermissibleValue(text="vnd.shootproof+json"))
+        setattr(
+            cls, "vnd.shootproof+json", PermissibleValue(text="vnd.shootproof+json")
+        )
         setattr(cls, "vnd.shopkick+json", PermissibleValue(text="vnd.shopkick+json"))
         setattr(cls, "vnd.shp", PermissibleValue(text="vnd.shp"))
         setattr(cls, "vnd.shx", PermissibleValue(text="vnd.shx"))
@@ -12915,14 +13666,18 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.software602.filler.form-xml-zip",
             PermissibleValue(text="vnd.software602.filler.form-xml-zip"),
         )
-        setattr(cls, "vnd.solent.sdkm+xml", PermissibleValue(text="vnd.solent.sdkm+xml"))
+        setattr(
+            cls, "vnd.solent.sdkm+xml", PermissibleValue(text="vnd.solent.sdkm+xml")
+        )
         setattr(cls, "vnd.spotfire.dxp", PermissibleValue(text="vnd.spotfire.dxp"))
         setattr(cls, "vnd.spotfire.sfs", PermissibleValue(text="vnd.spotfire.sfs"))
         setattr(cls, "vnd.sqlite3", PermissibleValue(text="vnd.sqlite3"))
         setattr(cls, "vnd.sss-cod", PermissibleValue(text="vnd.sss-cod"))
         setattr(cls, "vnd.sss-dtf", PermissibleValue(text="vnd.sss-dtf"))
         setattr(cls, "vnd.sss-ntf", PermissibleValue(text="vnd.sss-ntf"))
-        setattr(cls, "vnd.stepmania.package", PermissibleValue(text="vnd.stepmania.package"))
+        setattr(
+            cls, "vnd.stepmania.package", PermissibleValue(text="vnd.stepmania.package")
+        )
         setattr(
             cls,
             "vnd.stepmania.stepchart",
@@ -12941,19 +13696,25 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.syncml.dm.notification",
             PermissibleValue(text="vnd.syncml.dm.notification"),
         )
-        setattr(cls, "vnd.syncml.dmddf+xml", PermissibleValue(text="vnd.syncml.dmddf+xml"))
+        setattr(
+            cls, "vnd.syncml.dmddf+xml", PermissibleValue(text="vnd.syncml.dmddf+xml")
+        )
         setattr(
             cls,
             "vnd.syncml.dmtnds+wbxml",
             PermissibleValue(text="vnd.syncml.dmtnds+wbxml"),
         )
-        setattr(cls, "vnd.syncml.dmtnds+xml", PermissibleValue(text="vnd.syncml.dmtnds+xml"))
+        setattr(
+            cls, "vnd.syncml.dmtnds+xml", PermissibleValue(text="vnd.syncml.dmtnds+xml")
+        )
         setattr(
             cls,
             "vnd.syncml.dmddf+wbxml",
             PermissibleValue(text="vnd.syncml.dmddf+wbxml"),
         )
-        setattr(cls, "vnd.syncml.dm+wbxml", PermissibleValue(text="vnd.syncml.dm+wbxml"))
+        setattr(
+            cls, "vnd.syncml.dm+wbxml", PermissibleValue(text="vnd.syncml.dm+wbxml")
+        )
         setattr(cls, "vnd.syncml.dm+xml", PermissibleValue(text="vnd.syncml.dm+xml"))
         setattr(
             cls,
@@ -12961,7 +13722,9 @@ class MIMETypes(EnumDefinitionImpl):
             PermissibleValue(text="vnd.syncml.ds.notification"),
         )
         setattr(cls, "vnd.syncml+xml", PermissibleValue(text="vnd.syncml+xml"))
-        setattr(cls, "vnd.tableschema+json", PermissibleValue(text="vnd.tableschema+json"))
+        setattr(
+            cls, "vnd.tableschema+json", PermissibleValue(text="vnd.tableschema+json")
+        )
         setattr(
             cls,
             "vnd.tao.intent-module-archive",
@@ -12985,7 +13748,9 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "vnd.triscape.mxs", PermissibleValue(text="vnd.triscape.mxs"))
         setattr(cls, "vnd.trueapp", PermissibleValue(text="vnd.trueapp"))
         setattr(cls, "vnd.truedoc", PermissibleValue(text="vnd.truedoc"))
-        setattr(cls, "vnd.ubisoft.webplayer", PermissibleValue(text="vnd.ubisoft.webplayer"))
+        setattr(
+            cls, "vnd.ubisoft.webplayer", PermissibleValue(text="vnd.ubisoft.webplayer")
+        )
         setattr(cls, "vnd.ufdl", PermissibleValue(text="vnd.ufdl"))
         setattr(cls, "vnd.uiq.theme", PermissibleValue(text="vnd.uiq.theme"))
         setattr(cls, "vnd.umajin", PermissibleValue(text="vnd.umajin"))
@@ -13007,20 +13772,26 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.uplanet.bearer-choice-wbxml",
             PermissibleValue(text="vnd.uplanet.bearer-choice-wbxml"),
         )
-        setattr(cls, "vnd.uplanet.cacheop", PermissibleValue(text="vnd.uplanet.cacheop"))
+        setattr(
+            cls, "vnd.uplanet.cacheop", PermissibleValue(text="vnd.uplanet.cacheop")
+        )
         setattr(
             cls,
             "vnd.uplanet.cacheop-wbxml",
             PermissibleValue(text="vnd.uplanet.cacheop-wbxml"),
         )
-        setattr(cls, "vnd.uplanet.channel", PermissibleValue(text="vnd.uplanet.channel"))
+        setattr(
+            cls, "vnd.uplanet.channel", PermissibleValue(text="vnd.uplanet.channel")
+        )
         setattr(
             cls,
             "vnd.uplanet.channel-wbxml",
             PermissibleValue(text="vnd.uplanet.channel-wbxml"),
         )
         setattr(cls, "vnd.uplanet.list", PermissibleValue(text="vnd.uplanet.list"))
-        setattr(cls, "vnd.uplanet.listcmd", PermissibleValue(text="vnd.uplanet.listcmd"))
+        setattr(
+            cls, "vnd.uplanet.listcmd", PermissibleValue(text="vnd.uplanet.listcmd")
+        )
         setattr(
             cls,
             "vnd.uplanet.listcmd-wbxml",
@@ -13042,7 +13813,9 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "vnd.vd-study", PermissibleValue(text="vnd.vd-study"))
         setattr(cls, "vnd.vectorworks", PermissibleValue(text="vnd.vectorworks"))
         setattr(cls, "vnd.vel+json", PermissibleValue(text="vnd.vel+json"))
-        setattr(cls, "vnd.verimatrix.vcas", PermissibleValue(text="vnd.verimatrix.vcas"))
+        setattr(
+            cls, "vnd.verimatrix.vcas", PermissibleValue(text="vnd.verimatrix.vcas")
+        )
         setattr(
             cls,
             "vnd.veritone.aion+json",
@@ -13114,8 +13887,12 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "vnd.xmpie.ppkg", PermissibleValue(text="vnd.xmpie.ppkg"))
         setattr(cls, "vnd.xmpie.xlim", PermissibleValue(text="vnd.xmpie.xlim"))
         setattr(cls, "vnd.yamaha.hv-dic", PermissibleValue(text="vnd.yamaha.hv-dic"))
-        setattr(cls, "vnd.yamaha.hv-script", PermissibleValue(text="vnd.yamaha.hv-script"))
-        setattr(cls, "vnd.yamaha.hv-voice", PermissibleValue(text="vnd.yamaha.hv-voice"))
+        setattr(
+            cls, "vnd.yamaha.hv-script", PermissibleValue(text="vnd.yamaha.hv-script")
+        )
+        setattr(
+            cls, "vnd.yamaha.hv-voice", PermissibleValue(text="vnd.yamaha.hv-voice")
+        )
         setattr(
             cls,
             "vnd.yamaha.openscoreformat.osfpvg+xml",
@@ -13131,7 +13908,9 @@ class MIMETypes(EnumDefinitionImpl):
             "vnd.yamaha.remote-setup",
             PermissibleValue(text="vnd.yamaha.remote-setup"),
         )
-        setattr(cls, "vnd.yamaha.smaf-audio", PermissibleValue(text="vnd.yamaha.smaf-audio"))
+        setattr(
+            cls, "vnd.yamaha.smaf-audio", PermissibleValue(text="vnd.yamaha.smaf-audio")
+        )
         setattr(
             cls,
             "vnd.yamaha.smaf-phrase",
@@ -13156,7 +13935,9 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(
             cls,
             "vnd.youtube.yt (OBSOLETED in favor of video/vnd.youtube.yt)",
-            PermissibleValue(text="vnd.youtube.yt (OBSOLETED in favor of video/vnd.youtube.yt)"),
+            PermissibleValue(
+                text="vnd.youtube.yt (OBSOLETED in favor of video/vnd.youtube.yt)"
+            ),
         )
         setattr(cls, "vnd.zul", PermissibleValue(text="vnd.zul"))
         setattr(cls, "vnd.zzazz.deck+xml", PermissibleValue(text="vnd.zzazz.deck+xml"))
@@ -13164,17 +13945,23 @@ class MIMETypes(EnumDefinitionImpl):
         setattr(cls, "voucher-cms+json", PermissibleValue(text="voucher-cms+json"))
         setattr(cls, "vq-rtcpxr", PermissibleValue(text="vq-rtcpxr"))
         setattr(cls, "watcherinfo+xml", PermissibleValue(text="watcherinfo+xml"))
-        setattr(cls, "webpush-options+json", PermissibleValue(text="webpush-options+json"))
+        setattr(
+            cls, "webpush-options+json", PermissibleValue(text="webpush-options+json")
+        )
         setattr(cls, "whoispp-query", PermissibleValue(text="whoispp-query"))
         setattr(cls, "whoispp-response", PermissibleValue(text="whoispp-response"))
         setattr(cls, "wordperfect5.1", PermissibleValue(text="wordperfect5.1"))
         setattr(cls, "wsdl+xml", PermissibleValue(text="wsdl+xml"))
         setattr(cls, "wspolicy+xml", PermissibleValue(text="wspolicy+xml"))
         setattr(cls, "x-pki-message", PermissibleValue(text="x-pki-message"))
-        setattr(cls, "x-www-form-urlencoded", PermissibleValue(text="x-www-form-urlencoded"))
+        setattr(
+            cls, "x-www-form-urlencoded", PermissibleValue(text="x-www-form-urlencoded")
+        )
         setattr(cls, "x-x509-ca-cert", PermissibleValue(text="x-x509-ca-cert"))
         setattr(cls, "x-x509-ca-ra-cert", PermissibleValue(text="x-x509-ca-ra-cert"))
-        setattr(cls, "x-x509-next-ca-cert", PermissibleValue(text="x-x509-next-ca-cert"))
+        setattr(
+            cls, "x-x509-next-ca-cert", PermissibleValue(text="x-x509-next-ca-cert")
+        )
         setattr(cls, "x400-bp", PermissibleValue(text="x400-bp"))
         setattr(cls, "xacml+xml", PermissibleValue(text="xacml+xml"))
         setattr(cls, "xcap-att+xml", PermissibleValue(text="xcap-att+xml"))
@@ -13276,9 +14063,15 @@ class ContainerFormat(EnumDefinitionImpl):
     dockerv2 = PermissibleValue(
         text="dockerv2", description="Container is packaged with Docker v2 format."
     )
-    oci = PermissibleValue(text="oci", description="Container is packaged with OCI format.")
-    lxc = PermissibleValue(text="lxc", description="Container is packaged with LXC format.")
-    lxd = PermissibleValue(text="lxd", description="Container is packaged with LXD format.")
+    oci = PermissibleValue(
+        text="oci", description="Container is packaged with OCI format."
+    )
+    lxc = PermissibleValue(
+        text="lxc", description="Container is packaged with LXC format."
+    )
+    lxd = PermissibleValue(
+        text="lxd", description="Container is packaged with LXD format."
+    )
 
     _defn = EnumDefinition(
         name="ContainerFormat",
@@ -13440,7 +14233,9 @@ class StorageRedundancyMechanism(EnumDefinitionImpl):
         text="RS_Code",
         description="""Reed-Solomon Erasure Code, cf https://en.wikipedia.org/wiki/Reed%E2%80%93Solomon_error_correction""",
     )
-    Other = PermissibleValue(text="Other", description="Unspecified redundancy mechanism")
+    Other = PermissibleValue(
+        text="Other", description="Unspecified redundancy mechanism"
+    )
 
     _defn = EnumDefinition(
         name="StorageRedundancyMechanism",
@@ -13457,7 +14252,9 @@ class FileAccessProtocol(EnumDefinitionImpl):
         text="IPFS",
         description="InterPlanetary File System, cf https://en.wikipedia.org/wiki/IPFS",
     )
-    Other = PermissibleValue(text="Other", description="Any other proprietary access protocol")
+    Other = PermissibleValue(
+        text="Other", description="Any other proprietary access protocol"
+    )
 
     _defn = EnumDefinition(
         name="FileAccessProtocol",
@@ -13501,7 +14298,9 @@ class FileSystemType(EnumDefinitionImpl):
         text="OneFS",
         description="Dell One File Fystem,cf https://en.wikipedia.org/wiki/One_File_System",
     )
-    Other = PermissibleValue(text="Other", description="Any other proprietary file system")
+    Other = PermissibleValue(
+        text="Other", description="Any other proprietary file system"
+    )
 
     _defn = EnumDefinition(
         name="FileSystemType",
@@ -13617,7 +14416,9 @@ class CompressionAlgorithm(EnumDefinitionImpl):
         text="ANS",
         description="Entropy encoding algorithm, cf https://en.wikipedia.org/wiki/Asymmetric_numeral_systems",
     )
-    Other = PermissibleValue(text="Other", description="Unspecified compression algorithm")
+    Other = PermissibleValue(
+        text="Other", description="Unspecified compression algorithm"
+    )
 
     _defn = EnumDefinition(
         name="CompressionAlgorithm",
@@ -13634,7 +14435,9 @@ class AccessAttribute(EnumDefinitionImpl):
         setattr(
             cls,
             "Read-Only",
-            PermissibleValue(text="Read-Only", description="Allow for access in read-mode only"),
+            PermissibleValue(
+                text="Read-Only", description="Allow for access in read-mode only"
+            ),
         )
         setattr(
             cls,
@@ -13661,7 +14464,9 @@ class StorageAPI(EnumDefinitionImpl):
         description="Cloud Data Management Interface API (open ISO standard)",
     )
     S3 = PermissibleValue(text="S3", description="Amazon S3 API")
-    CloudStorage = PermissibleValue(text="CloudStorage", description="Google Cloud Storage API")
+    CloudStorage = PermissibleValue(
+        text="CloudStorage", description="Google Cloud Storage API"
+    )
 
     _defn = EnumDefinition(
         name="StorageAPI",
@@ -13706,7 +14511,9 @@ class WatchDogActions(EnumDefinitionImpl):
     poweroff = PermissibleValue(
         text="poweroff", description="Power of of guest is forced if server hangs."
     )
-    pause = PermissibleValue(text="pause", description="Pause of guest is forced, if server hangs.")
+    pause = PermissibleValue(
+        text="pause", description="Pause of guest is forced, if server hangs."
+    )
     none = PermissibleValue(
         text="none",
         description="Watchdog is enabled, but not action is defined and performed if server hangs.",
@@ -14880,7 +15687,9 @@ slots.containerServiceOffering__instantiationReq = Slot(
     curie=GX.curie("instantiationReq"),
     model_uri=GX.containerServiceOffering__instantiationReq,
     domain=None,
-    range=Union[Union[dict, ContainerResourceLimits], List[Union[dict, ContainerResourceLimits]]],
+    range=Union[
+        Union[dict, ContainerResourceLimits], List[Union[dict, ContainerResourceLimits]]
+    ],
 )
 
 slots.bareMetalServiceOffering__codeArtifact = Slot(
@@ -14988,7 +15797,9 @@ slots.dataResource__exposedThrough = Slot(
     curie=GX.curie("exposedThrough"),
     model_uri=GX.dataResource__exposedThrough,
     domain=None,
-    range=Union[Union[dict, DataExchangeComponent], List[Union[dict, DataExchangeComponent]]],
+    range=Union[
+        Union[dict, DataExchangeComponent], List[Union[dict, DataExchangeComponent]]
+    ],
 )
 
 slots.dataResource__obsoleteDateTime = Slot(
@@ -15240,7 +16051,9 @@ slots.backupPolicy__backupReplication = Slot(
     curie=GX.curie("backupReplication"),
     model_uri=GX.backupPolicy__backupReplication,
     domain=None,
-    range=Optional[Union[Union[dict, ReplicationPolicy], List[Union[dict, ReplicationPolicy]]]],
+    range=Optional[
+        Union[Union[dict, ReplicationPolicy], List[Union[dict, ReplicationPolicy]]]
+    ],
 )
 
 slots.snapshotPolicy__snapshotReplication = Slot(
@@ -15249,7 +16062,9 @@ slots.snapshotPolicy__snapshotReplication = Slot(
     curie=GX.curie("snapshotReplication"),
     model_uri=GX.snapshotPolicy__snapshotReplication,
     domain=None,
-    range=Optional[Union[Union[dict, ReplicationPolicy], List[Union[dict, ReplicationPolicy]]]],
+    range=Optional[
+        Union[Union[dict, ReplicationPolicy], List[Union[dict, ReplicationPolicy]]]
+    ],
 )
 
 slots.replicationPolicy__synchronousReplication = Slot(
@@ -15286,7 +16101,9 @@ slots.replicationPolicy__geoReplication = Slot(
     model_uri=GX.replicationPolicy__geoReplication,
     domain=None,
     range=Optional[
-        Union[Union[str, "GeoReplicationScope"], List[Union[str, "GeoReplicationScope"]]]
+        Union[
+            Union[str, "GeoReplicationScope"], List[Union[str, "GeoReplicationScope"]]
+        ]
     ],
 )
 
@@ -15351,7 +16168,9 @@ slots.storageConfiguration__storageCompression = Slot(
     model_uri=GX.storageConfiguration__storageCompression,
     domain=None,
     range=Optional[
-        Union[Union[str, "CompressionAlgorithm"], List[Union[str, "CompressionAlgorithm"]]]
+        Union[
+            Union[str, "CompressionAlgorithm"], List[Union[str, "CompressionAlgorithm"]]
+        ]
     ],
 )
 
@@ -15362,7 +16181,9 @@ slots.storageConfiguration__storageDeduplication = Slot(
     model_uri=GX.storageConfiguration__storageDeduplication,
     domain=None,
     range=Optional[
-        Union[Union[str, "DeduplicationMethod"], List[Union[str, "DeduplicationMethod"]]]
+        Union[
+            Union[str, "DeduplicationMethod"], List[Union[str, "DeduplicationMethod"]]
+        ]
     ],
 )
 
@@ -15396,7 +16217,9 @@ slots.storageConfiguration__storageProtection = Slot(
     model_uri=GX.storageConfiguration__storageProtection,
     domain=None,
     range=Optional[
-        Union[Union[dict, DataProtectionPolicy], List[Union[dict, DataProtectionPolicy]]]
+        Union[
+            Union[dict, DataProtectionPolicy], List[Union[dict, DataProtectionPolicy]]
+        ]
     ],
 )
 
@@ -15424,7 +16247,9 @@ slots.fileStorageConfiguration__fileSystemType = Slot(
     curie=GX.curie("fileSystemType"),
     model_uri=GX.fileStorageConfiguration__fileSystemType,
     domain=None,
-    range=Optional[Union[Union[str, "FileSystemType"], List[Union[str, "FileSystemType"]]]],
+    range=Optional[
+        Union[Union[str, "FileSystemType"], List[Union[str, "FileSystemType"]]]
+    ],
 )
 
 slots.fileStorageConfiguration__highLevelAccessProtocol = Slot(
@@ -15433,7 +16258,9 @@ slots.fileStorageConfiguration__highLevelAccessProtocol = Slot(
     curie=GX.curie("highLevelAccessProtocol"),
     model_uri=GX.fileStorageConfiguration__highLevelAccessProtocol,
     domain=None,
-    range=Optional[Union[Union[str, "FileAccessProtocol"], List[Union[str, "FileAccessProtocol"]]]],
+    range=Optional[
+        Union[Union[str, "FileAccessProtocol"], List[Union[str, "FileAccessProtocol"]]]
+    ],
 )
 
 slots.blockStorageConfiguration__blockStorageTechnology = Slot(
@@ -15457,7 +16284,9 @@ slots.blockStorageConfiguration__lowLevelBlockAccessProtocol = Slot(
     model_uri=GX.blockStorageConfiguration__lowLevelBlockAccessProtocol,
     domain=None,
     range=Optional[
-        Union[Union[str, "BlockAccessProtocol"], List[Union[str, "BlockAccessProtocol"]]]
+        Union[
+            Union[str, "BlockAccessProtocol"], List[Union[str, "BlockAccessProtocol"]]
+        ]
     ],
 )
 
@@ -15557,7 +16386,9 @@ slots.fileStorageServiceOffering__accessAttributes = Slot(
     curie=GX.curie("accessAttributes"),
     model_uri=GX.fileStorageServiceOffering__accessAttributes,
     domain=None,
-    range=Optional[Union[Union[str, "AccessAttribute"], List[Union[str, "AccessAttribute"]]]],
+    range=Optional[
+        Union[Union[str, "AccessAttribute"], List[Union[str, "AccessAttribute"]]]
+    ],
 )
 
 slots.blockStorageServiceOffering__storageConfiguration = Slot(
@@ -15575,7 +16406,9 @@ slots.objectStorageServiceOffering__accessAttributes = Slot(
     curie=GX.curie("accessAttributes"),
     model_uri=GX.objectStorageServiceOffering__accessAttributes,
     domain=None,
-    range=Optional[Union[Union[str, "AccessAttribute"], List[Union[str, "AccessAttribute"]]]],
+    range=Optional[
+        Union[Union[str, "AccessAttribute"], List[Union[str, "AccessAttribute"]]]
+    ],
 )
 
 slots.objectStorageServiceOffering__maximumObjectSize = Slot(

@@ -41,7 +41,11 @@ def appenddicts(dct1, *kwd):
     "Return dict d1 with items from kwd added"
     dct = dct1
     for k in kwd:
+<<<<<<< HEAD
         assert k is not None
+=======
+        assert (k is not None)
+>>>>>>> Generate gx conformant credentials for server flavors (#81)
         dct.update(k)
     return dct
 
@@ -193,8 +197,12 @@ class osService:
             if not quiet:
                 print(
                     f"#WARNING: Service {self.fulltype} in region {region} does not support getting extensions.\n{exc}",
+<<<<<<< HEAD
                     file=sys.stderr,
                 )
+=======
+                    file=sys.stderr)
+>>>>>>> Generate gx conformant credentials for server flavors (#81)
         try:
             self.azs = list(
                 filter(
@@ -581,13 +589,18 @@ def usage(err=1):
 
 def ostackconn(cloud, timeout):
     "Establish connection to OpenStack cloud cloud (timeout timeout)"
+<<<<<<< HEAD
     conn = openstack.connect(
         cloud=cloud, timeout=timeout, api_timeout=timeout * 1.5 + 4
     )
+=======
+    conn = openstack.connect(cloud=cloud, timeout=timeout, api_timeout=timeout * 1.5 + 4)
+>>>>>>> Generate gx conformant credentials for server flavors (#81)
     try:
         conn.authorize()
     except Exception:
         print("INFO: Retry connection with 'default' domain", file=sys.stderr)
+<<<<<<< HEAD
         conn = openstack.connect(
             cloud=cloud,
             timeout=timeout,
@@ -595,6 +608,10 @@ def ostackconn(cloud, timeout):
             default_domain="default",
             project_domain_id="default",
         )
+=======
+        conn = openstack.connect(cloud=cloud, timeout=timeout, api_timeout=timeout * 1.5 + 4,
+                                 default_domain='default', project_domain_id='default')
+>>>>>>> Generate gx conformant credentials for server flavors (#81)
         conn.authorize()
     return conn
 
