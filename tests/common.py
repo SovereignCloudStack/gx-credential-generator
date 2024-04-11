@@ -213,7 +213,7 @@ class OpenstackTestcase(unittest.TestCase):
         self.assertEqual(exp.firmwareType, act.firmwareType, "VM_Image.firmwareType")
         self.assertEqual(exp.hwRngTypeOfImage, act.hwRngTypeOfImage, "VM_Image.hwRngTypeOfImage")
 
-    def check_installation_requirement(
+    def check_instantiation_requirement(
             self, ob_1: InstantiationRequirement, ob_2: InstantiationRequirement
     ):
         self.assert_gaia_x_entity(ob_1, ob_2)
