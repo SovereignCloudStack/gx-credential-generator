@@ -187,6 +187,53 @@ mkdir -p os_secret && cp secret1 ./os_secret
 docker run -v "${PWD}/os_secret:/root/.config/openstack" gx-credential-generator ./gx-cred-generator.py --os-cloud gx-h61.1
 ```
 
+
+## Development Hints
+
+### Running the tests
+
+First, install the test dependencies **in addition** to the main dependencies into
+your virtualenv as described above under ["Quick Start Guide"](#quick-start-guide):
+
+```shell
+pip install -r test-requirements.txt
+```
+
+Then, tests can be run with:
+
+```shell
+python3 -m pytest tests/
+```
+
+### Updating the dependency pins
+
+We pin dependencies with `pip-compile` from [pip-tools](https://pypi.org/project/pip-tools/),
+which can be installed with:
+
+```shell
+pip install pip-tools
+```
+
+If you change one of the `*.in` files, you need to regenerate the concrete `requirements.txt`
+files as follows (the order is important):
+
+```shell
+pip-compile requirements.in
+pip-compile test-requirements.in
+```
+
+By default, `pip-compile` doesn't update the pinned versions. This can be changed by adding the
+`--upgrade` flag to the above invocations:
+
+```shell
+pip-compile --upgrade requirements.in
+pip-compile --upgrade test-requirements.in
+```
+
+Whenever the concrete `requirements.txt` file change you also shouldn't forget to re-run the
+`pip install -r ...` steps again.
+
+
 ## Status (2023-05-04)
 The current PoC code can discover OpenStack capabilities and produces
 an entry for the services in the service catalogue, with name,
