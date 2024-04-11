@@ -33,7 +33,6 @@ jobs:
           pip install -r test-requirements.txt
           pip install -r requirements.txt
 
-
       - name: Test with pytest
         run: |
           coverage run --omit=tests/*,generator/common/gx_schema.py,*__init__*,generator/vendor/* -m pytest tests
@@ -48,11 +47,11 @@ jobs:
           badge: true
           fail_below_min: true
           format: markdown
-          #hide_branch_rate: false
-          #hide_complexity: true
+          hide_branch_rate: false
+          hide_complexity: true
           indicators: true
           output: both
-          thresholds: '80 95'
+          thresholds: '95 100'
 
 
       - name: Add Coverage PR Comment
@@ -64,3 +63,7 @@ jobs:
 
       - name: Write to Job Summary
         run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Check code coverage threshold
+        run: |
+          
