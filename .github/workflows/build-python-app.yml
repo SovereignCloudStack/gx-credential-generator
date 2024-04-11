@@ -33,10 +33,6 @@ jobs:
           pip install -r test-requirements.txt
           pip install -r requirements.txt
 
-      #- name: Test with pytest
-      #  run: |
-      #    #pip install pytest pytest-cov
-      #    python3 -m pytest tests --doctest-modules --junitxml=junit/test-results.xml
 
       - name: Test with pytest
         run: |
@@ -52,11 +48,12 @@ jobs:
           badge: true
           fail_below_min: true
           format: markdown
-          hide_branch_rate: false
-          hide_complexity: true
+          #hide_branch_rate: false
+          #hide_complexity: true
           indicators: true
           output: both
-          thresholds: '60 80'
+          thresholds: '80 95'
+
 
       - name: Add Coverage PR Comment
         uses: marocchino/sticky-pull-request-comment@v2
