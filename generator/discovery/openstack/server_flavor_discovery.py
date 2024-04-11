@@ -127,9 +127,9 @@ class ServerFlavorDiscovery:
         """
         cpu = CPU(cpuArchitecture=CpuArch.other, numberOfCores=os_flavor.vcpus)
         if flavorname:
-            cpu.smtEnabled = (
-                flavorname.cpuram.cputype != "C"
-            )  # FIXME this is unclear to me
+            #cpu.smtEnabled = (
+            #    flavorname.cpuram.cputype != "C"
+            #)  # FIXME this is unclear to me, see #85
             cpu.defaultOversubscriptionRatio = 1
             if flavorname.cpuram.cputype == "V":
                 cpu.defaultOversubscriptionRatio = 5
