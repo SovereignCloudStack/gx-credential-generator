@@ -177,7 +177,7 @@ def main(argv):
     "Entry point for main program"
     global cloud, outjson, indent
     global debug, ofile
-    timeout = 12
+    # timeout = 12
     conn = kubeconn(None, None, None)
     my_kube = KubeCluster(conn)
     if ofile == "/dev/stdout":

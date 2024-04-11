@@ -10,7 +10,7 @@ from generator.common.gx_schema import (Disk, DiskBusType, DiskType, Frequency,
 from generator.common.gx_schema import ServerFlavor as GX_Flavor
 from generator.discovery.openstack.server_flavor_discovery import \
     ServerFlavorDiscovery
-from generator.vendor.flavor_names import Flavorname, parser_v3
+from generator.vendor.flavor_names import parser_v3
 from tests.common import MockConnection, OpenstackTestcase, get_config
 
 OS_FLAVOR_1 = OS_Flavor(id="flavor_1", name="ABC", vcpus=2, ram=16, disk=0, description=None)

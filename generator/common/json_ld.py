@@ -1,19 +1,16 @@
 """
 Methods and classes needed/useful for JSON-LD serialization.
 """
+
 import inspect
 from datetime import date, datetime
 from typing import List
 from uuid import uuid4
 
-from linkml_runtime.linkml_model.meta import (
-    EnumDefinition,
-    PermissibleValue,
-    PvFormulaOptions,
-)
+from linkml_runtime.linkml_model.meta import PermissibleValue
 from linkml_runtime.utils.enumerations import EnumDefinitionImpl
 from linkml_runtime.utils.metamodelcore import URI
-from linkml_runtime.utils.yamlutils import YAMLRoot, extended_str
+from linkml_runtime.utils.yamlutils import YAMLRoot
 
 from generator.common.gx_schema import GX, QUDT, SCHEMA, VCARD, slots
 

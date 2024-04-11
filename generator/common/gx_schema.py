@@ -1084,9 +1084,11 @@ class LegalPerson(Participant):
                 [self.registrationNumber] if self.registrationNumber is not None else []
             )
         self.registrationNumber = [
-            v
-            if isinstance(v, LegalPersonRegistrationNumber)
-            else LegalPersonRegistrationNumber(v)
+            (
+                v
+                if isinstance(v, LegalPersonRegistrationNumber)
+                else LegalPersonRegistrationNumber(v)
+            )
             for v in self.registrationNumber
         ]
 
@@ -1107,9 +1109,11 @@ class LegalPerson(Participant):
                 else []
             )
         self.parentOrganizationOf = [
-            v
-            if isinstance(v, LegalPersonRegistrationNumber)
-            else LegalPersonRegistrationNumber(v)
+            (
+                v
+                if isinstance(v, LegalPersonRegistrationNumber)
+                else LegalPersonRegistrationNumber(v)
+            )
             for v in self.parentOrganizationOf
         ]
 
@@ -1118,9 +1122,11 @@ class LegalPerson(Participant):
                 [self.subOrganisationOf] if self.subOrganisationOf is not None else []
             )
         self.subOrganisationOf = [
-            v
-            if isinstance(v, LegalPersonRegistrationNumber)
-            else LegalPersonRegistrationNumber(v)
+            (
+                v
+                if isinstance(v, LegalPersonRegistrationNumber)
+                else LegalPersonRegistrationNumber(v)
+            )
             for v in self.subOrganisationOf
         ]
 
@@ -1245,9 +1251,11 @@ class PhysicalResource(Resource):
                 [self.maintainedBy] if self.maintainedBy is not None else []
             )
         self.maintainedBy = [
-            v
-            if isinstance(v, LegalPersonRegistrationNumber)
-            else LegalPersonRegistrationNumber(v)
+            (
+                v
+                if isinstance(v, LegalPersonRegistrationNumber)
+                else LegalPersonRegistrationNumber(v)
+            )
             for v in self.maintainedBy
         ]
 
@@ -1260,9 +1268,11 @@ class PhysicalResource(Resource):
         if not isinstance(self.ownedBy, list):
             self.ownedBy = [self.ownedBy] if self.ownedBy is not None else []
         self.ownedBy = [
-            v
-            if isinstance(v, LegalPersonRegistrationNumber)
-            else LegalPersonRegistrationNumber(v)
+            (
+                v
+                if isinstance(v, LegalPersonRegistrationNumber)
+                else LegalPersonRegistrationNumber(v)
+            )
             for v in self.ownedBy
         ]
 
@@ -1271,9 +1281,11 @@ class PhysicalResource(Resource):
                 [self.manufacturedBy] if self.manufacturedBy is not None else []
             )
         self.manufacturedBy = [
-            v
-            if isinstance(v, LegalPersonRegistrationNumber)
-            else LegalPersonRegistrationNumber(v)
+            (
+                v
+                if isinstance(v, LegalPersonRegistrationNumber)
+                else LegalPersonRegistrationNumber(v)
+            )
             for v in self.manufacturedBy
         ]
 
@@ -1600,9 +1612,11 @@ class ServiceOffering(GaiaXEntity):
                 else []
             )
         self.dataProtectionRegime = [
-            v
-            if isinstance(v, PersonalDataProtectionRegime)
-            else PersonalDataProtectionRegime(v)
+            (
+                v
+                if isinstance(v, PersonalDataProtectionRegime)
+                else PersonalDataProtectionRegime(v)
+            )
             for v in self.dataProtectionRegime
         ]
 
@@ -1953,9 +1967,9 @@ class DataResource(VirtualResource):
     dataController: Optional[
         Union[Union[dict, Participant], List[Union[dict, Participant]]]
     ] = empty_list()
-    consent: Optional[
-        Union[Union[dict, "Consent"], List[Union[dict, "Consent"]]]
-    ] = empty_list()
+    consent: Optional[Union[Union[dict, "Consent"], List[Union[dict, "Consent"]]]] = (
+        empty_list()
+    )
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self._is_empty(self.producedBy):
@@ -1970,9 +1984,11 @@ class DataResource(VirtualResource):
                 [self.exposedThrough] if self.exposedThrough is not None else []
             )
         self.exposedThrough = [
-            v
-            if isinstance(v, DataExchangeComponent)
-            else DataExchangeComponent(**as_dict(v))
+            (
+                v
+                if isinstance(v, DataExchangeComponent)
+                else DataExchangeComponent(**as_dict(v))
+            )
             for v in self.exposedThrough
         ]
 
@@ -2249,9 +2265,9 @@ class ContainerResourceLimits(InstantiationRequirement):
     memoryLimit: Optional[Union[dict, MemorySize]] = None
     gpuRequirements: Optional[Union[dict, GPU]] = None
     gpuLimit: Optional[int] = None
-    confidentialComputingTechnology: Optional[
-        Union[dict, "ConfidentialComputing"]
-    ] = None
+    confidentialComputingTechnology: Optional[Union[dict, "ConfidentialComputing"]] = (
+        None
+    )
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self._is_empty(self.confidential):
@@ -2547,9 +2563,9 @@ class StorageConfiguration(InstantiationRequirement):
     class_name: ClassVar[str] = "StorageConfiguration"
     class_model_uri: ClassVar[URIRef] = GX.StorageConfiguration
 
-    storageEncryption: Union[
-        Union[dict, Encryption], List[Union[dict, Encryption]]
-    ] = None
+    storageEncryption: Union[Union[dict, Encryption], List[Union[dict, Encryption]]] = (
+        None
+    )
     storageCompression: Optional[
         Union[
             Union[str, "CompressionAlgorithm"], List[Union[str, "CompressionAlgorithm"]]
@@ -2615,9 +2631,11 @@ class StorageConfiguration(InstantiationRequirement):
                 else []
             )
         self.storageRedundancyMechanism = [
-            v
-            if isinstance(v, StorageRedundancyMechanism)
-            else StorageRedundancyMechanism(v)
+            (
+                v
+                if isinstance(v, StorageRedundancyMechanism)
+                else StorageRedundancyMechanism(v)
+            )
             for v in self.storageRedundancyMechanism
         ]
 
@@ -2655,9 +2673,9 @@ class FileStorageConfiguration(StorageConfiguration):
     class_name: ClassVar[str] = "FileStorageConfiguration"
     class_model_uri: ClassVar[URIRef] = GX.FileStorageConfiguration
 
-    storageEncryption: Union[
-        Union[dict, Encryption], List[Union[dict, Encryption]]
-    ] = None
+    storageEncryption: Union[Union[dict, Encryption], List[Union[dict, Encryption]]] = (
+        None
+    )
     fileSystemType: Optional[
         Union[Union[str, "FileSystemType"], List[Union[str, "FileSystemType"]]]
     ] = empty_list()
@@ -2702,9 +2720,9 @@ class BlockStorageConfiguration(StorageConfiguration):
     class_name: ClassVar[str] = "BlockStorageConfiguration"
     class_model_uri: ClassVar[URIRef] = GX.BlockStorageConfiguration
 
-    storageEncryption: Union[
-        Union[dict, Encryption], List[Union[dict, Encryption]]
-    ] = None
+    storageEncryption: Union[Union[dict, Encryption], List[Union[dict, Encryption]]] = (
+        None
+    )
     blockStorageTechnology: Optional[
         Union[
             Union[str, "BlockStorageTechnology"],
@@ -3028,9 +3046,9 @@ class ServerFlavor(InstantiationRequirement):
     bootVolume: Union[dict, Disk] = None
     gpu: Optional[Union[dict, GPU]] = None
     network: Optional[str] = None
-    additionalVolume: Optional[
-        Union[Union[dict, Disk], List[Union[dict, Disk]]]
-    ] = empty_list()
+    additionalVolume: Optional[Union[Union[dict, Disk], List[Union[dict, Disk]]]] = (
+        empty_list()
+    )
     confidentialComputing: Optional[Union[dict, "ConfidentialComputing"]] = None
     hypervisor: Optional[Union[dict, Hypervisor]] = None
     hardwareAssistedVirtualization: Optional[Union[bool, Bool]] = False

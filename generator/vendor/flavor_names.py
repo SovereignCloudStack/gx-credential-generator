@@ -9,13 +9,19 @@ from typing import Optional
 import yaml
 
 
-CPUTYPE_KEY = {'L': 'crowded-core', 'V': 'shared-core', 'T': 'dedicated-thread', 'C': 'dedicated-core'}
-DISKTYPE_KEY = {'n': 'network', 'h': 'hdd', 's': 'ssd', 'p': 'nvme'}
+CPUTYPE_KEY = {
+    "L": "crowded-core",
+    "V": "shared-core",
+    "T": "dedicated-thread",
+    "C": "dedicated-core",
+}
+DISKTYPE_KEY = {"n": "network", "h": "hdd", "s": "ssd", "p": "nvme"}
 HERE = Path(__file__).parent
 
 
 class TypeCheck:
     """class for validating the type of some attribute within a flavor name"""
+
     def __call__(self, attr: str, value):
         raise ValueError(f"{attr} can not be set to {value}")
 
@@ -36,7 +42,9 @@ class TblCheck(TypeCheck):
 
     def __call__(self, attr, value):
         if value not in self.tbl:
-            raise ValueError(f"{attr} can not be set to {value!r}; must be one of {tuple(self.tbl)}")
+            raise ValueError(
+                f"{attr} can not be set to {value!r}; must be one of {tuple(self.tbl)}"
+            )
 
 
 class BoolCheck(TypeCheck):
@@ -48,17 +56,22 @@ class BoolCheck(TypeCheck):
 class IntCheck(TypeCheck):
     def __call__(self, attr, value):
         if not isinstance(value, int) or value <= 0:
-            raise ValueError(f"{attr} can not be set to {value!r}; must be positive integer")
+            raise ValueError(
+                f"{attr} can not be set to {value!r}; must be positive integer"
+            )
 
 
 class FloatCheck(TypeCheck):
     def __call__(self, attr, value):
         if not isinstance(value, float) or value <= 0 or int(2 * value) != 2 * value:
-            raise ValueError(f"{attr} can not be set to {value!r}; must be positive multiple of 0.5")
+            raise ValueError(
+                f"{attr} can not be set to {value!r}; must be positive multiple of 0.5"
+            )
 
 
 class Attr:
     """class to represent one attribute, such as brand, of one component, such as gpu, of a flavor name"""
+
     typ = None
     default = None
 
@@ -91,7 +104,7 @@ class Attr:
         if self.letter is None:
             self.letter = name
         self.attr = name
-        self._attr = '_' + name
+        self._attr = "_" + name
 
     def __get__(self, obj, objclass=None):
         if obj is None:
@@ -146,10 +159,19 @@ class DepTblAttr(Attr):
 
 class Main:
     """Class representing the first part (CPU+RAM)"""
+
     type = "CPU-RAM"
     component_name = "cpuram"
     cpus = IntAttr("#vCPUs")
-    cputype = TblAttr("CPU type", {"L": "LowPerf vCPUs", "V": "vCPUs", "T": "SMT Threads", "C": "Dedicated Cores"})
+    cputype = TblAttr(
+        "CPU type",
+        {
+            "L": "LowPerf vCPUs",
+            "V": "vCPUs",
+            "T": "SMT Threads",
+            "C": "Dedicated Cores",
+        },
+    )
     cpuinsecure = BoolAttr("?Insec SMT", letter="i")
     ram = FloatAttr("##GiB RAM")
     raminsecure = BoolAttr("?no ECC", letter="u")
@@ -158,22 +180,43 @@ class Main:
 
 class Disk:
     """Class representing the disk part"""
+
     type = "Disk"
     component_name = "disk"
     nrdisks = IntAttr("#.NrDisks", default=1)
     disksize = OptIntAttr("#.GB Disk")
-    disktype = TblAttr("Disk type", {'': '(unspecified)', "n": "Networked", "h": "Local HDD", "s": "SSD", "p": "HiPerf NVMe"})
+    disktype = TblAttr(
+        "Disk type",
+        {
+            "": "(unspecified)",
+            "n": "Networked",
+            "h": "Local HDD",
+            "s": "SSD",
+            "p": "HiPerf NVMe",
+        },
+    )
 
 
 class Hype:
     """Class repesenting Hypervisor"""
+
     type = "Hypervisor"
     component_name = "hype"
-    hype = TblAttr(".Hypervisor", {"kvm": "KVM", "xen": "Xen", "hyv": "Hyper-V", "vmw": "VMware", "bms": "Bare Metal System"})
+    hype = TblAttr(
+        ".Hypervisor",
+        {
+            "kvm": "KVM",
+            "xen": "Xen",
+            "hyv": "Hyper-V",
+            "vmw": "VMware",
+            "bms": "Bare Metal System",
+        },
+    )
 
 
 class HWVirt:
     """Class repesenting support for hardware virtualization"""
+
     type = "Hardware/NestedVirtualization"
     component_name = "hwvirt"
     hwvirt = BoolAttr("?HardwareVirt", letter="hwv")
@@ -181,36 +224,107 @@ class HWVirt:
 
 class CPUBrand:
     """Class repesenting CPU brand"""
+
     type = "CPUBrand"
     component_name = "cpubrand"
-    cpuvendor = TblAttr("CPU Vendor", {"i": "Intel", "z": "AMD", "a": "ARM", "r": "RISC-V"})
-    cpugen = DepTblAttr("#.CPU Gen", cpuvendor, {
-        "i": {None: '(unspecified)', 0: "Unspec/Pre-Skylake", 1: "Skylake", 2: "Cascade Lake", 3: "Ice Lake", 4: "Sapphire Rapids"},
-        "z": {None: '(unspecified)', 0: "Unspec/Pre-Zen", 1: "Zen 1", 2: "Zen 2", 3: "Zen 3", 4: "Zen 4"},
-        "a": {None: '(unspecified)', 0: "Unspec/Pre-A76", 1: "A76/NeoN1", 2: "A78/X1/NeoV1", 3: "A710/NeoN2"},
-        "r": {None: '(unspecified)', 0: "Unspec"},
-    })
-    perf = TblAttr("Performance", {"": "Std Perf", "h": "High Perf", "hh": "Very High Perf", "hhh": "Very Very High Perf"})
+    cpuvendor = TblAttr(
+        "CPU Vendor", {"i": "Intel", "z": "AMD", "a": "ARM", "r": "RISC-V"}
+    )
+    cpugen = DepTblAttr(
+        "#.CPU Gen",
+        cpuvendor,
+        {
+            "i": {
+                None: "(unspecified)",
+                0: "Unspec/Pre-Skylake",
+                1: "Skylake",
+                2: "Cascade Lake",
+                3: "Ice Lake",
+                4: "Sapphire Rapids",
+            },
+            "z": {
+                None: "(unspecified)",
+                0: "Unspec/Pre-Zen",
+                1: "Zen 1",
+                2: "Zen 2",
+                3: "Zen 3",
+                4: "Zen 4",
+            },
+            "a": {
+                None: "(unspecified)",
+                0: "Unspec/Pre-A76",
+                1: "A76/NeoN1",
+                2: "A78/X1/NeoV1",
+                3: "A710/NeoN2",
+            },
+            "r": {None: "(unspecified)", 0: "Unspec"},
+        },
+    )
+    perf = TblAttr(
+        "Performance",
+        {
+            "": "Std Perf",
+            "h": "High Perf",
+            "hh": "Very High Perf",
+            "hhh": "Very Very High Perf",
+        },
+    )
 
 
 class GPU:
     """Class repesenting GPU support"""
+
     type = "GPU"
     component_name = "gpu"
     gputype = TblAttr("Type", {"g": "vGPU", "G": "Pass-Through GPU"})
     brand = TblAttr("Brand", {"N": "nVidia", "A": "AMD", "I": "Intel"})
-    gen = DepTblAttr("Gen", brand, {
-        "N": {'': '(unspecified)', "f": "Fermi", "k": "Kepler", "m": "Maxwell", "p": "Pascal",
-              "v": "Volta", "t": "Turing", "a": "Ampere", "l": "AdaLovelace"},
-        "A": {'': '(unspecified)', "0.4": "GCN4.0/Polaris", "0.5": "GCN5.0/Vega", "1": "RDNA1/Navi1x", "2": "RDNA2/Navi2x", "3": "RDNA3/Navi3x"},
-        "I": {'': '(unspecified)', "0.9": "Gen9/Skylake", "0.95": "Gen9.5/KabyLake", "1": "Xe1/Gen12.1", "2": "Xe2"},
-    })
+    gen = DepTblAttr(
+        "Gen",
+        brand,
+        {
+            "N": {
+                "": "(unspecified)",
+                "f": "Fermi",
+                "k": "Kepler",
+                "m": "Maxwell",
+                "p": "Pascal",
+                "v": "Volta",
+                "t": "Turing",
+                "a": "Ampere",
+                "l": "AdaLovelace",
+            },
+            "A": {
+                "": "(unspecified)",
+                "0.4": "GCN4.0/Polaris",
+                "0.5": "GCN5.0/Vega",
+                "1": "RDNA1/Navi1x",
+                "2": "RDNA2/Navi2x",
+                "3": "RDNA3/Navi3x",
+            },
+            "I": {
+                "": "(unspecified)",
+                "0.9": "Gen9/Skylake",
+                "0.95": "Gen9.5/KabyLake",
+                "1": "Xe1/Gen12.1",
+                "2": "Xe2",
+            },
+        },
+    )
     cu = OptIntAttr("#.CU/EU/SM")
-    perf = TblAttr("Performance", {"": "Std Perf", "h": "High Perf", "hh": "Very High Perf", "hhh": "Very Very High Perf"})
+    perf = TblAttr(
+        "Performance",
+        {
+            "": "Std Perf",
+            "h": "High Perf",
+            "hh": "Very High Perf",
+            "hhh": "Very Very High Perf",
+        },
+    )
 
 
 class IB:
     """Class representing Infiniband"""
+
     type = "Infiniband"
     component_name = "ib"
     ib = BoolAttr("?IB")
@@ -218,9 +332,16 @@ class IB:
 
 class Flavorname:
     """A flavor name; merely a bunch of components"""
+
     def __init__(
-        self, cpuram: Main = None, disk: Disk = None, hype: Hype = None, hwvirt: HWVirt = None,
-        cpubrand: CPUBrand = None, gpu: GPU = None, ib: IB = None
+        self,
+        cpuram: Main = None,
+        disk: Disk = None,
+        hype: Hype = None,
+        hwvirt: HWVirt = None,
+        cpubrand: CPUBrand = None,
+        gpu: GPU = None,
+        ib: IB = None,
     ):
         self.cpuram = cpuram
         self.disk = disk
@@ -313,6 +434,7 @@ class SyntaxV1:
     """
     This class bundles the regular expressions that comprise the syntax for v1 of the standard.
     """
+
     prefix = "SCS-"
     cpuram = re.compile(r"([0-9]*)([LVTC])(i|):([0-9\.]*)(u|)(o|)")
     disk = re.compile(r":(?:([0-9]*)x|)([0-9]*)([nhsp]|)")
@@ -326,7 +448,7 @@ class SyntaxV1:
     @staticmethod
     def from_v2(nm: str) -> str:
         """v2 to v1 flavor name transformation"""
-        return nm.replace('-', ':').replace('_', '-').replace('SCS:', 'SCS-')
+        return nm.replace("-", ":").replace("_", "-").replace("SCS:", "SCS-")
 
 
 class SyntaxV2:
@@ -338,6 +460,7 @@ class SyntaxV2:
 
     Note that the syntax hasn't changed since v2, so this class is still valid.
     """
+
     prefix = "SCS-"
     cpuram = re.compile(r"([0-9]*)([LVTC])(i|)\-([0-9\.]*)(u|)(o|)")
     disk = re.compile(r"\-(?:([0-9]*)x|)([0-9]*)([nhsp]|)")
@@ -351,11 +474,12 @@ class SyntaxV2:
     @staticmethod
     def from_v1(nm: str) -> str:
         """v1 to v2 flavor name transformation"""
-        return nm.replace('-', '_').replace(':', '-').replace('SCS_', 'SCS-')
+        return nm.replace("-", "_").replace(":", "-").replace("SCS_", "SCS-")
 
 
 class ParseCtx:
     """Auxiliary class used during parsing to hold current position in the string"""
+
     def __init__(self, s: str, pos=0):
         self.s = s
         self.pos = pos
@@ -363,6 +487,7 @@ class ParseCtx:
 
 class ComponentParser:
     """Auxiliary class for parsing a single component of a flavor name"""
+
     def __init__(self, parsestr: re.Pattern, targetcls):
         self.parsestr = parsestr  # re.Pattern as defined in `SyntaxV1` or `SyntaxV2`
         self.targetcls = targetcls  # component class such as `Main` or `Disk`
@@ -374,7 +499,9 @@ class ComponentParser:
         match_attr = Attr.collect(self.targetcls)
         groups = m.groups()
         if len(groups) != len(match_attr):
-            raise ValueError(f"unexpected number of matching groups: {match_attr} vs {groups}")
+            raise ValueError(
+                f"unexpected number of matching groups: {match_attr} vs {groups}"
+            )
         t = self.targetcls()
         for attr, group in zip(match_attr, groups):
             if attr.name[:2] == "##":
@@ -500,6 +627,7 @@ def lookup_user_input(formdata, idx, attr, target):
 
 class Inputter:
     """Auxiliary class for interactive input of flavor names."""
+
     def __init__(self, obtain_input=ask_user_input):
         self.ask_user_input = staticmethod(obtain_input)
 
@@ -518,7 +646,9 @@ class Inputter:
         flavorname = Flavorname()
         flavorname.cpuram = self.input_component(Main)
         flavorname.disk = self.input_component(Disk)
-        if flavorname.disk and not (flavorname.disk.nrdisks and flavorname.disk.disksize):
+        if flavorname.disk and not (
+            flavorname.disk.nrdisks and flavorname.disk.disksize
+        ):
             # special case...
             flavorname.disk = None
         flavorname.hype = self.input_component(Hype)
@@ -539,16 +669,16 @@ inputflavor = inputter = Inputter()
 def flavorname_to_dict(flavorname: Flavorname) -> dict:
     name_v2 = outputter(flavorname)
     result = {
-        'cpus': flavorname.cpuram.cpus,
-        'cpu-type': CPUTYPE_KEY[flavorname.cpuram.cputype],
-        'ram': flavorname.cpuram.ram,
-        'name-v1': SyntaxV1.from_v2(name_v2),
-        'name-v2': name_v2,
+        "cpus": flavorname.cpuram.cpus,
+        "cpu-type": CPUTYPE_KEY[flavorname.cpuram.cputype],
+        "ram": flavorname.cpuram.ram,
+        "name-v1": SyntaxV1.from_v2(name_v2),
+        "name-v2": name_v2,
     }
     if flavorname.disk:
-        result['disk'] = flavorname.disk.disksize
+        result["disk"] = flavorname.disk.disksize
         for i in range(flavorname.disk.nrdisks):
-            result[f'disk{i}-type'] = DISKTYPE_KEY[flavorname.disk.disktype or 'n']
+            result[f"disk{i}-type"] = DISKTYPE_KEY[flavorname.disk.disktype or "n"]
     return result
 
 
@@ -598,14 +728,14 @@ def prettyname(flavorname, prefix=""):
     if flavorname.hype:
         stg += f'on {_tbl_out(flavorname.hype, "hype")}'
     if flavorname.hwvirt:
-        stg += 'with HW virt '
+        stg += "with HW virt "
     # Disk
     if flavorname.disk:
         stg += "and "
         stg += _tbl_out(flavorname.disk, "disktype", True)
         if flavorname.disk.nrdisks != 1:
-            stg += f'{flavorname.disk.nrdisks}x'
-        stg += f'{flavorname.disk.disksize}GB root volume '
+            stg += f"{flavorname.disk.nrdisks}x"
+        stg += f"{flavorname.disk.disksize}GB root volume "
     # GPU
     if flavorname.gpu:
         stg += "and " + _tbl_out(flavorname.gpu, "gputype")
@@ -624,6 +754,7 @@ class CompatLayer:
     """
     This class provides convenience functions previously found in `flavor-name-check.py`.
     """
+
     def __init__(self):
         self.verbose = False
         self.debug = False
@@ -633,7 +764,7 @@ class CompatLayer:
         self.v3_flv = False
         self.mandFlavorFile = str(Path(HERE.parent, "SCS-Spec.MandatoryFlavors.yaml"))
         bindir = os.path.basename(sys.argv[0])
-        self.searchpath = (bindir, ) if bindir else os.environ['PATH'].split(':')
+        self.searchpath = (bindir,) if bindir else os.environ["PATH"].split(":")
 
     def parsename(self, namestr: str) -> Optional[Flavorname]:
         """
@@ -698,5 +829,8 @@ class CompatLayer:
 
 if __name__ == "__main__":
     namestr = "SCS-16T-64-3x10s_bms_hwv_i3h_GNa-64_ib"
-    print(outputter(parser_v1("SCS-16T:64:3x10s-GNa:64-ib")) == outputter(parser_v2(namestr).shorten()))
+    print(
+        outputter(parser_v1("SCS-16T:64:3x10s-GNa:64-ib"))
+        == outputter(parser_v2(namestr).shorten())
+    )
     print(namestr == outputter(parser_v2(namestr)))

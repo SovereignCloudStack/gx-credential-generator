@@ -52,7 +52,12 @@ CPUVENDOR_LOOKUP = {
     "a": (
         "AArch-64",
         "ARM",
-        ("pre Cortex A76", "A76/NeoN1 class", "A78/x1/NeoV1 class", "A71x/NeoN2 (ARMv9)"),
+        (
+            "pre Cortex A76",
+            "A76/NeoN1 class",
+            "A78/x1/NeoV1 class",
+            "A71x/NeoN2 (ARMv9)",
+        ),
     ),
     # RISC-V
     "r": (
@@ -92,7 +97,7 @@ class ServerFlavorDiscovery:
 
         try:
             flavorname = parser_v3(os_flavor.name)
-        except ValueError as e:
+        except ValueError:
             flavorname = None
         # Initialize Gaia-X Server Flavor
         disks = self._get_disks(os_flavor, flavorname)
@@ -122,7 +127,9 @@ class ServerFlavorDiscovery:
         """
         cpu = CPU(cpuArchitecture=CpuArch.other, numberOfCores=os_flavor.vcpus)
         if flavorname:
-            cpu.smtEnabled = flavorname.cpuram.cputype != "C"  # FIXME this is unclear to me
+            cpu.smtEnabled = (
+                flavorname.cpuram.cputype != "C"
+            )  # FIXME this is unclear to me
             cpu.defaultOversubscriptionRatio = 1
             if flavorname.cpuram.cputype == "V":
                 cpu.defaultOversubscriptionRatio = 5
@@ -130,7 +137,9 @@ class ServerFlavorDiscovery:
                 cpu.defaultOversubscriptionRatio = 16
         return cpu
 
-    def _get_ram(self, os_flavor: OS_Flavor, flavorname: Optional[Flavorname]) -> Memory:
+    def _get_ram(
+        self, os_flavor: OS_Flavor, flavorname: Optional[Flavorname]
+    ) -> Memory:
         """
         Return Gaia-X RAM definition specified in given OpenStack flavor.
         @param os_flavor: OpenStack Flavor
@@ -146,7 +155,9 @@ class ServerFlavorDiscovery:
                 mem.defaultOversubscriptionRatio = 2
         return mem
 
-    def _get_disks(self, os_flavor: OS_Flavor, flavorname: Optional[Flavorname]) -> List[Disk]:
+    def _get_disks(
+        self, os_flavor: OS_Flavor, flavorname: Optional[Flavorname]
+    ) -> List[Disk]:
         """
         Return all disk specification found in given Openstack flavor.
         @param os_flavor: Openstack flavor specification
@@ -169,7 +180,9 @@ class ServerFlavorDiscovery:
             for i in range(int(flavorname.disk.nrdisks)):
                 disks.append(
                     Disk(
-                        diskSize=MemorySize(value=flavorname.disk.disksize, unit=const.UNIT_GB),
+                        diskSize=MemorySize(
+                            value=flavorname.disk.disksize, unit=const.UNIT_GB
+                        ),
                         diskType=disk_type,
                         diskBusType=disk_bus_types,
                     )
@@ -225,4 +238,3 @@ class ServerFlavorDiscovery:
         @type gx_flavor: ServerFlavor
         """
         gx_flavor.description = os_flavor.description
-    

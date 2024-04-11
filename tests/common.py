@@ -27,7 +27,7 @@ from generator.common.gx_schema import (
     VirtualResource,
     VMImage,
     ServerFlavor,
-InstantiationRequirement
+    InstantiationRequirement
 )
 
 
@@ -214,7 +214,7 @@ class OpenstackTestcase(unittest.TestCase):
         self.assertEqual(exp.hwRngTypeOfImage, act.hwRngTypeOfImage, "VM_Image.hwRngTypeOfImage")
 
     def check_installation_requirement(
-        self, ob_1: InstantiationRequirement, ob_2: InstantiationRequirement
+            self, ob_1: InstantiationRequirement, ob_2: InstantiationRequirement
     ):
         self.assert_gaia_x_entity(ob_1, ob_2)
 
@@ -255,6 +255,7 @@ class OpenstackTestcase(unittest.TestCase):
 
         for i in range(9, len(ob_1.additionalVolume) - 1):
             self.assert_disk(ob_1.additionalVolume[i], ob_2.additionalVolume[i])
+
 
 class MockConnection:
     """

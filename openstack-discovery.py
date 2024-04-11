@@ -40,7 +40,7 @@ def appenddicts(dct1, *kwd):
     "Return dict d1 with items from kwd added"
     dct = dct1
     for k in kwd:
-        assert(k is not None)
+        assert (k is not None)
         dct.update(k)
     return dct
 
@@ -92,6 +92,7 @@ def versinfo(connprox, stype, region):
 
 class osServiceCat:
     "OpenStack service catalog"
+
     def __init__(self, dct, regfilter):
         self.id = dct["id"]
         self.region = regfilter
@@ -114,6 +115,7 @@ class osServiceCat:
 
 class osService:
     "A generic openStack service, with a proxy connection object from SDK"
+
     def __init__(self, conn, stype, name, region, prj_id, ept, quiet=True):
         "c'tor for the OpenStack service to be caled by subclasses"
         global errors
@@ -165,8 +167,9 @@ class osService:
             self.extensions = list(map(lambda x: x.alias, self.conn.extensions()))
         except Exception as exc:
             if not quiet:
-                print(f"#WARNING: Service {self.fulltype} in region {region} does not support getting extensions.\n{exc}",
-                      file=sys.stderr)
+                print(
+                    f"#WARNING: Service {self.fulltype} in region {region} does not support getting extensions.\n{exc}",
+                    file=sys.stderr)
         try:
             self.azs = list(filter(lambda x: x.state['available'] is True, self.conn.availability_zones()))
         except Exception:
@@ -207,6 +210,7 @@ class osService:
 
 class osFlavor:
     "Abstraction for flavors"
+
     def __init__(self, flv):
         self.name = flv['name']
         # Note: cpuType, cpuGeneration, diskType are MR34 ideas,
@@ -215,14 +219,14 @@ class osFlavor:
         self.cpuType = ""
         self.cpuGeneration = ""
         self.numberOfvCPUs = flv['vcpus']
-        self.ramSize = flv['ram']       # MiB
-        self.diskSize = flv['disk']     # GB
+        self.ramSize = flv['ram']  # MiB
+        self.diskSize = flv['disk']  # GB
         self.diskType = ""
 
     def values(self):
-        ydct = dict(name = self.name,
-                    numberOfvCPUs = self.numberOfvCPUs,
-                    ramSize = dict(Value=self.ramSize/1024, Unit='GiB'))
+        ydct = dict(name=self.name,
+                    numberOfvCPUs=self.numberOfvCPUs,
+                    ramSize=dict(Value=self.ramSize / 1024, Unit='GiB'))
         if self.diskSize:
             ydct['diskSize'] = dict(Value=self.diskSize, Unit='GB')
         # TODO: cpuType, cpuGen, diskType output
@@ -262,6 +266,7 @@ class osCompute(osService):
 
 class azInfo:
     "Convert zoneXxx dict into class with Xxx attributes for availability zones"
+
     def __init__(self, dct):
         for key in dct:
             if key[:4] == "zone":
@@ -328,6 +333,7 @@ class osLoadBalancer(osService):
             dct[self.stype]["flavors"] = self.flavors
         return dct
 
+
 # TODO: List of public images with properties
 
 
@@ -366,6 +372,7 @@ OSClasses = [osCompute, osVolume, osLoadBalancer, osNetwork]
 
 class nonOSService:
     "Non-OpenStack services listed in the service catalogue"
+
     def __init__(self, stype, name, url):
         self.stype = stype
         self.name = name
@@ -382,6 +389,7 @@ class nonOSService:
 
 class osCloud:
     "Abstraction for openStack cloud with all its services"
+
     def __init__(self, conn):
         # import copy
         self.conn = conn
@@ -488,12 +496,12 @@ def usage(err=1):
 
 def ostackconn(cloud, timeout):
     "Establish connection to OpenStack cloud cloud (timeout timeout)"
-    conn = openstack.connect(cloud=cloud, timeout=timeout, api_timeout=timeout*1.5+4)
+    conn = openstack.connect(cloud=cloud, timeout=timeout, api_timeout=timeout * 1.5 + 4)
     try:
         conn.authorize()
     except Exception:
         print("INFO: Retry connection with 'default' domain", file=sys.stderr)
-        conn = openstack.connect(cloud=cloud, timeout=timeout, api_timeout=timeout*1.5+4,
+        conn = openstack.connect(cloud=cloud, timeout=timeout, api_timeout=timeout * 1.5 + 4,
                                  default_domain='default', project_domain_id='default')
         conn.authorize()
     return conn
