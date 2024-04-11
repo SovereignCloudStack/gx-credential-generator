@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # vim: set ts=4 sw=4 et:
 #
-# openstack-openstack_discovery.py
+# openstack-discovery.py
 """
 Talk to OpenStack APIs to discover environment
 Save discovered information in classes that reflect G-X attributes
@@ -482,7 +482,7 @@ class osCloud:
 
 def usage(err=1):
     "output help"
-    print("Usage: openstack-openstack_discovery.py [options]", file=sys.stderr)
+    print("Usage: openstack-discovery.py [options]", file=sys.stderr)
     print("Options: -j/--json:   output GX JSON-LD instead of YAML")
     print("         -J/--json-compact:   output compact GX JSON-LD instead of YAML")
     print("         -f FILE/--file=FILE: write output to FILE (default: stdout)")

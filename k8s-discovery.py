@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # vim: set ts=4 sw=4 et:
 #
-# k8s-openstack_discovery.py
+# k8s-discovery.py
 """
 Talk to K8s APIs to discover environment
 Save discovered information in classes that reflect G-X attributes
