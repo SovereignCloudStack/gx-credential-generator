@@ -27,6 +27,7 @@ from linkml_runtime.utils.metamodelcore import (URI, Bool, XSDDate,
 from linkml_runtime.utils.slot import Slot
 from linkml_runtime.utils.yamlutils import (YAMLRoot, extended_float,
                                            extended_int, extended_str)
+
 from rdflib import Namespace, URIRef
 
 metamodel_version = "1.7.0"

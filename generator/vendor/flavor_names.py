@@ -8,7 +8,6 @@ from typing import Optional
 
 import yaml
 
-
 CPUTYPE_KEY = {
     "L": "crowded-core",
     "V": "shared-core",

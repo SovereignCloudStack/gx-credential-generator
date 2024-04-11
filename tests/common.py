@@ -3,18 +3,18 @@ from pathlib import Path
 from typing import List
 
 import yaml
-
-from openstack.image.v2.image import Image as OS_Image
 from openstack.compute.v2.flavor import Flavor as OS_Flavor
-from generator.common.config import Config
+from openstack.image.v2.image import Image as OS_Image
 
 from generator.common.config import Config
 from generator.common.gx_schema import (CPU, GPU, CheckSum, CodeArtifact,
                                         Device, Disk, Encryption, GaiaXEntity,
-                                        Hypervisor, Image, Memory,
-                                        OperatingSystem, Resource, Signature,
+                                        Hypervisor, Image,
+                                        InstantiationRequirement, Memory,
+                                        OperatingSystem, Resource,
+                                        ServerFlavor, Signature,
                                         SoftwareResource, VirtualResource,
-                                        VMImage, InstantiationRequirement)
+                                        VMImage)
 
 
 def get_absolute_path(relative_path: str) -> str:
