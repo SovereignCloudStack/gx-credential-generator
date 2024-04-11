@@ -263,7 +263,7 @@ class MockConnection:
     """
 
     def __init__(self, images: List[OS_Image] = None, flavors: List[OS_Flavor] = None):
-        self.images =  images or []
+        self.images = images or []
         self.flavors = flavors or []
 
     def list_images(self) -> List[OS_Image]:
@@ -271,6 +271,6 @@ class MockConnection:
 
     def list_flavors(self) -> List[OS_Flavor]:
         return self.flavors
-        
+
     def authorize(self):
         pass
