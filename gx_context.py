@@ -15,5 +15,5 @@ gxcontext = {
         "xsd": "http://www.w3.org/2001/XMLSchema#",
     }
 }
-
+}
 gxtype = {"@type": "gx:ServiceOffering"}

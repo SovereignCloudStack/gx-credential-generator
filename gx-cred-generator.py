@@ -10,6 +10,7 @@
 SPDX-License-Identifier: EPL-2.0
 """
 
+import importlib
 import getopt
 import json
 import sys

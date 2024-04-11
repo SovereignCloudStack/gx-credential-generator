@@ -829,8 +829,5 @@ class CompatLayer:
 
 if __name__ == "__main__":
     namestr = "SCS-16T-64-3x10s_bms_hwv_i3h_GNa-64_ib"
-    print(
-        outputter(parser_v1("SCS-16T:64:3x10s-GNa:64-ib"))
-        == outputter(parser_v2(namestr).shorten())
-    )
+    print(outputter(parser_v1("SCS-16T:64:3x10s-GNa:64-ib")) == outputter(parser_v2(namestr).shorten()))
     print(namestr == outputter(parser_v2(namestr)))
