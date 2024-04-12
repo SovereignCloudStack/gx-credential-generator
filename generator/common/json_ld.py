@@ -166,10 +166,4 @@ def _get_super_classes(class_name) -> List:
     @param class_name: name of class
     @return: list of all super classes
     """
-    classes = []
-    for base in inspect.getmro(class_name):
-        try:
-            classes.append(base)
-        except AttributeError:
-            pass
-    return classes
+    return list(inspect.getmro(class_name))

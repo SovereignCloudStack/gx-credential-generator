@@ -115,11 +115,6 @@ software resources:
     resource policy: "default: allow intent"
     license:
       - https://almalinux.org/p/the-almalinux-os-licensing-policy/
-  Debian 11:
-    copyright owner: "AlmaLinux OS Foundation"
-    resource policy: "default: allow intent"
-    license:
-      - https://www.debian.org/legal/licenses/
   KVM:
     copyright owner: "Qumranet"
     resource policy: "default: allow intent"

@@ -47,7 +47,7 @@ class ContainerPort:
 
 class KubeContainer:
     def __init__(
-            self, env, c_image, command, image_pull_policy, c_name, ports, volumes
+        self, env, c_image, command, image_pull_policy, c_name, ports, volumes
     ):
         self.env = env
         self.c_image = c_image
@@ -60,7 +60,7 @@ class KubeContainer:
 
 class KubeNodeCapacity:
     def __init__(
-            self, cpu, ephemeral_storage, hugepages_1Gi, hugepages_2Mi, memory, pods
+        self, cpu, ephemeral_storage, hugepages_1Gi, hugepages_2Mi, memory, pods
     ):
         self.cpu = cpu
         self.ephemeral_storage = ephemeral_storage
@@ -79,19 +79,19 @@ class KubeNode:
 
 class KubePod:
     def __init__(
-            self,
-            host_ip,
-            pod_i_ps,
-            phase,
-            start_time,
-            qos_class,
-            image,
-            image_id,
-            name,
-            namespace,
-            labels,
-            uid,
-            containers,
+        self,
+        host_ip,
+        pod_i_ps,
+        phase,
+        start_time,
+        qos_class,
+        image,
+        image_id,
+        name,
+        namespace,
+        labels,
+        uid,
+        containers,
     ):
         self.host_ip = host_ip
         self.pod_i_ps = pod_i_ps

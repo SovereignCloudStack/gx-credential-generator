@@ -42,10 +42,14 @@ def appenddicts(dct1, *kwd):
     dct = dct1
     for k in kwd:
 <<<<<<< HEAD
+<<<<<<< HEAD
         assert k is not None
 =======
         assert (k is not None)
 >>>>>>> Generate gx conformant credentials for server flavors (#81)
+=======
+        assert k is not None
+>>>>>>> Increase code coverage
         dct.update(k)
     return dct
 
@@ -198,11 +202,16 @@ class osService:
                 print(
                     f"#WARNING: Service {self.fulltype} in region {region} does not support getting extensions.\n{exc}",
 <<<<<<< HEAD
+<<<<<<< HEAD
                     file=sys.stderr,
                 )
 =======
                     file=sys.stderr)
 >>>>>>> Generate gx conformant credentials for server flavors (#81)
+=======
+                    file=sys.stderr,
+                )
+>>>>>>> Increase code coverage
         try:
             self.azs = list(
                 filter(
@@ -590,17 +599,26 @@ def usage(err=1):
 def ostackconn(cloud, timeout):
     "Establish connection to OpenStack cloud cloud (timeout timeout)"
 <<<<<<< HEAD
+<<<<<<< HEAD
     conn = openstack.connect(
         cloud=cloud, timeout=timeout, api_timeout=timeout * 1.5 + 4
     )
 =======
     conn = openstack.connect(cloud=cloud, timeout=timeout, api_timeout=timeout * 1.5 + 4)
 >>>>>>> Generate gx conformant credentials for server flavors (#81)
+=======
+    conn = openstack.connect(
+        cloud=cloud, timeout=timeout, api_timeout=timeout * 1.5 + 4
+    )
+>>>>>>> Increase code coverage
     try:
         conn.authorize()
     except Exception:
         print("INFO: Retry connection with 'default' domain", file=sys.stderr)
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Increase code coverage
         conn = openstack.connect(
             cloud=cloud,
             timeout=timeout,
@@ -608,10 +626,13 @@ def ostackconn(cloud, timeout):
             default_domain="default",
             project_domain_id="default",
         )
+<<<<<<< HEAD
 =======
         conn = openstack.connect(cloud=cloud, timeout=timeout, api_timeout=timeout * 1.5 + 4,
                                  default_domain='default', project_domain_id='default')
 >>>>>>> Generate gx conformant credentials for server flavors (#81)
+=======
+>>>>>>> Increase code coverage
         conn.authorize()
     return conn
 

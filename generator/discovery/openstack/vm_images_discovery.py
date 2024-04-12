@@ -18,14 +18,27 @@ import generator.common.const as const
 from generator.common.config import Config
 from generator.common.gx_schema import CPU, SPDX
 from generator.common.gx_schema import Architectures as CpuArch
-from generator.common.gx_schema import (CheckSum, ChecksumAlgorithm, Disk,
-                                        DiskBusType, FirmType, HypervisorType,
-                                        LatestN, MaintenanceSubscription,
-                                        Memory, MemorySize, OperatingSystem,
-                                        RNGTypes, Signature,
-                                        SignatureAlgorithm, UpdateFrequency,
-                                        UpdateStrategy, Validity1, Validity2,
-                                        VMDiskType)
+from generator.common.gx_schema import (
+    CheckSum,
+    ChecksumAlgorithm,
+    Disk,
+    DiskBusType,
+    FirmType,
+    HypervisorType,
+    LatestN,
+    MaintenanceSubscription,
+    Memory,
+    MemorySize,
+    OperatingSystem,
+    RNGTypes,
+    Signature,
+    SignatureAlgorithm,
+    UpdateFrequency,
+    UpdateStrategy,
+    Validity1,
+    Validity2,
+    VMDiskType,
+)
 from generator.common.gx_schema import VMImage as GX_Image
 from generator.common.gx_schema import WatchDogActions
 from generator.common.json_ld import JsonLdObject
@@ -199,7 +212,8 @@ class VmDiscovery:
     @staticmethod
     def _get_firme_ware_type(os_image: OS_Image) -> FirmType:
         if (
-                os_image.properties is not None and "hw_firmware_type" in os_image.properties
+            os_image.properties is not None
+            and "hw_firmware_type" in os_image.properties
         ):
             return FirmType(
                 FIRM_WARE_LOOKUP.get(
@@ -487,6 +501,18 @@ class VmDiscovery:
                     self._get_license_for_os(const.CONFIG_OS_OPEN_SUSE)
                 ),
             )
+        elif os_image.os_distro.lower() == "suse":
+            return OperatingSystem(
+                version=os_image.os_version,
+                osDistribution=const.CONFIG_OS_SUSE,
+                resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_SUSE),
+                copyrightOwnedBy=self._get_copyright_owner_for_os(
+                    const.CONFIG_OS_OPEN_SUSE
+                ),
+                license=self._get_license_list(
+                    self._get_license_for_os(const.CONFIG_OS_SUSE)
+                ),
+            )
         elif os_image.os_distro.lower() == "rocky":
             return OperatingSystem(
                 version=os_image.os_version,
@@ -509,16 +535,17 @@ class VmDiscovery:
                     self._get_license_for_os(const.CONFIG_OS_RHEL)
                 ),
             )
-        elif os_image.os_distro.lower() == "sled":
-            return OperatingSystem(
-                version=os_image.os_version,
-                osDistribution=const.CONFIG_OS_SLED,
-                resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_SLED),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(const.CONFIG_OS_SLED),
-                license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_SLED)
-                ),
-            )
+        # sled not yet supported by Gaia-X
+        # elif os_image.os_distro.lower() == "sled":
+        #    return OperatingSystem(
+        #        version=os_image.os_version,
+        #        osDistribution=const.CONFIG_OS_SLED,
+        #        resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_SLED),
+        #        copyrightOwnedBy=self._get_copyright_owner_for_os(const.CONFIG_OS_SLED),
+        #        license=self._get_license_list(
+        #            self._get_license_for_os(const.CONFIG_OS_SLED)
+        #        ),
+        #    )
         elif os_image.os_distro.lower() == "ubuntu":
             return OperatingSystem(
                 version=os_image.os_version,
@@ -560,19 +587,35 @@ class VmDiscovery:
         elif os_image.os_distro.lower() == "almalinux":
             return OperatingSystem(
                 version=os_image.os_version,
-                osDistribution=const.CONFIG_OS_ALMALINUX,
+                osDistribution=const.CONFIG_OS_ALMA_LINUX,
                 resourcePolicy=self._get_resource_policy_for_os(
-                    const.CONFIG_OS_ALMALINUX
+                    const.CONFIG_OS_ALMA_LINUX
                 ),
                 copyrightOwnedBy=self._get_copyright_owner_for_os(
-                    const.CONFIG_OS_ALMALINUX
+                    const.CONFIG_OS_ALMA_LINUX
                 ),
                 license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_ALMALINUX)
+                    self._get_license_for_os(const.CONFIG_OS_ALMA_LINUX)
+                ),
+            )
+        elif os_image.os_distro.lower() == "alpinelinux":
+            return OperatingSystem(
+                version=os_image.os_version,
+                osDistribution=const.CONFIG_OS_ALP,
+                resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_ALP),
+                copyrightOwnedBy=self._get_copyright_owner_for_os(const.CONFIG_OS_ALP),
+                license=self._get_license_list(
+                    self._get_license_for_os(const.CONFIG_OS_ALP)
                 ),
             )
         else:
-            raise ValueError("Unsupported value for operating system distribution found: '" + os_image.os_distro + "'")
+            return OperatingSystem(
+                version=os_image.os_version,
+                osDistribution="others",
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="TBA",
+                license="TBA",
+            )
 
     def _get_resource_policy_for_os(self, os: str) -> str:
         return self.conf.get_value(
@@ -702,24 +745,29 @@ class VmDiscovery:
                     )
             else:
                 update_strategy.providedUntil = None
-            if "hotfix_hours" in os_image.properties and os_image.properties["hotfix_hours"]:
-                try:
-                    hot_h = int(os_image.properties["hotfix_hours"])
-                    if hot_h >= 0:
-                        update_strategy.hotfixHours = int(
-                            os_image.properties["hotfix_hours"]
-                        )
-                except ValueError:
-                    # int cast fails
-                    pass
+            if (
+                "hotfix_hours" in os_image.properties
+                and os_image.properties["hotfix_hours"]
+            ):
+                hot_h = int(os_image.properties["hotfix_hours"])
+                if hot_h >= 0:
+                    update_strategy.hotfixHours = int(
+                        os_image.properties["hotfix_hours"]
+                    )
             return update_strategy
 
     @staticmethod
     def _get_description(os_image: OS_Image) -> str:
-        if os_image.properties is not None and "image_description" in os_image.properties:
+        if (
+            os_image.properties is not None
+            and "image_description" in os_image.properties
+        ):
             if "managed_by_VENDOR" in os_image.properties:
-                return os_image.properties["image_description"] + " Managed by " + os_image.properties[
-                    "managed_by_VENDOR"]
+                return (
+                    os_image.properties["image_description"]
+                    + " Managed by "
+                    + os_image.properties["managed_by_VENDOR"]
+                )
             else:
                 return os_image.properties["image_description"]
 
@@ -729,7 +777,10 @@ class VmDiscovery:
 
     @staticmethod
     def _get_build_date(os_image: OS_Image) -> datetime:
-        if os_image.properties is not None and "image_build_date" in os_image.properties:
+        if (
+            os_image.properties is not None
+            and "image_build_date" in os_image.properties
+        ):
             return datetime.strptime(
                 os_image.properties["image_build_date"], "%Y-%m-%d"
             )
@@ -752,10 +803,17 @@ class VmDiscovery:
             subscriptionRequired=False, subscriptionIncluded=False
         )
         maint.subscriptionIncluded = bool(
-            os_image.properties and os_image.properties.get("subscription_included", None))
+            os_image.properties
+            and os_image.properties.get("subscription_included", None)
+        )
         maint.subscriptionRequired = bool(
-            os_image.properties and os_image.properties.get("subscription_required", None))
-        if os_image.properties is not None and "maintained_until" in os_image.properties:
+            os_image.properties
+            and os_image.properties.get("subscription_required", None)
+        )
+        if (
+            os_image.properties is not None
+            and "maintained_until" in os_image.properties
+        ):
             main_until = os_image.properties["maintained_until"]
             maint.maintainedUntil = datetime.strptime(main_until, "%Y-%m-%d").date()
         return maint

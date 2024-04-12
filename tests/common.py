@@ -7,14 +7,27 @@ from openstack.compute.v2.flavor import Flavor as OS_Flavor
 from openstack.image.v2.image import Image as OS_Image
 
 from generator.common.config import Config
-from generator.common.gx_schema import (CPU, GPU, CheckSum, CodeArtifact,
-                                        Device, Disk, Encryption, GaiaXEntity,
-                                        Hypervisor, Image,
-                                        InstantiationRequirement, Memory,
-                                        OperatingSystem, Resource,
-                                        ServerFlavor, Signature,
-                                        SoftwareResource, VirtualResource,
-                                        VMImage)
+from generator.common.gx_schema import (
+    CPU,
+    GPU,
+    CheckSum,
+    CodeArtifact,
+    Device,
+    Disk,
+    Encryption,
+    GaiaXEntity,
+    Hypervisor,
+    Image,
+    InstantiationRequirement,
+    Memory,
+    OperatingSystem,
+    Resource,
+    ServerFlavor,
+    Signature,
+    SoftwareResource,
+    VirtualResource,
+    VMImage,
+)
 
 
 def get_absolute_path(relative_path: str) -> str:
@@ -37,6 +50,7 @@ class OpenstackTestcase(unittest.TestCase):
         self.assertEqual(ob_1.description, ob_2.description, "GaiaXEntity.description")
 
     def assert_resource(self, ob_1: Resource, ob_2: Resource):
+        self.assert_gaia_x_entity(ob_1, ob_2)
         self.assertEqual(
             ob_1.aggregationOfResources,
             ob_2.aggregationOfResources,
@@ -169,7 +183,7 @@ class OpenstackTestcase(unittest.TestCase):
         )
 
     def assert_code_artifact(self, ob_1: CodeArtifact, ob_2: CodeArtifact):
-        self.assert_gaia_x_entity(ob_1, ob_2)
+        self.assert_virtual_resource(ob_1, ob_1)
 
     def assert_image(self, ob_1: Image, ob_2: Image):
         self.assert_code_artifact(ob_1, ob_1)
@@ -242,14 +256,15 @@ class OpenstackTestcase(unittest.TestCase):
         )
 
     def check_instantiation_requirement(
-            self, ob_1: InstantiationRequirement, ob_2: InstantiationRequirement
+        self, ob_1: InstantiationRequirement, ob_2: InstantiationRequirement
     ):
         self.assert_gaia_x_entity(ob_1, ob_2)
 
     def check_hypervisor(self, ob_1: Hypervisor, ob_2: Hypervisor):
         self.assert_software_resource(ob_1, ob_2)
         self.assertEqual(
-            ob_1.hypervisorType, str(ob_2.hypervisorType), "Hypervisor.hypervisorType")
+            ob_1.hypervisorType, str(ob_2.hypervisorType), "Hypervisor.hypervisorType"
+        )
 
     def assert_flavor(self, ob_1: ServerFlavor, ob_2: ServerFlavor):
         # self.check_installation_requirement(ob_1, ob_2)
