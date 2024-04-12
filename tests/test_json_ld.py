@@ -4,22 +4,11 @@ import unittest
 from linkml_runtime.utils.metamodelcore import URI
 from rdflib import Namespace
 
-from generator.common.gx_schema import (
-    Address,
-    CountryNameAlpha2,
-    GaiaX,
-    GaiaXEntity,
-    Image,
-    MemorySize,
-    ServerFlavor,
-)
-from generator.common.json_ld import (
-    JsonLdObject,
-    get_json_ld_context,
-    get_json_ld_types,
-    get_slot_curie,
-    to_json_ld,
-)
+from generator.common.gx_schema import (Address, CountryNameAlpha2, Image,
+                                        MemorySize, ServerFlavor)
+from generator.common.json_ld import (JsonLdObject, get_json_ld_context,
+                                      get_json_ld_types, get_slot_curie,
+                                      to_json_ld)
 
 
 class JsonLDTestCase(unittest.TestCase):

@@ -32,6 +32,4 @@ class OsCloud:
         @rtype List[JsonLdObject]
         """
         return (
-            VmDiscovery(self.conn, self.config).discover()
-            + ServerFlavorDiscovery(self.conn, self.config).discover()
-        )
+            VmDiscovery(self.conn, self.config).discover() + ServerFlavorDiscovery(self.conn, self.config).discover())

@@ -199,8 +199,7 @@ class VmDiscovery:
     @staticmethod
     def _get_firme_ware_type(os_image: OS_Image) -> FirmType:
         if (
-            os_image.properties is not None
-            and "hw_firmware_type" in os_image.properties
+                os_image.properties is not None and "hw_firmware_type" in os_image.properties
         ):
             return FirmType(
                 FIRM_WARE_LOOKUP.get(
@@ -723,9 +722,7 @@ class VmDiscovery:
                 provided_until = str(os_image.properties["provided_until"])
                 try:
                     # is date provided?
-                    update_strategy.providedUntil = datetime.strptime(
-                        provided_until, "%Y-%m-%d"
-                    ).date()
+                    update_strategy.providedUntil = datetime.strptime(provided_until, "%Y-%m-%d").date()
                 except ValueError:
                     update_strategy.providedUntil = PROVIDED_UNTIL_LOOKUP.get(
                         provided_until
@@ -733,8 +730,7 @@ class VmDiscovery:
             else:
                 update_strategy.providedUntil = None
             if (
-                "hotfix_hours" in os_image.properties
-                and os_image.properties["hotfix_hours"]
+                    "hotfix_hours" in os_image.properties and os_image.properties["hotfix_hours"]
             ):
                 hot_h = int(os_image.properties["hotfix_hours"])
                 if hot_h >= 0:
@@ -746,15 +742,11 @@ class VmDiscovery:
     @staticmethod
     def _get_description(os_image: OS_Image) -> str:
         if (
-            os_image.properties is not None
-            and "image_description" in os_image.properties
+                os_image.properties is not None and "image_description" in os_image.properties
         ):
             if "managed_by_VENDOR" in os_image.properties:
-                return (
-                    os_image.properties["image_description"]
-                    + " Managed by "
-                    + os_image.properties["managed_by_VENDOR"]
-                )
+                return (os_image.properties["image_description"] + " Managed by " + os_image.properties[
+                    "managed_by_VENDOR"])
             else:
                 return os_image.properties["image_description"]
 
@@ -765,8 +757,7 @@ class VmDiscovery:
     @staticmethod
     def _get_build_date(os_image: OS_Image) -> datetime:
         if (
-            os_image.properties is not None
-            and "image_build_date" in os_image.properties
+                os_image.properties is not None and "image_build_date" in os_image.properties
         ):
             return datetime.strptime(
                 os_image.properties["image_build_date"], "%Y-%m-%d"
@@ -790,16 +781,13 @@ class VmDiscovery:
             subscriptionRequired=False, subscriptionIncluded=False
         )
         maint.subscriptionIncluded = bool(
-            os_image.properties
-            and os_image.properties.get("subscription_included", None)
+            os_image.properties and os_image.properties.get("subscription_included", None)
         )
         maint.subscriptionRequired = bool(
-            os_image.properties
-            and os_image.properties.get("subscription_required", None)
+            os_image.properties and os_image.properties.get("subscription_required", None)
         )
         if (
-            os_image.properties is not None
-            and "maintained_until" in os_image.properties
+                os_image.properties is not None and "maintained_until" in os_image.properties
         ):
             main_until = os_image.properties["maintained_until"]
             maint.maintainedUntil = datetime.strptime(main_until, "%Y-%m-%d").date()
@@ -827,8 +815,6 @@ class VmDiscovery:
     @staticmethod
     def _get_hypervisor_type(os_image: OS_Image) -> HypervisorType:
         if os_image.hypervisor_type is not None:
-            return HypervisorType(
-                HYPER_LOOKUP.get(os_image.hypervisor_type.lower(), HypervisorType.other)
-            )
+            return HypervisorType(HYPER_LOOKUP.get(os_image.hypervisor_type.lower(), HypervisorType.other))
         else:
             return HypervisorType(HypervisorType.other)

@@ -7,27 +7,14 @@ from openstack.compute.v2.flavor import Flavor as OS_Flavor
 from openstack.image.v2.image import Image as OS_Image
 
 from generator.common.config import Config
-from generator.common.gx_schema import (
-    CPU,
-    GPU,
-    CheckSum,
-    CodeArtifact,
-    Device,
-    Disk,
-    Encryption,
-    GaiaXEntity,
-    Hypervisor,
-    Image,
-    InstantiationRequirement,
-    Memory,
-    OperatingSystem,
-    Resource,
-    ServerFlavor,
-    Signature,
-    SoftwareResource,
-    VirtualResource,
-    VMImage,
-)
+from generator.common.gx_schema import (CPU, GPU, CheckSum, CodeArtifact,
+                                        Device, Disk, Encryption, GaiaXEntity,
+                                        Hypervisor, Image,
+                                        InstantiationRequirement, Memory,
+                                        OperatingSystem, Resource,
+                                        ServerFlavor, Signature,
+                                        SoftwareResource, VirtualResource,
+                                        VMImage)
 
 
 def get_absolute_path(relative_path: str) -> str:

@@ -4,23 +4,11 @@ from datetime import date, datetime
 from openstack.image.v2.image import Image as OS_Image
 
 from generator.common import const
-from generator.common.gx_schema import (
-    CPU,
-    CheckSum,
-    ChecksumAlgorithm,
-    Disk,
-    FirmType,
-    HypervisorType,
-    LatestN,
-    MaintenanceSubscription,
-    Memory,
-    MemorySize,
-    OperatingSystem,
-    RNGTypes,
-    Signature,
-    UpdateStrategy,
-    VMDiskType,
-)
+from generator.common.gx_schema import (CPU, CheckSum, ChecksumAlgorithm, Disk,
+                                        FirmType, HypervisorType, LatestN,
+                                        MaintenanceSubscription, Memory,
+                                        MemorySize, OperatingSystem, RNGTypes,
+                                        Signature, UpdateStrategy, VMDiskType)
 from generator.common.gx_schema import VMImage as GX_Image
 from generator.common.gx_schema import WatchDogActions
 from generator.common.json_ld import JsonLdObject
