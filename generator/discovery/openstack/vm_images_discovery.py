@@ -18,27 +18,14 @@ import generator.common.const as const
 from generator.common.config import Config
 from generator.common.gx_schema import CPU, SPDX
 from generator.common.gx_schema import Architectures as CpuArch
-from generator.common.gx_schema import (
-    CheckSum,
-    ChecksumAlgorithm,
-    Disk,
-    DiskBusType,
-    FirmType,
-    HypervisorType,
-    LatestN,
-    MaintenanceSubscription,
-    Memory,
-    MemorySize,
-    OperatingSystem,
-    RNGTypes,
-    Signature,
-    SignatureAlgorithm,
-    UpdateFrequency,
-    UpdateStrategy,
-    Validity1,
-    Validity2,
-    VMDiskType,
-)
+from generator.common.gx_schema import (CheckSum, ChecksumAlgorithm, Disk,
+                                        DiskBusType, FirmType, HypervisorType,
+                                        LatestN, MaintenanceSubscription,
+                                        Memory, MemorySize, OperatingSystem,
+                                        RNGTypes, Signature,
+                                        SignatureAlgorithm, UpdateFrequency,
+                                        UpdateStrategy, Validity1, Validity2,
+                                        VMDiskType)
 from generator.common.gx_schema import VMImage as GX_Image
 from generator.common.gx_schema import WatchDogActions
 from generator.common.json_ld import JsonLdObject
