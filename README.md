@@ -63,7 +63,7 @@ like the IaaS GX Credential, the list of node images (osism minio), ...
    cd gx-credential-generator
    ```
 
-2) Install scripts dependencies (installing them into a
+2. Install scripts dependencies (installing them into a
    Python [virtualenv](https://virtualenv.pypa.io/en/stable/) is recommended)
 
    ```bash
@@ -89,9 +89,9 @@ b. Generate Gaia-X Credentials
 
 - To print OpenStack properties in JSON-LD
 
-```bash
-   python3 cli.py openstack <os-cloud>
-   ```
+  ```bash
+  python3 cli.py openstack <os-cloud>
+  ```
 
 ### K8s
 
@@ -99,9 +99,9 @@ Generate Gaia-X Credentials
 
 - To print K8s properties ...
 
-   ```bash
-   ./gx-cred-generator.py k8s
-   ```
+  ```bash
+  ./gx-cred-generator.py k8s
+  ```
 
 ### Airflow Pipeline
 
@@ -109,7 +109,8 @@ Start the gaiax-pipeline (deprecated)
 
 - To modify the airflow pipeline you have to touch the gaiax-pipeline.py file
   inside the dags folder
-  ```
+  
+  ```bash
   cd devops
   docker-compose up -d
   ```
@@ -309,9 +310,9 @@ list the types, for loadbalancers, we have a flavor list as well.
 Thanks to the work in Hackathon #4, we have an option to export
 JSON-LD (use option `--gaia-x` aka. `-g`) that can be signed and
 successfully processed by the compilance service at
-http://compliance.lab.gaia-x.eu/
+<http://compliance.lab.gaia-x.eu/>
 Signing and verifying can be combined using the Delta-DAO signer.
-https://signer.demo.delta-dao.com/#signer
+<https://signer.demo.delta-dao.com/#signer>
 
 From an OpenStack perspective, this still incomplete.
 
