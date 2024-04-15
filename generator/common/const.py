@@ -58,4 +58,12 @@ CONFIG_HV_CH = "Cloud Hypervisor"
 CONFIG_HV_VMW = "vmware"
 CONFIG_HV_HYV = "hyper-v"
 
+CONFIG_HV_KVM = "KVM"
+CONFIG_HV_QUEMU = "quemu"
+CONFIG_HV_XEN = "Xen"
+CONFIG_HV_ESXI = "ESXi"
+CONFIG_HV_CH = "Cloud Hypervisor"
+CONFIG_HV_VMW = "vmware"
+CONFIG_HV_HYV = "hyper-v"
+
 CONFIG_FILE = "config/config.yaml"

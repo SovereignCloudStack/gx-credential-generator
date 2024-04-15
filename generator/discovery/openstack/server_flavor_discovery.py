@@ -13,8 +13,15 @@ from generator.common import const
 from generator.common.config import Config
 from generator.common.gx_schema import CPU
 from generator.common.gx_schema import Architectures as CpuArch
-from generator.common.gx_schema import (Disk, DiskType, Frequency, Hypervisor,
-                                        HypervisorType, Memory, MemorySize)
+from generator.common.gx_schema import (
+    Disk,
+    DiskType,
+    Frequency,
+    Hypervisor,
+    HypervisorType,
+    Memory,
+    MemorySize,
+)
 from generator.common.gx_schema import ServerFlavor as GX_Flavor
 from generator.common.json_ld import JsonLdObject
 from generator.vendor.flavor_names import Flavorname, parser_v3
@@ -122,6 +129,7 @@ class ServerFlavorDiscovery:
             cpu.smtEnabled = (
                 flavorname.cpuram.cputype != "C"
             )  # FIXME this is unclear to me, see #85
+
             cpu.defaultOversubscriptionRatio = 1
             if flavorname.cpuram.cputype == "V":
                 cpu.defaultOversubscriptionRatio = 5
@@ -130,7 +138,7 @@ class ServerFlavorDiscovery:
         return cpu
 
     def _get_ram(
-        self, os_flavor: OS_Flavor, flavorname: Optional[Flavorname]
+            self, os_flavor: OS_Flavor, flavorname: Optional[Flavorname]
     ) -> Memory:
         """
         Return Gaia-X RAM definition specified in given OpenStack flavor.
@@ -148,7 +156,7 @@ class ServerFlavorDiscovery:
         return mem
 
     def _get_disks(
-        self, os_flavor: OS_Flavor, flavorname: Optional[Flavorname]
+            self, os_flavor: OS_Flavor, flavorname: Optional[Flavorname]
     ) -> List[Disk]:
         """
         Return all disk specification found in given Openstack flavor.
@@ -188,7 +196,7 @@ class ServerFlavorDiscovery:
         return disks
 
     def _parse_optional_flavor_properties(
-        self, flavorname: Optional[Flavorname], gx_flavor: GX_Flavor
+            self, flavorname: Optional[Flavorname], gx_flavor: GX_Flavor
     ):
         """Parse and return optional flavor properties, such as CPU architecture, CPU frequency or hypervisor.
         @param os_flavor Openstack flavor

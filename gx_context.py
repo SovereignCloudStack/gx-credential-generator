@@ -13,5 +13,6 @@ gxcontext = {
         "gx": "https://https://registry.lab.gaia-x.eu//v1$/gx#",
         "xsd": "http://www.w3.org/2001/XMLSchema#",
     }
+
 }
 gxtype = {"@type": "gx:ServiceOffering"}

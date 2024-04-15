@@ -729,14 +729,16 @@ class VmDiscovery:
                     )
             else:
                 update_strategy.providedUntil = None
-            if (
-                    "hotfix_hours" in os_image.properties and os_image.properties["hotfix_hours"]
-            ):
-                hot_h = int(os_image.properties["hotfix_hours"])
-                if hot_h >= 0:
-                    update_strategy.hotfixHours = int(
-                        os_image.properties["hotfix_hours"]
-                    )
+            if "hotfix_hours" in os_image.properties and os_image.properties["hotfix_hours"]:
+                try:
+                    hot_h = int(os_image.properties["hotfix_hours"])
+                    if hot_h >= 0:
+                        update_strategy.hotfixHours = int(
+                            os_image.properties["hotfix_hours"]
+                        )
+                except ValueError:
+                    # int cast fails
+                    pass
             return update_strategy
 
     @staticmethod

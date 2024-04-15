@@ -6,6 +6,9 @@ import yaml
 from openstack.compute.v2.flavor import Flavor as OS_Flavor
 from openstack.image.v2.image import Image as OS_Image
 
+from openstack.image.v2.image import Image as OS_Image
+from openstack.compute.v2.flavor import Flavor as OS_Flavor
+
 from generator.common.config import Config
 from generator.common.gx_schema import (CPU, GPU, CheckSum, CodeArtifact,
                                         Device, Disk, Encryption, GaiaXEntity,
@@ -15,6 +18,7 @@ from generator.common.gx_schema import (CPU, GPU, CheckSum, CodeArtifact,
                                         ServerFlavor, Signature,
                                         SoftwareResource, VirtualResource,
                                         VMImage)
+
 
 
 def get_absolute_path(relative_path: str) -> str:
@@ -252,6 +256,49 @@ class OpenstackTestcase(unittest.TestCase):
         self.assertEqual(
             ob_1.hypervisorType, str(ob_2.hypervisorType), "Hypervisor.hypervisorType"
         )
+
+    def assert_flavor(self, ob_1: ServerFlavor, ob_2: ServerFlavor):
+        # self.check_installation_requirement(ob_1, ob_2)
+        self.assert_cpu(ob_1.cpu, ob_2.cpu)
+        self.assert_mem(ob_1.ram, ob_2.ram)
+        self.assert_gpu(ob_1.gpu, ob_2.gpu)
+        self.assert_disk(ob_1.bootVolume, ob_2.bootVolume)
+        self.assertEqual(
+            len(ob_1.additionalVolume),
+            len(ob_2.additionalVolume),
+            "ServerFlavor.additionalVolume",
+        )
+        if ob_1.hypervisor:
+            self.check_hypervisor(ob_1.hypervisor, ob_2.hypervisor)
+        if ob_1.confidentialComputing:
+            self.assertEqual(
+                ob_1.confidentialComputing,
+                str(ob_2.confidentialComputing),
+                "ServerFlavor.confidentialComputing",
+            )
+        self.assertEqual(
+            ob_1.hardwareAssistedVirtualization,
+            ob_2.hardwareAssistedVirtualization,
+            "ServerFlavor.hardwareAssistedVirtualization",
+        )
+        self.assertEqual(
+            ob_1.hwRngTypeOfFlavor,
+            ob_2.hwRngTypeOfFlavor,
+            "ServerFlavor.hwRngTypeOfFlavor",
+        )
+
+        for i in range(9, len(ob_1.additionalVolume) - 1):
+            self.assert_disk(ob_1.additionalVolume[i], ob_2.additionalVolume[i])
+
+    def check_instantiation_requirement(
+            self, ob_1: InstantiationRequirement, ob_2: InstantiationRequirement
+    ):
+        self.assert_gaia_x_entity(ob_1, ob_2)
+
+    def check_hypervisor(self, ob_1: Hypervisor, ob_2: Hypervisor):
+        self.assert_software_resource(ob_1, ob_2)
+        self.assertEqual(
+            ob_1.hypervisorType, str(ob_2.hypervisorType), "Hypervisor.hypervisorType")
 
     def assert_flavor(self, ob_1: ServerFlavor, ob_2: ServerFlavor):
         # self.check_installation_requirement(ob_1, ob_2)

@@ -195,6 +195,7 @@ class osService:
                     f"#WARNING: Service {self.fulltype} in region {region} does not support getting extensions.\n{exc}",
                     file=sys.stderr,
                 )
+
         try:
             self.azs = list(
                 filter(
@@ -272,6 +273,7 @@ class osFlavor:
             numberOfvCPUs=self.numberOfvCPUs,
             ramSize=dict(Value=self.ramSize / 1024, Unit="GiB"),
         )
+
         if self.diskSize:
             ydct["diskSize"] = dict(Value=self.diskSize, Unit="GB")
         # TODO: cpuType, cpuGen, diskType output

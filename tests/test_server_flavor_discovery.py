@@ -13,9 +13,8 @@ from generator.discovery.openstack.server_flavor_discovery import \
 from generator.vendor.flavor_names import parser_v3
 from tests.common import MockConnection, OpenstackTestcase, get_config
 
-OS_FLAVOR_1 = OS_Flavor(
-    id="flavor_1", name="ABC", vcpus=2, ram=16, disk=0, description=None
-)
+
+OS_FLAVOR_1 = OS_Flavor(id="flavor_1", name="ABC", vcpus=2, ram=16, disk=0, description=None)
 OS_FLAVOR_2 = OS_Flavor(
     id="flavor_2", name="SCS-4L-32uo-3x50s_kvm_z3hh", vcpus=2, ram=16, disk=0
 )
@@ -74,35 +73,26 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
 
     def test_get_mem(self):
         self.assertEqual(
-            Memory(
-                memorySize=MemorySize(value=10, unit=const.UNIT_MB), eccEnabled=True
-            ),
+            Memory(memorySize=MemorySize(value=10, unit=const.UNIT_MB), eccEnabled=True),
             self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C-4-10n", ram=10)).ram,
         )
         self.assertEqual(
-            Memory(
-                memorySize=MemorySize(value=10, unit=const.UNIT_MB), eccEnabled=True
-            ),
+            Memory(memorySize=MemorySize(value=10, unit=const.UNIT_MB), eccEnabled=True),
             self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C-3.5-10n", ram=10)).ram,
         )
         self.assertEqual(
-            Memory(
-                memorySize=MemorySize(value=10, unit=const.UNIT_MB), eccEnabled=False
-            ),
+            Memory(memorySize=MemorySize(value=10, unit=const.UNIT_MB), eccEnabled=False),
             self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C-4u-10n", ram=10)).ram,
         )
         self.assertEqual(
             Memory(
-                memorySize=MemorySize(value=10, unit=const.UNIT_MB),
-                eccEnabled=True,
+                memorySize=MemorySize(value=10, unit=const.UNIT_MB), eccEnabled=True,
                 defaultOversubscriptionRatio=2,
             ),
             self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C-4o-10n", ram=10)).ram,
         )
         self.assertEqual(
-            Memory(
-                memorySize=MemorySize(value=10, unit=const.UNIT_MB), eccEnabled=False
-            ),
+            Memory(memorySize=MemorySize(value=10, unit=const.UNIT_MB), eccEnabled=False),
             self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C-4ou-10n", ram=10)).ram,
         )
         self.assertEqual(
@@ -114,21 +104,15 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
             self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C-4uo-10n", ram=10)).ram,
         )
         self.assertEqual(
-            Memory(
-                memorySize=MemorySize(value=10, unit=const.UNIT_MB), eccEnabled=False
-            ),
+            Memory(memorySize=MemorySize(value=10, unit=const.UNIT_MB), eccEnabled=False),
             self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C_", ram=10)).ram,
         )
         self.assertEqual(
-            Memory(
-                memorySize=MemorySize(value=10, unit=const.UNIT_MB), eccEnabled=False
-            ),
+            Memory(memorySize=MemorySize(value=10, unit=const.UNIT_MB), eccEnabled=False),
             self.discovery._convert_to_gx(OS_Flavor(name="SCS-2V:8", ram=10)).ram,
         )
         self.assertEqual(
-            Memory(
-                memorySize=MemorySize(value=10, unit=const.UNIT_MB), eccEnabled=False
-            ),
+            Memory(memorySize=MemorySize(value=10, unit=const.UNIT_MB), eccEnabled=False),
             self.discovery._convert_to_gx(OS_Flavor(name="test", ram=10)).ram,
         )
 
@@ -136,22 +120,16 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
         # no SCS standard compliant flavor name
         self.assertEqual(
             Disk(diskSize=MemorySize(value=50, unit=const.UNIT_GB)),
-            self.discovery._convert_to_gx(
-                OS_Flavor(name="abc", ram=32, disk=50)
-            ).bootVolume,
+            self.discovery._convert_to_gx(OS_Flavor(name="abc", ram=32, disk=50)).bootVolume,
         )
         # invalid SCS flavor name
         self.assertEqual(
             Disk(diskSize=MemorySize(value=50, unit=const.UNIT_GB)),
-            self.discovery._convert_to_gx(
-                OS_Flavor(name="SCS-2C:10n", ram=32, disk=50)
-            ).bootVolume,
+            self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C:10n", ram=32, disk=50)).bootVolume,
         )
 
         # SCS compliant flavor names
-        gx_flavor = self.discovery._convert_to_gx(
-            OS_Flavor(name="SCS-2C-4-2x10", disk=50)
-        )
+        gx_flavor = self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C-4-2x10", disk=50))
         self.assertEqual(
             [
                 Disk(diskSize=MemorySize(value=10, unit=const.UNIT_GB)),
@@ -159,28 +137,18 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
             ],
             [gx_flavor.bootVolume] + gx_flavor.additionalVolume,
         )
-        gx_flavor = self.discovery._convert_to_gx(
-            OS_Flavor(name="SCS-2C-4-10p", disk=50)
-        )
+        gx_flavor = self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C-4-10p", disk=50))
         self.assertEqual(
             [
-                Disk(
-                    diskSize=MemorySize(value=10, unit=const.UNIT_GB),
-                    diskType=DiskType("local HDD"),
-                    diskBusType=DiskBusType.NVMe,
-                )
+                Disk(diskSize=MemorySize(value=10, unit=const.UNIT_GB), diskType=DiskType("local HDD"),
+                     diskBusType=DiskBusType.NVMe)
             ],
             [gx_flavor.bootVolume] + gx_flavor.additionalVolume,
         )
-        gx_flavor = self.discovery._convert_to_gx(
-            OS_Flavor(name="SCS-2C-4-10h", disk=50)
-        )
+        gx_flavor = self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C-4-10h", disk=50))
         self.assertEqual(
             [
-                Disk(
-                    diskSize=MemorySize(value=10, unit=const.UNIT_GB),
-                    diskType=DiskType("local HDD"),
-                )
+                Disk(diskSize=MemorySize(value=10, unit=const.UNIT_GB), diskType=DiskType("local HDD"),)
             ],
             [gx_flavor.bootVolume] + gx_flavor.additionalVolume,
         )
@@ -301,24 +269,16 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
 
         # init expected objects
         gax_flavor_1 = self._init_gx_flavor(ram=16, disk=0, number_of_cores=2)
-
-        gax_flavor_2 = self._init_gx_flavor(
-            ram=16,
-            disk=50,
-            cpu_arc=CpuArch("x86-64"),
-            cpu_vendor="AMD",
-            cpu_gen="Zen-3 (Milan)",
-            cpu_freq=Frequency(value=3.25, unit=const.UNIT_GHZ),
-            number_of_cores=2,
-        )
+        gax_flavor_2 = self._init_gx_flavor(ram=16, disk=50, cpu_arc=CpuArch("x86-64"), cpu_vendor="AMD",
+                                            cpu_gen="Zen-3 (Milan)",
+                                            cpu_freq=Frequency(value=3.25, unit=const.UNIT_GHZ), number_of_cores=2)
         gax_flavor_2.cpu.defaultOversubscriptionRatio = 16
         gax_flavor_2.cpu.smtEnabled = True
         gax_flavor_2.ram.eccEnabled = False
         gax_flavor_2.ram.defaultOversubscriptionRatio = 2
         gax_flavor_2.bootVolume = Disk(
             diskSize=MemorySize(value=50, unit=const.UNIT_GB),
-            diskType=DiskType("local SSD"),
-        )
+            diskType=DiskType("local SSD"))
         gax_flavor_2.additionalVolume = [
             Disk(
                 diskSize=MemorySize(value=50, unit=const.UNIT_GB),
@@ -344,7 +304,7 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
             cpu_gen: str = None,
             cpu_freq: Frequency = None,
             hw_virt: bool = False,
-            hv: bool = False,
+            hv: bool = False
     ) -> GX_Flavor:
         gx_flavor = GX_Flavor(
             # name=os_flavor.name,
@@ -357,20 +317,13 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
             ),
             ram=Memory(memorySize=MemorySize(value=ram, unit=const.UNIT_MB)),
             bootVolume=Disk(diskSize=MemorySize(value=disk, unit=const.UNIT_GB)),
-            hardwareAssistedVirtualization=hw_virt,
-        )
+            hardwareAssistedVirtualization=hw_virt)
         if hv:
             gx_flavor.hypervisor = Hypervisor(
                 hypervisorType="KVM",
-                copyrightOwnedBy=self.discovery.conf.get_copyright_owner(
-                    const.CONFIG_HV_KVM
-                ),
+                copyrightOwnedBy=self.discovery.conf.get_copyright_owner(const.CONFIG_HV_KVM),
                 license=self.discovery.conf.get_license(const.CONFIG_HV_KVM),
-                resourcePolicy=self.discovery.conf.get_resource_policy(
-                    const.CONFIG_HV_KVM
-                ),
-            )
-
+                resourcePolicy=self.discovery.conf.get_resource_policy(const.CONFIG_HV_KVM))
         return gx_flavor
 
 
