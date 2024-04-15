@@ -8,8 +8,7 @@ from generator.common.gx_schema import Architectures as CpuArch
 from generator.common.gx_schema import (Disk, DiskBusType, DiskType, Frequency,
                                         Hypervisor, Memory, MemorySize)
 from generator.common.gx_schema import ServerFlavor as GX_Flavor
-from generator.discovery.openstack.server_flavor_discovery import \
-  ServerFlavorDiscovery
+from generator.discovery.openstack.server_flavor_discovery import ServerFlavorDiscovery
 from generator.vendor.flavor_names import parser_v3
 from tests.common import MockConnection, OpenstackTestcase, get_config
 
@@ -335,16 +334,16 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
         self.assert_flavor(gax_flavor_2, received_gax_flavors[1].gx_object)
 
     def _init_gx_flavor(
-        self,
-        ram: int = 32,
-        disk: int = 50,
-        cpu_arc: CpuArch = CpuArch.other,
-        number_of_cores=1,
-        cpu_vendor: str = None,
-        cpu_gen: str = None,
-        cpu_freq: Frequency = None,
-        hw_virt: bool = False,
-        hv: bool = False,
+            self,
+            ram: int = 32,
+            disk: int = 50,
+            cpu_arc: CpuArch = CpuArch.other,
+            number_of_cores=1,
+            cpu_vendor: str = None,
+            cpu_gen: str = None,
+            cpu_freq: Frequency = None,
+            hw_virt: bool = False,
+            hv: bool = False,
     ) -> GX_Flavor:
         gx_flavor = GX_Flavor(
             # name=os_flavor.name,
