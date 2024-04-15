@@ -1,6 +1,6 @@
 import json
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 from click.testing import CliRunner
 from openstack.compute.v2.flavor import Flavor as OS_Flavor
@@ -93,9 +93,26 @@ class CliTestCase(unittest.TestCase):
             expected_output = json.load(json_file)
             received_output = json.loads(result.output)
             self.assertEqual(expected_output, received_output)
+    @patch("openstack.connect")
+    def test_openstack_exception(self, os_connect):
+        # Mock openstack calls
+        mock_con = MockConnection(images=[OS_IMAGE_1], flavors=[OS_FLAVOR_1])
+        mock_con.authorize = MagicMock(name='method')
+        mock_con.authorize.side_effect = [Exception(), None]
+        os_connect.return_value = mock_con
+        runner = CliRunner()
+        result = runner.invoke(
+            cli.openstack, "myCloud --config=" + get_absolute_path(const.CONFIG_FILE)
+        )
+        self.assertIsNone(result.exception)
+        self.assertEqual(0, result.exit_code)
 
     def test_kubernetes(self):
         # TODO: Implement test case
+        runner = CliRunner()
+        result = runner.invoke(cli.kubernetes)
+        self.assertIsNone(result.exception)
+        self.assertEqual(0, result.exit_code)
         pass
 
 
