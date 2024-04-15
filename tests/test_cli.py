@@ -1,6 +1,6 @@
 import json
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 from click.testing import CliRunner
 from openstack.compute.v2.flavor import Flavor as OS_Flavor
@@ -88,11 +88,12 @@ class CliTestCase(unittest.TestCase):
         self.assertIsNone(result.exception)
         self.assertEqual(0, result.exit_code)
         with open(
-            get_absolute_path("tests/data/empty_credential.json"), "r"
+                get_absolute_path("tests/data/empty_credential.json"), "r"
         ) as json_file:
             expected_output = json.load(json_file)
             received_output = json.loads(result.output)
             self.assertEqual(expected_output, received_output)
+
     @patch("openstack.connect")
     def test_openstack_exception(self, os_connect):
         # Mock openstack calls
