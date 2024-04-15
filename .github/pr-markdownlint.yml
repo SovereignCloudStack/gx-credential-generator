@@ -1,0 +1,31 @@
+name: Markdownlint on PR
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .nvmrc
+      - package-lock.json
+      - .github/workflows/pr-markdownlint.yml
+      - "**/*.md"
+
+jobs:
+  lint-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install all npm packages
+        run: npm ci
+
+      - name: Lint markdown files
+        run: npm run lint:md
