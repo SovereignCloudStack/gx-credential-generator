@@ -18,7 +18,7 @@ from linkml_runtime.linkml_model.types import (Boolean, Date, Datetime, Float,
                                                Integer, String, Uri)
 from linkml_runtime.utils.curienamespace import CurieNamespace
 from linkml_runtime.utils.dataclass_extensions_376 import \
-  dataclasses_init_fn_with_kwargs
+    dataclasses_init_fn_with_kwargs
 from linkml_runtime.utils.enumerations import EnumDefinitionImpl
 from linkml_runtime.utils.formatutils import camelcase, sfx, underscore
 from linkml_runtime.utils.metamodelcore import (URI, Bool, XSDDate,
