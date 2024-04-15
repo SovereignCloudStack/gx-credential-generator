@@ -50,7 +50,7 @@ sequenceDiagram
     participant OpenStack cloud
     participant TSA
     participant OCM
-    
+
     GaiaX generator->>OpenStack cloud: Call API for technical properties
     OpenStack cloud-->>GaiaX generator: technical properties (claims)
     GaiaX generator->>TSA: Sign claims in JSON-LD

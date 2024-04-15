@@ -58,17 +58,17 @@ like the IaaS GX Credential, the list of node images (osism minio), ...
 
 1. Clone the repository into a location of your choice
 
-```bash
-git clone git@github.com:SovereignCloudStack/gx-credential-generator.git
-cd gx-credential-generator
-```
+   ```bash
+   git clone git@github.com:SovereignCloudStack/gx-credential-generator.git
+   cd gx-credential-generator
+   ```
 
-2. Install scripts dependencies (installing them into a
+2) Install scripts dependencies (installing them into a
    Python [virtualenv](https://virtualenv.pypa.io/en/stable/) is recommended)
 
-```bash
-pip install -r requirements.txt
-```
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 ### OpenStack
 
@@ -81,9 +81,9 @@ a. Create `clouds.yaml` configuration file
   clouds.yaml is a yaml file containing several cloud configurations. Each
   configuration is referred by name.
 - Make sure the following keys exist in our `clouds.yaml`.
-    - `auth.user_domain_name`
-    - `auth.project_domain_name`
-    - `region_name`
+  - `auth.user_domain_name`
+  - `auth.project_domain_name`
+  - `region_name`
 
 b. Generate Gaia-X Credentials
 
