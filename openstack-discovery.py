@@ -41,15 +41,7 @@ def appenddicts(dct1, *kwd):
     "Return dict d1 with items from kwd added"
     dct = dct1
     for k in kwd:
-<<<<<<< HEAD
-<<<<<<< HEAD
         assert k is not None
-=======
-        assert (k is not None)
->>>>>>> Generate gx conformant credentials for server flavors (#81)
-=======
-        assert k is not None
->>>>>>> Increase code coverage
         dct.update(k)
     return dct
 
@@ -201,17 +193,8 @@ class osService:
             if not quiet:
                 print(
                     f"#WARNING: Service {self.fulltype} in region {region} does not support getting extensions.\n{exc}",
-<<<<<<< HEAD
-<<<<<<< HEAD
                     file=sys.stderr,
                 )
-=======
-                    file=sys.stderr)
->>>>>>> Generate gx conformant credentials for server flavors (#81)
-=======
-                    file=sys.stderr,
-                )
->>>>>>> Increase code coverage
         try:
             self.azs = list(
                 filter(

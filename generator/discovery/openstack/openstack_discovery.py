@@ -11,7 +11,7 @@ from openstack.connection import Connection
 from generator.common.config import Config
 from generator.common.json_ld import JsonLdObject
 from generator.discovery.openstack.server_flavor_discovery import \
-    ServerFlavorDiscovery
+  ServerFlavorDiscovery
 from generator.discovery.openstack.vm_images_discovery import VmDiscovery
 
 
