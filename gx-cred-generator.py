@@ -92,18 +92,15 @@ def getprovby():
     return {
         "@id": "https://scs.community/LegalPerson-khnps661nnlgghoq4is18",
         "@type": gxsvo + "LegalParticipant",
-        gxsvo
-        + "legalAddress": {
+        gxsvo + "legalAddress": {
             "@type": gxsvo + "legalAddress",
             gxsvo + "countrySubdivisionCode": valtype("DE-BE"),
         },
-        gxsvo
-        + "headquarterAddress": {
+        gxsvo + "headquarterAddress": {
             "@type": gxsvo + "legalAddress",
             gxsvo + "countrySubdivisionCode": valtype("DE-BE"),
         },
-        gxsvo
-        + "legalRegistrationNumber": {
+        gxsvo + "legalRegistrationNumber": {
             "@type": gxsvo + "legalRegistrationNumber",
             # At least one of taxID, vatID, EUID, EORI or leiCode must be defined.
             gxsvo + "leiCode": valtype("123"),
