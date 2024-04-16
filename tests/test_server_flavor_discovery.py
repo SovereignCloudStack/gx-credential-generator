@@ -13,7 +13,6 @@ from generator.discovery.openstack.server_flavor_discovery import \
 from generator.vendor.flavor_names import parser_v3
 from tests.common import MockConnection, OpenstackTestcase, get_config
 
-
 OS_FLAVOR_1 = OS_Flavor(id="flavor_1", name="ABC", vcpus=2, ram=16, disk=0, description=None)
 OS_FLAVOR_2 = OS_Flavor(
     id="flavor_2", name="SCS-4L-32uo-3x50s_kvm_z3hh", vcpus=2, ram=16, disk=0

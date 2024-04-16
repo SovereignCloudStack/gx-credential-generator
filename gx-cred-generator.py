@@ -11,6 +11,7 @@ SPDX-License-Identifier: EPL-2.0
 """
 
 import getopt
+import importlib
 import json
 import sys
 from time import time

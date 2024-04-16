@@ -109,7 +109,7 @@ Start the gaiax-pipeline (deprecated)
 
 - To modify the airflow pipeline you have to touch the gaiax-pipeline.py file
   inside the dags folder
-  
+
   ```bash
   cd devops
   docker-compose up -d
@@ -332,5 +332,3 @@ From a Gaia-X perspective, SCS generator is still incomplete, as it does not
 generate W3C Verifiable Credentials. A concept on how to make generator Gaia-X
 compliant and integrate it into Gaia-x Tool box, can be
 found [here](doc/xfsc.md).
-
-

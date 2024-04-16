@@ -5,7 +5,6 @@ from unittest.mock import MagicMock, patch
 from click.testing import CliRunner
 from openstack.compute.v2.flavor import Flavor as OS_Flavor
 from openstack.image.v2.image import Image as OS_Image
-from openstack.compute.v2.flavor import Flavor as OS_Flavor
 
 import cli
 from generator.common import const
