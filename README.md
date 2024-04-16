@@ -297,38 +297,3 @@ Whenever the concrete `requirements.txt` file change you also shouldn't forget
 to re-run the
 `pip install -r ...` steps again.
 
-## Status (2023-05-04)
-
-The current PoC code can discover OpenStack capabilities and produces
-an entry for the services in the service catalogue, with name,
-(micro)versions, availability zones and extensions (where supported).
-
-For the compute service, there is a flavor list (yet without some
-of the details discoverable by SCS specs); for volumes, we
-list the types, for loadbalancers, we have a flavor list as well.
-
-Thanks to the work in Hackathon #4, we have an option to export
-JSON-LD (use option `--gaia-x` aka. `-g`) that can be signed and
-successfully processed by the compilance service at
-<http://compliance.lab.gaia-x.eu/>
-Signing and verifying can be combined using the Delta-DAO signer.
-<https://signer.demo.delta-dao.com/#signer>
-
-From an OpenStack perspective, this still incomplete.
-
-- We lack flavor details (though we need SCS specs to discover more)
-- Neutron probably has a few things to detect.
-
-During Hackathon#6, the JSON-LD was updated match the current
-shapes thanks to the work from dNation. A validator was added.
-
-Tecnalia contributed work to characterize K8s clusters in Hackathon#6
-as well as an Airflow automation pipeline.
-
-TODO: Create cmd line tool that does signing and interacting with
-the compliance service, so we can set up CI testing.
-
-From a Gaia-X perspective, SCS generator is still incomplete, as it does not
-generate W3C Verifiable Credentials. A concept on how to make generator Gaia-X
-compliant and integrate it into Gaia-x Tool box, can be
-found [here](doc/xfsc.md).
