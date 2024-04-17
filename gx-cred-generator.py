@@ -281,7 +281,7 @@ def main(argv):
             file_name = f"{ofile}_{int(time())}.json"
         else:
             file_name = f"{ofile}_{int(time())}.yaml"
-        print(output(mycloud, myk8s), file=open(file_name, "a", encoding="UTF-8"))
+        print(output(mycloud, myk8s), file=open(file_name, mode="a", encoding="UTF-8"))
 
 
 if __name__ == "__main__":
