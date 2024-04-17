@@ -88,7 +88,7 @@ class CliTestCase(unittest.TestCase):
         self.assertIsNone(result.exception)
         self.assertEqual(0, result.exit_code)
         with open(
-                get_absolute_path("tests/data/empty_credential.json"), "r"
+                get_absolute_path("tests/data/empty_credential.json"), mode="r"
         ) as json_file:
             expected_output = json.load(json_file)
             received_output = json.loads(result.output)
