@@ -232,7 +232,7 @@ def main(argv):
     if ofile == "/dev/stdout":
         print(my_kube, file=sys.stdout)
     else:
-        print(my_kube, file=open(ofile, "a", encoding="UTF-8"))
+        print(my_kube, file=open(ofile, mode="a", encoding="UTF-8"))
 
 
 if __name__ == "__main__":
