@@ -1,0 +1,3 @@
+[run]
+omit = *_test.py,tests/*,generator/common/gx_schema.py,*__init__*,generator/vendor/*
+branch = True
