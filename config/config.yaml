@@ -141,17 +141,6 @@ software resources:
     resource policy: "default: allow intent"
     license:
       - https://www.microsoft.com/windows-server/pricing
-#cloud resources:
-#  own images:
-#    AlmaLinux 8:
-#      aggregation of:
-#        - web:did:provider.de
-#      copyright owner:
-#        - "AlmaLinux OS Foundation"
-#        - "ABC"
-#      resource policy: "abc"
-#      license:
-#          - https://www.abc.org
 #wallets:
 #  filesystem:
 #    path: /etc/wallet/gx-credentials/
