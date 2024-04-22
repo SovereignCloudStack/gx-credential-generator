@@ -4,7 +4,7 @@ from datetime import date, datetime
 from openstack.image.v2.image import Image as OS_Image
 
 from generator.common import const
-from generator import (
+from generator.common.gx_schema import (
     CPU,
     CheckSum,
     ChecksumAlgorithm,
@@ -21,10 +21,10 @@ from generator import (
     UpdateStrategy,
     VMDiskType,
 )
-from generator import VMImage as GX_Image
-from generator import WatchDogActions
-from generator import JsonLdObject
-from generator.discovery import VmDiscovery
+from generator.common.gx_schema import VMImage as GX_Image
+from generator.common.gx_schema import WatchDogActions
+from generator.common.json_ld import JsonLdObject
+from generator.discovery.openstack.vm_images_discovery import VmDiscovery
 from tests.generator.common import MockConnection, OpenstackTestcase, get_config
 
 GX_IMAGE_1 = JsonLdObject(

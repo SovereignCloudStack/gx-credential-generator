@@ -3,11 +3,11 @@ import unittest
 from openstack.compute.v2.flavor import Flavor as OS_Flavor
 
 from generator.common import const
-from generator import CPU
-from generator import Architectures as CpuArch
-from generator import (Disk, DiskBusType, DiskType, Frequency,
+from generator.common.gx_schema import CPU
+from generator.common.gx_schema import Architectures as CpuArch
+from generator.common.gx_schema import (Disk, DiskBusType, DiskType, Frequency,
                        Hypervisor, Memory, MemorySize)
-from generator import ServerFlavor as GX_Flavor
+from generator.common.gx_schema import ServerFlavor as GX_Flavor
 from generator.discovery.openstack.server_flavor_discovery import \
     ServerFlavorDiscovery
 from generator.vendor.flavor_names import parser_v3
