@@ -1,7 +1,7 @@
 import unittest
 
-from generator import GaiaX, GaiaXEntity, ServerFlavor
-from generator import get_json_ld_types, get_slot_curie
+from generator.common.gx_schema import GaiaX, GaiaXEntity, ServerFlavor
+from generator.common.json_ld import get_json_ld_types, get_slot_curie
 
 
 class JsonLDTestCase(unittest.TestCase):
