@@ -303,280 +303,280 @@ class VmDiscovery:
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_ARCH,
-                resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_ARCH),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(const.CONFIG_OS_ARCH),
+                resourcePolicy=self.conf.get_resource_policy(const.CONFIG_OS_ARCH),
+                copyrightOwnedBy=self.conf.get_copyright_owner(const.CONFIG_OS_ARCH),
                 license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_ARCH)
+                    self.self.conf.get_license(const.CONFIG_OS_ARCH)
                 ),
             )
         elif os_image.os_distro.lower() == "centos":
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_CENTOS,
-                resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_CENTOS),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(
+                resourcePolicy=self.conf.get_resource_policy(const.CONFIG_OS_CENTOS),
+                copyrightOwnedBy=self.conf.get_copyright_owner(
                     const.CONFIG_OS_CENTOS
                 ),
                 license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_CENTOS)
+                    self.conf.get_license(const.CONFIG_OS_CENTOS)
                 ),
             )
         elif os_image.os_distro.lower() == "debian":
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_DEBIAN,
-                resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_DEBIAN),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(
+                resourcePolicy=self.conf.get_resource_policy(const.CONFIG_OS_DEBIAN),
+                copyrightOwnedBy=self.conf.get_copyright_owner(
                     const.CONFIG_OS_DEBIAN
                 ),
                 license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_DEBIAN)
+                    self.conf.get_license(const.CONFIG_OS_DEBIAN)
                 ),
             )
         elif os_image.os_distro.lower() == "fedora":
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_FEDORA,
-                resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_FEDORA),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(
+                resourcePolicy=self.conf.get_resource_policy(const.CONFIG_OS_FEDORA),
+                copyrightOwnedBy=self.conf.get_copyright_owner(
                     const.CONFIG_OS_FEDORA
                 ),
                 license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_FEDORA)
+                    self.conf.get_license(const.CONFIG_OS_FEDORA)
                 ),
             )
         elif os_image.os_distro.lower() == "freebsd":
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_FREEBSD,
-                resourcePolicy=self._get_resource_policy_for_os(
+                resourcePolicy=self.conf.get_resource_policy(
                     const.CONFIG_OS_FREEBSD
                 ),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(
+                copyrightOwnedBy=self.conf.get_copyright_owner(
                     const.CONFIG_OS_FREEBSD
                 ),
                 license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_FREEBSD)
+                    self.conf.get_license(const.CONFIG_OS_FREEBSD)
                 ),
             )
         elif os_image.os_distro.lower() == "gentoo":
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_GENTOO,
-                resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_GENTOO),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(
+                resourcePolicy=self.conf.get_resource_policy(const.CONFIG_OS_GENTOO),
+                copyrightOwnedBy=self.conf.get_copyright_owner(
                     const.CONFIG_OS_GENTOO
                 ),
                 license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_GENTOO)
+                    self.conf.get_license(const.CONFIG_OS_GENTOO)
                 ),
             )
         elif os_image.os_distro.lower() == "mandrake":
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_MANDRAKE,
-                resourcePolicy=self._get_resource_policy_for_os(
+                resourcePolicy=self.conf.get_resource_policy(
                     const.CONFIG_OS_MANDRAKE
                 ),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(
+                copyrightOwnedBy=self.conf.get_copyright_owner(
                     const.CONFIG_OS_MANDRAKE
                 ),
                 license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_MANDRAKE)
+                    self.conf.get_license(const.CONFIG_OS_MANDRAKE)
                 ),
             )
         elif os_image.os_distro.lower() == "mandriva":
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_MANDRIVA,
-                resourcePolicy=self._get_resource_policy_for_os(
+                resourcePolicy=self.conf.get_resource_policy(
                     const.CONFIG_OS_MANDRIVA
                 ),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(
+                copyrightOwnedBy=self.conf.get_copyright_owner(
                     const.CONFIG_OS_MANDRIVA
                 ),
                 license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_MANDRIVA)
+                    self.conf.get_license(const.CONFIG_OS_MANDRIVA)
                 ),
             )
         elif os_image.os_distro.lower() == "mes":
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_MES,
-                resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_MES),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(const.CONFIG_OS_MES),
+                resourcePolicy=self.conf.get_resource_policy(const.CONFIG_OS_MES),
+                copyrightOwnedBy=self.conf.get_copyright_owner(const.CONFIG_OS_MES),
                 license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_MES)
+                    self.conf.get_license(const.CONFIG_OS_MES)
                 ),
             )
         elif os_image.os_distro.lower() == "msdos":
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_MSDOS,
-                resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_MSDOS),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(
+                resourcePolicy=self.conf.get_resource_policy(const.CONFIG_OS_MSDOS),
+                copyrightOwnedBy=self.conf.get_copyright_owner(
                     const.CONFIG_OS_MSDOS
                 ),
                 license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_MSDOS)
+                    self.conf.get_license(const.CONFIG_OS_MSDOS)
                 ),
             )
         elif os_image.os_distro.lower() == "netbsd":
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_NETBSD,
-                resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_NETBSD),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(
+                resourcePolicy=self.conf.get_resource_policy(const.CONFIG_OS_NETBSD),
+                copyrightOwnedBy=self.conf.get_copyright_owner(
                     const.CONFIG_OS_NETBSD
                 ),
                 license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_NETBSD)
+                    self.self.conf.get_license(const.CONFIG_OS_NETBSD)
                 ),
             )
         elif os_image.os_distro.lower() == "netware":
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_NOVELL,
-                resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_NOVELL),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(
+                resourcePolicy=self.conf.get_resource_policy(const.CONFIG_OS_NOVELL),
+                copyrightOwnedBy=self.conf.get_copyright_owner(
                     const.CONFIG_OS_NOVELL
                 ),
                 license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_NOVELL)
+                    self.conf.get_license(const.CONFIG_OS_NOVELL)
                 ),
             )
         elif os_image.os_distro.lower() == "openbsd":
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_OPENBSD,
-                resourcePolicy=self._get_resource_policy_for_os(
+                resourcePolicy=self.conf.get_resource_policy(
                     const.CONFIG_OS_OPENBSD
                 ),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(
+                copyrightOwnedBy=self.conf.get_copyright_owner(
                     const.CONFIG_OS_OPENBSD
                 ),
                 license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_OPENBSD)
+                    self.conf.get_license(const.CONFIG_OS_OPENBSD)
                 ),
             )
         elif os_image.os_distro.lower() == "opensolaris":
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_SOLARIS,
-                resourcePolicy=self._get_resource_policy_for_os(
+                resourcePolicy=self.conf.get_resource_policy(
                     const.CONFIG_OS_SOLARIS
                 ),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(
+                copyrightOwnedBy=self.conf.get_copyright_owner(
                     const.CONFIG_OS_SOLARIS
                 ),
                 license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_SOLARIS)
+                    self.conf.get_license(const.CONFIG_OS_SOLARIS)
                 ),
             )
         elif os_image.os_distro.lower() == "opensuse":
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_OPEN_SUSE,
-                resourcePolicy=self._get_resource_policy_for_os(
+                resourcePolicy=self.conf.get_resource_policy(
                     const.CONFIG_OS_OPEN_SUSE
                 ),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(
+                copyrightOwnedBy=self.conf.get_copyright_owner(
                     const.CONFIG_OS_OPEN_SUSE
                 ),
                 license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_OPEN_SUSE)
+                    self.conf.get_license(const.CONFIG_OS_OPEN_SUSE)
                 ),
             )
         elif os_image.os_distro.lower() == "rocky":
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_ROCKY,
-                resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_ROCKY),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(
+                resourcePolicy=self.conf.get_resource_policy(const.CONFIG_OS_ROCKY),
+                copyrightOwnedBy=self.conf.get_copyright_owner(
                     const.CONFIG_OS_ROCKY
                 ),
                 license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_ROCKY)
+                    self.conf.get_license(const.CONFIG_OS_ROCKY)
                 ),
             )
         elif os_image.os_distro.lower() == "rhel":
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_RHEL,
-                resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_RHEL),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(const.CONFIG_OS_RHEL),
+                resourcePolicy=self.conf.get_resource_policy(const.CONFIG_OS_RHEL),
+                copyrightOwnedBy=self.conf.get_copyright_owner(const.CONFIG_OS_RHEL),
                 license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_RHEL)
+                    self.conf.get_license(const.CONFIG_OS_RHEL)
                 ),
             )
         elif os_image.os_distro.lower() == "sled":
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_SLED,
-                resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_SLED),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(const.CONFIG_OS_SLED),
+                resourcePolicy=self.conf.get_resource_policy(const.CONFIG_OS_SLED),
+                copyrightOwnedBy=self.conf.get_copyright_owner(const.CONFIG_OS_SLED),
                 license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_SLED)
+                    self.conf.get_license(const.CONFIG_OS_SLED)
                 ),
             )
         elif os_image.os_distro.lower() == "ubuntu":
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_UBUNTU,
-                resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_UBUNTU),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(
+                resourcePolicy=self.conf.get_resource_policy(const.CONFIG_OS_UBUNTU),
+                copyrightOwnedBy=self.conf.get_copyright_owner(
                     const.CONFIG_OS_UBUNTU
                 ),
                 license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_UBUNTU)
+                    self.conf.get_license(const.CONFIG_OS_UBUNTU)
                 ),
             )
         elif os_image.os_distro.lower() == "windows":
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_WINDOWS,
-                resourcePolicy=self._get_resource_policy_for_os(
+                resourcePolicy=self.conf.get_resource_policy(
                     const.CONFIG_OS_WINDOWS
                 ),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(
+                copyrightOwnedBy=self.conf.get_copyright_owner(
                     const.CONFIG_OS_WINDOWS
                 ),
                 license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_WINDOWS)
+                    self.conf.get_license(const.CONFIG_OS_WINDOWS)
                 ),
             )
         elif os_image.os_distro.lower() == "cirros":
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_CIRROS,
-                resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_CIRROS),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(
+                resourcePolicy=self.conf.get_resource_policy(const.CONFIG_OS_CIRROS),
+                copyrightOwnedBy=self.conf.get_copyright_owner(
                     const.CONFIG_OS_CIRROS
                 ),
                 license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_CIRROS)
+                    self.conf.get_license(const.CONFIG_OS_CIRROS)
                 ),
             )
         elif os_image.os_distro.lower() == "almalinux":
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_ALMALINUX,
-                resourcePolicy=self._get_resource_policy_for_os(
-                    const.CONFIG_OS_ALMALINUX
+                resourcePolicy=self.conf.get_resource_policy(const.CONFIG_OS_ALMALINUX
                 ),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(
+                copyrightOwnedBy=self.conf.get_copyright_owner(
                     const.CONFIG_OS_ALMALINUX
                 ),
                 license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_ALMALINUX)
+                    self.conf.get_license(const.CONFIG_OS_ALMALINUX)
                 ),
             )
         else:
             raise ValueError("Unsupported value for operating system distribution found: '" + os_image.os_distro + "'")
 
-    def _get_resource_policy_for_os(self, os: str) -> str:
+    """def _get_resource_policy_for_os(self, os: str) -> str:
         return self.conf.get_value(
             [
+                const.CONFIG_GAX,
                 const.CONFIG_SOFTWARE,
                 os,
                 const.CONFIG_RESOURCE_POLICY,
@@ -586,6 +586,7 @@ class VmDiscovery:
     def _get_copyright_owner_for_os(self, os: str) -> List[str]:
         return self.conf.get_value(
             [
+                const.CONFIG_GAX,
                 const.CONFIG_SOFTWARE,
                 os,
                 const.CONFIG_COPYRIGHT,
@@ -599,7 +600,7 @@ class VmDiscovery:
                 os,
                 const.CONFIG_LICENSE,
             ]
-        )
+        )"""
 
     def _add_copyright_owner(self, os_image: OS_Image, gx_image: GX_Image) -> None:
         try:

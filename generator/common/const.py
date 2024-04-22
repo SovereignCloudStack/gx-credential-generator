@@ -10,6 +10,13 @@ UNIT_MB = "https://qudt.org/vocab/unit/MegaBYTE"
 UNIT_GB = "https://qudt.org/vocab/unit/GigaBYTE"
 UNIT_GHZ = "https://qudt.org/vocab/unit/GigaHZ"
 
+CONFIG_DID = "DIDs"
+CONFIG_CPS_DID = "csp_did"
+CONFIG_IAAS_DID = "iaas_did"
+CONFIG_KAAS_DID = "k8s_did"
+CONFIG_GAX = "Gaia-X"
+CONFIG_SOFTWARE = "software resources"
+
 CONFIG_VM_IMAGE = "vm image"
 CONFIG_RESOURCE_POLICY = "resource policy"
 CONFIG_LICENSE = "license"
@@ -20,7 +27,7 @@ CONFIG_AGGREGATION_OF = "aggregation of"
 CONFIG_WALLETS = "wallets"
 CONFIG_DEFAULT = "default"
 CONFIG_CLOUD_RESOURCES = "cloud resources:"
-CONFIG_SOFTWARE = "software resources"
+
 CONFIG_FILESYSTEM_WALLET = "filesystem"
 CONFIG_XFSC_WALLET = "xfsc"
 

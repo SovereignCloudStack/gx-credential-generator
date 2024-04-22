@@ -23,12 +23,12 @@ class Config:
         return _get_value(self.config, keys)
 
     def get_copyright_owner(self, software: str) -> List[str]:
-        return self.get_value([const.CONFIG_SOFTWARE, software, const.CONFIG_COPYRIGHT])
+        return self.get_value([const.CONFIG_GAX, const.CONFIG_SOFTWARE, software, const.CONFIG_COPYRIGHT])
 
     def get_license(self, software: str) -> List[str]:
-        return self.get_value([const.CONFIG_SOFTWARE, software, const.CONFIG_LICENSE])
+        return self.get_value([const.CONFIG_GAX, const.CONFIG_SOFTWARE, software, const.CONFIG_LICENSE])
 
     def get_resource_policy(self, software: str) -> List[str]:
         return self.get_value(
-            [const.CONFIG_SOFTWARE, software, const.CONFIG_RESOURCE_POLICY]
+            [const.CONFIG_GAX, const.CONFIG_SOFTWARE, software, const.CONFIG_RESOURCE_POLICY]
         )

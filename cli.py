@@ -14,15 +14,20 @@ import json
 import sys
 
 import click
-import openstack as os
+import openstack as open_stack
 import yaml
 
 import generator.common.json_ld as json_ld
 from generator.common.config import Config
 from generator.discovery.openstack.openstack_discovery import OsCloud
+import os
 
 SHAPES_FILE_FORMAT = "turtle"
 DATA_FILE_FORMAT = "json-ld"
+
+DEFAULT_CONFIG_1 = "config.yaml"
+DEFAULT_CONFIG_2 = "~/.config/scs-gax-gen/config.yaml"
+DEFAULT_CONFIG_3 = "etc/scs-gax-gen/config.yaml"
 
 
 @click.group()
@@ -43,12 +48,12 @@ def openstack(cloud, timeout, config):
     CLOUD MUST refer to a name defined in Openstack's configuration file clouds.yaml."""
 
     # init Openstack Connections
-    conn = os.connect(cloud=cloud, timeout=timeout, api_timeout=timeout * 1.5 + 4)
+    conn = open_stack.connect(cloud=cloud, timeout=timeout, api_timeout=timeout * 1.5 + 4)
     try:
         conn.authorize()
     except Exception:
         print("INFO: Retry connection with 'default' domain", file=sys.stderr)
-        conn = os.connect(
+        conn = open_stack.connect(
             cloud=cloud,
             timeout=timeout,
             api_timeout=timeout * 1.5 + 4,
@@ -56,6 +61,15 @@ def openstack(cloud, timeout, config):
             project_domain_id="default",
         )
         conn.authorize()
+
+    # load config
+    if not config:
+        if os.path.exists(DEFAULT_CONFIG_1):
+            config = DEFAULT_CONFIG_1
+        elif os.path.exists(DEFAULT_CONFIG_2):
+            config = DEFAULT_CONFIG_2
+        else:
+            config = DEFAULT_CONFIG_3
 
     # generate Gaia-X Credentials
     with open(config, "r") as config_file:
