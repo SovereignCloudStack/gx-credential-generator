@@ -21,7 +21,7 @@ class DidGenerator:
             autoescape=select_autoescape()
         )
 
-    def generate_did_document(self, issuer: str, verification_methods: Set[jwk.JWK]) -> dict:
+    def generate_did_document(self, issuer: str, verification_methods: List) -> dict:
         vfy_methods = []
         keys = []
         key_number = 0
@@ -41,5 +41,4 @@ class DidGenerator:
 
         did_doc_tmpl = self.jinja_env.get_template("did.j2")
         did_doc = did_doc_tmpl.render(issuer=issuer, verification_method=vfy_methods, keys=keys)
-        #print(did_doc)
         return json.loads(did_doc)

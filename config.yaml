@@ -1,0 +1,4 @@
+issuer: "did:web:cloudandheat.com"
+pub_key:
+  - "/home/anja-strunk/Playground/gaia-x/gaia-x_ec.pem.pub"
+  - "/home/anja-strunk/Playground/gaia-x/gaia-x_rsa.pem.pub"
