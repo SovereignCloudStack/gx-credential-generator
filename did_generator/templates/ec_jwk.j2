@@ -1,0 +1,11 @@
+    {
+      "id": "{{ issuer }}#JWK2020-EC-key#{{ number }}",
+      "type": "JsonWebKey2020",
+      "controller": "{{ issuer }}",
+      "publicKeyJwk": {
+        "kty": "EC",
+        "crv": "{{ jwk.crv }}",
+        "x": "{{ jwk.x }}",
+        "y": "{{ jwk.y }}"
+      }
+    }

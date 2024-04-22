@@ -7,8 +7,8 @@ import yaml
 from openstack.image.v2.image import Image as OS_Image
 from openstack.compute.v2.flavor import Flavor as OS_Flavor
 
-from generator.common.config import Config
-from generator.common.gx_schema import (
+from generator import Config
+from generator import (
     CPU,
     GPU,
     CheckSum,

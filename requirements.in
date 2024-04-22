@@ -6,4 +6,6 @@ pyshacl
 linkml
 rdflib
 python-dotenv
+cryptography
 jwcrypto
+jinja2

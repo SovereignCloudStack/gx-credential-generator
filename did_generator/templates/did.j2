@@ -1,0 +1,23 @@
+{
+   "@context": [
+      "https://www.w3.org/ns/did/v1",
+      "https://w3id.org/security/suites/jws-2020/v1"
+   ],
+   "id": "{{ issuer }}",
+   "verificationMethod":[
+      {% for i in verification_method %}
+         {{ i }}
+         {%if loop.index < (keys|length) %}
+            ,
+        {% endif %}
+      {% endfor %}
+   ],
+   "assertionMethod": [
+        {% for i in keys %}
+            "{{ issuer }}{{loop.index}}#{{ i }}"
+                {%if loop.index < (keys|length) %}
+                          ,
+            {% endif %}
+        {% endfor %}
+   ]
+}

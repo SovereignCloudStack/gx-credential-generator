@@ -1,6 +1,6 @@
 import unittest
 
-import generator.common.config as config
+import generator as config
 
 
 class ConfigTestCase(unittest.TestCase):

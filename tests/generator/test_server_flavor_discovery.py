@@ -3,15 +3,15 @@ import unittest
 from openstack.compute.v2.flavor import Flavor as OS_Flavor
 
 from generator.common import const
-from generator.common.gx_schema import CPU
-from generator.common.gx_schema import Architectures as CpuArch
-from generator.common.gx_schema import (Disk, DiskBusType, DiskType, Frequency,
-                                        Hypervisor, Memory, MemorySize)
-from generator.common.gx_schema import ServerFlavor as GX_Flavor
+from generator import CPU
+from generator import Architectures as CpuArch
+from generator import (Disk, DiskBusType, DiskType, Frequency,
+                       Hypervisor, Memory, MemorySize)
+from generator import ServerFlavor as GX_Flavor
 from generator.discovery.openstack.server_flavor_discovery import \
     ServerFlavorDiscovery
 from generator.vendor.flavor_names import parser_v3
-from tests.common import MockConnection, OpenstackTestcase, get_config
+from tests.generator.common import MockConnection, OpenstackTestcase, get_config
 
 OS_FLAVOR_1 = OS_Flavor(id="flavor_1", name="ABC", vcpus=2, ram=16, disk=0, description=None)
 OS_FLAVOR_2 = OS_Flavor(
@@ -149,7 +149,7 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
         gx_flavor = self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C-4-10h", disk=50))
         self.assertEqual(
             [
-                Disk(diskSize=MemorySize(value=10, unit=const.UNIT_GB), diskType=DiskType("local HDD"),)
+                Disk(diskSize=MemorySize(value=10, unit=const.UNIT_GB), diskType=DiskType("local HDD"), )
             ],
             [gx_flavor.bootVolume] + gx_flavor.additionalVolume,
         )

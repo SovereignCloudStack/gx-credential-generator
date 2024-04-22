@@ -8,7 +8,7 @@ from openstack.compute.v2.flavor import Flavor as OS_Flavor
 
 import cli
 from generator.common import const
-from tests.common import MockConnection, get_absolute_path
+from tests.generator.common import MockConnection, get_absolute_path
 
 OS_IMAGE_1 = OS_Image(
     hw_scsi_model="virtio - scsi",

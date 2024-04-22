@@ -17,8 +17,8 @@ import click
 import openstack as os
 import yaml
 
-import generator.common.json_ld as json_ld
-from generator.common.config import Config
+import generator as json_ld
+from generator import Config
 from generator.discovery.openstack.openstack_discovery import OsCloud
 
 SHAPES_FILE_FORMAT = "turtle"
