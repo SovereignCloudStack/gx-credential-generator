@@ -6,6 +6,7 @@ DIDs:
 
 wallet:
   filesystem:
+    # use filesystem wallet for test purpose only!
     path: /etc/gaia-x/wallet/
 
 Gaia-X:

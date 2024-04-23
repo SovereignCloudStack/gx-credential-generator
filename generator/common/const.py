@@ -24,7 +24,7 @@ CONFIG_COPYRIGHT = "copyright owner"
 CONFIG_OPERATING_SYSTEM = "operating system"
 CONFIG_OWN_IMAGES = "own images"
 CONFIG_AGGREGATION_OF = "aggregation of"
-CONFIG_WALLETS = "wallets"
+CONFIG_WALLET = "wallet"
 CONFIG_DEFAULT = "default"
 CONFIG_CLOUD_RESOURCES = "cloud resources:"
 

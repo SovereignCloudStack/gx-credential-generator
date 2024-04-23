@@ -16,11 +16,14 @@ import sys
 import click
 import openstack as open_stack
 import yaml
+import generator.common.const as const
 
 import generator.common.json_ld as json_ld
 from generator.common.config import Config
+
 from generator.discovery.openstack.openstack_discovery import OsCloud
 import os
+from generator.wallet.filesystem_wallet import FileSystemWallet
 
 SHAPES_FILE_FORMAT = "turtle"
 DATA_FILE_FORMAT = "json-ld"
@@ -76,6 +79,10 @@ def openstack(cloud, timeout, config):
         # init everything
         config_dict = yaml.safe_load(config_file)
         os_cloud = OsCloud(conn, Config(config_dict))
+
+        # init wallet
+        if config_dict["wallet"] == const.CONFIG_WALLETS:
+            wallet = FileSystemWallet(config_dict["wallet"])
 
         # run discovery
         creds = os_cloud.discover()
