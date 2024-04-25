@@ -75,7 +75,7 @@ hbreader==0.9.1
     #   linkml-runtime
 html5lib==1.1
     # via pyshacl
-idna==3.6
+idna==3.7
     # via
     #   jsonschema
     #   requests
