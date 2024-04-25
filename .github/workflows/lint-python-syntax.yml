@@ -1,0 +1,29 @@
+name: Lint Python
+
+on:
+  push:
+    paths:
+      - '**.py'
+      - .github/workflows/lint-python-syntax.yml
+
+jobs:
+  lint-python-syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - run: pip3 install flake8
+      - run: flake8 --exclude generator/common/gx_schema.py
+
+  check-sorted-imports:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - run: pip3 install isort
+      - run: isort . --check --skip generator/common/gx_schema.py
+
