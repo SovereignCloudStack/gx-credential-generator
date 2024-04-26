@@ -306,7 +306,7 @@ class VmDiscovery:
                 resourcePolicy=self.conf.get_resource_policy(const.CONFIG_OS_ARCH),
                 copyrightOwnedBy=self.conf.get_copyright_owner(const.CONFIG_OS_ARCH),
                 license=self._get_license_list(
-                    self.self.conf.get_license(const.CONFIG_OS_ARCH)
+                    self.conf.get_license(const.CONFIG_OS_ARCH)
                 ),
             )
         elif os_image.os_distro.lower() == "centos":
@@ -430,7 +430,7 @@ class VmDiscovery:
                     const.CONFIG_OS_NETBSD
                 ),
                 license=self._get_license_list(
-                    self.self.conf.get_license(const.CONFIG_OS_NETBSD)
+                    self.conf.get_license(const.CONFIG_OS_NETBSD)
                 ),
             )
         elif os_image.os_distro.lower() == "netware":
@@ -491,13 +491,12 @@ class VmDiscovery:
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_SUSE,
-                resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_SUSE),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(
+                resourcePolicy=self.conf.get_resource_policy(const.CONFIG_OS_SUSE),
+                copyrightOwnedBy=self.conf.get_copyright_owner(
                     const.CONFIG_OS_OPEN_SUSE
                 ),
-                license=self._get_license_list(
-                    self._get_license_for_os(const.CONFIG_OS_SUSE)
-                ),
+                license=self._get_license_list( self.conf.get_license(const.CONFIG_OS_SUSE)
+               )
             )
         elif os_image.os_distro.lower() == "rocky":
             return OperatingSystem(
@@ -573,23 +572,24 @@ class VmDiscovery:
         elif os_image.os_distro.lower() == "almalinux":
             return OperatingSystem(
                 version=os_image.os_version,
-                osDistribution=const.CONFIG_OS_ALMALINUX,
-                resourcePolicy=self.conf.get_resource_policy(const.CONFIG_OS_ALMALINUX
+                osDistribution=const.CONFIG_OS_ALMA_LINUX,
+                resourcePolicy=self.conf.get_resource_policy(const.CONFIG_OS_ALMA_LINUX
                 ),
                 copyrightOwnedBy=self.conf.get_copyright_owner(
-                    const.CONFIG_OS_ALMALINUX
+                    const.CONFIG_OS_ALMA_LINUX
+                ),
                 license=self._get_license_list(
                     self.conf.get_license(const.CONFIG_OS_ALMA_LINUX)
-                ),
+                )
             )
         elif os_image.os_distro.lower() == "alpinelinux":
             return OperatingSystem(
                 version=os_image.os_version,
                 osDistribution=const.CONFIG_OS_ALP,
-                resourcePolicy=self._get_resource_policy_for_os(const.CONFIG_OS_ALP),
-                copyrightOwnedBy=self._get_copyright_owner_for_os(const.CONFIG_OS_ALP),
+                resourcePolicy=self.conf.get_resource_policy(const.CONFIG_OS_ALP),
+                copyrightOwnedBy=self.conf.get_copyright_owner(const.CONFIG_OS_ALP),
                 license=self._get_license_list(
-                    self.conf.get_license(const.CONFIG_OS_ALMALINUX)
+                    self.conf.get_license(const.CONFIG_OS_ALP)
                 ),
             )
         else:

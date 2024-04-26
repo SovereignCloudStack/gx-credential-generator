@@ -81,7 +81,7 @@ def openstack(cloud, timeout, config):
         os_cloud = OsCloud(conn, Config(config_dict))
 
         # init wallet
-        if config_dict["wallet"] == const.CONFIG_WALLETS:
+        if config_dict["wallet"] == const.CONFIG_WALLET:
             wallet = FileSystemWallet(config_dict["wallet"])
 
         # run discovery

@@ -63,6 +63,7 @@ class FileSystemWallet(Wallet):
         for s, p, o in graph:
             if s == subject:
                 # geht das auch mit einer Sparql Anfrage
+                pass
 
 
 

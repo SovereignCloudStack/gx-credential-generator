@@ -6,7 +6,7 @@ from click.testing import CliRunner
 from openstack.compute.v2.flavor import Flavor as OS_Flavor
 from openstack.image.v2.image import Image as OS_Image
 
-import cli
+from generator import cli
 from generator.common import const
 from tests.common import MockConnection, get_absolute_path
 

@@ -10,7 +10,7 @@ wallet:
     path: /etc/gaia-x/wallet/
 
 Gaia-X:
-# DO NOT change, unless you will override default settings for Gaia-X mandatory attributes
+# DO NOT change these values, unless you want to override default settings for Gaia-X mandatory attributes
   software resources:
     Alpine Linux:
       copyright owner: "Alpine Linux"
