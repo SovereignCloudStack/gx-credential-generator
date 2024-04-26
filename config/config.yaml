@@ -7,7 +7,8 @@ DIDs:
 wallet:
   filesystem:
     # use filesystem wallet for test purpose only!
-    path: /etc/gaia-x/wallet/
+    #path: /etc/gaia-x/wallet/
+    path: /home/anja-strunk/Playground/gaia-x/wallet
 
 Gaia-X:
 # DO NOT change these values, unless you want to override default settings for Gaia-X mandatory attributes

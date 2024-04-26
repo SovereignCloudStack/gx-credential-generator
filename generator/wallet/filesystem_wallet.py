@@ -1,8 +1,14 @@
+import json
+
 from generator.wallet.wallet import Wallet
 from rdflib import Graph
 import os
 from rdflib.exceptions import ParserError
 from rdflib.plugin import PluginException
+
+from typing import List
+
+import glob
 
 class FileSystemWallet(Wallet):
 
@@ -28,11 +34,23 @@ class FileSystemWallet(Wallet):
                 print("Could not parse '" + cred_abs_path + "'." + e.msg)
 
 
-    def get_credentials_of_subject(self, subject_id: str) -> Graph:
-        pass
+    def get_credentials_of_subject(self, subject_id: str, type: str = None) -> List[dict]:
+        creds = []
+        for cred_file in glob.glob(os.path.join(self.folder, "credentials/*.json")):
+            with open(cred_file, "r") as file:
+                cred_json = json.load(file)
+                try:
+                    if cred_json['credentialSubject']['id'] == subject_id:
+                        creds.append(cred_json)
+                except KeyError as ke:
+                    raise KeyError("No valid credential in file: '" + cred_file + "'. Error_: " + ke)
+
+        return creds
 
 
-    def get_graph_of_subject(self, subject_id: str) -> Graph:
+
+
+    def get_graph_of_subject(self, subject_id: str, type: str = None) -> Graph:
         claims_folder = os.path.join(self.folder, "claims")
         graph = Graph()
         for claim_file in os.listdir(claims_folder):

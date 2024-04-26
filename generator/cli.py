@@ -21,7 +21,7 @@ import generator.common.const as const
 import generator.common.json_ld as json_ld
 from generator.common.config import Config
 
-from generator.discovery.openstack.openstack_discovery import OsCloud
+from generator.discovery.openstack.openstack_discovery import OpenStackDiscovery
 import os
 from generator.wallet.filesystem_wallet import FileSystemWallet
 
@@ -78,11 +78,7 @@ def openstack(cloud, timeout, config):
     with open(config, "r") as config_file:
         # init everything
         config_dict = yaml.safe_load(config_file)
-        os_cloud = OsCloud(conn, Config(config_dict))
-
-        # init wallet
-        if config_dict["wallet"] == const.CONFIG_WALLET:
-            wallet = FileSystemWallet(config_dict["wallet"])
+        os_cloud = OpenStackDiscovery(conn, Config(config_dict))
 
         # run discovery
         creds = os_cloud.discover()
