@@ -13,15 +13,8 @@ from generator.common import const
 from generator.common.config import Config
 from generator.common.gx_schema import CPU
 from generator.common.gx_schema import Architectures as CpuArch
-from generator.common.gx_schema import (
-    Disk,
-    DiskType,
-    Frequency,
-    Hypervisor,
-    HypervisorType,
-    Memory,
-    MemorySize,
-)
+from generator.common.gx_schema import (Disk, DiskType, Frequency, Hypervisor,
+                                        HypervisorType, Memory, MemorySize)
 from generator.common.gx_schema import ServerFlavor as GX_Flavor
 from generator.common.json_ld import JsonLdObject
 from generator.vendor.flavor_names import Flavorname, parser_v3
@@ -126,7 +119,10 @@ class ServerFlavorDiscovery:
         """
         cpu = CPU(cpuArchitecture=CpuArch.other, numberOfCores=os_flavor.vcpus)
         if flavorname:
-            cpu.smtEnabled = (flavorname.cpuram.cputype != "C")  # FIXME this is unclear to me, see #85
+            cpu.smtEnabled = (
+                flavorname.cpuram.cputype != "C"
+            )  # FIXME this is unclear to me, see #85
+
             cpu.defaultOversubscriptionRatio = 1
             if flavorname.cpuram.cputype == "V":
                 cpu.defaultOversubscriptionRatio = 5

@@ -22,7 +22,8 @@ OS_FLAVOR_2 = OS_Flavor(
 class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
     def setUp(self):
         self.discovery = ServerFlavorDiscovery(
-            conn=MockConnection(flavors=[OS_FLAVOR_1, OS_FLAVOR_2]), conf=get_config())
+            conn=MockConnection(flavors=[OS_FLAVOR_1, OS_FLAVOR_2]), conf=get_config()
+        )
 
     def test_get_cpu(self):
         self.assertEqual(
@@ -65,10 +66,7 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
             self.discovery._convert_to_gx(OS_Flavor(name="SCS-2L-4", vcpus=4)).cpu,
         )
         self.assertEqual(
-            CPU(
-                cpuArchitecture=CpuArch.other,
-                numberOfCores=4
-            ),
+            CPU(cpuArchitecture=CpuArch.other, numberOfCores=4),
             self.discovery._convert_to_gx(OS_Flavor(name="SCS-2:8", vcpus=4)).cpu,
         )
 
@@ -270,7 +268,6 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
 
         # init expected objects
         gax_flavor_1 = self._init_gx_flavor(ram=16, disk=0, number_of_cores=2)
-
         gax_flavor_2 = self._init_gx_flavor(ram=16, disk=50, cpu_arc=CpuArch("x86-64"), cpu_vendor="AMD",
                                             cpu_gen="Zen-3 (Milan)",
                                             cpu_freq=Frequency(value=3.25, unit=const.UNIT_GHZ), number_of_cores=2)
@@ -326,7 +323,6 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
                 copyrightOwnedBy=self.discovery.conf.get_copyright_owner(const.CONFIG_HV_KVM),
                 license=self.discovery.conf.get_license(const.CONFIG_HV_KVM),
                 resourcePolicy=self.discovery.conf.get_resource_policy(const.CONFIG_HV_KVM))
-
         return gx_flavor
 
 
