@@ -1,7 +1,7 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 
-name: Check Python application
+name: Check Code Coverage
 
 on:
   push:
@@ -17,7 +17,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  build-python-app:
+  check-code-coverage:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -44,25 +44,10 @@ jobs:
         with:
           filename: coverage.xml
           badge: true
-          fail_below_min: false
+          fail_below_min: true
           format: markdown
           hide_branch_rate: false
           hide_complexity: false
           indicators: true
           output: both
           thresholds: '90 95'
-
-      - name: add threshold to coverage.md
-        run: |
-          cat code-coverage-results.md
-
-      - name: Add Coverage PR Comment
-        uses: marocchino/sticky-pull-request-comment@v2
-        if: github.event_name == 'pull_request'
-        with:
-          recreate: true
-          path: code-coverage-results.md
-
-      - name: Write to Job Summary
-        run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
-
