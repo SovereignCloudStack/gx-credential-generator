@@ -4,23 +4,11 @@ from datetime import date, datetime
 from openstack.image.v2.image import Image as OS_Image
 
 from generator.common import const
-from generator.common.gx_schema import (
-    CPU,
-    CheckSum,
-    ChecksumAlgorithm,
-    Disk,
-    FirmType,
-    HypervisorType,
-    LatestN,
-    MaintenanceSubscription,
-    Memory,
-    MemorySize,
-    OperatingSystem,
-    RNGTypes,
-    Signature,
-    UpdateStrategy,
-    VMDiskType,
-)
+from generator.common.gx_schema import (CPU, CheckSum, ChecksumAlgorithm, Disk,
+                                        FirmType, HypervisorType, LatestN,
+                                        MaintenanceSubscription, Memory,
+                                        MemorySize, OperatingSystem, RNGTypes,
+                                        Signature, UpdateStrategy, VMDiskType)
 from generator.common.gx_schema import VMImage as GX_Image
 from generator.common.gx_schema import WatchDogActions
 from generator.common.json_ld import JsonLdObject
@@ -33,8 +21,8 @@ GX_IMAGE_1 = JsonLdObject(
         name="Image1",
         description="Image 1",
         aggregationOfResources=[],
-        copyrightOwnedBy=["Microsoft Corporation"],
-        license=["https://www.microsoft.com/licensing"],
+        copyrightOwnedBy=["Fedora-Project"],
+        license=["https://docs.fedoraproject.org/en-US/legal/fedora-linux-license/"],
         resourcePolicy=["default: allow intent"],
         checksum=CheckSum(
             checkSumCalculation="sha-512",
@@ -49,15 +37,17 @@ GX_IMAGE_1 = JsonLdObject(
             name=None,
             description=None,
             aggregationOfResources=[],
-            copyrightOwnedBy=["Microsoft Corporation"],
-            license=["https://www.microsoft.com/licensing"],
+            copyrightOwnedBy=["Fedora-Project"],
+            license=[
+                "https://docs.fedoraproject.org/en-US/legal/fedora-linux-license/"
+            ],
             resourcePolicy=["default: allow intent"],
             checksum=None,
             signature=None,
             version="Stable",
             patchLevel=None,
             buildDate=None,
-            osDistribution="Microsoft Windows",
+            osDistribution="Fedora",
         ),
         cpuReq=CPU(
             vendor=None,
@@ -80,19 +70,25 @@ GX_IMAGE_1 = JsonLdObject(
             generation=None,
             defaultOversubscriptionRatio=None,
             supportedOversubscriptionRatio=None,
-            memorySize=MemorySize(value=1.048576, unit="https://qudt.org/vocab/unit/MegaBYTE"),
+            memorySize=MemorySize(
+                value=1.048576, unit="https://qudt.org/vocab/unit/MegaBYTE"
+            ),
             memoryClass="other",
             memoryRank="other",
             eccEnabled=False,
             hardwareEncryption=False,
         ),
-        videoRamSize=MemorySize(value=20.0, unit="https://qudt.org/vocab/unit/MegaBYTE"),
+        videoRamSize=MemorySize(
+            value=20.0, unit="https://qudt.org/vocab/unit/MegaBYTE"
+        ),
         rootDiskReq=Disk(
             vendor=None,
             generation=None,
             defaultOversubscriptionRatio=None,
             supportedOversubscriptionRatio=None,
-            diskSize=MemorySize(value=21.47483648, unit="https://qudt.org/vocab/unit/GigaBYTE"),
+            diskSize=MemorySize(
+                value=21.47483648, unit="https://qudt.org/vocab/unit/GigaBYTE"
+            ),
             diskType="other",
             diskBusType="SCSI",
         ),
@@ -120,8 +116,8 @@ GX_IMAGE_1.gx_object.maintenance.maintainedUntil = date(2024, 5, 31)
 GX_IMAGE_2 = JsonLdObject(
     gx_id="image_2",
     gx_object=GX_Image(
-        copyrightOwnedBy=["Microsoft Corporation"],
-        license=["https://www.microsoft.com/licensing"],
+        copyrightOwnedBy=["The FreeBSD Project"],
+        license=["GPL-3.0-only", "LGPL-2.0"],
         resourcePolicy=["default: allow intent"],
         maintenance={"subscriptionIncluded": False, "subscriptionRequired": False},
         hypervisorType=HypervisorType("other"),
@@ -142,7 +138,7 @@ GX_IMAGE_2 = JsonLdObject(
 
 OS_IMAGE_1 = OS_Image(
     hw_scsi_model="virtio - scsi",
-    os_distro="windows",
+    os_distro="Fedora",
     hw_watchdog_action="reset",
     hw_rng_model="virtio",
     os_version="Stable",
@@ -218,8 +214,12 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
         self.assertEqual(VMDiskType("RAW"), self.discovery._get_disk_format(OS_Image()))
 
     def test_get_secure_boot(self):
-        self.assertTrue(self.discovery._get_secure_boot(OS_Image(needs_secure_boot=True)))
-        self.assertFalse(self.discovery._get_secure_boot(OS_Image(needs_secure_boot=False)))
+        self.assertTrue(
+            self.discovery._get_secure_boot(OS_Image(needs_secure_boot=True))
+        )
+        self.assertFalse(
+            self.discovery._get_secure_boot(OS_Image(needs_secure_boot=False))
+        )
         self.assertFalse(self.discovery._get_secure_boot(OS_Image()))
 
     def test_get_firmeware_type(self):
@@ -235,7 +235,9 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
             FirmType(FirmType.other),
             self.discovery._get_firme_ware_type(OS_Image(hw_firmware_type="foo")),
         )
-        self.assertEqual(FirmType(FirmType.other), self.discovery._get_firme_ware_type(OS_Image()))
+        self.assertEqual(
+            FirmType(FirmType.other), self.discovery._get_firme_ware_type(OS_Image())
+        )
 
     def test_get_watchdog_action(self):
         self.assertEqual(
@@ -270,28 +272,40 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
             CPU(cpuArchitecture="x86-64"),
             self.discovery._get_cpu_req(OS_Image(architecture="x86_64")),
         )
-        self.assertEqual(CPU(cpuArchitecture="other"), self.discovery._get_cpu_req(OS_Image()))
+        self.assertEqual(
+            CPU(cpuArchitecture="other"), self.discovery._get_cpu_req(OS_Image())
+        )
 
     def test_get_multiqueue_enabled(self):
         self.assertTrue(
-            self.discovery._get_multiqueue_enabled(OS_Image(is_hw_vif_multiqueue_enabled=True))
+            self.discovery._get_multiqueue_enabled(
+                OS_Image(is_hw_vif_multiqueue_enabled=True)
+            )
         )
         self.assertFalse(
-            self.discovery._get_multiqueue_enabled(OS_Image(is_hw_vif_multiqueue_enabled=False))
+            self.discovery._get_multiqueue_enabled(
+                OS_Image(is_hw_vif_multiqueue_enabled=False)
+            )
         )
         self.assertFalse(self.discovery._get_multiqueue_enabled(OS_Image()))
 
     def test_get_checksum(self):
         self.assertEqual(
-            CheckSum(checkSumValue="a123", checkSumCalculation=ChecksumAlgorithm("md5")),
+            CheckSum(
+                checkSumValue="a123", checkSumCalculation=ChecksumAlgorithm("md5")
+            ),
             self.discovery._get_checksum(OS_Image(hash_value="a123", hash_algo="md5")),
         )
         self.assertEqual(
-            CheckSum(checkSumValue="a123", checkSumCalculation=ChecksumAlgorithm("md5")),
+            CheckSum(
+                checkSumValue="a123", checkSumCalculation=ChecksumAlgorithm("md5")
+            ),
             self.discovery._get_checksum(OS_Image(hash_value="a123", hash_algo="MD5")),
         )
         self.assertEqual(
-            CheckSum(checkSumValue="a123", checkSumCalculation=ChecksumAlgorithm("other")),
+            CheckSum(
+                checkSumValue="a123", checkSumCalculation=ChecksumAlgorithm("other")
+            ),
             self.discovery._get_checksum(OS_Image(hash_value="a123", hash_algo="foo")),
         )
         self.assertIsNone(self.discovery._get_checksum(OS_Image()))
@@ -319,17 +333,19 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
         up_strat.oldVersionsValidUntil = date(2024, 1, 31)
         up_strat.providedUntil = date(2024, 1, 31)
 
-        self.assertEqual(
-            up_strat,
-            self.discovery._get_update_strategy(
-                OS_Image(
-                    replace_frequency="monthly",
-                    uuid_validity="2024-01-31",
-                    provided_until="2024-01-31",
-                    hotfix_hours=5,
-                )
+        (
+            self.assertEqual(
+                up_strat,
+                self.discovery._get_update_strategy(
+                    OS_Image(
+                        replace_frequency="monthly",
+                        uuid_validity="2024-01-31",
+                        provided_until="2024-01-31",
+                        hotfix_hours=5,
+                    )
+                ),
             ),
-        ),
+        )
 
         self.assertEqual(
             UpdateStrategy(
@@ -348,7 +364,9 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
             ),
         )
 
-        up_strat = UpdateStrategy(replaceFrequency="yearly", providedUntil="notice", hotfixHours=5)
+        up_strat = UpdateStrategy(
+            replaceFrequency="yearly", providedUntil="notice", hotfixHours=5
+        )
         up_strat.oldVersionsValidUntil = LatestN(value=3)
         self.assertEqual(
             up_strat,
@@ -407,17 +425,25 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
         self.assertIsNone(self.discovery._get_build_date(OS_Image()))
 
     def test_get_license_included(self):
-        self.assertTrue(self.discovery._get_license_included(OS_Image(licenseIncluded=True)))
-        self.assertFalse(self.discovery._get_license_included(OS_Image(licenseIncluded=False)))
+        self.assertTrue(
+            self.discovery._get_license_included(OS_Image(licenseIncluded=True))
+        )
+        self.assertFalse(
+            self.discovery._get_license_included(OS_Image(licenseIncluded=False))
+        )
         self.assertFalse(self.discovery._get_license_included(OS_Image()))
 
     def test_get_patch_level(self):
-        self.assertEqual("v1.2.0", self.discovery._get_patch_level(OS_Image(patchlevel="v1.2.0")))
+        self.assertEqual(
+            "v1.2.0", self.discovery._get_patch_level(OS_Image(patchlevel="v1.2.0"))
+        )
         self.assertIsNone(self.discovery._get_patch_level(OS_Image(propo1="foo")))
         self.assertIsNone(self.discovery._get_patch_level(OS_Image()))
 
     def test_get_version(self):
-        self.assertEqual("v1.2.0", self.discovery._get_version(OS_Image(internal_version="v1.2.0")))
+        self.assertEqual(
+            "v1.2.0", self.discovery._get_version(OS_Image(internal_version="v1.2.0"))
+        )
         self.assertIsNone(self.discovery._get_version(OS_Image()))
 
     def test_get_maintenance(self):
@@ -438,17 +464,23 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
             ),
         )
         self.assertEqual(
-            MaintenanceSubscription(subscriptionIncluded=True, subscriptionRequired=True),
+            MaintenanceSubscription(
+                subscriptionIncluded=True, subscriptionRequired=True
+            ),
             self.discovery._get_maintenance(
                 OS_Image(subscription_required=True, subscription_included=True)
             ),
         )
         self.assertEqual(
-            MaintenanceSubscription(subscriptionIncluded=False, subscriptionRequired=True),
+            MaintenanceSubscription(
+                subscriptionIncluded=False, subscriptionRequired=True
+            ),
             self.discovery._get_maintenance(OS_Image(subscription_required=True)),
         )
         self.assertEqual(
-            MaintenanceSubscription(subscriptionIncluded=False, subscriptionRequired=False),
+            MaintenanceSubscription(
+                subscriptionIncluded=False, subscriptionRequired=False
+            ),
             self.discovery._get_maintenance(OS_Image()),
         )
 
@@ -515,17 +547,23 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
                 memorySize=MemorySize(1.048576, unit=const.UNIT_MB),
                 hardwareEncryption=True,
             ),
-            self.discovery._get_min_ram_req(OS_Image(min_ram=1, hw_mem_encryption=True)),
+            self.discovery._get_min_ram_req(
+                OS_Image(min_ram=1, hw_mem_encryption=True)
+            ),
         )
         self.assertEqual(
-            Memory(memorySize=MemorySize(0, unit=const.UNIT_MB), hardwareEncryption=False),
+            Memory(
+                memorySize=MemorySize(0, unit=const.UNIT_MB), hardwareEncryption=False
+            ),
             self.discovery._get_min_ram_req(OS_Image(min_ram=0)),
         )
         self.assertIsNone(self.discovery._get_min_ram_req(OS_Image()))
 
     def test_get_min_disk_req(self):
         self.assertEqual(
-            Disk(diskSize=MemorySize(1.073741824, unit=const.UNIT_GB), diskBusType="SATA"),
+            Disk(
+                diskSize=MemorySize(1.073741824, unit=const.UNIT_GB), diskBusType="SATA"
+            ),
             self.discovery._get_min_disk_req(OS_Image(min_disk=1, hw_disk_bus="SATA")),
         )
         self.assertEqual(
@@ -538,12 +576,74 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
         self.assertEqual(
             OperatingSystem(
                 version="1",
+                osDistribution=const.CONFIG_OS_ALP,
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="Alpine Linux",
+                license=["https://gitlab.alpinelinux.org/alpine/aports/-/issues/9074"],
+            ),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="alpinelinux")
+            ),
+        )
+        self.assertEqual(
+            OperatingSystem(
+                version="1",
+                osDistribution=const.CONFIG_OS_ALMA_LINUX,
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="Canonical Ltd.",
+                license=["https://almalinux.org/p/the-almalinux-os-licensing-policy/"],
+            ),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="AlmaLinux")
+            ),
+        )
+        self.assertEqual(
+            OperatingSystem(
+                version="1",
+                osDistribution=const.CONFIG_OS_ARCH,
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="Judd Vinet, Aaron Griffin, Levente Polyák and others",
+                license=["https://gitlab.archlinux.org/archlinux"],
+            ),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="arch")
+            ),
+        )
+        self.assertEqual(
+            OperatingSystem(
+                version="1",
+                osDistribution=const.CONFIG_OS_CENTOS,
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="The CentOS Project and others",
+                license=["https://github.com/CentOS/"],
+            ),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="centOs")
+            ),
+        )
+        self.assertEqual(
+            OperatingSystem(
+                version="1",
+                osDistribution=const.CONFIG_OS_CIRROS,
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="Canonical Ltd.",
+                license=["GPL-2.0-only"],
+            ),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="cirros")
+            ),
+        )
+        self.assertEqual(
+            OperatingSystem(
+                version="1",
                 osDistribution=const.CONFIG_OS_DEBIAN,
                 resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
                 copyrightOwnedBy="Ian Murdock and others",
                 license=["https://www.debian.org/legal/licenses/index.en.html"],
             ),
-            self.discovery._get_operation_system(OS_Image(os_version="1", os_distro="debian")),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="debian")
+            ),
         )
         self.assertEqual(
             OperatingSystem(
@@ -553,7 +653,223 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
                 copyrightOwnedBy="The FreeBSD Project",
                 license=["GPL-3.0-only", "LGPL-2.0"],
             ),
-            self.discovery._get_operation_system(OS_Image(os_version="1", os_distro="FreeBSD")),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="FreeBSD")
+            ),
+        )
+        self.assertEqual(
+            OperatingSystem(
+                version="1",
+                osDistribution=const.CONFIG_OS_FEDORA,
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="Fedora-Project",
+                license=[
+                    "https://docs.fedoraproject.org/en-US/legal/fedora-linux-license/"
+                ],
+            ),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="fedora")
+            ),
+        )
+        self.assertEqual(
+            OperatingSystem(
+                version="1",
+                osDistribution=const.CONFIG_OS_GENTOO,
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="Gentoo Foundation, Inc.",
+                license=["https://www.gentoo.org/glep/glep-0076.html"],
+            ),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="gentoo")
+            ),
+        )
+        self.assertEqual(
+            OperatingSystem(
+                version="1",
+                osDistribution=const.CONFIG_OS_MANDRAKE,
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="Mandriva Linux",
+                license=["GPL-3.0-only"],
+            ),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="mandrake")
+            ),
+        )
+        self.assertEqual(
+            OperatingSystem(
+                version="1",
+                osDistribution=const.CONFIG_OS_MANDRIVA,
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="Mandriva S. A.",
+                license=["GPL-3.0-only"],
+            ),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="mandriva")
+            ),
+        )
+        self.assertEqual(
+            OperatingSystem(
+                version="1",
+                osDistribution=const.CONFIG_OS_MES,
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="Mandriva S. A.",
+                license=["GPL-3.0-only"],
+            ),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="mes")
+            ),
+        )
+        self.assertEqual(
+            OperatingSystem(
+                version="1",
+                osDistribution=const.CONFIG_OS_MSDOS,
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="Microsoft Corporation",
+                license=[
+                    "https://www.microsoft.com/licensing/docs/view/Licensing-Guides"
+                ],
+            ),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="msdos")
+            ),
+        )
+        self.assertEqual(
+            OperatingSystem(
+                version="1",
+                osDistribution=const.CONFIG_OS_NETBSD,
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="The NetBSD Foundation",
+                license=["https://www.netbsd.org/about/redistribution.html"],
+            ),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="netbsd")
+            ),
+        )
+        self.assertEqual(
+            OperatingSystem(
+                version="1",
+                osDistribution=const.CONFIG_OS_NOVELL,
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="Micro Focus International",
+                license=[
+                    "https://support.novell.com/techcenter/articles/ana19960702.html"
+                ],
+            ),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="netware")
+            ),
+        )
+        self.assertEqual(
+            OperatingSystem(
+                version="1",
+                osDistribution=const.CONFIG_OS_OPENBSD,
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="OpenBSD",
+                license=["https://www.openbsd.org/policy.html"],
+            ),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="openbsd")
+            ),
+        )
+        self.assertEqual(
+            OperatingSystem(
+                version="1",
+                osDistribution=const.CONFIG_OS_OPEN_SUSE,
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="openSUSE contributors & others",
+                license=["https://en.opensuse.org/openSUSE:License"],
+            ),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="opensuse")
+            ),
+        )
+        self.assertEqual(
+            OperatingSystem(
+                version="1",
+                osDistribution=const.CONFIG_OS_SOLARIS,
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="Sun Microsystems",
+                license=[
+                    "https://opensource.apple.com/source/xnu/xnu-2050.7.9/tools/tests/libMicro/OPENSOLARIS.LICENSE.auto.html"
+                ],
+            ),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="opensolaris")
+            ),
+        )
+        self.assertEqual(
+            OperatingSystem(
+                version="1",
+                osDistribution=const.CONFIG_OS_ROCKY,
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="Rocky Enterprise Software Foundation",
+                license=["https://rockylinux.org/licensing"],
+            ),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="rocky")
+            ),
+        )
+        self.assertEqual(
+            OperatingSystem(
+                version="1",
+                osDistribution=const.CONFIG_OS_RHEL,
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="Red Hat, Inc.",
+                license=[
+                    "https://www.redhat.com/en/store/red-hat-enterprise-linux-server"
+                ],
+            ),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="rhel")
+            ),
+        )
+        self.assertEqual(
+            OperatingSystem(
+                version="1",
+                osDistribution=const.CONFIG_OS_SUSE,
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="openSUSE contributors & others",
+                license=["https://www.suse.com/products/terms_and_conditions.pdf"],
+            ),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="suse")
+            ),
+        )
+        self.assertEqual(
+            OperatingSystem(
+                version="1",
+                osDistribution="others",
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="TBA",
+                license=["TBA"],
+            ),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="sled")
+            ),
+        )
+        self.assertEqual(
+            OperatingSystem(
+                version="1",
+                osDistribution=const.CONFIG_OS_UBUNTU,
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="Canonical",
+                license=["https://ubuntu.com/legal/open-source-licences"],
+            ),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="ubuntu")
+            ),
+        )
+        self.assertEqual(
+            OperatingSystem(
+                version="1",
+                osDistribution=const.CONFIG_OS_WINDOWS,
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="Microsoft Corporation",
+                license=["https://www.microsoft.com/licensing"],
+            ),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1", os_distro="windows")
+            ),
         )
 
 
