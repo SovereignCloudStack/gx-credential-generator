@@ -10,11 +10,9 @@ on:
   pull_request:
     branches:
       - "main"
-    paths:
-      - '**.py'
-      - .github/workflows/build-python-app.yml
-
-
+  #  paths:
+  #    - '**.py'
+  #    - .github/workflows/build-python-app.yml
 
 permissions:
   contents: read
