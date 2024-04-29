@@ -60,7 +60,7 @@ OS_FLAVOR_1 = OS_Flavor(
 
 class CliTestCase(unittest.TestCase):
     @patch("openstack.connect")
-    def _test_openstack(self, os_connect):
+    def test_openstack(self, os_connect):
         # Mock openstack calls
         os_connect.return_value = MockConnection(
             images=[OS_IMAGE_1], flavors=[OS_FLAVOR_1]
