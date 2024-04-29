@@ -10,17 +10,17 @@ on:
   pull_request:
     branches:
       - "main"
-  #  paths:
-  #    - '**.py'
-  #    - .github/workflows/build-python-app.yml
+
 
 permissions:
   contents: read
   pull-requests: write
 
 jobs:
-  build-python-app:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
     steps:
       - uses: actions/checkout@v4
 
@@ -37,8 +37,8 @@ jobs:
 
       - name: Test with pytest
         run: |
-          python -m pytest --cov --cov-report=xml
-          coverage report
+          python -m pytest --cov --cov-report=xml tests
+          coverage report -m
         shell: bash
 
       - name: Code Coverage Report
@@ -49,20 +49,18 @@ jobs:
           fail_below_min: true
           format: markdown
           hide_branch_rate: false
-          hide_complexity: false
+          hide_complexity: true
           indicators: true
           output: both
-          thresholds: '90 95'
+          thresholds: '100 100'
 
       - name: Add Coverage PR Comment
         uses: marocchino/sticky-pull-request-comment@v2
         if: ${{ !cancelled() && github.event_name == 'pull_request' }}
         with:
           recreate: true
-          path:
-            code-coverage-results.mdwith:
+          path: code-coverage-results.md
 
       - name: Write to Job Summary
         if: ${{ !cancelled() }}
         run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
-

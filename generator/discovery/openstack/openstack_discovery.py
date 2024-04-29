@@ -15,7 +15,6 @@ from generator.discovery.openstack.server_flavor_discovery import \
 from generator.discovery.openstack.vm_images_discovery import VmDiscovery
 
 
-
 class OsCloud:
     """Abstraction for openStack cloud with all its services."""
 
