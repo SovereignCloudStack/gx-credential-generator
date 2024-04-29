@@ -1,9 +1,0 @@
-[run]
-source = creator
-
-[report]
-show_missing = True
-skip_empty = True
-
-[xml]
-output = coverage.xml

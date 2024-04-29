@@ -1,6 +1,9 @@
 [run]
-omit = 
-  tests/*
-  generator/common/gx_schema.py
-  generator/vendor/*
-branch = True
+source = creator
+
+[report]
+show_missing = True
+skip_empty = True
+
+[xml]
+output = coverage.xml
