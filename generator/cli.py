@@ -14,23 +14,15 @@ import json
 import sys
 
 import click
-import openstack as open_stack
+import openstack as os
 import yaml
-import generator.common.const as const
 
 import generator.common.json_ld as json_ld
 from generator.common.config import Config
-
-from generator.discovery.openstack.openstack_discovery import OpenStackDiscovery
-import os
-from generator.wallet.filesystem_wallet import FileSystemWallet
+from generator.discovery.openstack.openstack_discovery import OsCloud
 
 SHAPES_FILE_FORMAT = "turtle"
 DATA_FILE_FORMAT = "json-ld"
-
-DEFAULT_CONFIG_1 = "config.yaml"
-DEFAULT_CONFIG_2 = "~/.config/scs-gax-gen/config.yaml"
-DEFAULT_CONFIG_3 = "etc/scs-gax-gen/config.yaml"
 
 
 @click.group()
@@ -51,12 +43,12 @@ def openstack(cloud, timeout, config):
     CLOUD MUST refer to a name defined in Openstack's configuration file clouds.yaml."""
 
     # init Openstack Connections
-    conn = open_stack.connect(cloud=cloud, timeout=timeout, api_timeout=timeout * 1.5 + 4)
+    conn = os.connect(cloud=cloud, timeout=timeout, api_timeout=timeout * 1.5 + 4)
     try:
         conn.authorize()
     except Exception:
         print("INFO: Retry connection with 'default' domain", file=sys.stderr)
-        conn = open_stack.connect(
+        conn = os.connect(
             cloud=cloud,
             timeout=timeout,
             api_timeout=timeout * 1.5 + 4,
@@ -65,20 +57,11 @@ def openstack(cloud, timeout, config):
         )
         conn.authorize()
 
-    # load config
-    if not config:
-        if os.path.exists(DEFAULT_CONFIG_1):
-            config = DEFAULT_CONFIG_1
-        elif os.path.exists(DEFAULT_CONFIG_2):
-            config = DEFAULT_CONFIG_2
-        else:
-            config = DEFAULT_CONFIG_3
-
     # generate Gaia-X Credentials
     with open(config, "r") as config_file:
         # init everything
         config_dict = yaml.safe_load(config_file)
-        os_cloud = OpenStackDiscovery(conn, Config(config_dict))
+        os_cloud = OsCloud(conn, Config(config_dict))
 
         # run discovery
         creds = os_cloud.discover()

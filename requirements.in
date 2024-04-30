@@ -5,3 +5,5 @@ click
 pyshacl
 linkml
 rdflib
+requests
+jinja2

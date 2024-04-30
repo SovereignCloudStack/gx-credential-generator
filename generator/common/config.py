@@ -20,15 +20,19 @@ class Config:
         self.config = config
 
     def get_value(self, keys: List[str]):
-        return _get_value(self.config, keys)
+        try:
+            return _get_value(self.config, keys)
+        except KeyError as ke:
+            raise KeyError("Config file missing following key chain: " + str(keys))
+
 
     def get_copyright_owner(self, software: str) -> List[str]:
-        return self.get_value([const.CONFIG_GAX, const.CONFIG_SOFTWARE, software, const.CONFIG_COPYRIGHT])
+        return self.get_value([const.CONFIG_SOFTWARE, software, const.CONFIG_COPYRIGHT])
 
     def get_license(self, software: str) -> List[str]:
-        return self.get_value([const.CONFIG_GAX, const.CONFIG_SOFTWARE, software, const.CONFIG_LICENSE])
+        return self.get_value([const.CONFIG_SOFTWARE, software, const.CONFIG_LICENSE])
 
     def get_resource_policy(self, software: str) -> List[str]:
         return self.get_value(
-            [const.CONFIG_GAX, const.CONFIG_SOFTWARE, software, const.CONFIG_RESOURCE_POLICY]
+            [const.CONFIG_SOFTWARE, software, const.CONFIG_RESOURCE_POLICY]
         )
