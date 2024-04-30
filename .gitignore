@@ -8,6 +8,7 @@ devops/logs/
 devops/plugins/
 node_modules
 *.tar.gz
+.gx-credentials
 # Make sure credentials not push to the repo
 os_secret
 k8s_secret
