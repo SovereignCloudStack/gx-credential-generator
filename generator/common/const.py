@@ -7,11 +7,20 @@ CONFIG_FILE = "config/config.yaml"
 CONFIG_DID = "did"
 CONFIG_TaC = "terms-and-conditions"
 
+# Signing keys
+CONFIG_SIGN = "Signing"
+CONFIG_SIGN_KEY = "key"
+CONFIG_SIGN_VER_METH = "verification-method"
+CONFIG_SIGN_BASE_CRED_URL = "base_credential_url"
+
+
 # CPS configuration keys
 CONFIG_CSP = "CPS"
+CONFIG_CSP_NAME = "legal-name"
 CONFIG_CSP_LEG_AD = "legal-address-country-code"
 CONFIG_CSP_HQ_ADR = "headquarter-address-country-code"
 CONFIG_CSP_VAT_ID = "vat-id"
+#CONFIG_CSP_SIGN_KEY = "signing-key"
 
 # IaaS configuration keys
 CONFIG_IAAS = "iaas"

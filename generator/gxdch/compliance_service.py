@@ -1,14 +1,15 @@
 import requests
 from requests import Response
 from typing import List
-
+from jinja2 import Environment
 
 class ComplianceService:
 
-    def __init__(self, api: str, jinja2_templates: str):
-        if not api or not jinja2_templates:
+    def __init__(self, api: str, templates: Environment):
+        if not api or not templates:
             raise AttributeError("Parameters MUST not be None")
         self.api = api
+        self.templates = templates
 
     def issue_reg_number_vc(self, reg_number: str, csp_did: str) -> Response:
         if reg_number is None or csp_did is None:

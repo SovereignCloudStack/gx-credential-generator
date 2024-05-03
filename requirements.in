@@ -7,3 +7,6 @@ linkml
 rdflib
 requests
 jinja2
+pyld
+jwcrypto
+jcs

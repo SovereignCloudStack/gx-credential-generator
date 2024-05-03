@@ -7,23 +7,22 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 import json
 import uuid
 
-class NotaryService:
 
-    def __init__(self, api: str, jinja2_templates: str):
-        if not api or not jinja2_templates:
+class NotaryService:
+    """ Wrapper class to connect GXDCH notary service. """
+    def __init__(self, api: str, templates: Environment):
+        if not api or not templates:
             raise AttributeError("Parameters MUST not be None")
         self.api = api
-        self.jinja_env = Environment(
-            loader=FileSystemLoader(jinja2_templates),
-            autoescape=select_autoescape()
-        )
-        print(os.getcwd())
+        self.templates = templates
 
-    def issue_vat_id_vc(self, vat_id: str, csp_did: str) -> Response:
-        if vat_id is None or csp_did is None:
-            raise AttributeError("reg_number or csp_did MUST not be None")#
+    def issue_vat_id_vc(self, csp: dict) -> Response:
+        if not csp:
+            raise AttributeError("csp MUST not be None")  #
 
+        # TODO: Use python classes instead of jinja2 templates here as soon as GXDCH is ins sync with latest Gaia-X
+        # Credential Schema from https://gitlab.com/gaia-x/technical-committee/service-characteristics
         cred_id = uuid.uuid1()
-        req_tmpl = self.jinja_env.get_template("http-requests/gxdch-not-request.json")
-        req_body = req_tmpl.render(csp_did=csp_did, vat_id=vat_id)
+        req_tmpl = self.templates.get_template("http-requests/gxdch-not-request.json")
+        req_body = req_tmpl.render(csp=csp)
         return requests.post(self.api + "?vcid=" + str(cred_id), json=json.loads(req_body))

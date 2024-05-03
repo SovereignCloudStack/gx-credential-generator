@@ -3,6 +3,6 @@
      "https://registry.lab.gaia-x.eu/development/api/trusted-shape-registry/v1/shapes/jsonld/participant"
    ],
   "type": "gx:legalRegistrationNumber",
-  "id": "{{ csp_did }}",
-  "gx:vatID": "{{ vat_id }}"
+  "id": "{{ csp['did'] }}",
+  "gx:vatID": "{{ csp['vat-id'] }}"
 }
