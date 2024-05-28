@@ -16,7 +16,8 @@ class NotaryService:
         self.api = api
         self.templates = templates
 
-    def issue_vat_id_vc(self, csp: dict) -> Response:
+    # TODO: Support all kind of registration numbers
+    def request_vat_id_vc(self, csp: dict) -> Response:
         if not csp:
             raise AttributeError("csp MUST not be None")  #
 
@@ -26,3 +27,5 @@ class NotaryService:
         req_tmpl = self.templates.get_template("http-requests/gxdch-not-request.json")
         req_body = req_tmpl.render(csp=csp)
         return requests.post(self.api + "?vcid=" + str(cred_id), json=json.loads(req_body))
+
+

@@ -65,7 +65,7 @@ class ServerFlavorDiscovery:
         self.conn = conn
         self.conf = conf
 
-    def discover(self) -> List[JsonLdObject]:
+    def discover(self) -> List[GX_Flavor]:
         """
         Return one JsonLdObject for each public server flavor discovery at openstack cloud.
 
@@ -75,7 +75,7 @@ class ServerFlavorDiscovery:
         flavors = list()
         for fl in self.conn.list_flavors():
             if fl.is_public:
-                flavors.append(JsonLdObject(self._convert_to_gx(fl), gx_id=fl.id))
+                flavors.append(self._convert_to_gx(fl))
         return flavors
 
     def _convert_to_gx(self, os_flavor: OS_Flavor) -> GX_Flavor:
@@ -117,7 +117,7 @@ class ServerFlavorDiscovery:
         @return: Gaia-X compliant CPU definition
         @rtype CPU
         """
-        cpu = CPU(cpuArchitecture=CpuArch.other, numberOfCores=os_flavor.vcpus)
+        cpu = CPU(cpuArchitecture=CpuArch.Other, numberOfCores=os_flavor.vcpus)
         if flavorname:
             cpu.smtEnabled = (
                 flavorname.cpuram.cputype != "C"

@@ -1,40 +1,23 @@
 # Mandatory attributes required by Gaia-X
 CPS:
   did: did:web:example.com
-  legal-name: ACME Coorp.
-  # allowed values are country codes according to ISO 3166-2 alpha2, alpha-3 or numeric format.
-  legal-address-country-code: DE-SN
-  # allowed values are country codes according to ISO 3166-2 alpha2, alpha-3 or numeric format.
-  headquarter-address-country-code: DE-SN
-  # CSP VAT number
-  vat-id: DE281093504
-  # absolute path to key to sign verifiable credentials
-  signing-key: path-to-key
 
 IaaS:
   did: did:web:example.com:iaas
   terms-and-conditions:
-    - www.example.com
-  resource-policy:
+    - https://www.cloudandheat.com/allgemeine-geschaeftsbedingungen/
+    #- www.example.com/tan1
+    - www.example.com/tan2
+  service-policy:
+    - "default: allow intent"
     - "default: allow intent"
   data-account-export:
     # Allowed values are: API, email, webform,  unregisteredLetter, registeredLetter, supportCenter
-    request-type: email
+    request-type: API
     # allowed values are: digital, physical
     access-type: digital
     # Allowed values are MIME types
     format-type: "application/plain"
-
-# Endpoints of Gaia-X Digital Clearing House
-gxdch:
-  notary-service:
-    - https://registrationnumber.notary.gaia-x.eu/v1/registrationNumberVC
-    - https://gx-notary.gxdch.dih.telekom.com/v1/registrationNumberVC
-    - https://gx-notary.airenetworks.es/v1/registrationNumberVC
-    - https://x-notary.aruba.it/v1/registrationNumberVC
-  compliance-service:
-    - https://gx-compliance.aruba.it/v1/api/credential-offers
-
 
 
 # CAUTION: Do not change these values, unless you want to overwrite default behaviour
@@ -176,17 +159,3 @@ software resources:
     resource-policy: "default: allow intent"
     license:
       - https://www.microsoft.com/windows-server/pricing
-#cloud resources:
-#  own images:
-#    AlmaLinux 8:
-#      aggregation of:
-#        - web:did:provider.de
-#      copyright-owner:
-#        - "AlmaLinux OS Foundation"
-#        - "ABC"
-#      resource-policy: "abc"
-#      license:
-#          - https://www.abc.org
-#wallets:
-#  filesystem:
-#    path: /etc/wallet/gx-credentials/

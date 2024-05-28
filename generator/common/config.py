@@ -23,7 +23,7 @@ class Config:
         try:
             return _get_value(self.config, keys)
         except KeyError as ke:
-            raise KeyError("Config file missing following key chain: " + str(keys))
+            raise KeyError("Config file missing following keys: " + str(keys))
 
 
     def get_copyright_owner(self, software: str) -> List[str]:

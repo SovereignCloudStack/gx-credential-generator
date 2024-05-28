@@ -1,4 +1,0 @@
-The PARTICIPANT signing Gaia-X credentials agrees as follows:
-- to update its Gaia-X credentials about any changes, be it technical, organizational, or legal - especially but not limited to contractual in regards to the indicated attributes present in the Gaia-X credentials.
-
-The keypair used to sign Gaia-X credentials will be revoked where Gaia-X Association becomes aware of any inaccurate statements in regards to the claims which result in a non-compliance with the Trust Framework and policy rules defined in the Policy Rules and Labelling Document (PRLD).

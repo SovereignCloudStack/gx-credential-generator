@@ -107,7 +107,7 @@ UPDATE_STRATEGY_LOOKUP = {
 }
 
 
-class VmDiscovery:
+class VmImageDiscovery:
     """Discover VM image properties."""
 
     def __init__(self, conn: Connection, conf: Config) -> None:
@@ -120,7 +120,7 @@ class VmDiscovery:
         self.conf = conf
 
     # def collect_vm_images(self, conn: Connection) -> List[str]:
-    def discover(self) -> List[JsonLdObject]:
+    def discover(self) -> List[GX_Image]:
         """
         Return one credential for each public VM image offered by openstack cloud.
 
@@ -129,11 +129,7 @@ class VmDiscovery:
         images = []
         for image in self.conn.list_images():
             if image.visibility == "public":
-                images.append(
-                    JsonLdObject(
-                        gx_id=image.id, gx_object=self._convert_to_gx_image(image)
-                    )
-                )
+                images.append(self._convert_to_gx_image(image))
         return images
 
     def _convert_to_gx_image(self, os_image: OS_Image) -> GX_Image:
@@ -159,7 +155,7 @@ class VmDiscovery:
         gx_image.vPMU = self._get_vmpu(os_image)
         gx_image.cpuReq = self._get_cpu_req(os_image)
         gx_image.multiQueues = self._get_multiqueue_enabled(os_image)
-        gx_image.checksum = self._get_checksum(os_image)
+        #gx_image.checksum = self._get_checksum(os_image)
         gx_image.hwRngTypeOfImage = self._get_rng_model(os_image)
         gx_image.videoRamSize = self._get_video_ram_size(os_image)
         gx_image.file_size = self._get_file_size(os_image)
@@ -230,7 +226,7 @@ class VmDiscovery:
     def _get_cpu_req(os_image: OS_Image) -> CPU:
         cpu = CPU(
             cpuArchitecture=CpuArch(
-                ARCH_LOOKUP.get(os_image.architecture, CpuArch.other)
+                ARCH_LOOKUP.get(os_image.architecture, CpuArch.Other)
             )
         )
 

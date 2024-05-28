@@ -12,7 +12,7 @@ from generator.common.gx_schema import (CPU, CheckSum, ChecksumAlgorithm, Disk,
 from generator.common.gx_schema import VMImage as GX_Image
 from generator.common.gx_schema import WatchDogActions
 from generator.common.json_ld import JsonLdObject
-from generator.discovery.openstack.vm_images_discovery import VmDiscovery
+from generator.discovery.openstack.vm_images_discovery import VmImageDiscovery
 from tests.common import MockConnection, OpenstackTestcase, get_config
 
 GX_IMAGE_1 = JsonLdObject(
@@ -185,7 +185,7 @@ OS_IMAGE_2 = OS_Image(
 
 class VMImageDiscoveryTestcase(OpenstackTestcase):
     def setUp(self):
-        self.discovery = VmDiscovery(
+        self.discovery = VmImageDiscovery(
             conn=MockConnection([OS_IMAGE_1, OS_IMAGE_2]), conf=get_config()
         )
 
