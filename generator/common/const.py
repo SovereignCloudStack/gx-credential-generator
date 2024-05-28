@@ -6,12 +6,6 @@ CONFIG_FILE = "config/config.yaml"
 # General keys
 CONFIG_DID = "did"
 
-# Credentials keys
-CONFIG_CRED = "Credentials"
-CONFIG_CRED_KEY = "key"
-CONFIG_CRED_VER_METH = "verification-method"
-CONFIG_CRED_BASE_CRED_URL = "base_credential_url"
-
 # CPS configuration keys
 CONFIG_CSP = "CPS"
 

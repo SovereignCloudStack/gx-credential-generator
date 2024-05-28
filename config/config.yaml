@@ -4,12 +4,11 @@ CPS:
 
 IaaS:
   did: did:web:example.com:iaas
+  # URL to a document containing terms and conditions of service offering
   terms-and-conditions:
-    - https://www.cloudandheat.com/allgemeine-geschaeftsbedingungen/
-    #- www.example.com/tan1
+    - www.example.com/tan1
     - www.example.com/tan2
   service-policy:
-    - "default: allow intent"
     - "default: allow intent"
   data-account-export:
     # Allowed values are: API, email, webform,  unregisteredLetter, registeredLetter, supportCenter
