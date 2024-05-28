@@ -1,4 +1,6 @@
+################################################################
 # Mandatory attributes required by Gaia-X
+################################################################
 CPS:
   did: did:web:example.com
 
@@ -18,8 +20,9 @@ IaaS:
     # Allowed values are MIME types
     format-type: "application/plain"
 
-
+################################################################
 # CAUTION: Do not change these values, unless you want to overwrite default behaviour
+################################################################
 software resources:
   Alpine Linux:
     copyright-owner: "Alpine Linux"

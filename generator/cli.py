@@ -12,9 +12,11 @@ SPDX-License-Identifier: EPL-2.0
 
 import json
 import sys
+
 import click
 import openstack as os
 import yaml
+
 import generator.common.json_ld as json_ld
 from generator.common.config import Config
 from generator.discovery.openstack.openstack_discovery import OsCloud

@@ -6,24 +6,27 @@ SPDX-License-Identifier: EPL-2.0
 import json
 import os
 import uuid
-from typing import List
 from datetime import datetime
-from requests.exceptions import HTTPError
-from openstack.connection import Connection
-from generator.common.config import Config
-from generator.common import const
-from generator.common.json_ld import JsonLdObject
-from generator.gxdch.notary_service import NotaryService
-from generator.gxdch.compliance_service import ComplianceService
-from generator.common.gx_schema import VirtualMachineServiceOffering, DataAccountExport, TermsAndConditions, VMImage
-from generator.discovery.openstack.vm_images_discovery import VmImageDiscovery
-from generator.discovery.openstack.server_flavor_discovery import ServerFlavorDiscovery
-from jinja2 import Environment, FileSystemLoader, select_autoescape
-
 from hashlib import sha256
-import requests
+from typing import List
 
+import requests
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 from linkml_runtime.utils import yamlutils
+from openstack.connection import Connection
+from requests.exceptions import HTTPError
+
+from generator.common import const
+from generator.common.config import Config
+from generator.common.gx_schema import (DataAccountExport, TermsAndConditions,
+                                        VirtualMachineServiceOffering, VMImage)
+from generator.common.json_ld import JsonLdObject
+from generator.discovery.openstack.server_flavor_discovery import \
+    ServerFlavorDiscovery
+from generator.discovery.openstack.vm_images_discovery import VmImageDiscovery
+from generator.gxdch.compliance_service import ComplianceService
+from generator.gxdch.notary_service import NotaryService
+
 
 class OsCloud:
     """Abstraction for openStack cloud with all its services."""
