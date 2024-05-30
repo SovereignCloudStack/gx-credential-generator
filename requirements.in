@@ -1,12 +1,6 @@
 kubernetes
 openstacksdk
-PyYAML
 click
-pyshacl
 linkml
-rdflib
 requests
-jinja2
-pyld
 jwcrypto
-jcs

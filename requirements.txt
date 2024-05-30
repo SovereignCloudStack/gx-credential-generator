@@ -20,9 +20,7 @@ attrs==23.2.0
     #   jsonschema
     #   referencing
 cachetools==5.3.3
-    # via
-    #   google-auth
-    #   pyld
+    # via google-auth
 certifi==2024.2.2
     # via
     #   kubernetes
@@ -66,8 +64,6 @@ exceptiongroup==1.2.0
     # via pytest
 fqdn==1.5.1
     # via jsonschema
-frozendict==2.4.2
-    # via pyld
 google-auth==2.29.0
     # via kubernetes
 graphviz==0.20.3
@@ -79,14 +75,10 @@ hbreader==0.9.1
     #   jsonasobj2
     #   linkml
     #   linkml-runtime
-html5lib==1.1
-    # via pyshacl
 idna==3.7
     # via
     #   jsonschema
     #   requests
-importlib-metadata==7.1.0
-    # via pyshacl
 iniconfig==2.0.0
     # via pytest
 iso8601==2.1.0
@@ -99,11 +91,8 @@ isodate==0.6.1
     #   rdflib
 isoduration==20.11.0
     # via jsonschema
-jcs==0.2.1
-    # via -r requirements.in
 jinja2==3.1.3
     # via
-    #   -r requirements.in
     #   linkml
     #   linkml-dataops
 jmespath==1.0.1
@@ -148,8 +137,6 @@ linkml-runtime==1.7.5
     # via
     #   linkml
     #   linkml-dataops
-lxml==5.2.1
-    # via pyld
 markupsafe==2.1.5
     # via jinja2
 netifaces==0.11.0
@@ -164,12 +151,8 @@ os-service-types==1.7.0
     # via
     #   keystoneauth1
     #   openstacksdk
-owlrl==6.0.2
-    # via pyshacl
 packaging==24.0
-    # via
-    #   pyshacl
-    #   pytest
+    # via pytest
 parse==1.20.1
     # via linkml
 pbr==6.0.0
@@ -190,8 +173,6 @@ prefixmaps==0.2.3
     # via
     #   linkml
     #   linkml-runtime
-prettytable==3.10.0
-    # via pyshacl
 pyasn1==0.6.0
     # via
     #   pyasn1-modules
@@ -212,12 +193,8 @@ pyjsg==0.11.10
     #   linkml
     #   pyshexc
     #   shexjsg
-pyld==2.0.4
-    # via -r requirements.in
 pyparsing==3.1.2
     # via rdflib
-pyshacl==0.25.0
-    # via -r requirements.in
 pyshex==0.8.1
     # via linkml
 pyshexc==0.9.1
@@ -237,7 +214,6 @@ pytrie==0.4.0
     # via curies
 pyyaml==6.0.1
     # via
-    #   -r requirements.in
     #   json-flattener
     #   kubernetes
     #   linkml
@@ -247,12 +223,9 @@ pyyaml==6.0.1
     #   prefixmaps
 rdflib==7.0.0
     # via
-    #   -r requirements.in
     #   cfgraph
     #   linkml
     #   linkml-runtime
-    #   owlrl
-    #   pyshacl
     #   rdflib-jsonld
     #   rdflib-shim
     #   sparqlslurper
@@ -303,7 +276,6 @@ shexjsg==0.8.2
     #   pyshexc
 six==1.16.0
     # via
-    #   html5lib
     #   isodate
     #   kubernetes
     #   python-dateutil
@@ -342,18 +314,12 @@ urllib3==2.2.1
     #   requests
 watchdog==4.0.0
     # via linkml
-wcwidth==0.2.13
-    # via prettytable
 webcolors==1.13
     # via jsonschema
-webencodings==0.5.1
-    # via html5lib
 websocket-client==1.7.0
     # via kubernetes
 wrapt==1.16.0
     # via deprecated
-zipp==3.18.1
-    # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

@@ -8,11 +8,10 @@ from openstack.image.v2.image import Image as OS_Image
 
 from generator import cli
 from generator.common import const
-from tests.common import MockConnection, get_absolute_path, get_config
-
-from generator.discovery.openstack.openstack_discovery import OpenStackDiscovery
-
+from generator.discovery.openstack.openstack_discovery import \
+    OpenStackDiscovery
 from generator.wallet.filesystem_wallet import FileSystemWallet
+from tests.common import MockConnection, get_absolute_path, get_config
 
 OS_IMAGE_1 = OS_Image(
     hw_scsi_model="virtio - scsi",
