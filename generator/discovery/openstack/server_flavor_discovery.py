@@ -16,7 +16,6 @@ from generator.common.gx_schema import Architectures as CpuArch
 from generator.common.gx_schema import (Disk, DiskType, Frequency, Hypervisor,
                                         HypervisorType, Memory, MemorySize)
 from generator.common.gx_schema import ServerFlavor as GX_Flavor
-from generator.common.json_ld import JsonLdObject
 from generator.vendor.flavor_names import Flavorname, parser_v3
 
 # map SCS hypervisor names to corresponding GX type and config key

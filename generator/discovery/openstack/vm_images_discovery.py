@@ -28,7 +28,6 @@ from generator.common.gx_schema import (CheckSum, ChecksumAlgorithm, Disk,
                                         VMDiskType)
 from generator.common.gx_schema import VMImage as GX_Image
 from generator.common.gx_schema import WatchDogActions
-from generator.common.json_ld import JsonLdObject
 
 VALID_UNTIL_LOOKUP = {
     "none": Validity1.none.text,

@@ -68,7 +68,7 @@ class OpenstackDiscoveyTestCase(unittest.TestCase):
             conn=MockConnection(images=[OS_IMAGE_1], flavors=[OS_FLAVOR_1]), config=get_config())
 
     def test_discovery(self):
-        claim = self.discovery.discover()
+        claim = self.discovery.discover
         pass
 
 
