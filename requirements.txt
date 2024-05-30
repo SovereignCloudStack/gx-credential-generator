@@ -93,7 +93,7 @@ isodate==0.6.1
     #   rdflib
 isoduration==20.11.0
     # via jsonschema
-jinja2==3.1.3
+jinja2==3.1.4
     # via
     #   linkml
     #   linkml-dataops
