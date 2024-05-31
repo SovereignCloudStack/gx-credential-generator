@@ -191,8 +191,8 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
 
     def test_discovery_vm_images(self):
         actual_gax_images = self.discovery.discover()
-        self.assert_vm_image(GX_IMAGE_1.gx_object, actual_gax_images[0].gx_object)
-        self.assert_vm_image(GX_IMAGE_2.gx_object, actual_gax_images[1].gx_object)
+        self.assert_vm_image(GX_IMAGE_1.gx_object, actual_gax_images[0])
+        self.assert_vm_image(GX_IMAGE_2.gx_object, actual_gax_images[1])
 
     def test_get_disk_format(self):
         self.assertEqual(
@@ -273,7 +273,7 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
             self.discovery._get_cpu_req(OS_Image(architecture="x86_64")),
         )
         self.assertEqual(
-            CPU(cpuArchitecture="other"), self.discovery._get_cpu_req(OS_Image())
+            CPU(cpuArchitecture="Other"), self.discovery._get_cpu_req(OS_Image())
         )
 
     def test_get_multiqueue_enabled(self):

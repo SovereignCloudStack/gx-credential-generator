@@ -18,7 +18,7 @@ IaaS:
     # allowed values are: digital, physical
     access-type: digital
     # Allowed values are MIME types
-    format-type: "application/plain"
+    format-type: "plain"
 
 ################################################################
 # CAUTION: Do not change these values, unless you want to overwrite default behaviour

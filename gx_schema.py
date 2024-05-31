@@ -8,27 +8,22 @@
 
 import dataclasses
 import re
+from jsonasobj2 import JsonObj, as_dict
+from typing import Optional, List, Union, Dict, ClassVar, Any
 from dataclasses import dataclass
 from datetime import date, datetime
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from linkml_runtime.linkml_model.meta import EnumDefinition, PermissibleValue, PvFormulaOptions
 
-from jsonasobj2 import JsonObj, as_dict
-from linkml_runtime.linkml_model.meta import (EnumDefinition, PermissibleValue,
-                                              PvFormulaOptions)
-from linkml_runtime.linkml_model.types import (Boolean, Date, Datetime, Float,
-                                               Integer, String, Uri)
-from linkml_runtime.utils.curienamespace import CurieNamespace
-from linkml_runtime.utils.dataclass_extensions_376 import \
-    dataclasses_init_fn_with_kwargs
-from linkml_runtime.utils.enumerations import EnumDefinitionImpl
-from linkml_runtime.utils.formatutils import camelcase, sfx, underscore
-from linkml_runtime.utils.metamodelcore import (URI, Bool, XSDDate,
-                                                XSDDateTime, bnode, empty_dict,
-                                                empty_list)
 from linkml_runtime.utils.slot import Slot
-from linkml_runtime.utils.yamlutils import (YAMLRoot, extended_float,
-                                            extended_int, extended_str)
+from linkml_runtime.utils.metamodelcore import empty_list, empty_dict, bnode
+from linkml_runtime.utils.yamlutils import YAMLRoot, extended_str, extended_float, extended_int
+from linkml_runtime.utils.dataclass_extensions_376 import dataclasses_init_fn_with_kwargs
+from linkml_runtime.utils.formatutils import camelcase, underscore, sfx
+from linkml_runtime.utils.enumerations import EnumDefinitionImpl
 from rdflib import Namespace, URIRef
+from linkml_runtime.utils.curienamespace import CurieNamespace
+from linkml_runtime.linkml_model.types import Boolean, Date, Datetime, Float, Integer, String, Uri
+from linkml_runtime.utils.metamodelcore import Bool, URI, XSDDate, XSDDateTime
 
 metamodel_version = "1.7.0"
 version = None
@@ -113,7 +108,7 @@ class Address(YAMLRoot):
         if not isinstance(self.countryCode, str):
             self.countryCode = str(self.countryCode)
 
-        #self._normalize_inlined_as_dict(slot_name="gps", slot_type=GPSLocation, key_name="latitude", keyed=False)
+        self._normalize_inlined_as_dict(slot_name="gps", slot_type=GPSLocation, key_name="latitude", keyed=False)
 
         if self.streetAddress is not None and not isinstance(self.streetAddress, str):
             self.streetAddress = str(self.streetAddress)
@@ -451,7 +446,7 @@ class Endpoint(YAMLRoot):
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self._is_empty(self.standardConformity):
             self.MissingRequiredField("standardConformity")
-        #self._normalize_inlined_as_dict(slot_name="standardConformity", slot_type=StandardConformity, key_name="title", keyed=False)
+        self._normalize_inlined_as_dict(slot_name="standardConformity", slot_type=StandardConformity, key_name="title", keyed=False)
 
         if self.endpointURL is not None and not isinstance(self.endpointURL, URI):
             self.endpointURL = URI(self.endpointURL)
@@ -1056,7 +1051,7 @@ class PhysicalResource(Resource):
 
         if self._is_empty(self.location):
             self.MissingRequiredField("location")
-        #self._normalize_inlined_as_dict(slot_name="location", slot_type=Address, key_name="countryCode", keyed=False)
+        self._normalize_inlined_as_dict(slot_name="location", slot_type=Address, key_name="countryCode", keyed=False)
 
         if not isinstance(self.ownedBy, list):
             self.ownedBy = [self.ownedBy] if self.ownedBy is not None else []
@@ -1314,7 +1309,7 @@ class ServiceOffering(GaiaXEntity):
 
         if self._is_empty(self.serviceOfferingTermsAndConditions):
             self.MissingRequiredField("serviceOfferingTermsAndConditions")
-        #self._normalize_inlined_as_dict(slot_name="serviceOfferingTermsAndConditions", slot_type=TermsAndConditions, key_name="url", keyed=False)
+        self._normalize_inlined_as_dict(slot_name="serviceOfferingTermsAndConditions", slot_type=TermsAndConditions, key_name="url", keyed=False)
 
         if self._is_empty(self.servicePolicy):
             self.MissingRequiredField("servicePolicy")
@@ -1324,7 +1319,7 @@ class ServiceOffering(GaiaXEntity):
 
         if self._is_empty(self.dataAccountExport):
             self.MissingRequiredField("dataAccountExport")
-        #self._normalize_inlined_as_dict(slot_name="dataAccountExport", slot_type=DataAccountExport, key_name="requestType", keyed=False)
+        self._normalize_inlined_as_dict(slot_name="dataAccountExport", slot_type=DataAccountExport, key_name="requestType", keyed=False)
 
         if not isinstance(self.dependsOn, list):
             self.dependsOn = [self.dependsOn] if self.dependsOn is not None else []
@@ -1419,11 +1414,11 @@ class VirtualMachineServiceOffering(ComputeServiceOffering):
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self._is_empty(self.codeArtifact):
             self.MissingRequiredField("codeArtifact")
-        #self._normalize_inlined_as_dict(slot_name="codeArtifact", slot_type=VMImage, key_name="copyrightOwnedBy", keyed=False)
+        self._normalize_inlined_as_dict(slot_name="codeArtifact", slot_type=VMImage, key_name="copyrightOwnedBy", keyed=False)
 
         if self._is_empty(self.instantiationReq):
             self.MissingRequiredField("instantiationReq")
-        #self._normalize_inlined_as_dict(slot_name="instantiationReq", slot_type=ServerFlavor, key_name="cpu", keyed=False)
+        self._normalize_inlined_as_dict(slot_name="instantiationReq", slot_type=ServerFlavor, key_name="cpu", keyed=False)
 
         super().__post_init__(**kwargs)
 
@@ -1450,11 +1445,11 @@ class ContainerServiceOffering(ComputeServiceOffering):
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self._is_empty(self.codeArtifact):
             self.MissingRequiredField("codeArtifact")
-        #self._normalize_inlined_as_dict(slot_name="codeArtifact", slot_type=ContainerImage, key_name="copyrightOwnedBy", keyed=False)
+        self._normalize_inlined_as_dict(slot_name="codeArtifact", slot_type=ContainerImage, key_name="copyrightOwnedBy", keyed=False)
 
         if self._is_empty(self.instantiationReq):
             self.MissingRequiredField("instantiationReq")
-        #self._normalize_inlined_as_dict(slot_name="instantiationReq", slot_type=ContainerResourceLimits, key_name="confidential", keyed=False)
+        self._normalize_inlined_as_dict(slot_name="instantiationReq", slot_type=ContainerResourceLimits, key_name="confidential", keyed=False)
 
         super().__post_init__(**kwargs)
 
@@ -1481,11 +1476,11 @@ class BareMetalServiceOffering(ComputeServiceOffering):
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self._is_empty(self.codeArtifact):
             self.MissingRequiredField("codeArtifact")
-        #self._normalize_inlined_as_dict(slot_name="codeArtifact", slot_type=PXEImage, key_name="copyrightOwnedBy", keyed=False)
+        self._normalize_inlined_as_dict(slot_name="codeArtifact", slot_type=PXEImage, key_name="copyrightOwnedBy", keyed=False)
 
         if self._is_empty(self.instantiationReq):
             self.MissingRequiredField("instantiationReq")
-        #self._normalize_inlined_as_dict(slot_name="instantiationReq", slot_type=ServerFlavor, key_name="cpu", keyed=False)
+        self._normalize_inlined_as_dict(slot_name="instantiationReq", slot_type=ServerFlavor, key_name="cpu", keyed=False)
 
         super().__post_init__(**kwargs)
 
@@ -1637,7 +1632,7 @@ class DataResource(VirtualResource):
             self.dataController = [self.dataController] if self.dataController is not None else []
         self.dataController = [v if isinstance(v, Participant) else Participant(**as_dict(v)) for v in self.dataController]
 
-        #self._normalize_inlined_as_dict(slot_name="consent", slot_type=Consent, key_name="legalBasis", keyed=False)
+        self._normalize_inlined_as_dict(slot_name="consent", slot_type=Consent, key_name="legalBasis", keyed=False)
 
         super().__post_init__(**kwargs)
 
@@ -1754,7 +1749,7 @@ class Region(Resource):
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self._is_empty(self.aggregationOfResources):
             self.MissingRequiredField("aggregationOfResources")
-        #self._normalize_inlined_as_dict(slot_name="aggregationOfResources", slot_type=Datacenter, key_name="maintainedBy", keyed=False)
+        self._normalize_inlined_as_dict(slot_name="aggregationOfResources", slot_type=Datacenter, key_name="maintainedBy", keyed=False)
 
         super().__post_init__(**kwargs)
 
@@ -1927,7 +1922,7 @@ class BackupPolicy(DataProtectionPolicy):
             self.backupLocation = [self.backupLocation] if self.backupLocation is not None else []
         self.backupLocation = [v if isinstance(v, Resource) else Resource(**as_dict(v)) for v in self.backupLocation]
 
-        #self._normalize_inlined_as_dict(slot_name="backupReplication", slot_type=ReplicationPolicy, key_name="protectionFrequency", keyed=False)
+        self._normalize_inlined_as_dict(slot_name="backupReplication", slot_type=ReplicationPolicy, key_name="protectionFrequency", keyed=False)
 
         super().__post_init__(**kwargs)
 
@@ -1949,7 +1944,7 @@ class SnapshotPolicy(DataProtectionPolicy):
     snapshotReplication: Optional[Union[Union[dict, "ReplicationPolicy"], List[Union[dict, "ReplicationPolicy"]]]] = empty_list()
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
-        #self._normalize_inlined_as_dictself._normalize_inlined_as_dict(slot_name="snapshotReplication", slot_type=ReplicationPolicy, key_name="protectionFrequency", keyed=False)
+        self._normalize_inlined_as_dict(slot_name="snapshotReplication", slot_type=ReplicationPolicy, key_name="protectionFrequency", keyed=False)
 
         super().__post_init__(**kwargs)
 
@@ -2303,7 +2298,7 @@ class StorageConfiguration(InstantiationRequirement):
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self._is_empty(self.storageEncryption):
             self.MissingRequiredField("storageEncryption")
-        #self._normalize_inlined_as_dict(slot_name="storageEncryption", slot_type=Encryption, key_name="cipher", keyed=False)
+        self._normalize_inlined_as_dict(slot_name="storageEncryption", slot_type=Encryption, key_name="cipher", keyed=False)
 
         if not isinstance(self.storageCompression, list):
             self.storageCompression = [self.storageCompression] if self.storageCompression is not None else []
@@ -2317,13 +2312,13 @@ class StorageConfiguration(InstantiationRequirement):
             self.storageRedundancyMechanism = [self.storageRedundancyMechanism] if self.storageRedundancyMechanism is not None else []
         self.storageRedundancyMechanism = [v if isinstance(v, StorageRedundancyMechanism) else StorageRedundancyMechanism(v) for v in self.storageRedundancyMechanism]
 
-        #self._normalize_inlined_as_dict(slot_name="storageProtection", slot_type=DataProtectionPolicy, key_name="protectionFrequency", keyed=False)
+        self._normalize_inlined_as_dict(slot_name="storageProtection", slot_type=DataProtectionPolicy, key_name="protectionFrequency", keyed=False)
 
         if not isinstance(self.storageQoS, list):
             self.storageQoS = [self.storageQoS] if self.storageQoS is not None else []
         self.storageQoS = [v if isinstance(v, QoS) else QoS(**as_dict(v)) for v in self.storageQoS]
 
-        #self._normalize_inlined_as_dict(slot_name="blockSize", slot_type=MemorySize, key_name="value", keyed=False)
+        self._normalize_inlined_as_dict(slot_name="blockSize", slot_type=MemorySize, key_name="value", keyed=False)
 
         super().__post_init__(**kwargs)
 
@@ -2946,15 +2941,15 @@ class ComputeFunctionConfiguration(InstantiationRequirement):
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self._is_empty(self.computeFunctionRuntime):
             self.MissingRequiredField("computeFunctionRuntime")
-        #self._normalize_inlined_as_dict(slot_name="computeFunctionRuntime", slot_type=ComputeFunctionRuntime, key_name="supportedLanguage", keyed=False)
+        self._normalize_inlined_as_dict(slot_name="computeFunctionRuntime", slot_type=ComputeFunctionRuntime, key_name="supportedLanguage", keyed=False)
 
         if not isinstance(self.computeFunctionQuotas, list):
             self.computeFunctionQuotas = [self.computeFunctionQuotas] if self.computeFunctionQuotas is not None else []
         self.computeFunctionQuotas = [v if isinstance(v, ComputeFunctionQuotas) else ComputeFunctionQuotas(**as_dict(v)) for v in self.computeFunctionQuotas]
 
-        #self._normalize_inlined_as_dict(slot_name="computeFunctionLibrary", slot_type=ComputeFunctionTemplate, key_name="copyrightOwnedBy", keyed=False)
+        self._normalize_inlined_as_dict(slot_name="computeFunctionLibrary", slot_type=ComputeFunctionTemplate, key_name="copyrightOwnedBy", keyed=False)
 
-        #self._normalize_inlined_as_dict(slot_name="computeFunctionSDK", slot_type=ComputeFunctionRuntime, key_name="supportedLanguage", keyed=False)
+        self._normalize_inlined_as_dict(slot_name="computeFunctionSDK", slot_type=ComputeFunctionRuntime, key_name="supportedLanguage", keyed=False)
 
         if not isinstance(self.computeFunctionTrigger, list):
             self.computeFunctionTrigger = [self.computeFunctionTrigger] if self.computeFunctionTrigger is not None else []
@@ -3107,7 +3102,7 @@ class ComputeFunctionTemplate(CodeArtifact):
 
         if self._is_empty(self.computeFunctionTemplateRuntime):
             self.MissingRequiredField("computeFunctionTemplateRuntime")
-        #self._normalize_inlined_as_dict(slot_name="computeFunctionTemplateRuntime", slot_type=ComputeFunctionRuntime, key_name="supportedLanguage", keyed=False)
+        self._normalize_inlined_as_dict(slot_name="computeFunctionTemplateRuntime", slot_type=ComputeFunctionRuntime, key_name="supportedLanguage", keyed=False)
 
         super().__post_init__(**kwargs)
 
@@ -3253,7 +3248,7 @@ class ServerFlavor(InstantiationRequirement):
         if self.network is not None and not isinstance(self.network, str):
             self.network = str(self.network)
 
-        #self._normalize_inlined_as_dict(slot_name="additionalVolume", slot_type=Disk, key_name="diskSize", keyed=False)
+        self._normalize_inlined_as_dict(slot_name="additionalVolume", slot_type=Disk, key_name="diskSize", keyed=False)
 
         if self.confidentialComputing is not None and not isinstance(self.confidentialComputing, ConfidentialComputing):
             self.confidentialComputing = ConfidentialComputing(**as_dict(self.confidentialComputing))

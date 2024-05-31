@@ -23,7 +23,7 @@ class JsonLDTestCase(unittest.TestCase):
             {
                 "@context": {
                     "ex": "https://example.com/",
-                    "gx": Namespace("https://w3id.org/gaia-x/ONTOLOGY_VERSION/"),
+                    "gx": Namespace("https://w3id.org/gaia-x/ONTOLOGY_VERSION#"),
                     "qudt": Namespace("http://qudt.org/vocab/"),
                     "schema": Namespace("http://schema.org/"),
                     "vcard": Namespace("http://www.w3.org/2006/vcard/ns#"),

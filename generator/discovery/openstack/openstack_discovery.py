@@ -19,7 +19,7 @@ from generator.discovery.openstack.server_flavor_discovery import \
 from generator.discovery.openstack.vm_images_discovery import VmImageDiscovery
 
 
-class OsCloud:
+class OpenstackDiscovery:
     """Abstraction for openStack cloud with all its services."""
 
     def __init__(self, conn: Connection, config: Config) -> None:
