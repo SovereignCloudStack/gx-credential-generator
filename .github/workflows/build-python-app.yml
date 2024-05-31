@@ -17,7 +17,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  build:
+  build-python-app:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -35,8 +35,8 @@ jobs:
 
       - name: Test with pytest
         run: |
-          python -m pytest --cov --cov-report=xml tests
-          coverage report -m
+          python -m pytest --cov --cov-report=xml
+          coverage report
         shell: bash
 
       - name: Code Coverage Report
@@ -54,10 +54,7 @@ jobs:
 
       - name: Add Coverage PR Comment
         uses: marocchino/sticky-pull-request-comment@v2
-        if: github.event_name == 'pull_request'
+        if: ${{ !cancelled() && github.event_name == 'pull_request' }}
         with:
           recreate: true
           path: code-coverage-results.md
-
-      - name: Write to Job Summary
-        run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
