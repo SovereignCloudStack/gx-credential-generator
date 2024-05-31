@@ -43,7 +43,7 @@ class OpenstackDiscoveyTestCase(unittest.TestCase):
         flavor_discovery.return_value = [GX_FLAVOR_1]
         image_discovery.return_value = [GX_IMAGE_1]
 
-        # run test
+        # run tests
         self.discovery.discover()
 
         # check results
