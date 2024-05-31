@@ -21,6 +21,8 @@ permissions:
 jobs:
   build-python-app:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
     steps:
       - uses: actions/checkout@v4
 
@@ -60,3 +62,7 @@ jobs:
         with:
           recreate: true
           path: code-coverage-results.md
+
+      - name: Write to Job Summary
+        if: ${{ !cancelled() }}
+        run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
