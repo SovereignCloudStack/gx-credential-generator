@@ -12,12 +12,10 @@ from requests.exceptions import HTTPError
 
 from generator.common import const
 from generator.common.config import Config
-from generator.common.gx_schema import (
-    DataAccountExport,
-    TermsAndConditions,
-    VirtualMachineServiceOffering,
-)
-from generator.discovery.openstack.server_flavor_discovery import ServerFlavorDiscovery
+from generator.common.gx_schema import (DataAccountExport, TermsAndConditions,
+                                        VirtualMachineServiceOffering)
+from generator.discovery.openstack.server_flavor_discovery import \
+    ServerFlavorDiscovery
 from generator.discovery.openstack.vm_images_discovery import VmImageDiscovery
 
 
