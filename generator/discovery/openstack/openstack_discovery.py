@@ -27,7 +27,7 @@ class OpenstackDiscovery:
         # self.regions = list(conn.identity.regions())
         self.config = config
 
-    @property
+
     def discover(self) -> VirtualMachineServiceOffering:
         """
         Discover all attributes of OS Cloud.
