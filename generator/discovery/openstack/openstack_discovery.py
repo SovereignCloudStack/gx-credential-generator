@@ -27,7 +27,6 @@ class OpenstackDiscovery:
         # self.regions = list(conn.identity.regions())
         self.config = config
 
-
     def discover(self) -> VirtualMachineServiceOffering:
         """
         Discover all attributes of OS Cloud.
@@ -65,7 +64,7 @@ class OpenstackDiscovery:
         )
         serivce_tac = []
         for url in self.config.get_value(
-            [const.CONFIG_IAAS, const.CONFIG_IAAS_T_AND_C]
+                [const.CONFIG_IAAS, const.CONFIG_IAAS_T_AND_C]
         ):
             httpResponse = requests.get(url)
             if httpResponse.status_code == 200:
