@@ -10,6 +10,7 @@ node_modules
 .gx-credentials/
 *.tar.gz
 htmlcov
+.gx-credentials
 # Make sure credentials not push to the repo
 os_secret
 k8s_secret
