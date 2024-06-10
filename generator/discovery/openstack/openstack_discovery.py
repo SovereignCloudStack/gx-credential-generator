@@ -69,7 +69,7 @@ class OpenstackDiscovery:
             httpResponse = requests.get(url)
             if httpResponse.status_code == 200:
                 content = httpResponse.text
-                serivce_tac.append(
+                service_tac.append(
                     TermsAndConditions(
                         url=url, hash=sha256(content.encode("utf-8")).hexdigest()
                     )
