@@ -2,7 +2,7 @@
 # Generation date: 2024-05-31T11:26:50
 # Schema: gaia-x
 #
-# id: https://w3id.org/gaia-x/ONTOLOGY_VERSION#gaia-x
+# id: https://w3id.org/gaia-x/deployment#gaia-x
 # description:
 # license: https://creativecommons.org/publicdomain/zero/1.0/
 
@@ -37,7 +37,7 @@ version = None
 dataclasses._init_fn = dataclasses_init_fn_with_kwargs
 
 # Namespaces
-GX = CurieNamespace('gx', 'https://w3id.org/gaia-x/ONTOLOGY_VERSION#')
+GX = CurieNamespace('gx', 'https://w3id.org/gaia-x/deployment#')
 LINKML = CurieNamespace('linkml', 'https://w3id.org/linkml/')
 QUDT = CurieNamespace('qudt', 'http://qudt.org/vocab/')
 QUDT_SCHEMA = CurieNamespace('qudt_schema', 'http://qudt.org/schema/qudt/')

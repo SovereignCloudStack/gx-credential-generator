@@ -134,7 +134,7 @@ required attribute and check validation result):
 ## Compliance
 
 GX Credential Generator creates credentials compliant with the latest (
-3024/01/19) Credential Schema, which can be downloaded from
+2024/01/19) Credential Schema, which can be downloaded from
 the [GX registry](https://registry.lab.gaia-x.eu/v1/api/trusted-shape-registry/v1/shapes/trustframework).
 GX Credential Generator **does not** create W3C
 complaint [Verifiable Credentials](https://www.w3.org/TR/vc-data-model/).
@@ -144,9 +144,9 @@ complaint [Verifiable Credentials](https://www.w3.org/TR/vc-data-model/).
 GX Credential generator is configured by `config.yaml`. The configuration
 includes:
 
-- Mandatory: Default values for mandatory attributes
-- Optional: Values for optional attributes
-- Optional: Wallets
+- Values for mandatory attributes of Gaia-X Ontology
+- Cryptographical material to sign Gaia-X Credentials and Verifiable Presentations
+- Decentralized Identifier ([DID](https://www.w3.org/TR/did-core/)) for CPS and service offering
 
 ### Mandatory Attributes
 
@@ -195,22 +195,10 @@ cloud resources:
       license:
         - https://www.example.org
 ```
+### Cryptographical Material
 
-### Optional Attributes
+### Decentralized Identifiers (DID) for CSP and Service Offerings
 
-As with mandatory attributes, GX Credential Schemas supports optional attributes
-whose values can not be retrieved from OpenStack. These values can be set in the
-section `cloud resources` as well.
-
-#### AggregationOf of VM Images
-
-GX Credential schema allows to describe cloud resources, such VM images, in a
-fine granular manner, by using attribute `aggregationOf`. This attribute refers
-a list of GX credentials either as [DID](https://www.w3.org/TR/did-core/) or as
-file path relative to generators working directory. The latter is copied to
-cloud resource's credentials. For more details on GX credential schema and its
-attributes, please
-refer [Gaia-X Service Characteristics GitLab](https://gitlab.com/gaia-x/technical-committee/service-characteristics)
 
 ## Docker
 
@@ -296,3 +284,10 @@ pip-compile --upgrade test-requirements.in
 Whenever the concrete `requirements.txt` file change you also shouldn't forget
 to re-run the
 `pip install -r ...` steps again.
+
+### Generate python classes for Gaia-X Ontology
+
+GX-Credential generator uses python classes to create Gaia-X compliant Gaia-X Credentials. 
+These classes mirror [Gaia-X Ontology](https://gitlab.com/gaia-x/technical-committee/service-characteristics-working-group/service-characteristics) and are generated automatically using [linkML's python generator](https://linkml.io/linkml/generators/python.html). 
+LinkMl seems to have a bug, as creation of inlined objects fails with `TypeError: unhashable type: 'list'` (see comment in [#70])https://github.com/SovereignCloudStack/gx-credential-generator/issues/70#issuecomment-2122354334)).
+As a quick workaround, we comment creation of inlined objects out.     
