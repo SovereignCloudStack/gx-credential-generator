@@ -93,6 +93,7 @@ isoduration==20.11.0
     # via jsonschema
 jinja2==3.1.3
     # via
+    #   -r requirements.in
     #   linkml
     #   linkml-dataops
 jmespath==1.0.1
