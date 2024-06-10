@@ -92,7 +92,7 @@ class OpenstackDiscovery:
             servicePolicy=self.config.get_value(
                 [const.CONFIG_IAAS, const.CONFIG_IAAS_SERVICE_POLICY]
             ),
-            serviceOfferingTermsAndConditions=serivce_tac,
+            serviceOfferingTermsAndConditions=service_tac,
             codeArtifact=images,
             instantiationReq=flavors,
         )
