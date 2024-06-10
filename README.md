@@ -195,7 +195,9 @@ cloud resources:
       license:
         - https://www.example.org
 ```
+
 ### Cryptographical Material
+
 
 ### Decentralized Identifiers (DID) for CSP and Service Offerings
 
