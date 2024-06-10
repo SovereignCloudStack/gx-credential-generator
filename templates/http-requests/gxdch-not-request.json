@@ -1,0 +1,8 @@
+{
+   "@context": [
+     "https://registry.lab.gaia-x.eu/development/api/trusted-shape-registry/v1/shapes/jsonld/participant"
+   ],
+  "type": "gx:legalRegistrationNumber",
+  "id": "{{ csp['did'] }}",
+  "gx:vatID": "{{ csp['vat-id'] }}"
+}
