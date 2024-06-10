@@ -62,7 +62,7 @@ class OpenstackDiscovery:
                 ]
             ),
         )
-        serivce_tac = []
+        service_tac = []
         for url in self.config.get_value(
                 [const.CONFIG_IAAS, const.CONFIG_IAAS_T_AND_C]
         ):
