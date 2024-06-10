@@ -14,7 +14,6 @@ on:
       - '**.py'
       - .github/workflows/build-python-app.yml
 
-
 permissions:
   contents: read
   pull-requests: write
@@ -40,8 +39,8 @@ jobs:
 
       - name: Test with pytest
         run: |
-          python -m pytest --cov --cov-report=xml tests
-          coverage report -m
+          python -m pytest --cov --cov-report=xml
+          coverage report
         shell: bash
 
       - name: Code Coverage Report

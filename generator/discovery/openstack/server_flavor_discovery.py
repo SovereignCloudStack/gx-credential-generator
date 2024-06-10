@@ -16,7 +16,6 @@ from generator.common.gx_schema import Architectures as CpuArch
 from generator.common.gx_schema import (Disk, DiskType, Frequency, Hypervisor,
                                         HypervisorType, Memory, MemorySize)
 from generator.common.gx_schema import ServerFlavor as GX_Flavor
-from generator.common.json_ld import JsonLdObject
 from generator.vendor.flavor_names import Flavorname, parser_v3
 
 # map SCS hypervisor names to corresponding GX type and config key
@@ -65,7 +64,7 @@ class ServerFlavorDiscovery:
         self.conn = conn
         self.conf = conf
 
-    def discover(self) -> List[JsonLdObject]:
+    def discover(self) -> List[GX_Flavor]:
         """
         Return one JsonLdObject for each public server flavor discovery at openstack cloud.
 
@@ -75,7 +74,7 @@ class ServerFlavorDiscovery:
         flavors = list()
         for fl in self.conn.list_flavors():
             if fl.is_public:
-                flavors.append(JsonLdObject(self._convert_to_gx(fl), gx_id=fl.id))
+                flavors.append(self._convert_to_gx(fl))
         return flavors
 
     def _convert_to_gx(self, os_flavor: OS_Flavor) -> GX_Flavor:
@@ -117,7 +116,7 @@ class ServerFlavorDiscovery:
         @return: Gaia-X compliant CPU definition
         @rtype CPU
         """
-        cpu = CPU(cpuArchitecture=CpuArch.other, numberOfCores=os_flavor.vcpus)
+        cpu = CPU(cpuArchitecture=CpuArch.Other, numberOfCores=os_flavor.vcpus)
         if flavorname:
             cpu.smtEnabled = (
                 flavorname.cpuram.cputype != "C"

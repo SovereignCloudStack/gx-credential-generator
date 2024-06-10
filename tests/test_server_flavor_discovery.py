@@ -27,12 +27,12 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
 
     def test_get_cpu(self):
         self.assertEqual(
-            CPU(cpuArchitecture=CpuArch.other, numberOfCores=0),
+            CPU(cpuArchitecture=CpuArch.Other, numberOfCores=0),
             self.discovery._convert_to_gx(OS_Flavor(name="ABC")).cpu,
         )
         self.assertEqual(
             CPU(
-                cpuArchitecture=CpuArch.other,
+                cpuArchitecture=CpuArch.Other,
                 defaultOversubscriptionRatio=1,
                 numberOfCores=4,
             ),
@@ -40,7 +40,7 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
         )
         self.assertEqual(
             CPU(
-                cpuArchitecture=CpuArch.other,
+                cpuArchitecture=CpuArch.Other,
                 defaultOversubscriptionRatio=1,
                 numberOfCores=4,
                 smtEnabled=True,
@@ -49,7 +49,7 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
         )
         self.assertEqual(
             CPU(
-                cpuArchitecture=CpuArch.other,
+                cpuArchitecture=CpuArch.Other,
                 defaultOversubscriptionRatio=5,
                 numberOfCores=4,
                 smtEnabled=True,
@@ -58,7 +58,7 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
         )
         self.assertEqual(
             CPU(
-                cpuArchitecture=CpuArch.other,
+                cpuArchitecture=CpuArch.Other,
                 defaultOversubscriptionRatio=16,
                 numberOfCores=4,
                 smtEnabled=True,
@@ -66,7 +66,7 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
             self.discovery._convert_to_gx(OS_Flavor(name="SCS-2L-4", vcpus=4)).cpu,
         )
         self.assertEqual(
-            CPU(cpuArchitecture=CpuArch.other, numberOfCores=4),
+            CPU(cpuArchitecture=CpuArch.Other, numberOfCores=4),
             self.discovery._convert_to_gx(OS_Flavor(name="SCS-2:8", vcpus=4)).cpu,
         )
 
@@ -290,14 +290,14 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
         ]
 
         # compare
-        self.assert_flavor(gax_flavor_1, received_gax_flavors[0].gx_object)
-        self.assert_flavor(gax_flavor_2, received_gax_flavors[1].gx_object)
+        self.assert_flavor(gax_flavor_1, received_gax_flavors[0])
+        self.assert_flavor(gax_flavor_2, received_gax_flavors[1])
 
     def _init_gx_flavor(
             self,
             ram: int = 32,
             disk: int = 50,
-            cpu_arc: CpuArch = CpuArch.other,
+            cpu_arc: CpuArch = CpuArch.Other,
             number_of_cores=1,
             cpu_vendor: str = None,
             cpu_gen: str = None,

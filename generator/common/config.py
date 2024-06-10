@@ -20,7 +20,10 @@ class Config:
         self.config = config
 
     def get_value(self, keys: List[str]):
-        return _get_value(self.config, keys)
+        try:
+            return _get_value(self.config, keys)
+        except KeyError:
+            raise KeyError("Config file missing following keys: " + str(keys))
 
     def get_copyright_owner(self, software: str) -> List[str]:
         return self.get_value([const.CONFIG_SOFTWARE, software, const.CONFIG_COPYRIGHT])

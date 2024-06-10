@@ -43,7 +43,9 @@ click==8.1.7
     #   linkml-runtime
     #   prefixcommons
 cryptography==42.0.5
-    # via openstacksdk
+    # via
+    #   jwcrypto
+    #   openstacksdk
 curies==0.7.9
     # via
     #   linkml-runtime
@@ -73,14 +75,10 @@ hbreader==0.9.1
     #   jsonasobj2
     #   linkml
     #   linkml-runtime
-html5lib==1.1
-    # via pyshacl
 idna==3.7
     # via
     #   jsonschema
     #   requests
-importlib-metadata==7.1.0
-    # via pyshacl
 iniconfig==2.0.0
     # via pytest
 iso8601==2.1.0
@@ -125,6 +123,8 @@ jsonschema[format]==4.21.1
     #   linkml-runtime
 jsonschema-specifications==2023.12.1
     # via jsonschema
+jwcrypto==1.5.6
+    # via -r requirements.in
 keystoneauth1==5.6.0
     # via openstacksdk
 kubernetes==26.1.0
@@ -151,12 +151,8 @@ os-service-types==1.7.0
     # via
     #   keystoneauth1
     #   openstacksdk
-owlrl==6.0.2
-    # via pyshacl
 packaging==24.0
-    # via
-    #   pyshacl
-    #   pytest
+    # via pytest
 parse==1.20.1
     # via linkml
 pbr==6.0.0
@@ -177,8 +173,6 @@ prefixmaps==0.2.3
     # via
     #   linkml
     #   linkml-runtime
-prettytable==3.10.0
-    # via pyshacl
 pyasn1==0.6.0
     # via
     #   pyasn1-modules
@@ -201,8 +195,6 @@ pyjsg==0.11.10
     #   shexjsg
 pyparsing==3.1.2
     # via rdflib
-pyshacl==0.25.0
-    # via -r requirements.in
 pyshex==0.8.1
     # via linkml
 pyshexc==0.9.1
@@ -222,7 +214,6 @@ pytrie==0.4.0
     # via curies
 pyyaml==6.0.1
     # via
-    #   -r requirements.in
     #   json-flattener
     #   kubernetes
     #   linkml
@@ -232,12 +223,9 @@ pyyaml==6.0.1
     #   prefixmaps
 rdflib==7.0.0
     # via
-    #   -r requirements.in
     #   cfgraph
     #   linkml
     #   linkml-runtime
-    #   owlrl
-    #   pyshacl
     #   rdflib-jsonld
     #   rdflib-shim
     #   sparqlslurper
@@ -255,6 +243,7 @@ referencing==0.34.0
     #   jsonschema-specifications
 requests==2.32.0
     # via
+    #   -r requirements.in
     #   curies
     #   keystoneauth1
     #   kubernetes
@@ -287,7 +276,6 @@ shexjsg==0.8.2
     #   pyshexc
 six==1.16.0
     # via
-    #   html5lib
     #   isodate
     #   kubernetes
     #   python-dateutil
@@ -313,6 +301,7 @@ types-python-dateutil==2.9.0.20240316
 typing-extensions==4.11.0
     # via
     #   dogpile-cache
+    #   jwcrypto
     #   pydantic
     #   pydantic-core
     #   sqlalchemy
@@ -325,18 +314,12 @@ urllib3==2.2.1
     #   requests
 watchdog==4.0.0
     # via linkml
-wcwidth==0.2.13
-    # via prettytable
 webcolors==1.13
     # via jsonschema
-webencodings==0.5.1
-    # via html5lib
 websocket-client==1.7.0
     # via kubernetes
 wrapt==1.16.0
     # via deprecated
-zipp==3.18.1
-    # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

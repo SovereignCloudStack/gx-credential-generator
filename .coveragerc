@@ -1,10 +1,12 @@
 [run]
 source = generator/
+omit = generator/vendor/*
+       generator/common/gx_schema.py
 
 [report]
 show_missing = True
 skip_empty = True
-omit = generator/vendor/*
+
 
 [xml]
 output = coverage.xml

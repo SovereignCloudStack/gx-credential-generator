@@ -1,19 +1,38 @@
 """
 Constants used by SCS GX Credential Generator.
 """
+CONFIG_FILE = "config/config.yaml"
 
+# General keys
+CONFIG_DID = "did"
+
+# CPS configuration keys
+CONFIG_CSP = "CPS"
+
+# IaaS configuration keys
+CONFIG_IAAS = "IaaS"
+CONFIG_IAAS_DATA_EXPORT = "data-account-export"
+CONFIG_IAAS_DATA_EXPORT_REQ_TYPE = "request-type"
+CONFIG_IAAS_DATA_EXPORT_ACCESS_TYPE = "access-type"
+CONFIG_IAAS_DATA_EXPORT_FORMAT_TYPE = "format-type"
+CONFIG_IAAS_SERVICE_POLICY = "service-policy"
+CONFIG_IAAS_T_AND_C = "terms-and-conditions"
+
+
+# Default values
 DEFAULT_RESOURCE_POLICY = "default: allow intent"
 DEFAULT_FIRMWARE_TYPE = "other"
 DEFAULT_WATCHDOG_ACTION = "none"
 
+# URIs for units according to GX Credential Schema
 UNIT_MB = "https://qudt.org/vocab/unit/MegaBYTE"
 UNIT_GB = "https://qudt.org/vocab/unit/GigaBYTE"
 UNIT_GHZ = "https://qudt.org/vocab/unit/GigaHZ"
 
 CONFIG_VM_IMAGE = "vm image"
-CONFIG_RESOURCE_POLICY = "resource policy"
+CONFIG_RESOURCE_POLICY = "resource-policy"
 CONFIG_LICENSE = "license"
-CONFIG_COPYRIGHT = "copyright owner"
+CONFIG_COPYRIGHT = "copyright-owner"
 CONFIG_OPERATING_SYSTEM = "operating system"
 CONFIG_OWN_IMAGES = "own images"
 CONFIG_AGGREGATION_OF = "aggregation of"
@@ -23,7 +42,6 @@ CONFIG_CLOUD_RESOURCES = "cloud resources:"
 CONFIG_SOFTWARE = "software resources"
 CONFIG_FILESYSTEM_WALLET = "filesystem"
 CONFIG_XFSC_WALLET = "xfsc"
-
 
 CONFIG_OS_ALP = "Alpine Linux"
 CONFIG_OS_ARCH = "Arch Linux"
@@ -57,13 +75,3 @@ CONFIG_HV_ESXI = "ESXi"
 CONFIG_HV_CH = "Cloud Hypervisor"
 CONFIG_HV_VMW = "vmware"
 CONFIG_HV_HYV = "hyper-v"
-
-CONFIG_HV_KVM = "KVM"
-CONFIG_HV_QUEMU = "quemu"
-CONFIG_HV_XEN = "Xen"
-CONFIG_HV_ESXI = "ESXi"
-CONFIG_HV_CH = "Cloud Hypervisor"
-CONFIG_HV_VMW = "vmware"
-CONFIG_HV_HYV = "hyper-v"
-
-CONFIG_FILE = "config/config.yaml"

@@ -7,8 +7,11 @@ __pycache__/
 devops/logs/
 devops/plugins/
 node_modules
+.gx-credentials/
 *.tar.gz
-.gx-credentials
+htmlcov
+coverage.xml
 # Make sure credentials not push to the repo
 os_secret
 k8s_secret
+.gx-credentials

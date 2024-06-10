@@ -19,7 +19,8 @@ import yaml
 
 import generator.common.json_ld as json_ld
 from generator.common.config import Config
-from generator.discovery.openstack.openstack_discovery import OsCloud
+from generator.discovery.openstack.openstack_discovery import \
+    OpenstackDiscovery
 
 SHAPES_FILE_FORMAT = "turtle"
 DATA_FILE_FORMAT = "json-ld"
@@ -61,7 +62,7 @@ def openstack(cloud, timeout, config):
     with open(config, "r") as config_file:
         # init everything
         config_dict = yaml.safe_load(config_file)
-        os_cloud = OsCloud(conn, Config(config_dict))
+        os_cloud = OpenstackDiscovery(conn, Config(config_dict))
 
         # run discovery
         creds = os_cloud.discover()

@@ -28,7 +28,6 @@ from generator.common.gx_schema import (CheckSum, ChecksumAlgorithm, Disk,
                                         VMDiskType)
 from generator.common.gx_schema import VMImage as GX_Image
 from generator.common.gx_schema import WatchDogActions
-from generator.common.json_ld import JsonLdObject
 
 VALID_UNTIL_LOOKUP = {
     "none": Validity1.none.text,
@@ -107,7 +106,7 @@ UPDATE_STRATEGY_LOOKUP = {
 }
 
 
-class VmDiscovery:
+class VmImageDiscovery:
     """Discover VM image properties."""
 
     def __init__(self, conn: Connection, conf: Config) -> None:
@@ -120,7 +119,7 @@ class VmDiscovery:
         self.conf = conf
 
     # def collect_vm_images(self, conn: Connection) -> List[str]:
-    def discover(self) -> List[JsonLdObject]:
+    def discover(self) -> List[GX_Image]:
         """
         Return one credential for each public VM image offered by openstack cloud.
 
@@ -129,11 +128,7 @@ class VmDiscovery:
         images = []
         for image in self.conn.list_images():
             if image.visibility == "public":
-                images.append(
-                    JsonLdObject(
-                        gx_id=image.id, gx_object=self._convert_to_gx_image(image)
-                    )
-                )
+                images.append(self._convert_to_gx_image(image))
         return images
 
     def _convert_to_gx_image(self, os_image: OS_Image) -> GX_Image:
@@ -230,7 +225,7 @@ class VmDiscovery:
     def _get_cpu_req(os_image: OS_Image) -> CPU:
         cpu = CPU(
             cpuArchitecture=CpuArch(
-                ARCH_LOOKUP.get(os_image.architecture, CpuArch.other)
+                ARCH_LOOKUP.get(os_image.architecture, CpuArch.Other)
             )
         )
 
