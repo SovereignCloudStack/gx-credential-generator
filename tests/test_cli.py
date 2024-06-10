@@ -10,7 +10,7 @@ from tests.common import MockConnection, get_absolute_path
 
 EXPECTED_RESULT = {
     "@context": {
-        "gx": "https://w3id.org/gaia-x/ONTOLOGY_VERSION#",
+        "gx": "https://w3id.org/gaia-x/deployment#",
         "qudt": "http://qudt.org/vocab/",
         "schema": "http://schema.org/",
         "vcard": "http://www.w3.org/2006/vcard/ns#",

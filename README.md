@@ -198,9 +198,7 @@ cloud resources:
 
 ### Cryptographical Material
 
-
 ### Decentralized Identifiers (DID) for CSP and Service Offerings
-
 
 ## Docker
 
@@ -289,7 +287,7 @@ to re-run the
 
 ### Generate python classes for Gaia-X Ontology
 
-GX-Credential generator uses python classes to create Gaia-X compliant Gaia-X Credentials. 
-These classes mirror [Gaia-X Ontology](https://gitlab.com/gaia-x/technical-committee/service-characteristics-working-group/service-characteristics) and are generated automatically using [linkML's python generator](https://linkml.io/linkml/generators/python.html). 
-LinkMl seems to have a bug, as creation of inlined objects fails with `TypeError: unhashable type: 'list'` (see comment in [#70])https://github.com/SovereignCloudStack/gx-credential-generator/issues/70#issuecomment-2122354334)).
-As a quick workaround, we comment creation of inlined objects out.     
+GX-Credential generator uses python classes to create Gaia-X compliant Gaia-X Credentials.
+These classes mirror [Gaia-X Ontology](https://gitlab.com/gaia-x/technical-committee/service-characteristics-working-group/service-characteristics) and are generated automatically using [linkML's python generator](https://linkml.io/linkml/generators/python.html).
+LinkMl seems to have a bug, as creation of inlined objects fails with `TypeError: unhashable type: 'list'` (see comment in [#70](https://github.com/SovereignCloudStack/gx-credential-generator/issues/70#issuecomment-2122354334)).
+As a quick workaround, we comment creation of inlined objects out.
