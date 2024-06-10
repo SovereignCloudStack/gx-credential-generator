@@ -80,7 +80,7 @@ class OpenstackDiscovery:
                     + url + "'. HTTP Status code: " + str(httpResponse.status_code)
                 )
 
-        if len(serivce_tac) == 0:
+        if len(service_tac) == 0:
             raise ValueError(
                 "Service offerings terms and conditions MUST not be empty. Please check config.yaml. There MUST be at least on entry in "
                 + const.CONFIG_IAAS + "." + const.CONFIG_IAAS_T_AND_C
