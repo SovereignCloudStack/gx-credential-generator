@@ -1,5 +1,6 @@
 import base64
 import json
+from json.decoder import JSONDecodeError
 import requests
 from hashlib import sha256
 from jwcrypto.jws import JWS, JWK
@@ -7,7 +8,7 @@ from cryptography.hazmat.primitives.serialization import load_pem_private_key, E
 from jwcrypto.common import json_encode
 from pyld import jsonld
 from generator.common.did_resolver import DidResolver
-import datetime
+from datetime import timezone, datetime
 
 
 def hash_str(text: str) -> str:
@@ -19,7 +20,7 @@ def compact_token(token):
     return parts[0] + ".." + parts[2]
 
 
-def sign_cred(cred: dict, private_key: JWK, verification_method: str) -> dict:
+def sign_cred(cred: dict, key: JWK, verification_method: str) -> dict:
     # canonicalize credential to produce a unique representation
     # According to JSON Web Signature 2020 Spec, use https://w3id.org/security#URDNA2015 for canonicalization
     cannon_cred = jsonld.normalize(cred, {'algorithm': 'URDNA2015', 'format': 'application/n-quads'})
@@ -27,15 +28,15 @@ def sign_cred(cred: dict, private_key: JWK, verification_method: str) -> dict:
     # hash document to insure integrity, see https://w3c.github.io/vc-data-integrity/#how-it-works
     # use SHA-256 for JSON Web Signature 2020, see https://w3c-ccg.github.io/lds-jws2020/#suite-definition
     # hash acts as JSON Web Signature's payload
-    # TODO: Clarify why we need an additional hash here, as JWS already hash document prior to signing
-    #payload = hash_str(cannon_cred)
+    # TODO: Clarify why we need an additional hash here, as JWS already hashes document prior to signing
+    payload = hash_str(cannon_cred)
 
     # create JSON Web Signature for credential's hash
-    jwstoken = JWS(cannon_cred)
+    jwstoken = JWS(payload)
     # TODO: Support all JWS key types here and check if Gaia-X does the same
-    jwstoken.add_signature(private_key, alg=None,
-                           protected=json_encode({"alg": "PS256"}),
-                           header=json_encode({"kid": private_key.thumbprint()}))
+    jwstoken.add_signature(key, alg=None,
+                           protected=json_encode({"alg": "PS256", "b64": False, "crit": ["b64"]}),
+                           header=json_encode({"kid": key.thumbprint()}))
     #jwstoken.add_signature(private_key, alg=None,
     #                       protected=json_encode({"alg": "PS256", "b64": False, "crit": ["b64"]}),
     #                       header=json_encode({"kid": private_key.thumbprint()}))
@@ -50,10 +51,10 @@ def sign_cred(cred: dict, private_key: JWK, verification_method: str) -> dict:
     #sig_new['signature'] = data[2]
     #sig_new_str = str(sig_new).replace('\'', '\"')
 
-    pub_key = load_jwk_from_file("/home/anja-strunk/.gaia-x/gaia-x_vc.key.public.pem")
+    #pub_key = load_jwk_from_file("/home/anja-strunk/.gaia-x/gaia-x_vc.key.public.pem")
 
-    jwstoken_sig= JWS()
-    jwstoken_sig.deserialize(sig, key=pub_key)
+    #jwstoken_sig= JWS()
+    #jwstoken_sig.deserialize(sig, key=key.public())
 
     #try:
     #    jwstoken3_c = JWS()
@@ -67,16 +68,18 @@ def sign_cred(cred: dict, private_key: JWK, verification_method: str) -> dict:
     # add proof to credential as JsonWebSiganture2020, see https://w3c-ccg.github.io/lds-jws2020/
     cred['proof'] = {
         "type": "JsonWebSignature2020",
-
-        "created": datetime.datetime.today().isoformat(),  # ISO_8601 formated date string.
-        "proofPurpose": "assertionMethod",  # SHOULD match assertion method expressed in DID document.
-        "verificationMethod": verification_method,  # resolvable link to verification method. Dereferencing SHOULD
-        # result in an object of type JsonWebKey2020.
+        # ISO_8601 formated date string.
+        "created": datetime.now(tz=timezone.utc).isoformat(),
+        # SHOULD match assertion method expressed in DID document.
+        "proofPurpose": "assertionMethod",
+        # resolvable link to verification method. Dereferencing SHOULD result in an object of type JsonWebKey2020.
+        "verificationMethod": verification_method,
         "jws": sig
     }
 
     # double-check if cred could be verified with given values
-    verify_cred(cred)
+    verify_cred(cred, key)
+    #return cred
 
 def load_jwk_from_file(path: str) -> JWK:
     with open(path, "rb") as key_file:
@@ -84,19 +87,20 @@ def load_jwk_from_file(path: str) -> JWK:
         return JWK.from_pem(bytes, password=None)
 
 
-def verify_cred(cred: dict) -> None:
+def verify_cred(cred: dict, key: JWK) -> None:
     cred_copy = cred.copy()
     proof = cred_copy['proof']
     doc = cred_copy.pop('proof')
-    # Accocring to https://www.w3.org/TR/vc-data-model/#proofs-signatures one or more proof elements are allowed, so we have to count proof elements here
+    # Accocrding to https://www.w3.org/TR/vc-data-model/#proofs-signatures
+    # one or more proof elements are allowed, so we have to count proof elements here
     if isinstance(proof, list):
         for p in proof:
-            _verify_signature(doc, p)
+            _verify_signature(doc, p, key)
     else:
-        _verify_signature(doc, proof)
+        _verify_signature(doc, proof, key)
 
 
-def _verify_signature(cred: dict, proof: dict):
+def _verify_signature(cred: dict, proof: dict, key: JWK):
     """
     Support JWS as proof only!!! And did only
     @param cred:
@@ -109,31 +113,27 @@ def _verify_signature(cred: dict, proof: dict):
             veri_meth = proof['verificationMethod']
             if str(veri_meth).startswith("did:web"):
                 # verification method is
-                key = _get_verification_key(proof, "https://uniresolver.io/1.0/identifiers")
+                #key = _get_verification_key(proof, "https://uniresolver.io/1.0/identifiers")
                 jwstoken = JWS()
                 try:
                     djws = json.loads(proof['jws'])
-                except json.JSONDecoderError as e:
+                except JSONDecodeError as e:
                     # we may have a compact signature here
                     data = proof['jws'].split(".")
 
                     pass
 
                 jwstoken.deserialize(proof['jws'], key=key)
-                #jwstoken.verify(key<)
             else:
                 # TODO: Which verification methods do exist in JWT?
-                raise TypeError("Verification method not support: ...")
+                raise TypeError("Verification method not supported: ...")
         else:
-            print("Unsupported type '" + proof['type'] + "' for assertion method found")
+            raise TypeError("Assertion method " + proof['type'] + "' not supported!")
 
 
 def _get_verification_key(proof, did_resolver_url: str) -> str:
     verif_method = proof['verificationMethod']
     did = str(verif_method).split("#")[0]
-    # c = ClientWebResolver(did_resolver_url)
-    # c2 = ClientWebResolver2("https://uniresolver.io/1.0/identifiers")
-    # r = c.resolve(did)
     if not did_resolver_url.endswith("/"):
         did_resolver_url += "/"
     # url = did_resolver_url + did
@@ -145,4 +145,4 @@ def _get_verification_key(proof, did_resolver_url: str) -> str:
                 return JWK.from_json(json.dumps(vm['publicKeyJwk']))
     else:
         raise TypeError(
-            "Could not retrieve DID document for '" + did + "' from reolver '" + did_resolver_url + "\n(Status Code: " + resp.status_code + ". " + resp.text + ".)")
+            "Could not retrieve DID document for '" + did + "' from resolver '" + did_resolver_url + "\n(Status Code: " + str(resp.status_code) + ". " + resp.text + ".)")

@@ -37,14 +37,14 @@ class OpenstackDiscoveyTestCase(unittest.TestCase):
     @patch("generator.discovery.openstack.vm_images_discovery.VmImageDiscovery.discover")
     @patch("generator.discovery.openstack.server_flavor_discovery.ServerFlavorDiscovery.discover")
     @patch("requests.get")
-    def test_discovery(self, request_get, flavor_discovery, image_discovery):
+    def test_generate_gx_credentials(self, request_get, flavor_discovery, image_discovery):
         # Mock openstack calls
         request_get.side_effect = [MagicMock(status_code=200, text="foo"), MagicMock(status_code=200, text="foo")]
         flavor_discovery.return_value = [GX_FLAVOR_1]
         image_discovery.return_value = [GX_IMAGE_1]
 
         # run tests
-        self.discovery.discover()
+        self.discovery.generate_gx_credentials()
 
         # check results
         image_discovery.assert_called_once()
