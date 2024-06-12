@@ -1,6 +1,6 @@
 import unittest
 
-from generator.gxdch.notary_service import NotaryService
+from generator.discovery.gxdch_services import NotaryService
 import os
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from unittest.mock import patch
@@ -17,7 +17,7 @@ class NotaryServiceTestCase(unittest.TestCase):
         )
 
         not_serv = NotaryService("https://registrationnumber.notary.gaia-x.eu/v1/registrationNumberVC", j_env=j_env)
-        resp = not_serv.issue_reg_number_vc(csp={"did": "did:web:example.com", "vat-id": "DE281093504"})
+        resp = not_serv.request_reg_number_vc(csp={"did": "did:web:example.com", "vat-id": "DE281093504"})
         self.assertTrue(resp['ok'])
         self.assertEqual(post_mock.call_count, 1)
 

@@ -60,6 +60,9 @@ CPUVENDOR_LOOKUP = {
 
 
 class ServerFlavorDiscovery:
+    """
+    Discovery for openstack server flavor properties.
+    """
     def __init__(self, conn: Connection, conf: Config) -> None:
         self.conn = conn
         self.conf = conf

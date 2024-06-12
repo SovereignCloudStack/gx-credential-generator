@@ -65,7 +65,7 @@ def openstack(cloud, timeout, config):
         os_cloud = OpenstackDiscovery(conn, Config(config_dict))
 
         # run discovery
-        creds = os_cloud.discover()
+        creds = os_cloud.generate_gx_credentials()
 
         props = json_ld.get_json_ld_context()
         props["@graph"] = creds

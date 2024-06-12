@@ -5,9 +5,14 @@ CONFIG_FILE = "config/config.yaml"
 
 # General keys
 CONFIG_DID = "did"
+CONFIG_DID = "did"
+CONFIG_TaC = "terms-and-conditions"
 
-# CPS configuration keys
-CONFIG_CSP = "CPS"
+# Credentials keys
+CONFIG_CRED = "Credentials"
+CONFIG_CRED_KEY = "key"
+CONFIG_CRED_VER_METH = "verification-method"
+CONFIG_CRED_BASE_CRED_URL = "base_credential_url"
 
 # IaaS configuration keys
 CONFIG_IAAS = "IaaS"
@@ -18,6 +23,18 @@ CONFIG_IAAS_DATA_EXPORT_FORMAT_TYPE = "format-type"
 CONFIG_IAAS_SERVICE_POLICY = "service-policy"
 CONFIG_IAAS_T_AND_C = "terms-and-conditions"
 
+# CPS configuration keys
+CONFIG_CSP = "CPS"
+CONFIG_CSP_NAME = "legal-name"
+CONFIG_CSP_LEG_AD = "legal-address-country-code"
+CONFIG_CSP_HQ_ADR = "headquarter-address-country-code"
+CONFIG_CSP_VAT_ID = "vat-id"
+#CONFIG_CSP_SIGN_KEY = "signing-key"
+
+# GXDCH
+CONST_GXDCH = "gxdch"
+CONST_GXDCH_NOT = "notary-service"
+CONST_GXDCH_COMP = "compliance-service"
 
 # Default values
 DEFAULT_RESOURCE_POLICY = "default: allow intent"
