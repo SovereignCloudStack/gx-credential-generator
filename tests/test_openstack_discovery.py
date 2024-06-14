@@ -44,7 +44,7 @@ class OpenstackDiscoveyTestCase(unittest.TestCase):
         image_discovery.return_value = [GX_IMAGE_1]
 
         # run tests
-        self.discovery.generate_gx_credentials()
+        self.discovery.discover()
 
         # check results
         image_discovery.assert_called_once()

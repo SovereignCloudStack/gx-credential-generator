@@ -12,7 +12,7 @@ CONFIG_TaC = "terms-and-conditions"
 CONFIG_CRED = "Credentials"
 CONFIG_CRED_KEY = "key"
 CONFIG_CRED_VER_METH = "verification-method"
-CONFIG_CRED_BASE_CRED_URL = "base_credential_url"
+CONFIG_CRED_BASE_CRED_URL = "base_url"
 
 # IaaS configuration keys
 CONFIG_IAAS = "IaaS"
@@ -92,3 +92,8 @@ CONFIG_HV_ESXI = "ESXi"
 CONFIG_HV_CH = "Cloud Hypervisor"
 CONFIG_HV_VMW = "vmware"
 CONFIG_HV_HYV = "hyper-v"
+
+# JSON-LD Context
+VC_CONTEXT = "https://www.w3.org/2018/credentials/v1"
+VP_CONTEXT = VC_CONTEXT
+LRN_CONTEXT = "https://registry.lab.gaia-x.eu/development/api/trusted-shape-registry/v1/shapes/jsonld/participant"
