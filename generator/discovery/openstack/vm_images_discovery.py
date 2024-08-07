@@ -1,11 +1,4 @@
-#!/usr/bin/env python3
-# vim: set ts=4 sw=4 et:
-#
-# vm_images_discovery.py
-"""Script to discovery VM images properties.
-
-(c) Anja Strunk <anja.strunk@cloudandheat.com>, 1/2024
-SPDX-License-Identifier: EPL-2.0
+"""Discovery for properties of virtual machine images.
 """
 from datetime import datetime
 from typing import List, Union
