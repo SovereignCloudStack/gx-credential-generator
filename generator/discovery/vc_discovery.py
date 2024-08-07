@@ -1,26 +1,14 @@
-from generator.common import const
-from jinja2 import Environment
+
 import json
 from datetime import datetime, timezone
 from generator.common import crypto
-from typing import List
-import requests
-from openstack.connection import Connection
-from requests.exceptions import HTTPError
+
 from typing import List
 
 from generator.common import const
-from generator.common.config import Config
-from generator.common.gx_schema import (DataAccountExport, TermsAndConditions,
-                                        VirtualMachineServiceOffering)
-from generator.discovery.openstack.server_flavor_discovery import \
-    ServerFlavorDiscovery
-from generator.discovery.openstack.vm_images_discovery import VmImageDiscovery
 
-from hashlib import sha256
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from generator.discovery.gxdch_services import NotaryService, ComplianceService, Gxdch
 
 
 class CredentialDiscovery:
@@ -28,13 +16,11 @@ class CredentialDiscovery:
     Discovery for mandatory and optional Gaia-X Credentials in context of Gaia-X.
     """
 
-    def __init__(self, gxdch: Gxdch):
-        self.templates = Environment(
+    def __init__(self):
+        self.jinja_env = Environment(
             loader=FileSystemLoader("templates"),
             autoescape=select_autoescape()
         )
-        self.not_service = gxdch.not_service
-        self.comp_service = gxdch.comp_service
 
     def create_and_sign_legal_person_vc(self, cred_id: str, lrn_cred_id: str, csp: dict, cred_settings: dict) -> dict:
         # TODO: Support list of legal registration number VCs
@@ -56,33 +42,43 @@ class CredentialDiscovery:
             "verifiableCredential": list()
         }
 
-        [cred['verifiableCredential'].append(vc) for vc in vcs]
-        crypto.sign_cred(cred=cred,
-                         key=crypto.load_jwk_from_file(cred_settings[const.CONFIG_CRED_KEY]),
-                         verification_method=cred_settings[const.CONFIG_CRED_VER_METH])
+        vp = self.jinja_env.get_template("credentials/verifiable-presenation_22.10.json").render(vcs = vcs)
 
-        return cred
+        [cred['verifiableCredential'].append(vc) for vc in vcs]
+        #crypto.sign_cred(cred=cred,
+        #                 key=crypto.load_jwk_from_file(cred_settings[const.CONFIG_CRED_KEY]),
+        #                 verification_method=cred_settings[const.CONFIG_CRED_VER_METH])
+
+        return vp
 
     def _create_and_sign_cred(self, template: str, content: dict, cred_settings: dict) -> dict:
         # TODO: Use python classes instead of jinja2 templates here as soon as GXDCH is in sync with latest Gaia-X
         # Credential Schema from https://gitlab.com/gaia-x/technical-committee/service-characteristics
         content['date'] = str(datetime.now(tz=timezone.utc).isoformat())
-        cred = json.loads(self.templates.get_template(template).render(content))
-        crypto.sign_cred(cred=cred,
-                         key=crypto.load_jwk_from_file(cred_settings[const.CONFIG_CRED_KEY]),
-                         verification_method=cred_settings[const.CONFIG_CRED_VER_METH])
-        return cred
+        cred = json.loads(self.jinja_env.get_template(template).render(content))
+        print("=============== T&A ==================")
+        print(json.dumps(cred, indent=4))
+        import generator.common.utils as utils
 
-    def request_vat_id_vc(self, csp: dict, cred_id) -> dict:
-        resp = self.not_service.request_reg_number_vc(csp=csp, cred_id=cred_id)
-        if resp.ok:
-            return resp.json()
-        else:
-            resp.raise_for_status()
+        print("=============== T&A - signed ==================")
+        signed_cred = utils.sign_doc(cred, crypto.load_jwk_from_file(cred_settings[const.CONFIG_CRED_KEY]), cred_settings[const.CONFIG_CRED_VER_METH])
+        print(json.dumps(signed_cred, indent=4))
 
-    def request_compliance_vc(self, vcs: List[dict], vp_id):
-        resp = self.comp_service.request_compliance_vc(vcs, vp_id)
-        if resp.ok:
-            return resp.json()
-        else:
-            resp.raise_for_status()
+        #crypto.sign_cred(cred=cred,
+        #                 key=crypto.load_jwk_from_file(cred_settings[const.CONFIG_CRED_KEY]),
+        #                 verification_method=cred_settings[const.CONFIG_CRED_VER_METH])
+        return signed_cred
+
+    #def request_vat_id_vc(self, csp: dict, cred_id) -> dict:
+    #    resp = self.not_service.request_reg_number_vc(csp=csp, cred_id=cred_id)
+    #    if resp.ok:
+    #        return resp.json()
+    #    else:
+    #        resp.raise_for_status()
+
+    #def request_compliance_vc(self, vp: str, vp_id):
+    #    resp = self.comp_service.request_compliance_vc(vp, vp_id)
+    #    if resp.ok:
+    #        return resp.json()
+    #    else:
+    #        resp.raise_for_status()

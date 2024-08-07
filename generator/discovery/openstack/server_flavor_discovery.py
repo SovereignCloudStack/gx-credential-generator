@@ -1,7 +1,4 @@
-"""Script to discovery server flavor properties.
-
-(c) Anja Strunk <anja.strunk@cloudandheat.com>, 2/2024
-SPDX-License-Identifier: EPL-2.0
+"""Discovery of properties if openstack flavors.
 """
 
 from typing import List, Optional

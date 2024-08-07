@@ -1,7 +1,4 @@
 """"General openstack discovery class.
-
-(c) Anja Strunk <anja.strunk@cloudandheat.com>, 2/2024
-SPDX-License-Identifier: EPL-2.0
 """
 
 import requests

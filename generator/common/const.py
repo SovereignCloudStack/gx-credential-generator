@@ -96,4 +96,7 @@ CONFIG_HV_HYV = "hyper-v"
 # JSON-LD Context
 VC_CONTEXT = "https://www.w3.org/2018/credentials/v1"
 VP_CONTEXT = VC_CONTEXT
+JWS_CONTEXT = "https://w3id.org/security/suites/jws-2020/v1"
+REG_CONTEXT = "https://registry.lab.gaia-x.eu/development/api/trusted-shape-registry/v1/shapes/jsonld/trustframework#"
 LRN_CONTEXT = "https://registry.lab.gaia-x.eu/development/api/trusted-shape-registry/v1/shapes/jsonld/participant"
+
