@@ -129,13 +129,17 @@ def kubernetes():
     default="config/config.yaml",
     help="Path to Configuration file for SCS GX Credential Generator.")
 def csp(config):
-    """Generates Gaia-X Credential for CPS"""
+    """Generate Gaia-X Credential for CPS."""
 
     # load config file
     with open(config, "r") as config_file:
         config = Config(yaml.safe_load(config_file))
         csp_gen = CspGenerator(config)
-        csp_gen.generate()
+        print("-------------------------- Gaia-X Credentials for CSP  --------------------------------------------")
+        vcs = csp_gen.generate()
+        if vcs is not None:
+            for vc in vcs:
+                print(json.dumps(vc, indent=4))
 
 cli_commands.add_command(openstack)
 cli_commands.add_command(kubernetes)

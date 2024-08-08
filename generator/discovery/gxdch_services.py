@@ -11,7 +11,7 @@ class ComplianceService:
             raise AttributeError("Parameters MUST not be None")
         self.api = api
 
-    def request_compliance_vc(self, vp:str, vp_id) -> Response:
+    def request_compliance_vc(self, vp:str, vp_id) -> str:
         resp = requests.post(self.api + "?vcid=" + vp_id, vp)
 
         if resp.ok:
@@ -28,7 +28,7 @@ class NotaryService:
         self.api = api
 
     # TODO: Support all kind of registration numbers
-    def request_reg_number_vc(self, csp: dict, cred_id: str) -> Response:
+    def request_reg_number_vc(self, csp: dict, cred_id: str) -> dict:
         body = dict()
         body['@context'] = const.LRN_CONTEXT
         body['@type'] = "gx:legalRegistrationNumber"
@@ -41,4 +41,20 @@ class NotaryService:
             return resp.json()
         else:
             resp.raise_for_status()
+
+
+class RegistryService:
+    """ Wrapper class to connect GXDCH Registry Service. """
+
+    def __init__(self, api: str):
+        self.api = api
+
+    def get_gx_tandc(self) -> dict:
+        resp = requests.get(self.api + "/api/termsAndConditions")
+
+        if resp.ok:
+            return resp.json()
+        else:
+            resp.raise_for_status()
+
 

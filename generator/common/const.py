@@ -29,12 +29,12 @@ CONFIG_CSP_NAME = "legal-name"
 CONFIG_CSP_LEG_AD = "legal-address-country-code"
 CONFIG_CSP_HQ_ADR = "headquarter-address-country-code"
 CONFIG_CSP_VAT_ID = "vat-id"
-#CONFIG_CSP_SIGN_KEY = "signing-key"
 
 # GXDCH
 CONST_GXDCH = "gxdch"
 CONST_GXDCH_NOT = "notary-service"
 CONST_GXDCH_COMP = "compliance-service"
+CONST_GXDCH_REG = "registry-service"
 
 # Default values
 DEFAULT_RESOURCE_POLICY = "default: allow intent"
@@ -46,6 +46,7 @@ UNIT_MB = "https://qudt.org/vocab/unit/MegaBYTE"
 UNIT_GB = "https://qudt.org/vocab/unit/GigaBYTE"
 UNIT_GHZ = "https://qudt.org/vocab/unit/GigaHZ"
 
+# Dicovery keys
 CONFIG_VM_IMAGE = "vm image"
 CONFIG_RESOURCE_POLICY = "resource-policy"
 CONFIG_LICENSE = "license"

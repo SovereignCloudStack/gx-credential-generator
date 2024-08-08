@@ -6,26 +6,36 @@ from datetime import datetime, timezone
 import generator.common.const as const
 from generator.common import crypto
 from generator.common.config import Config
-from generator.discovery.vc_discovery import CredentialDiscovery
-from generator.discovery.gxdch_services import NotaryService, ComplianceService
-from generator.common import utils
+from generator.discovery.gxdch_services import NotaryService, ComplianceService, RegistryService
 
 
 class CspGenerator:
 
     def __init__(self, conf: Config) -> None:
-        self.vc_discovery = CredentialDiscovery()
         self.notary = NotaryService(conf.get_value([const.CONST_GXDCH, const.CONST_GXDCH_NOT]))
         self.compliance = ComplianceService(conf.get_value([const.CONST_GXDCH, const.CONST_GXDCH_COMP]))
+        self.registry = RegistryService(conf.get_value([const.CONST_GXDCH, const.CONST_GXDCH_REG]))
 
         self.csp = conf.get_value([const.CONFIG_CSP])
         self.cred_settings = conf.get_value([const.CONFIG_CRED])
         self.cred_base_url = conf.get_value([const.CONFIG_CRED, const.CONFIG_CRED_BASE_CRED_URL])
 
-    def generate(self) -> dict:
-        """Generate Gaia-X compliant Gaia-X Credential for CSP. This includes """
+    def generate(self, auto_sign: bool = False) -> list:
+        """
+        Generate Gaia-X compliant Gaia-X Credential for CSP. This includes the following Verifiable Credentials (VC).
+          - VC on signed Gaia-X terms and conditions
+          - VC on CSP's legal registration number, such as LEI or VAT id
+          - VC on CSP's properties as Gaia-X Legal Person
+          - VC on CSP's Gaia-X compliance
+
+        @param auto_sign True, if Gaia-X terms and conditions should be automatically signed. Else user has to confirm
+        terms and conditions manually on user prompt.
+        @return: dictionary of VCs
+        """
         # sign Gaia-X terms and conditions
-        tac_vc = self._sign_gaia_x_terms_and_conditions()
+        tandc_vc = self._sign_gaia_x_terms_and_conditions(auto_sign=auto_sign)
+        if tandc_vc is None:
+            return
 
         # retrieve legal registration number from GXDCH Notary
         lrn_cred_id = self.cred_base_url + "/lrn.json"
@@ -34,40 +44,70 @@ class CspGenerator:
         # create Gaia-X Credential for CSP as Legal Person
         lp_vc = self._sign_legal_person(lrn_cred_id)
 
-        # TODO: Remove jina templates
-        vp_id = self.cred_base_url + "/compliance.json"
-        vp = self.vc_discovery.create_verifiable_presentation(vcs=[lrn_vc, tac_vc, lp_vc],
-                                                            cred_settings=self.cred_settings)
-        # Add Signature
-        #vp_signed = crypto.sign_cred(cred=vp,
-        #                 key=crypto.load_jwk_from_file(self.cred_settings['key']),
-        #                 verification_method=self.cred_settings['verification-method'])
+        # request Gaia-X compliance credential for CSP as Legal Person
+        vp = dict()
+        vp['@context'] = const.VP_CONTEXT
+        vp['type'] = "VerifiablePresentation"
+        vp['verifiableCredential'] = [tandc_vc, lrn_vc, lp_vc]
 
-        cs_vc = self.compliance.request_compliance_vc(vp, vp_id)
+        cs_vc = self.compliance.request_compliance_vc(json.dumps(vp), self.cred_base_url + "/compliance.json")
+        return [tandc_vc, lrn_vc, lp_vc, json.loads(cs_vc)]
 
-        return {'tac_vc': tac_vc, 'lrn_vc': lrn_vc, 'lp_vc': lp_vc, 'cs_vc': cs_vc }
+    def _sign_gaia_x_terms_and_conditions(self, auto_sign: bool = False) -> dict:
+        """
+        Create a Gaia-X Credential on signed Gaia-X terms and conditions.
 
+        @param auto_sign: If true, Gaia-X terms and conditions are signed automatically,
+        otherwise user is requested of confirm terms and conditions
+        @return: Gaia-X Credential on signed Gaia-X terms and conditions as dictionary.
+        """
 
-    def _sign_gaia_x_terms_and_conditions(self) -> dict:
-        """ Create a Gaia-X Credential on signed Gaia-X terms and conditions."""
-        tan_vc = dict()
-        tan_vc['@context'] = [const.VC_CONTEXT, const.JWS_CONTEXT, const.REG_CONTEXT]
-        tan_vc['type'] = "VerifiableCredential"
-        tan_vc['id'] = self.cred_base_url + "/tandc.json"
-        tan_vc['issuer'] = self.csp['did']
-        tan_vc['issuanceDate'] = str(datetime.now(tz=timezone.utc).isoformat())
-        tan_vc['credentialSubject'] = {
+        tand = self.registry.get_gx_tandc()
+        if not auto_sign:
+            print("Do you agree Gaia-X Terms and conditions version " + tand['version'] + ".")
+            print()
+            print("-------------------------- Gaia-X Terms and Conditions --------------------------------------------")
+            print(tand['text'])
+            print("-------------------------- ------------------------------------------------------------------------")
+            print()
+            print("Please type 'y' for 'I do agree' and 'n' for 'I do not agree': ")
+
+            resp = input()
+            while resp.lower() not in ['y', 'n']:
+                print("Please type 'y' for 'I do agree' and 'n' for 'I do not agree: '")
+                resp = input()
+
+            if resp.lower() == 'n':
+                # user did not agree Gaia-X terms and conditions, we have to abort here
+                print("Gaia-X terms and conditions were not signed - process aborted!")
+                return
+
+        tandc_vc = dict()
+        tandc_vc['@context'] = [const.VC_CONTEXT, const.JWS_CONTEXT, const.REG_CONTEXT]
+        tandc_vc['type'] = "VerifiableCredential"
+        tandc_vc['id'] = self.cred_base_url + "/tandc.json"
+        tandc_vc['issuer'] = self.csp['did']
+        tandc_vc['issuanceDate'] = str(datetime.now(tz=timezone.utc).isoformat())
+        tandc_vc['credentialSubject'] = {
             "type": "gx:GaiaXTermsAndConditions",
-            "gx:termsAndConditions": "The PARTICIPANT signing the Self-Description agrees as follows:\n- to update its descriptions about any changes, be it technical, organizational, or legal - especially but not limited to contractual in regards to the indicated attributes present in the descriptions.\n\nThe keypair used to sign Verifiable Credentials will be revoked where Gaia-X Association becomes aware of any inaccurate statements in regards to the claims which result in a non-compliance with the Trust Framework and policy rules defined in the Policy Rules and Labelling Document (PRLD).",
+            # We have to remove last char from terms and conditions string (which is a line return),
+            # as GXDCH Compliance Service does not expect it, even it is returned by GXDCH Registry
+            "gx:termsAndConditions": self.registry.get_gx_tandc()['text'][:-1],
             "id": self.csp['did']
         }
+
         # TODO: Replace by own method in crypto
-        return utils.sign_doc(tan_vc,
-                              crypto.load_jwk_from_file(self.cred_settings[const.CONFIG_CRED_KEY]),
-                              self.cred_settings[const.CONFIG_CRED_VER_METH])
+        return crypto.sign_cred(cred=tandc_vc,
+                                key=crypto.load_jwk_from_file(self.cred_settings[const.CONFIG_CRED_KEY]),
+                                verification_method=self.cred_settings[const.CONFIG_CRED_VER_METH])
 
     def _sign_legal_person(self, lrn_cred_id: str):
-        """ Create Gaia-X Credential for CSP as Legal Person."""
+        """
+        Create Gaia-X Credential for CSP as Legal Person.
+
+        @param lrn_cred_id: Id of Verifiable Credential attesting CSP's legal registration number.
+        @return: Gaia-X Credential on CSP as Legal Person as dictionary.
+        """
         lp_vc = dict()
         lp_vc['@context'] = [const.VC_CONTEXT, const.JWS_CONTEXT, const.REG_CONTEXT]
         lp_vc['type'] = "VerifiableCredential"
@@ -88,8 +128,6 @@ class CspGenerator:
                 "gx:countrySubdivisionCode": self.csp['headquarter-address-country-code']
             }
         }
-
-        # TODO: Replace by own method in crypto
-        return utils.sign_doc(lp_vc,
-                              crypto.load_jwk_from_file(self.cred_settings[const.CONFIG_CRED_KEY]),
-                              self.cred_settings[const.CONFIG_CRED_VER_METH])
+        return crypto.sign_cred(cred=lp_vc,
+                              key=crypto.load_jwk_from_file(self.cred_settings[const.CONFIG_CRED_KEY]),
+                              verification_method=self.cred_settings[const.CONFIG_CRED_VER_METH])
