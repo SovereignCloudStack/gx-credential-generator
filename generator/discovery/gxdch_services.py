@@ -1,5 +1,6 @@
+import json
+
 import requests
-from requests import Response
 import generator.common.const as const
 
 
@@ -11,14 +12,12 @@ class ComplianceService:
             raise AttributeError("Parameters MUST not be None")
         self.api = api
 
-    def request_compliance_vc(self, vp:str, vp_id) -> str:
+    def request_compliance_vc(self, vp: str, vp_id) -> str:
         resp = requests.post(self.api + "?vcid=" + vp_id, vp)
-
         if resp.ok:
             return resp.text
         else:
             resp.raise_for_status()
-
 
 
 class NotaryService:
@@ -28,11 +27,11 @@ class NotaryService:
         self.api = api
 
     # TODO: Support all kind of registration numbers
-    def request_reg_number_vc(self, csp: dict, cred_id: str) -> dict:
+    def request_reg_number_vc(self, csp: dict, cred_id: str, cred_subject_id: str) -> dict:
         body = dict()
         body['@context'] = const.LRN_CONTEXT
-        body['@type'] = "gx:legalRegistrationNumber"
-        body['id'] = cred_id  #csp['did'] TODO: I think DID is correct here, but Gaia-X requires credential id, instead of credential subject id
+        body['type'] = "gx:legalRegistrationNumber"
+        body['id'] = cred_subject_id #csp['did'] TODO: I think DID is correct here, but Gaia-X requires credential id, instead of credential subject id
         body['gx:vatID'] = csp['vat-id']
 
         resp = requests.post(self.api + "registrationNumberVC?vcid=" + str(cred_id), json=body)
@@ -56,5 +55,3 @@ class RegistryService:
             return resp.json()
         else:
             resp.raise_for_status()
-
-

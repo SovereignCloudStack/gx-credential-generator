@@ -18,9 +18,9 @@ class CspGenerator:
 
         self.csp = conf.get_value([const.CONFIG_CSP])
         self.cred_settings = conf.get_value([const.CONFIG_CRED])
-        self.cred_base_url = conf.get_value([const.CONFIG_CRED, const.CONFIG_CRED_BASE_CRED_URL])
+        self.cred_base_url = self.cred_settings[const.CONFIG_CRED_BASE_CRED_URL]
 
-    def generate(self, auto_sign: bool = False) -> list:
+    def generate(self, auto_sign: bool = False) -> dict:
         """
         Generate Gaia-X compliant Gaia-X Credential for CSP. This includes the following Verifiable Credentials (VC).
           - VC on signed Gaia-X terms and conditions
@@ -38,20 +38,21 @@ class CspGenerator:
             return
 
         # retrieve legal registration number from GXDCH Notary
-        lrn_cred_id = self.cred_base_url + "/lrn.json"
-        lrn_vc = self.notary.request_reg_number_vc(csp=self.csp, cred_id=lrn_cred_id)
+        lrn_vc = self.notary.request_reg_number_vc(
+            csp=self.csp,
+            cred_id=self.cred_base_url + "/lrn.json",
+            cred_subject_id=self.cred_base_url + "/lrn_cs.json")
 
         # create Gaia-X Credential for CSP as Legal Person
-        lp_vc = self._sign_legal_person(lrn_cred_id)
+        lp_vc = self._sign_legal_person(lrn_vc['credentialSubject']['id'])
 
         # request Gaia-X compliance credential for CSP as Legal Person
         vp = dict()
         vp['@context'] = const.VP_CONTEXT
         vp['type'] = "VerifiablePresentation"
         vp['verifiableCredential'] = [tandc_vc, lrn_vc, lp_vc]
-
-        cs_vc = self.compliance.request_compliance_vc(json.dumps(vp), self.cred_base_url + "/compliance.json")
-        return [tandc_vc, lrn_vc, lp_vc, json.loads(cs_vc)]
+        cs_vc = self.compliance.request_compliance_vc(json.dumps(vp), self.cred_base_url + "/csp_compliance.json")
+        return {'tandc': tandc_vc, 'lrn': lrn_vc, 'lp': lp_vc, 'cs': json.loads(cs_vc)}
 
     def _sign_gaia_x_terms_and_conditions(self, auto_sign: bool = False) -> dict:
         """
@@ -90,10 +91,8 @@ class CspGenerator:
         tandc_vc['issuanceDate'] = str(datetime.now(tz=timezone.utc).isoformat())
         tandc_vc['credentialSubject'] = {
             "type": "gx:GaiaXTermsAndConditions",
-            # We have to remove last char from terms and conditions string (which is a line return),
-            # as GXDCH Compliance Service does not expect it, even it is returned by GXDCH Registry
-            "gx:termsAndConditions": self.registry.get_gx_tandc()['text'][:-1],
-            "id": self.csp['did']
+            "gx:termsAndConditions": self.registry.get_gx_tandc()['text'],
+            "id": self.cred_base_url + "/tandc_cs.json"
         }
 
         # TODO: Replace by own method in crypto
@@ -115,7 +114,7 @@ class CspGenerator:
         lp_vc['issuer'] = self.csp['did']
         lp_vc['issuanceDate'] = str(datetime.now(tz=timezone.utc).isoformat())
         lp_vc['credentialSubject'] = {
-            "id": self.csp['did'],
+            "id": self.cred_base_url + "/legal_person_cs.json", # I think "self.csp['did']" is correct, but Gaia-X expects link,
             "type": "gx:LegalParticipant",
             "gx:legalName": self.csp['legal-name'],
             "gx:legalRegistrationNumber": {
