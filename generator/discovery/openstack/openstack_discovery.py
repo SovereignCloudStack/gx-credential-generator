@@ -1,10 +1,5 @@
 """"General openstack discovery class.
-
-(c) Anja Strunk <anja.strunk@cloudandheat.com>, 2/2024
-SPDX-License-Identifier: EPL-2.0
 """
-
-from hashlib import sha256
 
 import requests
 from openstack.connection import Connection
@@ -18,6 +13,10 @@ from generator.discovery.openstack.server_flavor_discovery import \
     ServerFlavorDiscovery
 from generator.discovery.openstack.vm_images_discovery import VmImageDiscovery
 
+from hashlib import sha256
+
+from generator.discovery.gxdch_services import ComplianceService, NotaryService
+
 
 class OpenstackDiscovery:
     """Abstraction for openStack cloud with all its services."""
@@ -29,12 +28,11 @@ class OpenstackDiscovery:
 
     def discover(self) -> VirtualMachineServiceOffering:
         """
-        Discover all attributes of OS Cloud.
+        Discover all attributes of OS Cloud as Gaia-X VirtualMachineServiceOffering.
 
-        @return: all attributes as list
-        @rtype List[JsonLdObject]
+        @return: all attributes as Gaia-X VirtualMachineServiceOffering
+        @rtype List[dict]
         """
-
         images = VmImageDiscovery(self.conn, self.config).discover()
         flavors = ServerFlavorDiscovery(self.conn, self.config).discover()
 
@@ -82,7 +80,7 @@ class OpenstackDiscovery:
 
         if len(service_tac) == 0:
             raise ValueError(
-                "Service offerings terms and conditions MUST not be empty. Please check config.yaml. There MUST be at least on entry in "
+                "Service offerings terms and conditions MUST not be empty. Please check config.yaml. There MUST be at least on entry."
                 + const.CONFIG_IAAS + "." + const.CONFIG_IAAS_T_AND_C
             )
 
