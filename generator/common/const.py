@@ -28,7 +28,12 @@ CONFIG_CSP = "CPS"
 CONFIG_CSP_NAME = "legal-name"
 CONFIG_CSP_LEG_AD = "legal-address-country-code"
 CONFIG_CSP_HQ_ADR = "headquarter-address-country-code"
+CONFIG_CSP_REG_NUMBER = "registration_numbers"
 CONFIG_CSP_VAT_ID = "vat-id"
+CONFIG_CSP_LEI_CODE = "lei-code"
+CONFIG_CSP_LOCAL_CODE = "local-req-number"
+CONFIG_CSP_EORI = "eori"
+CONFIG_CSP_EUID = "euid"
 
 # GXDCH
 CONST_GXDCH = "gxdch"

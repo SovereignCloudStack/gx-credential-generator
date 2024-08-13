@@ -27,7 +27,7 @@ class GxdchTestCase(unittest.TestCase):
 
         # run test
         not_serv = NotaryService("https://exampple.com/gxdch/notary")
-        resp = not_serv.request_reg_number_vc(csp={"did": "did:web:example.com", "vat-id": "DE123456789"},
+        resp = not_serv.request_reg_number_vc(csp={"did": "did:web:example.com", "registration_numbers": {"vat-id": "DE123456789"}},
                                               cred_subject_id=cred_subject_id, cred_id=cred_id)
 
         # check results
@@ -50,7 +50,7 @@ class GxdchTestCase(unittest.TestCase):
 
         # run test
         not_serv = NotaryService("https://exampple.com/gxdch/notary")
-        resp = not_serv.request_reg_number_vc(csp={"did": "did:web:example.com", "vat-id": "DE123456789"},
+        resp = not_serv.request_reg_number_vc(csp={"did": "did:web:example.com", "registration_numbers": {"vat-id": "DE123456789"}},
                                               cred_subject_id="foo", cred_id="bar")
 
         # check results

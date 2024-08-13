@@ -31,11 +31,6 @@ CPS:
     # CSP EUID code
     euid: 123456789
 
-
-
-
-
-
 IaaS:
   did: did:web:example.com:iaas
   terms-and-conditions:
