@@ -75,29 +75,17 @@ class CliTestCase(unittest.TestCase):
         self.assertEqual(0, result.exit_code)
         self.assertEqual("\"bar\"\n\"foo\"\n", result.output)
 
-    @patch("generator.discovery.csp_generator.CspGenerator.generate")
-    @patch("generator.cli.create_vmso_vcs")
     @patch("openstack.connect")
-    def test_openstack_exception(self, os_connect, gen_vmso, gen_csp):
+    def test_init_connection(self, os_connect):
         # Mock openstack calls
         mock_con = MockConnection(images=[], flavors=[])
         mock_con.authorize = MagicMock(name='method')
         mock_con.authorize.side_effect = [Exception(), None]
         os_connect.return_value = mock_con
-        gen_vmso.return_value = ["foo"]
-        gen_csp.return_value = ["bar"]
 
-        runner = CliRunner()
-        result = runner.invoke(
-            cli.openstack, "myCloud --config=" + get_absolute_path(const.CONFIG_FILE)
-        )
+        con = cli.init_openstack_connection("myCloud")
+        self.assertIsNotNone(con)
 
-        gen_csp.assert_called_once()
-        gen_vmso.assert_called_once()
-
-        self.assertIsNone(result.exception)
-        self.assertEqual(0, result.exit_code)
-        self.assertEqual("\"bar\"\n\"foo\"\n", result.output)
 
     @patch("generator.discovery.csp_generator.CspGenerator.generate")
     def test_csp(self, gen_csp):

@@ -18,8 +18,23 @@ CPS:
   legal-address-country-code: DE-SN
   # allowed values are country codes according to ISO 3166-2 alpha2, alpha-3 or numeric format.
   headquarter-address-country-code: DE-SN
-  # CSP VAT number
-  vat-id: DE123456789
+  # list of registration numbers. At least one registration number must be given. Each key MUST can only be set once.
+  registration_numbers:
+    # CSP VAT number
+    vat-id: DE123456789
+    # CSP LEI code
+    lei-code: 123456789
+    # CSP local registration number
+    local-req-number: 123456789
+    # CSP EORI code
+    eori: 123456789
+    # CSP EUID code
+    euid: 123456789
+
+
+
+
+
 
 IaaS:
   did: did:web:example.com:iaas
@@ -38,8 +53,8 @@ IaaS:
 
 # Endpoints of Gaia-X Digital Clearing House
 gxdch:
-  notary-service: https://registrationnumber.notary.lab.gaia-x.eu/v1-staging/
-  compliance-service: https://compliance.lab.gaia-x.eu/v1-staging/api/credential-offers
+  notary-service: https://registrationnumber.notary.lab.gaia-x.eu/v1-staging
+  compliance-service: https://compliance.lab.gaia-x.eu/v1-staging
   registry-service: https://registry.lab.gaia-x.eu/v1-staging
 
 

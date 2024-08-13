@@ -1,6 +1,6 @@
 import unittest
 
-from generator.discovery.gxdch_services import NotaryService, ComplianceService
+from generator.discovery.gxdch_services import NotaryService, ComplianceService, RegistryService
 from unittest.mock import patch
 import uuid
 
@@ -13,60 +13,103 @@ class GxdchTestCase(unittest.TestCase):
     def test_init_compliance_service(self):
         self.assertRaises(AttributeError, ComplianceService, None)
 
-    def test_request_registration_number_vc_exception(self):
-        not_serv = NotaryService(api="foo")
-        self.assertRaises(AttributeError, not_serv.request_reg_number_vc, None, None)
-
-    def test_request_compliance_vc_exception(self):
-        comp_serv = ComplianceService(api="foo")
-        self.assertRaises(AttributeError, comp_serv.request_compliance_vc, None, None)
+    def test_init_registry_service(self):
+        self.assertRaises(AttributeError, RegistryService, None)
 
     @patch("requests.post")
     def test_request_registration_number_vc(self, post_mock):
         # init test
-        post_mock.return_value = {"ok": True}
+        post_mock.return_value.ok = True
+        post_mock.return_value.json.return_value = "foo"
         cred_id = uuid.uuid4()
-        not_serv = NotaryService("https://registrationnumber.notary.gaia-x.eu/v1")
+        cred_subject_id = uuid.uuid4()
 
         # run test
+        not_serv = NotaryService("https://exampple.com/gxdch/notary")
         resp = not_serv.request_reg_number_vc(csp={"did": "did:web:example.com", "vat-id": "DE123456789"},
-                                              cred_id=cred_id)
+                                              cred_subject_id=cred_subject_id, cred_id=cred_id)
 
         # check results
-        self.assertTrue(resp['ok'])
-        self.assertEqual(post_mock.call_count, 1)
         self.assertEqual(
-            ('https://registrationnumber.notary.gaia-x.eu/v1/registrationNumberVC?vcid=' + str(cred_id),),
-            post_mock.call_args.args)
+            'https://exampple.com/gxdch/notary/registrationNumberVC?vcid=' + str(cred_id),
+            post_mock.call_args.args[0])
         self.assertEqual(
             {'json': {
-                '@context': 'https://www.w3.org/2018/credentials/v1',
-                '@type': 'gx:legalRegistrationNumber',
+                '@context': 'https://registry.lab.gaia-x.eu/development/api/trusted-shape-registry/v1/shapes/jsonld/participant',
+                'type': 'gx:legalRegistrationNumber',
                 'gx:vatID': 'DE123456789',
-                'id': 'did:web:example.com'}},
+                'id': cred_subject_id}},
             post_mock.call_args.kwargs)
+        self.assertEqual("foo", resp)
+
+    @patch("requests.post")
+    def test_request_registration_number_vc_exception(self, post_mock):
+        # init test
+        post_mock.return_value.ok = False
+
+        # run test
+        not_serv = NotaryService("https://exampple.com/gxdch/notary")
+        resp = not_serv.request_reg_number_vc(csp={"did": "did:web:example.com", "vat-id": "DE123456789"},
+                                              cred_subject_id="foo", cred_id="bar")
+
+        # check results
+        self.assertIsNone(resp)
 
     @patch("requests.post")
     def test_request_compliance_vc(self, post_mock):
         # init test
-        post_mock.return_value = {"ok": True}
-        comp_serv = ComplianceService("https://compliance.lab.gaia-x.eu/v1-staging/api/credential-offers")
+        post_mock.return_value.ok = True
+        post_mock.return_value.text = "foo"
 
         # run test
-        resp = comp_serv.request_compliance_vc(vcs=[{"foo": "bar"}], vp_id="example.json")
+        comp_serv = ComplianceService("https://example.com/gxdch/compliance-service")
+        resp = comp_serv.request_compliance_vc(vp="{\"foo\": \"bar\"}", vp_id="example.json")
 
         # Check results
-        self.assertTrue(resp['ok'])
         self.assertEqual(1, post_mock.call_count)
         self.assertEqual(
-            ('https://compliance.lab.gaia-x.eu/v1-staging/api/credential-offers?vcid=example.json',),
-            post_mock.call_args.args)
-        self.assertEqual(
-            {'json': {
-                '@context': 'https://www.w3.org/2018/credentials/v1',
-                '@type': 'VerifiablePresentation',
-                'verifiableCredential': '[{"foo": "bar"}]'}},
-            post_mock.call_args.kwargs)
+            'https://example.com/gxdch/compliance-service/api/credential-offers?vcid=example.json',
+            post_mock.call_args.args[0])
+        self.assertEqual("{\"foo\": \"bar\"}", post_mock.call_args.args[1])
+        self.assertEqual("foo", resp)
 
-    if __name__ == "__main__":
-        unittest.main()
+    @patch("requests.post")
+    def test_request_compliance_vc_exception(self, post_mock):
+        # init test
+        post_mock.return_value.ok = False
+
+        # run test
+        comp_serv = ComplianceService("https://example.com/gxdch/compliance-service")
+        resp = comp_serv.request_compliance_vc(vp="{\"foo\": \"bar\"}", vp_id="example.json")
+
+        # Check results
+        self.assertIsNone(resp)
+
+    @patch("requests.get")
+    def test_get_gx_tandc(self, get_mock):
+        get_mock.return_value.ok = True
+        get_mock.return_value.json.return_value = {'version': "22.10", "text": "foo"}
+
+        reg = RegistryService("https://example/gxdch/registry")
+        tandc = reg.get_gx_tandc()
+
+        get_mock.called_with("https://example/gxdch/registry" + "/api/termsAndConditions")
+        self.assertEqual({'version': "22.10", "text": "foo"}, tandc)
+
+
+    @patch("requests.get")
+    def test_get_gx_tandc_exception(self, get_mock):
+        get_mock.return_value.ok = False
+
+        reg = RegistryService("https://example/gxdch/registry")
+        tandc = reg.get_gx_tandc()
+
+        get_mock.called_with("https://example/gxdch/registry" + "/api/termsAndConditions")
+        self.assertIsNone(tandc)
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+
+
