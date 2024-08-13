@@ -1,6 +1,5 @@
 import unittest
 
-from generator.discovery.vc_discovery import CredentialDiscovery
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from unittest.mock import patch
 from cryptography.hazmat.primitives.asymmetric import rsa

@@ -36,51 +36,51 @@ class JsonLDTestCase(unittest.TestCase):
     def test_to_json_ld(self):
         addr = Address(countryCode="DE")
         self.assertEqual(
-            {"@type": "vcard:Address", "gx:countryCode": "DE"}, to_json_ld(addr)
+            {"type": "vcard:Address", "gx:countryCode": "DE"}, to_json_ld(addr)
         )
         self.assertEqual(
-            {"@id": "ex:foo", "@type": "vcard:Address", "gx:countryCode": "DE"},
+            {"id": "ex:foo", "type": "vcard:Address", "gx:countryCode": "DE"},
             to_json_ld(JsonLdObject(gx_object=addr, gx_id="foo")),
         )
 
         # test attribute is emtpy
         for value in [None, []]:
             addr.countryCode = value
-            self.assertEqual({"@type": "vcard:Address"}, to_json_ld(addr))
+            self.assertEqual({"type": "vcard:Address"}, to_json_ld(addr))
 
         # test attribute is an empty list
         addr.countryCode = ["DE", "FR"]
         self.assertEqual(
-            {"@type": "vcard:Address", "gx:countryCode": ["DE", "FR"]}, to_json_ld(addr)
+            {"type": "vcard:Address", "gx:countryCode": ["DE", "FR"]}, to_json_ld(addr)
         )
 
         # test attribute is a PermissibleValue
         addr.countryCode = CountryNameAlpha2.DE
         self.assertEqual(
-            {"@type": "vcard:Address", "gx:countryCode": "DE"}, to_json_ld(addr)
+            {"type": "vcard:Address", "gx:countryCode": "DE"}, to_json_ld(addr)
         )
 
         # test attribute is EnumDefinitionImpl
         addr.countryCode = CountryNameAlpha2("DE")
         self.assertEqual(
-            {"@type": "vcard:Address", "gx:countryCode": "DE"}, to_json_ld(addr)
+            {"type": "vcard:Address", "gx:countryCode": "DE"}, to_json_ld(addr)
         )
 
         # test attribute is date and datetime
         addr.countryCode = datetime.date(2014, 5, 12)
         self.assertEqual(
             {
-                "@type": "vcard:Address",
-                "gx:countryCode": {"@type": "xsd:date", "@value": "2014-05-12"},
+                "type": "vcard:Address",
+                "gx:countryCode": {"type": "xsd:date", "@value": "2014-05-12"},
             },
             to_json_ld(addr),
         )
         addr.countryCode = datetime.datetime(2014, 5, 12, 18, 50, 32)
         self.assertEqual(
             {
-                "@type": "vcard:Address",
+                "type": "vcard:Address",
                 "gx:countryCode": {
-                    "@type": "xsd:dateTime",
+                    "type": "xsd:dateTime",
                     "@value": "2014-05-12T18:50:32",
                 },
             },
@@ -91,17 +91,17 @@ class JsonLDTestCase(unittest.TestCase):
         addr.countryCode = 1.5
         self.assertEqual(
             {
-                "@type": "vcard:Address",
-                "gx:countryCode": {"@type": "xsd:float", "@value": 1.5},
+                "type": "vcard:Address",
+                "gx:countryCode": {"type": "xsd:float", "@value": 1.5},
             },
             to_json_ld(addr),
         )
         addr.countryCode = URI("https::example.com")
         self.assertEqual(
             {
-                "@type": "vcard:Address",
+                "type": "vcard:Address",
                 "gx:countryCode": {
-                    "@type": "xsd:anyURI",
+                    "type": "xsd:anyURI",
                     "@value": "https::example.com",
                 },
             },
@@ -110,8 +110,8 @@ class JsonLDTestCase(unittest.TestCase):
         addr.countryCode = False
         self.assertEqual(
             {
-                "@type": "vcard:Address",
-                "gx:countryCode": {"@type": "xsd:boolean", "@value": False},
+                "type": "vcard:Address",
+                "gx:countryCode": {"type": "xsd:boolean", "@value": False},
             },
             to_json_ld(addr),
         )

@@ -91,11 +91,9 @@ class CspGenerator:
         tandc_vc['issuanceDate'] = str(datetime.now(tz=timezone.utc).isoformat())
         tandc_vc['credentialSubject'] = {
             "type": "gx:GaiaXTermsAndConditions",
-            "gx:termsAndConditions": self.registry.get_gx_tandc()['text'],
+            "gx:termsAndConditions": tand['text'],
             "id": self.cred_base_url + "/tandc_cs.json"
         }
-
-        # TODO: Replace by own method in crypto
         return crypto.sign_cred(cred=tandc_vc,
                                 key=crypto.load_jwk_from_file(self.cred_settings[const.CONFIG_CRED_KEY]),
                                 verification_method=self.cred_settings[const.CONFIG_CRED_VER_METH])
