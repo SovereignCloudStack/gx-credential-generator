@@ -1,8 +1,9 @@
 import unittest
-
-from generator.discovery.gxdch_services import NotaryService, ComplianceService, RegistryService
-from unittest.mock import patch
 import uuid
+from unittest.mock import patch
+
+from generator.discovery.gxdch_services import (ComplianceService,
+                                                NotaryService, RegistryService)
 
 
 class GxdchTestCase(unittest.TestCase):

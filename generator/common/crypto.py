@@ -1,8 +1,9 @@
+from datetime import datetime, timezone
 from hashlib import sha256
-from jwcrypto.jws import JWS, JWK
+
 from jwcrypto.common import json_encode
+from jwcrypto.jws import JWK, JWS
 from pyld import jsonld
-from datetime import timezone, datetime
 
 """
 Methods to handle cryptography. Most source code is taken from Gaia-X Example 

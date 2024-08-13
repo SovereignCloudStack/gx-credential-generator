@@ -20,7 +20,9 @@ attrs==23.2.0
     #   jsonschema
     #   referencing
 cachetools==5.3.3
-    # via google-auth
+    # via
+    #   google-auth
+    #   pyld
 certifi==2024.2.2
     # via
     #   kubernetes
@@ -64,6 +66,8 @@ exceptiongroup==1.2.0
     # via pytest
 fqdn==1.5.1
     # via jsonschema
+frozendict==2.4.4
+    # via pyld
 google-auth==2.29.0
     # via kubernetes
 graphviz==0.20.3
@@ -137,6 +141,8 @@ linkml-runtime==1.7.5
     # via
     #   linkml
     #   linkml-dataops
+lxml==5.3.0
+    # via pyld
 markupsafe==2.1.5
     # via jinja2
 netifaces==0.11.0
@@ -193,6 +199,8 @@ pyjsg==0.11.10
     #   linkml
     #   pyshexc
     #   shexjsg
+pyld==2.0.4
+    # via -r requirements.in
 pyparsing==3.1.2
     # via rdflib
 pyshex==0.8.1

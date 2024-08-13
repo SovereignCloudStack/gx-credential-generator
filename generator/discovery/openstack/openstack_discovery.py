@@ -1,6 +1,8 @@
 """"General openstack discovery class.
 """
 
+from hashlib import sha256
+
 import requests
 from openstack.connection import Connection
 from requests.exceptions import HTTPError
@@ -12,10 +14,6 @@ from generator.common.gx_schema import (DataAccountExport, TermsAndConditions,
 from generator.discovery.openstack.server_flavor_discovery import \
     ServerFlavorDiscovery
 from generator.discovery.openstack.vm_images_discovery import VmImageDiscovery
-
-from hashlib import sha256
-
-from generator.discovery.gxdch_services import ComplianceService, NotaryService
 
 
 class OpenstackDiscovery:

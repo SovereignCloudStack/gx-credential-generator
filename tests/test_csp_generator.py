@@ -1,20 +1,15 @@
+import unittest
 from unittest.mock import patch
-import unittest
-from generator.discovery.csp_generator import CspGenerator
-import json
-import unittest
-from unittest.mock import MagicMock, patch
-import yaml
-from click.testing import CliRunner
 
-from generator import cli
-from generator.common import const, crypto, config
-from tests.common import MockConnection, get_absolute_path
-from cryptography.hazmat.primitives.asymmetric import ec, rsa
+import yaml
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
 from jwcrypto.jwt import JWK
-from cryptography.hazmat.primitives.serialization import Encoding
-from cryptography.hazmat.primitives import hashes, serialization
-from generator.common.gx_schema import VirtualMachineServiceOffering, DataAccountExport, TermsAndConditions
+
+from generator.common import config, const
+from generator.discovery.csp_generator import CspGenerator
+from tests.common import get_absolute_path
+
 
 class CspPGeneratorTestCase(unittest.TestCase):
     @patch("generator.discovery.gxdch_services.ComplianceService.request_compliance_vc")

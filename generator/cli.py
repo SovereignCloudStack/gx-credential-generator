@@ -12,22 +12,22 @@ SPDX-License-Identifier: EPL-2.0
 
 import json
 import sys
+from datetime import datetime, timezone
+from typing import List
 
 import click
 import openstack as os
 import yaml
+from openstack.connection import Connection
 
-from typing import List
-from datetime import datetime, timezone
 import generator.common.const as const
 import generator.common.json_ld as json_ld
+from generator.common import credentials, crypto
 from generator.common.config import Config
+from generator.discovery.csp_generator import CspGenerator
+from generator.discovery.gxdch_services import ComplianceService, NotaryService
 from generator.discovery.openstack.openstack_discovery import \
     OpenstackDiscovery
-from generator.discovery.gxdch_services import NotaryService, ComplianceService
-from generator.discovery.csp_generator import CspGenerator
-from generator.common import crypto, credentials
-from openstack.connection import Connection
 
 SHAPES_FILE_FORMAT = "turtle"
 DATA_FILE_FORMAT = "json-ld"

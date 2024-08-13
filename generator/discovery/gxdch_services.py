@@ -1,6 +1,5 @@
-import json
-
 import requests
+
 import generator.common.const as const
 
 

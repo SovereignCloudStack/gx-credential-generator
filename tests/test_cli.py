@@ -1,17 +1,19 @@
-import json
 import unittest
 from unittest.mock import MagicMock, patch
+
 import yaml
 from click.testing import CliRunner
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import ec, rsa
+from cryptography.hazmat.primitives.serialization import Encoding
+from jwcrypto.jwt import JWK
 
 from generator import cli
-from generator.common import const, crypto, config
+from generator.common import config, const, crypto
+from generator.common.gx_schema import (DataAccountExport, TermsAndConditions,
+                                        VirtualMachineServiceOffering)
 from tests.common import MockConnection, get_absolute_path
-from cryptography.hazmat.primitives.asymmetric import ec, rsa
-from jwcrypto.jwt import JWK
-from cryptography.hazmat.primitives.serialization import Encoding
-from cryptography.hazmat.primitives import hashes, serialization
-from generator.common.gx_schema import VirtualMachineServiceOffering, DataAccountExport, TermsAndConditions
+
 
 class CliTestCase(unittest.TestCase):
 

@@ -6,7 +6,8 @@ from datetime import datetime, timezone
 import generator.common.const as const
 from generator.common import crypto
 from generator.common.config import Config
-from generator.discovery.gxdch_services import NotaryService, ComplianceService, RegistryService
+from generator.discovery.gxdch_services import (ComplianceService,
+                                                NotaryService, RegistryService)
 
 
 class CspGenerator:
