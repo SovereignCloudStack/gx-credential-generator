@@ -3,13 +3,12 @@ from unittest.mock import MagicMock, patch
 
 import yaml
 from click.testing import CliRunner
-from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.hazmat.primitives.asymmetric import ec, rsa
-from cryptography.hazmat.primitives.serialization import Encoding
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
 from jwcrypto.jwt import JWK
 
 from generator import cli
-from generator.common import config, const, crypto
+from generator.common import config, const
 from generator.common.gx_schema import (DataAccountExport, TermsAndConditions,
                                         VirtualMachineServiceOffering)
 from tests.common import MockConnection, get_absolute_path
@@ -87,7 +86,6 @@ class CliTestCase(unittest.TestCase):
 
         con = cli.init_openstack_connection("myCloud")
         self.assertIsNotNone(con)
-
 
     @patch("generator.discovery.csp_generator.CspGenerator.generate")
     def test_csp(self, gen_csp):

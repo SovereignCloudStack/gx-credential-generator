@@ -25,7 +25,7 @@ import generator.common.json_ld as json_ld
 from generator.common import credentials, crypto
 from generator.common.config import Config
 from generator.discovery.csp_generator import CspGenerator
-from generator.discovery.gxdch_services import ComplianceService, NotaryService
+from generator.discovery.gxdch_services import ComplianceService
 from generator.discovery.openstack.openstack_discovery import \
     OpenstackDiscovery
 
@@ -132,7 +132,7 @@ def create_vmso_vcs(conf: Config, cloud: str, csp_vcs: List[dict], timeout: int 
     @return: A list of Gaia-X Credentials describing given OpenStack cloud.
     """
     csp = conf.get_value([const.CONFIG_CSP])
-    iaas = conf.get_value([const.CONFIG_IAAS]) # not yet used, as Gaia-X "abuses" id attribute of Verifiable Credentials
+    # iaas = conf.get_value([const.CONFIG_IAAS]) not yet used, as Gaia-X "abuses" id attribute of Verifiable Credentials
     cred_settings = conf.get_value([const.CONFIG_CRED])
 
     # init services

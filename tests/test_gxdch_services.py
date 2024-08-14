@@ -27,8 +27,9 @@ class GxdchTestCase(unittest.TestCase):
 
         # run test
         not_serv = NotaryService("https://exampple.com/gxdch/notary")
-        resp = not_serv.request_reg_number_vc(csp={"did": "did:web:example.com", "registration_numbers": {"vat-id": "DE123456789"}},
-                                              cred_subject_id=cred_subject_id, cred_id=cred_id)
+        resp = not_serv.request_reg_number_vc(
+            csp={"did": "did:web:example.com", "registration_numbers": {"vat-id": "DE123456789"}},
+            cred_subject_id=cred_subject_id, cred_id=cred_id)
 
         # check results
         self.assertEqual(
@@ -50,8 +51,9 @@ class GxdchTestCase(unittest.TestCase):
 
         # run test
         not_serv = NotaryService("https://exampple.com/gxdch/notary")
-        resp = not_serv.request_reg_number_vc(csp={"did": "did:web:example.com", "registration_numbers": {"vat-id": "DE123456789"}},
-                                              cred_subject_id="foo", cred_id="bar")
+        resp = not_serv.request_reg_number_vc(
+            csp={"did": "did:web:example.com", "registration_numbers": {"vat-id": "DE123456789"}},
+            cred_subject_id="foo", cred_id="bar")
 
         # check results
         self.assertIsNone(resp)
@@ -97,7 +99,6 @@ class GxdchTestCase(unittest.TestCase):
         get_mock.called_with("https://example/gxdch/registry" + "/api/termsAndConditions")
         self.assertEqual({'version': "22.10", "text": "foo"}, tandc)
 
-
     @patch("requests.get")
     def test_get_gx_tandc_exception(self, get_mock):
         get_mock.return_value.ok = False
@@ -111,6 +112,3 @@ class GxdchTestCase(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
-
-

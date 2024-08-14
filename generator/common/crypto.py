@@ -6,7 +6,7 @@ from jwcrypto.jws import JWK, JWS
 from pyld import jsonld
 
 """
-Methods to handle cryptography. Most source code is taken from Gaia-X Example 
+Methods to handle cryptography. Most source code is taken from Gaia-X Example
 in https://gitlab.com/gaia-x/lab/workshops/gaia-x-101/-/tree/master
 """
 
@@ -49,9 +49,10 @@ def sign_cred(cred: dict, key: JWK, verification_method: str) -> dict:
 
     # create JSON Web Signature for credential's hash
     jwstoken = JWS(payload)
-    jwstoken.add_signature(key, None,
-                            json_encode({"alg": "PS256", "b64": False, "crit": ["b64"]}),
-                            json_encode({"kid": key.thumbprint()}))
+    jwstoken.add_signature(key,
+                           None,
+                           json_encode({"alg": "PS256", "b64": False, "crit": ["b64"]}),
+                           json_encode({"kid": key.thumbprint()}))
     sig = jwstoken.serialize(compact=True)
 
     # add proof to credential as JsonWebSiganture2020, see https://w3c-ccg.github.io/lds-jws2020/
@@ -77,4 +78,3 @@ def load_jwk_from_file(path: str) -> JWK:
     with open(path, "rb") as key_file:
         bytes = key_file.read()
         return JWK.from_pem(bytes, password=None)
-
