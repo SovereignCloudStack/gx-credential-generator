@@ -55,7 +55,7 @@ def openstack(cloud, timeout, config):
         # create Gaia-X Credentials for CSP
         csp_gen = CspGenerator(conf=conf)
         csp_vcs = csp_gen.generate(auto_sign=True)
-        for vc in csp_vcs:
+        for vc in csp_vcs.values():
             print(json.dumps(vc, indent=2))
 
         # create Gaia-X Credentials for OopenStack
