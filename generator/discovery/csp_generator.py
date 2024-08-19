@@ -2,6 +2,8 @@
 """
 import json
 from datetime import datetime, timezone
+from generator.common import credentials
+
 
 import generator.common.const as const
 from generator.common import crypto
@@ -34,26 +36,34 @@ class CspGenerator:
         @return: dictionary of VCs
         """
         # sign Gaia-X terms and conditions
+        print('Create and sign VC of type "gx:GaiaXTermsAndConditions" for CSP...', end='')
         tandc_vc = self._sign_gaia_x_terms_and_conditions(auto_sign=auto_sign)
         if tandc_vc is None:
             return
+        print('ok')
 
         # retrieve legal registration number from GXDCH Notary
+        print('Request VC of type for "gx:LegalRegistrationNumber" for CSP at GXDCH Notary Service...', end='')
         lrn_vc = self.notary.request_reg_number_vc(
             csp=self.csp,
             cred_id=self.cred_base_url + "/lrn.json",
             cred_subject_id=self.cred_base_url + "/lrn_cs.json")
+        print('ok')
 
         # create Gaia-X Credential for CSP as Legal Person
+        print('Create and sign VC of type "gx:LegalPerson for CSP"...', end='')
         lp_vc = self._sign_legal_person(lrn_vc['credentialSubject']['id'])
+        lp_vc1 = self._sign_legal_person1(lrn_vc['credentialSubject']['id'])
+        lp_vc2 = self._sign_legal_person2(lrn_vc['credentialSubject']['id'])
+        print('ok')
 
         # request Gaia-X compliance credential for CSP as Legal Person
-        vp = dict()
-        vp['@context'] = const.VP_CONTEXT
-        vp['type'] = "VerifiablePresentation"
-        vp['verifiableCredential'] = [tandc_vc, lrn_vc, lp_vc]
-        cs_vc = self.compliance.request_compliance_vc(json.dumps(vp), self.cred_base_url + "/csp_compliance.json")
-        return {'tandc': tandc_vc, 'lrn': lrn_vc, 'lp': lp_vc, 'cs': json.loads(cs_vc)}
+        print('Request VC of type "gx:compliance" for CSP at GXDCH Compliance Service...', end='')
+        vp = credentials.convert_to_vp(creds=[tandc_vc, lrn_vc, lp_vc])
+        cs_vc = self.compliance.request_compliance_vc(vp, self.cred_base_url + "/csp_compliance.json")
+        print('ok')
+        return {'tandc': tandc_vc, 'lrn': lrn_vc, 'lp': lp_vc, 'cs': json.loads(cs_vc), 'vp_csp': vp}
+        #return {'tandc': tandc_vc, 'lrn': lrn_vc, 'lp': lp_vc, 'lp1': lp_vc1, 'lp2': lp_vc2 ,'cs': json.loads(cs_vc)}
 
     def _sign_gaia_x_terms_and_conditions(self, auto_sign: bool = False) -> dict:
         """
@@ -63,7 +73,6 @@ class CspGenerator:
         otherwise user is requested of confirm terms and conditions
         @return: Gaia-X Credential on signed Gaia-X terms and conditions as dictionary.
         """
-
         tand = self.registry.get_gx_tandc()
         if not auto_sign:
             print("Do you agree Gaia-X Terms and conditions version " + tand['version'] + ".")
@@ -113,7 +122,8 @@ class CspGenerator:
         lp_vc['issuer'] = self.csp['did']
         lp_vc['issuanceDate'] = str(datetime.now(tz=timezone.utc).isoformat())
         lp_vc['credentialSubject'] = {
-            "id": self.cred_base_url + "/legal_person_cs.json",  # I think "self.csp['did']" is correct, but Gaia-X expects link,
+            #"id": self.cred_base_url + "/legal_person_cs.json",  # I think "self.csp['did']" is correct, but Gaia-X expects link,
+            "id": self.csp['did'],
             "type": "gx:LegalParticipant",
             "gx:legalName": self.csp['legal-name'],
             "gx:legalRegistrationNumber": {
@@ -129,3 +139,58 @@ class CspGenerator:
         return crypto.sign_cred(cred=lp_vc,
                                 key=crypto.load_jwk_from_file(self.cred_settings[const.CONFIG_CRED_KEY]),
                                 verification_method=self.cred_settings[const.CONFIG_CRED_VER_METH])
+
+    def _sign_legal_person1(self, lrn_cred_id: str):
+        """
+        Create Gaia-X Credential for CSP as Legal Person.
+
+        @param lrn_cred_id: Id of Verifiable Credential attesting CSP's legal registration number.
+        @return: Gaia-X Credential on CSP as Legal Person as dictionary.
+        """
+        lp_vc = dict()
+        lp_vc['@context'] = [const.VC_CONTEXT, const.JWS_CONTEXT, const.REG_CONTEXT]
+        lp_vc['type'] = "VerifiableCredential"
+        lp_vc['id'] = self.cred_base_url + "/legal_person1.json"
+        lp_vc['issuer'] = self.csp['did']
+        lp_vc['issuanceDate'] = str(datetime.now(tz=timezone.utc).isoformat())
+        lp_vc['credentialSubject'] = {
+            "id": self.csp['did'],
+            "type": "gx:LegalParticipant",
+            "gx:legalName": self.csp['legal-name'],
+            "gx:legalRegistrationNumber": {
+                "id": lrn_cred_id
+            },
+            "gx:legalAddress": {
+                "gx:countrySubdivisionCode": self.csp['headquarter-address-country-code']
+            }
+        }
+        return crypto.sign_cred(cred=lp_vc,
+                                key=crypto.load_jwk_from_file(self.cred_settings[const.CONFIG_CRED_KEY]),
+                                verification_method=self.cred_settings[const.CONFIG_CRED_VER_METH])
+
+    def _sign_legal_person2(self, lrn_cred_id: str):
+        """
+        Create Gaia-X Credential for CSP as Legal Person.
+
+        @param lrn_cred_id: Id of Verifiable Credential attesting CSP's legal registration number.
+        @return: Gaia-X Credential on CSP as Legal Person as dictionary.
+        """
+        lp_vc = dict()
+        lp_vc['@context'] = [const.VC_CONTEXT, const.JWS_CONTEXT, const.REG_CONTEXT]
+        lp_vc['type'] = "VerifiableCredential"
+        lp_vc['id'] = self.cred_base_url + "/legal_person2.json"
+        lp_vc['issuer'] = self.csp['did']
+        lp_vc['issuanceDate'] = str(datetime.now(tz=timezone.utc).isoformat())
+        lp_vc['credentialSubject'] = {
+            "id": self.csp['did'],
+            # I think "self.csp['did']" is correct, but Gaia-X expects link,
+            "type": "gx:LegalParticipant",
+            "gx:legalName": self.csp['legal-name'],
+            "gx:headquarterAddress": {
+                "gx:countrySubdivisionCode": self.csp['legal-address-country-code']
+            }
+        }
+        return crypto.sign_cred(cred=lp_vc,
+                                key=crypto.load_jwk_from_file(self.cred_settings[const.CONFIG_CRED_KEY]),
+                                verification_method=self.cred_settings[const.CONFIG_CRED_VER_METH])
+
