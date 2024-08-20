@@ -122,8 +122,8 @@ class CspGenerator:
         lp_vc['issuer'] = self.csp['did']
         lp_vc['issuanceDate'] = str(datetime.now(tz=timezone.utc).isoformat())
         lp_vc['credentialSubject'] = {
-            #"id": self.cred_base_url + "/legal_person_cs.json",  # I think "self.csp['did']" is correct, but Gaia-X expects link,
-            "id": self.csp['did'],
+            "id": self.cred_base_url + "/legal_person_cs.json",  # I think "self.csp['did']" is correct, but Gaia-X expects link,
+            #"id": self.csp['did'],
             "type": "gx:LegalParticipant",
             "gx:legalName": self.csp['legal-name'],
             "gx:legalRegistrationNumber": {

@@ -64,18 +64,8 @@ def cli_commands():
 def openstack(cloud, timeout, config, out_dir):
     """Generates Gaia-X Credentials for CSP And OpenStack cloud CLOUD.
     CLOUD MUST refer to a name defined in Openstack's configuration file clouds.yaml."""
-    if not out_dir:
-        out_dir = os.getcwd()
-
-    if not os.path.isdir(out_dir):
-        raise NotADirectoryError(out_dir + "is not a directory or does not exit!")
-
     with open(config, "r") as config_file:
         conf = Config(yaml.safe_load(config_file))
-
-        dt = datetime.now()  # for date and time
-        ts_1 = datetime.timestamp(dt)  # for timestamp
-        ts_2 = dt.strftime('%Y-%m-%d_%H-%M-%S')
 
         # create Gaia-X Credentials for CSP
         csp_gen = CspGenerator(conf=conf)
@@ -91,23 +81,7 @@ def openstack(cloud, timeout, config, out_dir):
         vcs = dict()
         vcs.update(csp_vcs)
         vcs.update(so_vcs)
-
-        for key in vcs:
-            vc_path = os.path.join(out_dir, key + "_" + ts_2 + ".json")
-            with open(vc_path, "w") as vc_file:
-                if key == 'vp_csp':
-                    print(
-                        "Write Verifiable Presentation of Cloud Service Provider to be verified at GXDCH Compliance Service to " + str(
-                            vc_path))
-                    vc_file.write(json.dumps(vcs[key], indent=2))
-                elif key == 'vp_so':
-                    print(
-                        "Write Verifiable Presentation of Servivce Offering to be verified at GXDCH Compliance Service to " + str(
-                            vc_path))
-                    vc_file.write(json.dumps(vcs[key], indent=2))
-                else:
-                    print("Write Gaia-X Credential for " + VC_NAME_LOOKUP[key] + " to " + str(vc_path))
-                    vc_file.write(json.dumps(vcs[key], indent=2))
+        _print_vcs(vcs, out_dir)
 
 
 @click.command()
@@ -124,19 +98,21 @@ def kubernetes():
 
 @click.command()
 @click.option(
+    "--out-dir",
+    help="Path to output directory.",
+)
+@click.option(
     "--config",
     default="config/config.yaml",
     help="Path to Configuration file for SCS GX Credential Generator.")
-def csp(config):
+def csp(config, out_dir):
     """Generate Gaia-X Credential for CPS."""
     # load config file
     with open(config, "r") as config_file:
         config = Config(yaml.safe_load(config_file))
 
         vcs = CspGenerator(config).generate()
-        if vcs is not None:
-            for vc in vcs.values():
-                print(json.dumps(vc, indent=4))
+        _print_vcs(vcs, out_dir)
 
 
 def init_openstack_connection(cloud: str, timeout: int = 12) -> Connection:
@@ -147,7 +123,7 @@ def init_openstack_connection(cloud: str, timeout: int = 12) -> Connection:
     @return: OpenStacl connection.
     """
     try:
-        conn = os.connect(cloud=cloud, timeout=timeout, api_timeout=timeout * 1.5 + 4)
+        conn = o_stack.connect(cloud=cloud, timeout=timeout, api_timeout=timeout * 1.5 + 4)
         conn.authorize()
     except Exception:
         print("INFO: Retry connection with 'default' domain", file=sys.stderr)
@@ -174,8 +150,6 @@ def create_vmso_vcs(conf: Config, cloud: str, csp_vcs: List[dict], timeout: int 
     @param timeout: timeout for connection to OpenStack cloud. If timeout expires, connection is initialed a second time.
     @return: A list of Gaia-X Credentials describing given OpenStack cloud.
     """
-
-    print('Create VC of type "gx:VirtualMachineServiceOffering...')
     csp = conf.get_value([const.CONFIG_CSP])
     # iaas = conf.get_value([const.CONFIG_IAAS]) not yet used, as Gaia-X "abuses" id attribute of Verifiable Credentials
     cred_settings = conf.get_value([const.CONFIG_CRED])
@@ -186,7 +160,7 @@ def create_vmso_vcs(conf: Config, cloud: str, csp_vcs: List[dict], timeout: int 
     discovery = OpenstackDiscovery(conn=conn, config=conf)
 
     # run openstack discovery and build Gaia-X Credential for Virtual Machine Service Offering
-    print('Create VC of type "gx:VirtualMachineServiceOffering...', end='')
+    print('Create VC of type "gx:VirtualMachineServiceOffering"...', end='')
     vm_offering = discovery.discover()
     vmso_vc = dict()
     vmso_vc['@context'] = [const.VC_CONTEXT, const.JWS_CONTEXT, const.REG_CONTEXT]
@@ -201,7 +175,7 @@ def create_vmso_vcs(conf: Config, cloud: str, csp_vcs: List[dict], timeout: int 
     print('ok')
 
     # build Gaia-X Credential for Service Offering
-    print('Create VC of type "gx:ServiceOffering...', end='')
+    print('Create VC of type "gx:ServiceOffering"...', end='')
     so_vc = dict()
     so_vc['@context'] = [const.VC_CONTEXT, const.JWS_CONTEXT, const.REG_CONTEXT]
     so_vc['type'] = "VerifiableCredential"
@@ -235,13 +209,45 @@ def create_vmso_vcs(conf: Config, cloud: str, csp_vcs: List[dict], timeout: int 
     print('ok')
 
     # Request Gaia-X Compliance Credential for Service Offering
-    print('Request VC of type "gx:compliance" for Service Offering CSP at GXDCH Compliance Service...', end='')
+    print('Request VC of type "gx:compliance" for Service Offering at GXDCH Compliance Service...', end='')
     vp = credentials.convert_to_vp(creds=[csp_vcs['tandc'], csp_vcs['lrn'], csp_vcs['lp'], so_vc_signed])
     comp_vc = compliance.request_compliance_vc(vp,
                                                cred_settings[const.CONFIG_CRED_BASE_CRED_URL] + "/so_compliance.json")
 
     print('ok')
     return {'so': so_vc, 'cs': json.loads(comp_vc), 'vmso': vmso_vc_signed, 'vp_so': vp}
+
+
+def _get_timestamp():
+    dt = datetime.now()  # for date and time
+    # ts_1 = datetime.timestamp(dt)  # for timestamp
+    return dt.strftime('%Y-%m-%d_%H-%M-%S')
+
+
+def _print_vcs(vcs: dict, out_dir: str):
+    if not out_dir:
+        out_dir = os.getcwd()
+
+    if not os.path.isdir(out_dir):
+        raise NotADirectoryError(out_dir + "is not a directory or does not exit!")
+
+    ts = _get_timestamp()
+    for key in vcs:
+        vc_path = os.path.join(out_dir, key + "_" + ts + ".json")
+        with open(vc_path, "w") as vc_file:
+            if key == 'vp_csp':
+                print(
+                    "Write Verifiable Presentation of Cloud Service Provider to be verified at GXDCH Compliance Service to " + str(
+                        vc_path))
+                vc_file.write(json.dumps(vcs[key], indent=2))
+            elif key == 'vp_so':
+                print(
+                    "Write Verifiable Presentation of Service Offering to be verified at GXDCH Compliance Service to " + str(
+                        vc_path))
+                vc_file.write(json.dumps(vcs[key], indent=2))
+            else:
+                print("Write Gaia-X Credential for " + VC_NAME_LOOKUP[key] + " to " + str(vc_path))
+                vc_file.write(json.dumps(vcs[key], indent=2))
 
 
 cli_commands.add_command(openstack)

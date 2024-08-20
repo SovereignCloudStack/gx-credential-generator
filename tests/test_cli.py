@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, patch, mock_open
 
 import yaml
 from click.testing import CliRunner
@@ -20,8 +20,10 @@ class CliTestCase(unittest.TestCase):
     @patch("generator.common.crypto.load_jwk_from_file")
     @patch("generator.discovery.openstack.openstack_discovery.OpenstackDiscovery.discover")
     @patch("openstack.connect")
-    def test_generatate_vsmo(self, os_connect, os_discover, load_jwk, gxdch_req_compl):
+    @patch("generator.cli._print_vcs")
+    def test_generatate_vsmo(self, cli_print_vs, os_connect, os_discover, load_jwk, gxdch_req_compl):
         # Mock openstack calls
+        cli_print_vs.return_value = None
         os_connect.return_value = MockConnection(images=[], flavors=[])
         os_discover.return_value = VirtualMachineServiceOffering(
             providedBy="foo",
@@ -53,16 +55,19 @@ class CliTestCase(unittest.TestCase):
         os_discover.assert_called_once()
         gxdch_req_compl.assert_called_once()
 
-        self.assertEqual(3, len(vcs))
-        self.assertEqual("gx:ServiceOffering", vcs[0]['credentialSubject']["type"])
-        self.assertEqual("gx:ComplianceCredential", vcs[1]['credentialSubject']["type"])
-        self.assertEqual("gx:VirtualMachineServiceOffering", vcs[2]['credentialSubject']["type"])
+        self.assertEqual(4, len(vcs))
+        self.assertEqual("gx:ServiceOffering", vcs['so']['credentialSubject']["type"])
+        self.assertEqual("gx:ComplianceCredential", vcs['cs']['credentialSubject']["type"])
+        self.assertEqual("gx:VirtualMachineServiceOffering", vcs['vmso']['credentialSubject']["type"])
+        self.assertIsNotNone(vcs['vp_so'])
 
     @patch("generator.discovery.csp_generator.CspGenerator.generate")
     @patch("generator.cli.create_vmso_vcs")
-    def test_openstack(self, gen_vmso, gen_csp):
-        gen_vmso.return_value = ["foo"]
-        gen_csp.return_value = ["bar"]
+    @patch("generator.cli._print_vcs")
+    def test_openstack(self, cli_print_vs, gen_vmso, gen_csp):
+        cli_print_vs.return_value = None
+        gen_vmso.return_value = {"foo": "foo"}
+        gen_csp.return_value = {"bar": "bar"}
 
         runner = CliRunner()
         result = runner.invoke(
@@ -74,7 +79,6 @@ class CliTestCase(unittest.TestCase):
 
         self.assertIsNone(result.exception)
         self.assertEqual(0, result.exit_code)
-        self.assertEqual("\"bar\"\n\"foo\"\n", result.output)
 
     @patch("openstack.connect")
     def test_init_connection(self, os_connect):
@@ -88,7 +92,9 @@ class CliTestCase(unittest.TestCase):
         self.assertIsNotNone(con)
 
     @patch("generator.discovery.csp_generator.CspGenerator.generate")
-    def test_csp(self, gen_csp):
+    @patch("generator.cli._print_vcs")
+    def test_csp(self, cli_print_vs, gen_csp):
+        cli_print_vs.return_value = None
         gen_csp.return_value = {"vc": "bar"}
 
         runner = CliRunner()
@@ -97,10 +103,8 @@ class CliTestCase(unittest.TestCase):
         )
 
         gen_csp.assert_called_once()
-
         self.assertIsNone(result.exception)
         self.assertEqual(0, result.exit_code)
-        self.assertEqual("\"bar\"\n", result.output)
 
     def _test_kubernetes(self):
         # TODO: Implement test case
