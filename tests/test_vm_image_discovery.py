@@ -871,8 +871,7 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
                 OS_Image(os_version="1", os_distro="windows")
             ),
         )
-        self.assertIsNone(self.discovery._get_operation_system(OS_Image())
-        )
+        self.assertIsNone(self.discovery._get_operation_system(OS_Image()))
 
 
 if __name__ == "__main__":

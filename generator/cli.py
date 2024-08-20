@@ -17,9 +17,9 @@ from datetime import datetime, timezone
 from typing import List
 
 import click
+import openstack as o_stack
 # import openstack as os
 import yaml
-import openstack as o_stack
 from openstack.connection import Connection
 
 import generator.common.const as const

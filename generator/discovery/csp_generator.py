@@ -2,11 +2,9 @@
 """
 import json
 from datetime import datetime, timezone
-from generator.common import credentials
-
 
 import generator.common.const as const
-from generator.common import crypto
+from generator.common import credentials, crypto
 from generator.common.config import Config
 from generator.discovery.gxdch_services import (ComplianceService,
                                                 NotaryService, RegistryService)
@@ -53,8 +51,8 @@ class CspGenerator:
         # create Gaia-X Credential for CSP as Legal Person
         print('Create and sign VC of type "gx:LegalPerson for CSP"...', end='')
         lp_vc = self._sign_legal_person(lrn_vc['credentialSubject']['id'])
-        lp_vc1 = self._sign_legal_person1(lrn_vc['credentialSubject']['id'])
-        lp_vc2 = self._sign_legal_person2(lrn_vc['credentialSubject']['id'])
+        # lp_vc1 = self._sign_legal_person1(lrn_vc['credentialSubject']['id'])
+        # lp_vc2 = self._sign_legal_person2(lrn_vc['credentialSubject']['id'])
         print('ok')
 
         # request Gaia-X compliance credential for CSP as Legal Person
@@ -63,7 +61,7 @@ class CspGenerator:
         cs_vc = self.compliance.request_compliance_vc(vp, self.cred_base_url + "/csp_compliance.json")
         print('ok')
         return {'tandc': tandc_vc, 'lrn': lrn_vc, 'lp': lp_vc, 'cs': json.loads(cs_vc), 'vp_csp': vp}
-        #return {'tandc': tandc_vc, 'lrn': lrn_vc, 'lp': lp_vc, 'lp1': lp_vc1, 'lp2': lp_vc2 ,'cs': json.loads(cs_vc)}
+        # return {'tandc': tandc_vc, 'lrn': lrn_vc, 'lp': lp_vc, 'lp1': lp_vc1, 'lp2': lp_vc2 ,'cs': json.loads(cs_vc)}
 
     def _sign_gaia_x_terms_and_conditions(self, auto_sign: bool = False) -> dict:
         """
@@ -123,7 +121,7 @@ class CspGenerator:
         lp_vc['issuanceDate'] = str(datetime.now(tz=timezone.utc).isoformat())
         lp_vc['credentialSubject'] = {
             "id": self.cred_base_url + "/legal_person_cs.json",  # I think "self.csp['did']" is correct, but Gaia-X expects link,
-            #"id": self.csp['did'],
+            # "id": self.csp['did'],
             "type": "gx:LegalParticipant",
             "gx:legalName": self.csp['legal-name'],
             "gx:legalRegistrationNumber": {
@@ -193,4 +191,3 @@ class CspGenerator:
         return crypto.sign_cred(cred=lp_vc,
                                 key=crypto.load_jwk_from_file(self.cred_settings[const.CONFIG_CRED_KEY]),
                                 verification_method=self.cred_settings[const.CONFIG_CRED_VER_METH])
-

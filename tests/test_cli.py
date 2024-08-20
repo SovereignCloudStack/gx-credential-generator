@@ -1,6 +1,6 @@
 import os
 import unittest
-from unittest.mock import MagicMock, patch, mock_open
+from unittest.mock import MagicMock, patch
 
 import yaml
 from click.testing import CliRunner
@@ -127,8 +127,7 @@ class CliTestCase(unittest.TestCase):
             self.assertEqual(2, m2.call_count)
 
         with patch('builtins.open', unittest.mock.mock_open()):
-            self.assertRaises(NotADirectoryError,  cli._print_vcs, vcs, "/foo")
-
+            self.assertRaises(NotADirectoryError, cli._print_vcs, vcs, "/foo")
 
 
 if __name__ == "__main__":
