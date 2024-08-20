@@ -229,4 +229,5 @@ class ServerFlavorDiscovery:
         @param gx_flavor Gaia-X flavor specification
         @type gx_flavor: ServerFlavor
         """
-        gx_flavor.description = os_flavor.description
+        if gx_flavor is not None:
+            gx_flavor.description = os_flavor.description
