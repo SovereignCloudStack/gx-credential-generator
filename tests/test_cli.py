@@ -1,3 +1,4 @@
+import os
 import unittest
 from unittest.mock import MagicMock, patch, mock_open
 
@@ -113,6 +114,21 @@ class CliTestCase(unittest.TestCase):
         self.assertIsNone(result.exception)
         self.assertEqual(0, result.exit_code)
         pass
+
+    def test_print_vcs(self):
+        out_dir = os.getcwd()
+        vcs = {'so': {'foo': 'bar'}, 'lrn': {'bar': 'foo'}}
+        with patch('builtins.open', unittest.mock.mock_open()) as m1:
+            cli._print_vcs(vcs=vcs, out_dir=out_dir)
+            self.assertEqual(2, m1.call_count)
+
+        with patch('builtins.open', unittest.mock.mock_open()) as m2:
+            cli._print_vcs(vcs=vcs, out_dir=None)
+            self.assertEqual(2, m2.call_count)
+
+        with patch('builtins.open', unittest.mock.mock_open()):
+            self.assertRaises(NotADirectoryError,  cli._print_vcs, vcs, "/foo")
+
 
 
 if __name__ == "__main__":

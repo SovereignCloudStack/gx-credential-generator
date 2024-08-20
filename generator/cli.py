@@ -229,7 +229,7 @@ def _print_vcs(vcs: dict, out_dir: str):
         out_dir = os.getcwd()
 
     if not os.path.isdir(out_dir):
-        raise NotADirectoryError(out_dir + "is not a directory or does not exit!")
+        raise NotADirectoryError(out_dir + " is not a directory or does not exit!")
 
     ts = _get_timestamp()
     for key in vcs:
