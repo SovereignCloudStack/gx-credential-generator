@@ -59,7 +59,7 @@ class CspGenerator:
         cs_vc = self.compliance.request_compliance_vc(vp, self.cred_base_url + "/csp_compliance.json")
         print('ok')
         return {'tandc': tandc_vc, 'lrn': lrn_vc, 'lp': lp_vc, 'cs': json.loads(cs_vc), 'vp_csp': vp}
-        
+
     def _sign_gaia_x_terms_and_conditions(self, auto_sign: bool = False) -> dict:
         """
         Create a Gaia-X Credential on signed Gaia-X terms and conditions.
