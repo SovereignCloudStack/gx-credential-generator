@@ -32,7 +32,7 @@ class NotaryService:
         body = {
             '@context': const.LRN_CONTEXT,
             'type': "gx:legalRegistrationNumber",
-            'id': cred_subject_id, # csp['did'] TODO: I think DID is correct here, but Gaia-X requires credential id, instead of credential subject id
+            'id': cred_subject_id,  # csp['did'] TODO: I think DID is correct here, but Gaia-X requires credential id, instead of credential subject id
             'gx:vatID': csp[const.CONFIG_CSP_REG_NUMBER][const.CONFIG_CSP_VAT_ID],
         }
         resp = requests.post(self.api + "/registrationNumberVC?vcid=" + str(cred_id), json=body)

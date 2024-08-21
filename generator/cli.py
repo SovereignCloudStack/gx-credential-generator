@@ -189,7 +189,7 @@ def create_vmso_vcs(conf: Config, cloud: str, csp_vcs: List[dict], timeout: int 
             },
             "gx:termsAndConditions": [
                 {'gx:URL': s_tac.url, 'gx:hash': s_tac.hash}
-                    for s_tac in vm_offering.serviceOfferingTermsAndConditions],
+                for s_tac in vm_offering.serviceOfferingTermsAndConditions],
             "gx:policy": vm_offering.servicePolicy,
             "gx:dataAccountExport": {
                 "gx:requestType": vm_offering.dataAccountExport.requestType.code.text,
@@ -198,10 +198,6 @@ def create_vmso_vcs(conf: Config, cloud: str, csp_vcs: List[dict], timeout: int 
             }
         }
     }
-
-        
-        
-    
 
     # sign service offering credential
     so_vc_signed = crypto.sign_cred(cred=so_vc,
