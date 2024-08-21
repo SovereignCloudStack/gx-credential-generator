@@ -88,16 +88,17 @@ class CspGenerator:
                 print("Gaia-X terms and conditions were not signed - process aborted!")
                 return
 
-        tandc_vc = dict()
-        tandc_vc['@context'] = [const.VC_CONTEXT, const.JWS_CONTEXT, const.REG_CONTEXT]
-        tandc_vc['type'] = "VerifiableCredential"
-        tandc_vc['id'] = self.cred_base_url + "/tandc.json"
-        tandc_vc['issuer'] = self.csp['did']
-        tandc_vc['issuanceDate'] = str(datetime.now(tz=timezone.utc).isoformat())
-        tandc_vc['credentialSubject'] = {
-            "type": "gx:GaiaXTermsAndConditions",
-            "gx:termsAndConditions": tand['text'],
-            "id": self.cred_base_url + "/tandc_cs.json"
+        tandc_vc = {
+            '@context': [const.VC_CONTEXT, const.JWS_CONTEXT, const.REG_CONTEXT],
+            'type': "VerifiableCredential",
+            'id': self.cred_base_url + "/tandc.json",
+            'issuer': self.csp['did'],
+            'issuanceDate': str(datetime.now(tz=timezone.utc).isoformat()),
+            'credentialSubject': {
+                "type": "gx:GaiaXTermsAndConditions",
+                "gx:termsAndConditions": tand['text'],
+                "id": self.cred_base_url + "/tandc_cs.json"
+            }
         }
         return crypto.sign_cred(cred=tandc_vc,
                                 key=crypto.load_jwk_from_file(self.cred_settings[const.CONFIG_CRED_KEY]),
@@ -110,25 +111,26 @@ class CspGenerator:
         @param lrn_cred_id: Id of Verifiable Credential attesting CSP's legal registration number.
         @return: Gaia-X Credential on CSP as Legal Person as dictionary.
         """
-        lp_vc = dict()
-        lp_vc['@context'] = [const.VC_CONTEXT, const.JWS_CONTEXT, const.REG_CONTEXT]
-        lp_vc['type'] = "VerifiableCredential"
-        lp_vc['id'] = self.cred_base_url + "/legal_person.json"
-        lp_vc['issuer'] = self.csp['did']
-        lp_vc['issuanceDate'] = str(datetime.now(tz=timezone.utc).isoformat())
-        lp_vc['credentialSubject'] = {
-            "id": self.cred_base_url + "/legal_person_cs.json",  # I think "self.csp['did']" is correct, but Gaia-X expects link,
-            # "id": self.csp['did'],
-            "type": "gx:LegalParticipant",
-            "gx:legalName": self.csp['legal-name'],
-            "gx:legalRegistrationNumber": {
-                "id": lrn_cred_id
-            },
-            "gx:headquarterAddress": {
-                "gx:countrySubdivisionCode": self.csp['legal-address-country-code']
-            },
-            "gx:legalAddress": {
-                "gx:countrySubdivisionCode": self.csp['headquarter-address-country-code']
+        lp_vc = {
+            '@context': [const.VC_CONTEXT, const.JWS_CONTEXT, const.REG_CONTEXT],
+            'type': "VerifiableCredential",
+            'id': self.cred_base_url + "/legal_person.json",
+            'issuer': self.csp['did'],
+            'issuanceDate': str(datetime.now(tz=timezone.utc).isoformat()),
+            'credentialSubject': {
+                "id": self.cred_base_url + "/legal_person_cs.json",  # I think "self.csp['did']" is correct, but Gaia-X expects link,
+                # "id": self.csp['did'],
+                "type": "gx:LegalParticipant",
+                "gx:legalName": self.csp['legal-name'],
+                "gx:legalRegistrationNumber": {
+                    "id": lrn_cred_id
+                },
+                "gx:headquarterAddress": {
+                    "gx:countrySubdivisionCode": self.csp['legal-address-country-code']
+                },
+                "gx:legalAddress": {
+                    "gx:countrySubdivisionCode": self.csp['headquarter-address-country-code']
+                }
             }
         }
         return crypto.sign_cred(cred=lp_vc,

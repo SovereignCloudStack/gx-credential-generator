@@ -22,19 +22,19 @@ class ComplianceService:
 class NotaryService:
     """ Wrapper class to connect GXDCH Notary Service. """
 
-    def __init__(self, api: str):
-        if not api:
+    def __init__(self, api_url: str):
+        if not api_url:
             raise AttributeError("Parameters MUST not be None")
-        self.api = api
+        self.api = api_url
 
     # TODO: Support all kind of registration numbers
     def request_reg_number_vc(self, csp: dict, cred_id: str, cred_subject_id: str) -> dict:
-        body = dict()
-        body['@context'] = const.LRN_CONTEXT
-        body['type'] = "gx:legalRegistrationNumber"
-        body['id'] = cred_subject_id  # csp['did'] TODO: I think DID is correct here, but Gaia-X requires credential id, instead of credential subject id
-        body['gx:vatID'] = csp[const.CONFIG_CSP_REG_NUMBER][const.CONFIG_CSP_VAT_ID]
-
+        body = {
+            '@context': const.LRN_CONTEXT,
+            'type': "gx:legalRegistrationNumber",
+            'id': cred_subject_id, # csp['did'] TODO: I think DID is correct here, but Gaia-X requires credential id, instead of credential subject id
+            'gx:vatID': csp[const.CONFIG_CSP_REG_NUMBER][const.CONFIG_CSP_VAT_ID],
+        }
         resp = requests.post(self.api + "/registrationNumberVC?vcid=" + str(cred_id), json=body)
 
         if resp.ok:
@@ -53,7 +53,6 @@ class RegistryService:
 
     def get_gx_tandc(self) -> dict:
         resp = requests.get(self.api + "/api/termsAndConditions")
-
         if resp.ok:
             return resp.json()
         else:

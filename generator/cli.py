@@ -36,7 +36,7 @@ DATA_FILE_FORMAT = "json-ld"
 VC_NAME_LOOKUP = {
     "lp": "Legal Person",
     "lrn": "Legal Registration Number",
-    "tandc": "Gaia-X Terms and Contitions",
+    "tandc": "Gaia-X Terms and Conditions",
     "cs": "GXDCH Compliance Service",
     "so": "Service Offering",
     "vmso": "Virtual Machine Service Offering",
@@ -175,31 +175,33 @@ def create_vmso_vcs(conf: Config, cloud: str, csp_vcs: List[dict], timeout: int 
 
     # build Gaia-X Credential for Service Offering
     print('Create VC of type "gx:ServiceOffering"...', end='')
-    so_vc = dict()
-    so_vc['@context'] = [const.VC_CONTEXT, const.JWS_CONTEXT, const.REG_CONTEXT]
-    so_vc['type'] = "VerifiableCredential"
-    so_vc['id'] = cred_settings[const.CONFIG_CRED_BASE_CRED_URL] + "/so.json"
-    so_vc['issuer'] = csp['did']
-    so_vc['issuanceDate'] = str(datetime.now(tz=timezone.utc).isoformat())
-    so_vc['credentialSubject'] = {
-        "type": "gx:ServiceOffering",
-        "id": cred_settings[const.CONFIG_CRED_BASE_CRED_URL] + "/so_cs.json",  # iaas['did'],
-        "gx:providedBy": {
-            'id': csp_vcs['lp']['credentialSubject']['id']
-        },
-        "gx:termsAndConditions": list(),
-        "gx:policy": vm_offering.servicePolicy,
-        "gx:dataAccountExport": {
-            "gx:requestType": vm_offering.dataAccountExport.requestType.code.text,
-            "gx:accessType": vm_offering.dataAccountExport.accessType.code.text,
-            "gx:formatType": "application/" + vm_offering.dataAccountExport.formatType.code.text
+    so_vc = {
+        '@context': [const.VC_CONTEXT, const.JWS_CONTEXT, const.REG_CONTEXT],
+        'type': "VerifiableCredential",
+        'id': cred_settings[const.CONFIG_CRED_BASE_CRED_URL] + "/so.json",
+        'issuer': csp['did'],
+        'issuanceDate': str(datetime.now(tz=timezone.utc).isoformat()),
+        'credentialSubject': {
+            "type": "gx:ServiceOffering",
+            "id": cred_settings[const.CONFIG_CRED_BASE_CRED_URL] + "/so_cs.json",  # iaas['did'],
+            "gx:providedBy": {
+                'id': csp_vcs['lp']['credentialSubject']['id']
+            },
+            "gx:termsAndConditions": [
+                {'gx:URL': s_tac.url, 'gx:hash': s_tac.hash}
+                    for s_tac in vm_offering.serviceOfferingTermsAndConditions],
+            "gx:policy": vm_offering.servicePolicy,
+            "gx:dataAccountExport": {
+                "gx:requestType": vm_offering.dataAccountExport.requestType.code.text,
+                "gx:accessType": vm_offering.dataAccountExport.accessType.code.text,
+                "gx:formatType": "application/" + vm_offering.dataAccountExport.formatType.code.text
+            }
         }
     }
 
-    for s_tac in vm_offering.serviceOfferingTermsAndConditions:
-        so_vc['credentialSubject']["gx:termsAndConditions"].append({
-            'gx:URL': s_tac.url,
-            'gx:hash': s_tac.hash})
+        
+        
+    
 
     # sign service offering credential
     so_vc_signed = crypto.sign_cred(cred=so_vc,
