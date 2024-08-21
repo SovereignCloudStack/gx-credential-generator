@@ -18,7 +18,6 @@ from typing import List
 
 import click
 import openstack as o_stack
-# import openstack as os
 import yaml
 from openstack.connection import Connection
 
