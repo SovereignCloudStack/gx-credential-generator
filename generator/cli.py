@@ -144,7 +144,7 @@ def create_vmso_vcs(conf: Config, cloud: str, csp_vcs: List[dict], timeout: int 
       - Gaia-X Credential of GXDCH Compliance Service, attesting complaince of OpenStack cloud description with Gaia-X rules.
     @param conf: configuration settings for creation process.
     @param cloud: OpenStack ncloud name.
-    @param csp_vc: Gaia-X Credentials of Cloud Service Provider.
+    @param csp_vcs: Gaia-X Credentials of Cloud Service Provider.
     @param timeout: timeout for connection to OpenStack cloud. If timeout expires, connection is initialed a second time.
     @return: A list of Gaia-X Credentials describing given OpenStack cloud.
     """
