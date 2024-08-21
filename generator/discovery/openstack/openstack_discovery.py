@@ -78,7 +78,7 @@ class OpenstackDiscovery:
 
         if len(service_tac) == 0:
             raise ValueError(
-                "Service offerings terms and conditions MUST not be empty. Please check config.yaml. There MUST be at least on entry."
+                "Service offerings terms and conditions MUST not be empty. Please check config.yaml. There MUST be at least one entry."
                 + const.CONFIG_IAAS + "." + const.CONFIG_IAAS_T_AND_C
             )
 
