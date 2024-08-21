@@ -160,13 +160,14 @@ def create_vmso_vcs(conf: Config, cloud: str, csp_vcs: List[dict], timeout: int 
     # run openstack discovery and build Gaia-X Credential for Virtual Machine Service Offering
     print('Create VC of type "gx:VirtualMachineServiceOffering"...', end='')
     vm_offering = discovery.discover()
-    vmso_vc = dict()
-    vmso_vc['@context'] = [const.VC_CONTEXT, const.JWS_CONTEXT, const.REG_CONTEXT]
-    vmso_vc['type'] = "VerifiableCredential"
-    vmso_vc['id'] = cred_settings[const.CONFIG_CRED_BASE_CRED_URL] + "/vmo.json"
-    vmso_vc['issuer'] = csp['did']
-    vmso_vc['issuanceDate'] = str(datetime.now(tz=timezone.utc).isoformat())
-    vmso_vc['credentialSubject'] = json.loads(json.dumps(vm_offering, default=json_ld.to_json_ld))
+    vmso_vc = {
+        '@context': [const.VC_CONTEXT, const.JWS_CONTEXT, const.REG_CONTEXT],
+        'type': "VerifiableCredential",
+        'id': cred_settings[const.CONFIG_CRED_BASE_CRED_URL] + "/vmo.json",
+        'issuer': csp['did'],
+        'issuanceDate': str(datetime.now(tz=timezone.utc).isoformat()),
+        'credentialSubject': json.loads(json.dumps(vm_offering, default=json_ld.to_json_ld)),
+    }
     vmso_vc_signed = crypto.sign_cred(cred=vmso_vc,
                                       key=crypto.load_jwk_from_file(cred_settings[const.CONFIG_CRED_KEY]),
                                       verification_method=cred_settings[const.CONFIG_CRED_VER_METH])
