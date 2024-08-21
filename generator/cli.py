@@ -110,8 +110,8 @@ def csp(config, out_dir):
     with open(config, "r") as config_file:
         config = Config(yaml.safe_load(config_file))
 
-        vcs = CspGenerator(config).generate()
-        _print_vcs(vcs, out_dir)
+    vcs = CspGenerator(config).generate()
+    _print_vcs(vcs, out_dir)
 
 
 def init_openstack_connection(cloud: str, timeout: int = 12) -> Connection:
