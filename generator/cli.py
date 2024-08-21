@@ -67,21 +67,20 @@ def openstack(cloud, timeout, config, out_dir):
     with open(config, "r") as config_file:
         conf = Config(yaml.safe_load(config_file))
 
-        # create Gaia-X Credentials for CSP
-        csp_gen = CspGenerator(conf=conf)
-        csp_vcs = csp_gen.generate(auto_sign=True)
+    # create Gaia-X Credentials for CSP
+    csp_gen = CspGenerator(conf=conf)
+    csp_vcs = csp_gen.generate(auto_sign=True)
 
-        # create Gaia-X Credentials for OpenStack
-        so_vcs = create_vmso_vcs(
-            conf=conf,
-            cloud=cloud,
-            csp_vcs=csp_vcs,
-            timeout=timeout)
+    # create Gaia-X Credentials for OpenStack
+    so_vcs = create_vmso_vcs(
+        conf=conf,
+        cloud=cloud,
+        csp_vcs=csp_vcs,
+        timeout=timeout,
+    )
 
-        vcs = dict()
-        vcs.update(csp_vcs)
-        vcs.update(so_vcs)
-        _print_vcs(vcs, out_dir)
+    vcs = {**csp_vcs, **so_vcs}
+    _print_vcs(vcs, out_dir)
 
 
 @click.command()
