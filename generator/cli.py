@@ -26,7 +26,8 @@ import generator.common.json_ld as json_ld
 from generator.common import credentials, crypto
 from generator.common.config import Config
 from generator.discovery.csp_generator import CspGenerator
-from generator.discovery.gxdch_services import ComplianceService
+from generator.discovery.gxdch_services import (ComplianceService,
+                                                RegistryService)
 from generator.discovery.openstack.openstack_discovery import \
     OpenstackDiscovery
 
@@ -50,7 +51,13 @@ def cli_commands():
 
 @click.command()
 @click.option(
+    "--auto-sign/--no-auto-sign",
+    default=False,
+    help="Sign Gaia-X Terms and Conditions, automatically, without asking for permission on screen.",
+)
+@click.option(
     "--out-dir",
+    default=".",
     help="Path to output directory.",
 )
 @click.option(
@@ -60,15 +67,20 @@ def cli_commands():
 )
 @click.option("--timeout", default=24, help="Timeout for API calls in seconds")
 @click.argument("cloud")
-def openstack(cloud, timeout, config, out_dir):
+def openstack(cloud, timeout, config, out_dir, auto_sign):
     """Generates Gaia-X Credentials for CSP And OpenStack cloud CLOUD.
     CLOUD MUST refer to a name defined in Openstack's configuration file clouds.yaml."""
     with open(config, "r") as config_file:
         conf = Config(yaml.safe_load(config_file))
 
+    if not auto_sign and not _are_gaiax_tandc_signed(conf):
+        # user did not agree Gaia-X terms and conditions, we have to abort here
+        print("Gaia-X terms and conditions were not signed - process aborted!")
+        return
+
     # create Gaia-X Credentials for CSP
     csp_gen = CspGenerator(conf=conf)
-    csp_vcs = csp_gen.generate(auto_sign=True)
+    csp_vcs = csp_gen.generate()
 
     # create Gaia-X Credentials for OpenStack
     so_vcs = create_vmso_vcs(
@@ -96,6 +108,11 @@ def kubernetes():
 
 @click.command()
 @click.option(
+    "--auto-sign/--no-auto-sign",
+    default=False,
+    help="Sign Gaia-X Terms and Conditions, automatically, without asking for permission on screen.",
+)
+@click.option(
     "--out-dir",
     help="Path to output directory.",
 )
@@ -103,13 +120,17 @@ def kubernetes():
     "--config",
     default="config/config.yaml",
     help="Path to Configuration file for SCS GX Credential Generator.")
-def csp(config, out_dir):
+def csp(config, out_dir, auto_sign):
     """Generate Gaia-X Credential for CPS."""
     # load config file
     with open(config, "r") as config_file:
-        config = Config(yaml.safe_load(config_file))
+        conf = Config(yaml.safe_load(config_file))
 
-    vcs = CspGenerator(config).generate()
+    if not auto_sign and not _are_gaiax_tandc_signed(conf):
+        # user did not agree Gaia-X terms and conditions, we have to abort here
+        print("Gaia-X terms and conditions were not signed - process aborted!")
+        return
+    vcs = CspGenerator(conf).generate()
     _print_vcs(vcs, out_dir)
 
 
@@ -221,10 +242,7 @@ def _get_timestamp():
     return dt.strftime('%Y-%m-%d_%H-%M-%S')
 
 
-def _print_vcs(vcs: dict, out_dir: str):
-    if not out_dir:
-        out_dir = os.getcwd()
-
+def _print_vcs(vcs: dict, out_dir: str = "."):
     if not os.path.isdir(out_dir):
         raise NotADirectoryError(out_dir + " is not a directory or does not exit!")
 
@@ -245,6 +263,28 @@ def _print_vcs(vcs: dict, out_dir: str):
             else:
                 print("Write Gaia-X Credential for " + VC_NAME_LOOKUP[key] + " to " + str(vc_path))
                 vc_file.write(json.dumps(vcs[key], indent=2))
+
+
+def _are_gaiax_tandc_signed(conf: Config) -> bool:
+    reg = RegistryService(conf.get_value([const.CONST_GXDCH, const.CONST_GXDCH_REG]))
+    tand = reg.get_gx_tandc()
+
+    print("Do you agree Gaia-X Terms and conditions version " + tand['version'] + ".")
+    print()
+    print("-------------------------- Gaia-X Terms and Conditions --------------------------------------------")
+    print(tand['text'])
+    print("-------------------------- ------------------------------------------------------------------------")
+    print()
+    print("Please type 'y' for 'I do agree' and 'n' for 'I do not agree': ")
+
+    resp = input()
+    while resp.lower() not in ['y', 'n']:
+        print("Please type 'y' for 'I do agree' and 'n' for 'I do not agree: '")
+        resp = input()
+
+    if resp.lower() == 'y':
+        return True
+    return False
 
 
 cli_commands.add_command(openstack)

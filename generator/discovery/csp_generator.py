@@ -21,7 +21,7 @@ class CspGenerator:
         self.cred_settings = conf.get_value([const.CONFIG_CRED])
         self.cred_base_url = self.cred_settings[const.CONFIG_CRED_BASE_CRED_URL]
 
-    def generate(self, auto_sign: bool = False) -> dict:
+    def generate(self) -> dict:
         """
         Generate Gaia-X compliant Gaia-X Credential for CSP. This includes the following Verifiable Credentials (VC).
           - VC on signed Gaia-X terms and conditions
@@ -35,7 +35,7 @@ class CspGenerator:
         """
         # sign Gaia-X terms and conditions
         print('Create and sign VC of type "gx:GaiaXTermsAndConditions" for CSP...', end='')
-        tandc_vc = self._sign_gaia_x_terms_and_conditions(auto_sign=auto_sign)
+        tandc_vc = self._sign_gaia_x_terms_and_conditions()
         if tandc_vc is None:
             return
         print('ok')
@@ -60,7 +60,7 @@ class CspGenerator:
         print('ok')
         return {'tandc': tandc_vc, 'lrn': lrn_vc, 'lp': lp_vc, 'cs': json.loads(cs_vc), 'vp_csp': vp}
 
-    def _sign_gaia_x_terms_and_conditions(self, auto_sign: bool = False) -> dict:
+    def _sign_gaia_x_terms_and_conditions(self) -> dict:
         """
         Create a Gaia-X Credential on signed Gaia-X terms and conditions.
 
@@ -68,25 +68,6 @@ class CspGenerator:
         otherwise user is requested of confirm terms and conditions
         @return: Gaia-X Credential on signed Gaia-X terms and conditions as dictionary.
         """
-        tand = self.registry.get_gx_tandc()
-        if not auto_sign:
-            print("Do you agree Gaia-X Terms and conditions version " + tand['version'] + ".")
-            print()
-            print("-------------------------- Gaia-X Terms and Conditions --------------------------------------------")
-            print(tand['text'])
-            print("-------------------------- ------------------------------------------------------------------------")
-            print()
-            print("Please type 'y' for 'I do agree' and 'n' for 'I do not agree': ")
-
-            resp = input()
-            while resp.lower() not in ['y', 'n']:
-                print("Please type 'y' for 'I do agree' and 'n' for 'I do not agree: '")
-                resp = input()
-
-            if resp.lower() == 'n':
-                # user did not agree Gaia-X terms and conditions, we have to abort here
-                print("Gaia-X terms and conditions were not signed - process aborted!")
-                return
 
         tandc_vc = {
             '@context': [const.VC_CONTEXT, const.JWS_CONTEXT, const.REG_CONTEXT],
@@ -96,7 +77,7 @@ class CspGenerator:
             'issuanceDate': str(datetime.now(tz=timezone.utc).isoformat()),
             'credentialSubject': {
                 "type": "gx:GaiaXTermsAndConditions",
-                "gx:termsAndConditions": tand['text'],
+                "gx:termsAndConditions": self.registry.get_gx_tandc()['text'],
                 "id": self.cred_base_url + "/tandc_cs.json"
             }
         }
@@ -118,7 +99,8 @@ class CspGenerator:
             'issuer': self.csp['did'],
             'issuanceDate': str(datetime.now(tz=timezone.utc).isoformat()),
             'credentialSubject': {
-                "id": self.cred_base_url + "/legal_person_cs.json",  # I think "self.csp['did']" is correct, but Gaia-X expects link,
+                "id": self.cred_base_url + "/legal_person_cs.json",
+                # I think "self.csp['did']" is correct, but Gaia-X expects link,
                 # "id": self.csp['did'],
                 "type": "gx:LegalParticipant",
                 "gx:legalName": self.csp['legal-name'],

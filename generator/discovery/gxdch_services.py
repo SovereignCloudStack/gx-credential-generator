@@ -1,3 +1,5 @@
+import json
+
 import requests
 
 import generator.common.const as const
@@ -6,17 +8,15 @@ import generator.common.const as const
 class ComplianceService:
     """ Wrapper class to connect GXDCH Compliance Service. """
 
-    def __init__(self, api: str):
-        if not api:
+    def __init__(self, api_url: str):
+        if not api_url:
             raise AttributeError("Parameters MUST not be None")
-        self.api = api
+        self.api = api_url
 
-    def request_compliance_vc(self, vp: str, vp_id) -> str:
-        resp = requests.post(self.api + "/api/credential-offers?vcid=" + vp_id, vp)
-        if resp.ok:
-            return resp.text
-        else:
-            resp.raise_for_status()
+    def request_compliance_vc(self, vp: dict, vp_id) -> str:
+        resp = requests.post(self.api + "/api/credential-offers?vcid=" + vp_id, json.dumps(vp))
+        resp.raise_for_status()
+        return resp.text
 
 
 class NotaryService:
@@ -37,23 +37,19 @@ class NotaryService:
         }
         resp = requests.post(self.api + "/registrationNumberVC?vcid=" + str(cred_id), json=body)
 
-        if resp.ok:
-            return resp.json()
-        else:
-            resp.raise_for_status()
+        resp.raise_for_status()
+        return resp.json()
 
 
 class RegistryService:
     """ Wrapper class to connect GXDCH Registry Service. """
 
-    def __init__(self, api: str):
-        if not api:
+    def __init__(self, api_url: str):
+        if not api_url:
             raise AttributeError("Parameters MUST not be None")
-        self.api = api
+        self.api = api_url
 
     def get_gx_tandc(self) -> dict:
         resp = requests.get(self.api + "/api/termsAndConditions")
-        if resp.ok:
-            return resp.json()
-        else:
-            resp.raise_for_status()
+        resp.raise_for_status()
+        return resp.json()

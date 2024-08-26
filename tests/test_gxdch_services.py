@@ -2,6 +2,8 @@ import unittest
 import uuid
 from unittest.mock import patch
 
+from requests.exceptions import HTTPError
+
 from generator.discovery.gxdch_services import (ComplianceService,
                                                 NotaryService, RegistryService)
 
@@ -47,16 +49,15 @@ class GxdchTestCase(unittest.TestCase):
     @patch("requests.post")
     def test_request_registration_number_vc_exception(self, post_mock):
         # init test
-        post_mock.return_value.ok = False
+        post_mock.side_effect = HTTPError(409)
 
         # run test
         not_serv = NotaryService("https://exampple.com/gxdch/notary")
-        resp = not_serv.request_reg_number_vc(
-            csp={"did": "did:web:example.com", "registration_numbers": {"vat-id": "DE123456789"}},
-            cred_subject_id="foo", cred_id="bar")
 
         # check results
-        self.assertIsNone(resp)
+        self.assertRaises(HTTPError, not_serv.request_reg_number_vc,
+                          csp={"did": "did:web:example.com", "registration_numbers": {"vat-id": "DE123456789"}},
+                          cred_subject_id="foo", cred_id="bar")
 
     @patch("requests.post")
     def test_request_compliance_vc(self, post_mock):
@@ -66,7 +67,7 @@ class GxdchTestCase(unittest.TestCase):
 
         # run test
         comp_serv = ComplianceService("https://example.com/gxdch/compliance-service")
-        resp = comp_serv.request_compliance_vc(vp="{\"foo\": \"bar\"}", vp_id="example.json")
+        resp = comp_serv.request_compliance_vc(vp={"foo": "bar"}, vp_id="example.json")
 
         # Check results
         self.assertEqual(1, post_mock.call_count)
@@ -79,14 +80,14 @@ class GxdchTestCase(unittest.TestCase):
     @patch("requests.post")
     def test_request_compliance_vc_exception(self, post_mock):
         # init test
-        post_mock.return_value.ok = False
+        post_mock.side_effect = HTTPError(409)
 
         # run test
         comp_serv = ComplianceService("https://example.com/gxdch/compliance-service")
-        resp = comp_serv.request_compliance_vc(vp="{\"foo\": \"bar\"}", vp_id="example.json")
 
         # Check results
-        self.assertIsNone(resp)
+        self.assertRaises(HTTPError, comp_serv.request_compliance_vc, vp="{\\\"foo\\\": \\\"bar\\\"}",
+                          vp_id="example.json")
 
     @patch("requests.get")
     def test_get_gx_tandc(self, get_mock):
@@ -101,13 +102,9 @@ class GxdchTestCase(unittest.TestCase):
 
     @patch("requests.get")
     def test_get_gx_tandc_exception(self, get_mock):
-        get_mock.return_value.ok = False
-
+        get_mock.side_effect = HTTPError(409)
         reg = RegistryService("https://example/gxdch/registry")
-        tandc = reg.get_gx_tandc()
-
-        get_mock.called_with("https://example/gxdch/registry" + "/api/termsAndConditions")
-        self.assertIsNone(tandc)
+        self.assertRaises(HTTPError, reg.get_gx_tandc)
 
 
 if __name__ == "__main__":

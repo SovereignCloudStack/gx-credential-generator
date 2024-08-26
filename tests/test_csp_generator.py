@@ -36,27 +36,10 @@ class CspPGeneratorTestCase(unittest.TestCase):
     @patch("generator.discovery.gxdch_services.NotaryService.request_reg_number_vc")
     @patch("generator.discovery.gxdch_services.RegistryService.get_gx_tandc")
     @patch("generator.common.crypto.load_jwk_from_file")
-    def test_generate_auto_sign(self, load_jwk, get_tandc, request_req_number, request_comp_vc):
-        self._prepare_test(load_jwk, get_tandc, request_req_number, request_comp_vc)
-        csp_vcs = self.csp_gen.generate(auto_sign=True)
-        self._verify_csp_gen(csp_vcs, get_tandc, request_req_number, request_comp_vc)
-
-    @patch("generator.discovery.gxdch_services.ComplianceService.request_compliance_vc")
-    @patch("generator.discovery.gxdch_services.NotaryService.request_reg_number_vc")
-    @patch("generator.discovery.gxdch_services.RegistryService.get_gx_tandc")
-    @patch("generator.common.crypto.load_jwk_from_file")
     def test_generate(self, load_jwk, get_tandc, request_req_number, request_comp_vc):
         self._prepare_test(load_jwk, get_tandc, request_req_number, request_comp_vc)
-
-        # sign terms and conditions
-        with patch('builtins.input', return_value="y"):
-            csp_vcs = self.csp_gen.generate()
-            self._verify_csp_gen(csp_vcs, get_tandc, request_req_number, request_comp_vc)
-
-        # do not sign terms and conditions
-        with patch('builtins.input', return_value="n"):
-            csp_vcs = self.csp_gen.generate()
-            self.assertIsNone(csp_vcs)
+        csp_vcs = self.csp_gen.generate()
+        self._verify_csp_gen(csp_vcs, get_tandc, request_req_number, request_comp_vc)
 
     def _prepare_test(self, load_jwk, get_tandc, request_req_number, request_comp_vc):
         load_jwk.return_value = self.private_key

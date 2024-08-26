@@ -6,7 +6,7 @@ CONFIG_FILE = "config/config.yaml"
 # General keys
 CONFIG_DID = "did"
 CONFIG_DID = "did"
-CONFIG_TaC = "terms-and-conditions"
+CONFIG_T_AND_C = "terms-and-conditions"
 
 # Credentials keys
 CONFIG_CRED = "Credentials"
@@ -21,7 +21,6 @@ CONFIG_IAAS_DATA_EXPORT_REQ_TYPE = "request-type"
 CONFIG_IAAS_DATA_EXPORT_ACCESS_TYPE = "access-type"
 CONFIG_IAAS_DATA_EXPORT_FORMAT_TYPE = "format-type"
 CONFIG_IAAS_SERVICE_POLICY = "service-policy"
-CONFIG_IAAS_T_AND_C = "terms-and-conditions"
 
 # CPS configuration keys
 CONFIG_CSP = "CPS"

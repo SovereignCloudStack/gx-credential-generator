@@ -39,7 +39,7 @@ ARCH_LOOKUP = {
     "openrisc": "RISC-V",
     "parisc": "RISC-V",
     "parisc64": "RISC-V",
-    "unicore32": "RISC-V"
+    "unicore32": "RISC-V",
 }
 
 DISK_BUS_LOOKUP = {

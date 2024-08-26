@@ -60,7 +60,7 @@ class OpenstackDiscovery:
         )
         service_tac = []
         for url in self.config.get_value(
-                [const.CONFIG_IAAS, const.CONFIG_IAAS_T_AND_C]
+                [const.CONFIG_IAAS, const.CONFIG_T_AND_C]
         ):
             httpResponse = requests.get(url)
             if httpResponse.status_code == 200:
