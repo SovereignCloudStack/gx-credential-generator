@@ -59,7 +59,7 @@ class CspPGeneratorTestCase(unittest.TestCase):
 
         self.assertEqual(self.conf.get_value([const.CONFIG_CRED, const.CONFIG_CRED_BASE_CRED_URL]) + "/tandc.json",
                          csp_vcs['tandc']['id'])
-        self.assertEqual(self.conf.get_value([const.CONFIG_CRED, const.CONFIG_CRED_BASE_CRED_URL]) + "/tandc_cs.json",
+        self.assertEqual(self.conf.get_value([const.CONFIG_CRED, const.CONFIG_CRED_BASE_CRED_URL]) + "/tandc.json#subject",
                          csp_vcs['tandc']['credentialSubject']['id'])
         self.assertEqual("gx:GaiaXTermsAndConditions", csp_vcs['tandc']['credentialSubject']['type'])
         self.assertEqual("foo", csp_vcs['tandc']['credentialSubject']['gx:termsAndConditions'])
