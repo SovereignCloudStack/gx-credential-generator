@@ -53,7 +53,7 @@ class CspPGeneratorTestCase(unittest.TestCase):
         request_req_number.assert_called_with(
             csp=self.conf.get_value([const.CONFIG_CSP]),
             cred_id=self.conf.get_value([const.CONFIG_CRED, const.CONFIG_CRED_BASE_CRED_URL]) + "/lrn.json",
-            cred_subject_id=self.conf.get_value([const.CONFIG_CRED, const.CONFIG_CRED_BASE_CRED_URL]) + "/lrn_cs.json"
+            cred_subject_id=self.conf.get_value([const.CONFIG_CRED, const.CONFIG_CRED_BASE_CRED_URL]) + "/lrn.json#subject"
         )
         request_comp_vc.assert_called_once()
 
