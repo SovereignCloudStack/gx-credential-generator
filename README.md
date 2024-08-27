@@ -15,16 +15,15 @@ Gaia-X Ontology defines classes and a set of attributes, which Gaia-X offers to 
 
 A service and/or CSP is supposed to be "Gaia-X compliant", if their Gaia-X Credential(s) fulfill a set of special requirements. These requirements are defined in [Gaia-X Policy and Rules Documents](https://docs.gaia-x.eu/policy-rules-committee/policy-rules-conformity-document/23.10/) as well as [Gaia-X Trust Framework](https://docs.gaia-x.eu/policy-rules-committee/trust-framework/22.10/) and refer to classes and attributes used to describe service's as well as CSP's properties .
 
-Available classes and their attribute defined in Gaia-X Ontology and published in GXDCH Registry.
-
-gx-credential-generator cerates Gaia-X Credentials for
+gx-credential-generator creates Gaia-X Credentials for
 
 - Cloud Service Provider of SCS-compliant cloud infrastructure as instance of class `LegalPerson` 
-- OpenStack as an instance as instances of classes `ServiceOffering` and `VirtualMacuhineServiceOffering`
-- Kubernetes as a KaaS Service Offering as instance of class `ServiceOffering`
+- OpenStack as instances of classes `ServiceOffering` and `VirtualMacuhineServiceOffering`
+- Kubernetes as an instance of class `ServiceOffering`
 
-Each description may consists of a set of Gaia-X Credential, each of them attesting other properties. Compliance credential retrieved from [GXDCH](https://gaia-x.eu/gxdch/), to confirm Gaia-X compliance of CSP and/or service, is always included in set of generated GaiaX Credentials.
-
+Each description may consist of a several Gaia-X Credentials, each of them attesting other properties. 
+Set of generated credentials contains also Compliance Credential Gaia-X
+All credentials are bundled to a so called [Presentation](https://www.w3.org/TR/vc-data-model/#presentations-0) and send to [GXDCH](https://gaia-x.eu/gxdch/), which issues a Compliance credential to certify Gaia-X compliance.
 Gaia-X defines several level of compliance, each with a different security level. gx-credential-generator supports the very basic level, called "Conformity" and is compliant with respect to Gaia-X Tagus release.
 
 ### Cloud Service Provider
