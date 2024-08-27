@@ -58,7 +58,7 @@ class CspGenerator:
         vp = credentials.convert_to_vp(creds=[tandc_vc, lrn_vc, lp_vc])
         cs_vc = self.compliance.request_compliance_vc(vp, self.cred_base_url + "/csp_compliance.json")
         print('ok')
-        return {'tandc': tandc_vc, 'lrn': lrn_vc, 'lp': lp_vc, 'cs': json.loads(cs_vc), 'vp_csp': vp}
+        return {'tandc': tandc_vc, 'lrn': lrn_vc, 'lp': lp_vc, 'cs_csp': json.loads(cs_vc), 'vp_csp': vp}
 
     def _sign_gaia_x_terms_and_conditions(self) -> dict:
         """

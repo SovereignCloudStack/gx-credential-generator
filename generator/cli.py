@@ -38,7 +38,8 @@ VC_NAME_LOOKUP = {
     "lp": "Legal Person",
     "lrn": "Legal Registration Number",
     "tandc": "Gaia-X Terms and Conditions",
-    "cs": "GXDCH Compliance Service",
+    "cs_csp": "GXDCH Compliance Service",
+    "cs_so": "GXDCH Compliance Service",
     "so": "Service Offering",
     "vmso": "Virtual Machine Service Offering",
 }
@@ -233,7 +234,7 @@ def create_vmso_vcs(conf: Config, cloud: str, csp_vcs: List[dict], timeout: int 
                                                cred_settings[const.CONFIG_CRED_BASE_CRED_URL] + "/so_compliance.json")
 
     print('ok')
-    return {'so': so_vc, 'cs': json.loads(comp_vc), 'vmso': vmso_vc_signed, 'vp_so': vp}
+    return {'so': so_vc, 'cs_so': json.loads(comp_vc), 'vmso': vmso_vc_signed, 'vp_so': vp}
 
 
 def _get_timestamp():

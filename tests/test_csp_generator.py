@@ -77,7 +77,7 @@ class CspPGeneratorTestCase(unittest.TestCase):
         self.assertEqual(self.conf.get_value([const.CONFIG_CSP, const.CONFIG_DID]), csp_vcs['lp']['issuer'])
         self.assertIsNotNone(csp_vcs['lp']['proof'])
         self.assertEqual("gx:LegalParticipant", csp_vcs['lp']['credentialSubject']['type'])
-        self.assertEqual("gx:ComplianceCredential", csp_vcs['cs']['credentialSubject']['type'])
+        self.assertEqual("gx:ComplianceCredential", csp_vcs['cs_csp']['credentialSubject']['type'])
 
 
 if __name__ == '__main__':

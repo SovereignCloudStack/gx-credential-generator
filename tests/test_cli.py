@@ -22,7 +22,7 @@ class CliTestCase(unittest.TestCase):
     @patch("generator.discovery.openstack.openstack_discovery.OpenstackDiscovery.discover")
     @patch("openstack.connect")
     @patch("generator.cli._print_vcs")
-    def test_generatate_vsmo(self, cli_print_vs, os_connect, os_discover, load_jwk, gxdch_req_compl):
+    def test_generate_vsmo(self, cli_print_vs, os_connect, os_discover, load_jwk, gxdch_req_compl):
         # Mock openstack calls
         cli_print_vs.return_value = None
         os_connect.return_value = MockConnection(images=[], flavors=[])
@@ -58,7 +58,7 @@ class CliTestCase(unittest.TestCase):
 
         self.assertEqual(4, len(vcs))
         self.assertEqual("gx:ServiceOffering", vcs['so']['credentialSubject']["type"])
-        self.assertEqual("gx:ComplianceCredential", vcs['cs']['credentialSubject']["type"])
+        self.assertEqual("gx:ComplianceCredential", vcs['cs_so']['credentialSubject']["type"])
         self.assertEqual("gx:VirtualMachineServiceOffering", vcs['vmso']['credentialSubject']["type"])
         self.assertIsNotNone(vcs['vp_so'])
 
