@@ -1,11 +1,4 @@
-#!/usr/bin/env python3
-# vim: set ts=4 sw=4 et:
-#
-# vm_images_discovery.py
-"""Script to discovery VM images properties.
-
-(c) Anja Strunk <anja.strunk@cloudandheat.com>, 1/2024
-SPDX-License-Identifier: EPL-2.0
+"""Discovery for properties of virtual machine images.
 """
 from datetime import datetime
 from typing import List, Union
@@ -149,9 +142,9 @@ class VmImageDiscovery:
         # Discover optional attributes
         gx_image.vmImageDiskFormat = self._get_disk_format(os_image)
         gx_image.secureBoot = self._get_secure_boot(os_image)
-        gx_image.firmwareType = self._get_firme_ware_type(os_image)
+        gx_image.firmwareType = self._get_firmware_type(os_image)
         gx_image.watchDogAction = self._get_watchdog_action(os_image)
-        gx_image.vPMU = self._get_vmpu(os_image)
+        gx_image.vPMU = self._get_hw_pmu(os_image)
         gx_image.cpuReq = self._get_cpu_req(os_image)
         gx_image.multiQueues = self._get_multiqueue_enabled(os_image)
         gx_image.checksum = self._get_checksum(os_image)
@@ -163,7 +156,9 @@ class VmImageDiscovery:
         gx_image.name = self._get_name(os_image)
         gx_image.ramReq = self._get_min_ram_req(os_image)
         gx_image.rootDiskReq = self._get_min_disk_req(os_image)
-        gx_image.operatingSystem = self._get_operation_system(os_image)
+        os = self._get_operation_system(os_image)
+        if os is not None:
+            gx_image.operatingSystem = os
         gx_image.buildDate = self._get_build_date(os_image)
         gx_image.licenseIncluded = self._get_license_included(os_image)
         gx_image.patchLevel = self._get_patch_level(os_image)
@@ -192,7 +187,7 @@ class VmImageDiscovery:
         return bool(os_image.needs_secure_boot)
 
     @staticmethod
-    def _get_firme_ware_type(os_image: OS_Image) -> FirmType:
+    def _get_firmware_type(os_image: OS_Image) -> FirmType:
         if (
                 os_image.properties is not None and "hw_firmware_type" in os_image.properties
         ):
@@ -215,7 +210,7 @@ class VmImageDiscovery:
         return WatchDogActions(WatchDogActions.disabled)
 
     @staticmethod
-    def _get_vmpu(os_image: OS_Image) -> bool:
+    def _get_hw_pmu(os_image: OS_Image) -> bool:
         if os_image.properties and "hw_pmu" in os_image.properties:
             return bool(os_image.properties["hw_pmu"])
         else:
@@ -294,6 +289,9 @@ class VmImageDiscovery:
 
     def _get_operation_system(self, os_image: OS_Image) -> OperatingSystem:
         # Copyright owner and license not supported as Image properties, currently --> Default values from config are used
+        if os_image.os_distro is None:
+            return None
+
         if os_image.os_distro.lower() == "arch":
             return OperatingSystem(
                 version=os_image.os_version,

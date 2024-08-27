@@ -1,7 +1,4 @@
 """"General openstack discovery class.
-
-(c) Anja Strunk <anja.strunk@cloudandheat.com>, 2/2024
-SPDX-License-Identifier: EPL-2.0
 """
 
 from hashlib import sha256
@@ -29,12 +26,11 @@ class OpenstackDiscovery:
 
     def discover(self) -> VirtualMachineServiceOffering:
         """
-        Discover all attributes of OS Cloud.
+        Discover all attributes of OS Cloud as Gaia-X VirtualMachineServiceOffering.
 
-        @return: all attributes as list
-        @rtype List[JsonLdObject]
+        @return: all attributes as Gaia-X VirtualMachineServiceOffering
+        @rtype List[dict]
         """
-
         images = VmImageDiscovery(self.conn, self.config).discover()
         flavors = ServerFlavorDiscovery(self.conn, self.config).discover()
 
@@ -64,7 +60,7 @@ class OpenstackDiscovery:
         )
         service_tac = []
         for url in self.config.get_value(
-                [const.CONFIG_IAAS, const.CONFIG_IAAS_T_AND_C]
+                [const.CONFIG_IAAS, const.CONFIG_T_AND_C]
         ):
             httpResponse = requests.get(url)
             if httpResponse.status_code == 200:
@@ -80,9 +76,9 @@ class OpenstackDiscovery:
                     + url + "'. HTTP Status code: " + str(httpResponse.status_code)
                 )
 
-        if len(service_tac) == 0:
+        if not service_tac:
             raise ValueError(
-                "Service offerings terms and conditions MUST not be empty. Please check config.yaml. There MUST be at least on entry in "
+                "Service offerings terms and conditions MUST not be empty. Please check config.yaml. There MUST be at least one entry."
                 + const.CONFIG_IAAS + "." + const.CONFIG_IAAS_T_AND_C
             )
 

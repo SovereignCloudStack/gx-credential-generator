@@ -1,7 +1,4 @@
-"""Script to discovery server flavor properties.
-
-(c) Anja Strunk <anja.strunk@cloudandheat.com>, 2/2024
-SPDX-License-Identifier: EPL-2.0
+"""Discovery of properties if openstack flavors.
 """
 
 from typing import List, Optional
@@ -60,6 +57,9 @@ CPUVENDOR_LOOKUP = {
 
 
 class ServerFlavorDiscovery:
+    """
+    Discovery for openstack server flavor properties.
+    """
     def __init__(self, conn: Connection, conf: Config) -> None:
         self.conn = conn
         self.conf = conf
@@ -229,4 +229,5 @@ class ServerFlavorDiscovery:
         @param gx_flavor Gaia-X flavor specification
         @type gx_flavor: ServerFlavor
         """
-        gx_flavor.description = os_flavor.description
+        if gx_flavor is not None:
+            gx_flavor.description = os_flavor.description

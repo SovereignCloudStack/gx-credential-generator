@@ -72,7 +72,7 @@ def to_json_ld(obj) -> dict:
     if isinstance(obj, JsonLdObject):
         # if JsonLdObject add id
         gx_object = obj.gx_object
-        json_ld["@id"] = "ex:" + obj.gx_id.replace(" ", "")
+        json_ld["id"] = "ex:" + obj.gx_id.replace(" ", "")
         # call to_json_ld for gx_object
         json_ld.update(to_json_ld(gx_object))
         return json_ld
@@ -82,7 +82,7 @@ def to_json_ld(obj) -> dict:
         # json_ld['@type'] = get_types(obj.__class__)
         try:
             # set type of Gaia-X object if possible
-            json_ld["@type"] = obj.class_class_curie
+            json_ld["type"] = obj.class_class_curie
         except AttributeError:
             pass
         for key, value in obj.__dict__.items():
@@ -108,19 +108,19 @@ def to_json_ld(obj) -> dict:
         return json_ld
     elif isinstance(obj, datetime):
         # Add type for datetime
-        return {"@type": "xsd:dateTime", "@value": obj.strftime("%Y-%m-%dT%H:%M:%S")}
+        return {"type": "xsd:dateTime", "@value": obj.strftime("%Y-%m-%dT%H:%M:%S")}
     elif isinstance(obj, date):
         # add type for date
-        return {"@type": "xsd:date", "@value": obj.strftime("%Y-%m-%d")}
+        return {"type": "xsd:date", "@value": obj.strftime("%Y-%m-%d")}
     elif isinstance(obj, float):
         # add type for float
-        return {"@type": "xsd:float", "@value": obj}
+        return {"type": "xsd:float", "@value": obj}
     elif isinstance(obj, URI):
         # add type for URI
-        return {"@type": "xsd:anyURI", "@value": obj}
+        return {"type": "xsd:anyURI", "@value": obj}
     elif isinstance(obj, bool):
         # add type for boolean
-        return {"@type": "xsd:boolean", "@value": obj}
+        return {"type": "xsd:boolean", "@value": obj}
     else:
         return obj
 
