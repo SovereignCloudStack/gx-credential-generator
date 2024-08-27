@@ -15,26 +15,26 @@ Gaia-X Ontology defines classes and attributes, which Gaia-X offers to describe 
 
 A service and/or CSP is supposed to be "Gaia-X compliant", if their Gaia-X Credential(s) fulfill a set of special requirements. 
 These requirements are defined in [Gaia-X Policy and Rules Documents](https://docs.gaia-x.eu/policy-rules-committee/policy-rules-conformity-document/23.10/) as well as [Gaia-X Trust Framework](https://docs.gaia-x.eu/policy-rules-committee/trust-framework/22.10/).
-gx-credential generator automatically discovers CSP's and service's properties and creates Gaia-X Credentials for
+gx-credential-generator automatically discovers CSP's and service's properties and creates Gaia-X Credentials for
 
 - Cloud Service Provider of SCS-compliant cloud infrastructure as instance of class `LegalPerson` 
 - OpenStack as instances of classes `ServiceOffering` and `VirtualMacuhineServiceOffering`
 - Kubernetes as an instance of class `ServiceOffering`
 
 Each description may consist of several Gaia-X Credentials, each of them attesting other properties. 
-All credentials are bundled to a so called [Presentation](https://www.w3.org/TR/vc-data-model/#presentations-0) and send to [GXDCH Cpmpliance Service](https://gaia-x.eu/gxdch/), which issues a Compliance Credential to certify Gaia-X compliance of given CSP and/or service.
+All credentials are bundled in a so called [Presentation](https://www.w3.org/TR/vc-data-model/#presentations-0) and send to [GXDCH Cpmpliance Service](https://gaia-x.eu/gxdch/), which issues a Compliance Credential to certify Gaia-X compliance of given CSP and/or service.
 
-Gaia-X defines several level of compliance, each with a different security level. gx-credential-generator supports the very basic level, called "Conformity" and is compliant with respect to Gaia-X Tagus release.
+Gaia-X defines several level of compliance, each with a different security level. gx-credential-generator supports the very basic level, called "Conformity" and is compliant Gaia-X Tagus release.
 
 ### Cloud Service Provider
 
-Gaia-X expects the following three Gaia-X Credentials for a CSP in order to be Gaia-X complaint:
+gx-credential generator outputs the following Gaia-X Credentials for a CSP in order to be Gaia-X compliant
 
-- Gaia-X Terms and Conditions signed by CSP 
-- Legal Registration number issued by a Notary Service accredited GXDCH  
-- Gaia-X mandatory attributes for CSP
-
-gx-credential-generator generates required credentials and requests Gaia-X compliance for CSP at GXDCH. 
+- Gaia-X Terms and Conditions signed by CSP as instance class `GaiaXTermsAndConditions`
+- Legal Registration number issued by a Notary Service accredited by GXDCH as `LegalRegistrationNumber`
+- Gaia-X mandatory attributes for CSP as instance of class  `LegalPeron`
+- Presentation to be s sent to GXDCH Compliance Service to assert compliance
+- Compliance Credentials for CSP issued by GXDCH Compliance Service
 
 CPS's properties are not discoverable and read out from configuration file. See [configuration](#configuration) section for more details.
 
@@ -87,34 +87,34 @@ gx-credential-generator requires some configuration options. See [configuration]
 ```commandline
 python3 -m generator.cli csp
 ```
-Gaia-X terms and condiions are prompt and you are asked to agree to them. Type 'y' to agree or 'no' to not agree.
+Gaia-X terms and conditions are prompt and you are asked to agree to them. Type 'y' to agree or 'no' to not agree.
 
 **Note**: If you do not agree Gaia-X terms and conditions, process will be aborted and none Gaia-X credential are created.
 
-Each Gaia-X Credential is written to a separate JSON-LD file being prefixed as follows:
+Each Gaia-X Credential serialized in [JSON-LD](https://json-ld.org/) and stored in a separate file prefixed as follows:
 
 - lp: Gaia-X Credential containing CSP's legal address and headquarter address
 - lrn: Gaia-X Credential for CSP's legal registration number issued by GXDCH Notary Service. gx-credential-generator reaches out to Notary Service automatically.
 - tandc: Signed Gaia-X Terms and Conditions
-- vp_csp: collection of all Gaia-X Credentials to be sent to GXDCH Compliance Service for validation
+- vp_csp: Presentation of all Gaia-X Credentials to be sent to GXDCH Compliance Service to assert compliance
 - cs_csp: Compliance Credential for CSP as Gaia-X Legal Person
 
-Gaia-X credential files are stored in current working directory, be default. To change output director use parameter `--out-dir`:
+Gaia-X credential files are placed in current working directory, be default. To change output director use parameter `--out-dir`:
 
 ```commandline
 python3 -m generator.cli csp --out-dir=my-output-dir
 ```
 
-Running the gx-credential-generator with a specified configuration file path:
+Running the gx-credential-generator with a specified configuration file path use parameter `--config:
 
 ```commandline
-python3 -m generator.cli csp --auto-sign
+python3 -m generator.cli csp --config=my-config.yaml
 ```
 
 You can prevent to prompt Gaia-X terms and conditions using option `--auto-sign`. This implies you agree to them:
 
 ```commandline
-python3 -m generator.cli csp --config=my-config.yaml
+python3 -m generator.cli csp --auto-sign
 ```
 
 
