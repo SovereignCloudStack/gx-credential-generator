@@ -72,7 +72,7 @@ class CspPGeneratorTestCase(unittest.TestCase):
             self.conf.get_value([const.CONFIG_CRED, const.CONFIG_CRED_BASE_CRED_URL]) + "/legal_person.json",
             csp_vcs['lp']['id'])
         self.assertEqual(
-            self.conf.get_value([const.CONFIG_CRED, const.CONFIG_CRED_BASE_CRED_URL]) + "/legal_person_cs.json",
+            self.conf.get_value([const.CONFIG_CRED, const.CONFIG_CRED_BASE_CRED_URL]) + "/legal_person.json#subject",
             csp_vcs['lp']['credentialSubject']['id'])
         self.assertEqual(self.conf.get_value([const.CONFIG_CSP, const.CONFIG_DID]), csp_vcs['lp']['issuer'])
         self.assertIsNotNone(csp_vcs['lp']['proof'])
