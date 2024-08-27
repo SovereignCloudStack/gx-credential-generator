@@ -45,7 +45,7 @@ class CspGenerator:
         lrn_vc = self.notary.request_reg_number_vc(
             csp=self.csp,
             cred_id=self.cred_base_url + "/lrn.json",
-            cred_subject_id=self.cred_base_url + "/lrn_cs.json")
+            cred_subject_id=self.cred_base_url + "/lrn.json#subject")
         print('ok')
 
         # create Gaia-X Credential for CSP as Legal Person
