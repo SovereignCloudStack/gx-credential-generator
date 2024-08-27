@@ -11,17 +11,21 @@ To get familiar with Gaia-X Credentials, please consult the corresponding [docum
 
 ## Introduction
 
-In order to be classified as "Gaia-X compliant" Cloud Service Providers (CSPs) must fulfill special requirements, which are defined in [Gaia-X Policy and Rules Documents](https://docs.gaia-x.eu/policy-rules-committee/policy-rules-conformity-document/23.10/) as well as (Gaia-X Trust Framework)(https://docs.gaia-x.eu/policy-rules-committee/trust-framework/22.10/). 
-The same applies to CSPs' service offerings.  
-gx-credential generator creates Gaia-X conformant descriptions for 
+Gaia-X Ontology defines classes and a set of attributes, which Gaia-X offers to describe participants as well as service published in a Gaia-X catalogue.
 
-- Cloud Service Provider
-- OpenStack as an IaaS Service Offering
-- Kubernetes as a KaaS Service Offering
+A service and/or CSP is supposed to be "Gaia-X compliant", if their Gaia-X Credential(s) fulfill a set of special requirements. These requirements are defined in [Gaia-X Policy and Rules Documents](https://docs.gaia-x.eu/policy-rules-committee/policy-rules-conformity-document/23.10/) as well as [Gaia-X Trust Framework](https://docs.gaia-x.eu/policy-rules-committee/trust-framework/22.10/) and refer to classes and attributes used to describe service's as well as CSP's properties .
 
-These descriptions can be generated separately and consist of a set of Gaia-X Credentials including a compliance credential from [GXDCH](https://gaia-x.eu/gxdch/) Compliance Service to confirm CSP, IaaS as well as KaaS are Gaia-X compliant.
+Available classes and their attribute defined in Gaia-X Ontology and published in GXDCH Registry.
 
-Gaia-X defines several level of compliance, each with a different security level. gx-credential generator supports the very basic level, called "Conformity" and is compliant with repect to Gaia-X Tagus release..
+gx-credential-generator cerates Gaia-X Credentials for
+
+- Cloud Service Provider of SCS-compliant cloud infrastructure as instance of class `LegalPerson` 
+- OpenStack as an instance as instances of classes `ServiceOffering` and `VirtualMacuhineServiceOffering`
+- Kubernetes as a KaaS Service Offering as instance of class `ServiceOffering`
+
+Each description may consists of a set of Gaia-X Credential, each of them attesting other properties. Compliance credential retrieved from [GXDCH](https://gaia-x.eu/gxdch/), to confirm Gaia-X compliance of CSP and/or service, is always included in set of generated GaiaX Credentials.
+
+Gaia-X defines several level of compliance, each with a different security level. gx-credential-generator supports the very basic level, called "Conformity" and is compliant with respect to Gaia-X Tagus release.
 
 ### Cloud Service Provider
 
@@ -84,7 +88,7 @@ gx-credential-generator requires some configuration options. See [configuration]
 ```commandline
 python3 -m generator.cli csp
 ```
-Gaia-X terms and contions are prompt and you are asked to agree to them. Type 'y' to agree or 'no' to not agree.
+Gaia-X terms and condiions are prompt and you are asked to agree to them. Type 'y' to agree or 'no' to not agree.
 
 **Note**: If you do not agree Gaia-X terms and conditions, process will be aborted and none Gaia-X credential are created.
 
