@@ -204,7 +204,7 @@ def create_vmso_vcs(conf: Config, cloud: str, csp_vcs: List[dict], timeout: int 
         'issuanceDate': str(datetime.now(tz=timezone.utc).isoformat()),
         'credentialSubject': {
             "type": "gx:ServiceOffering",
-            "id": cred_settings[const.CONFIG_CRED_BASE_CRED_URL] + "/so_cs.json",  # iaas['did'],
+            "id": cred_settings[const.CONFIG_CRED_BASE_CRED_URL] + "/so.json#subject",  # iaas['did'],
             "gx:providedBy": {
                 'id': csp_vcs['lp']['credentialSubject']['id']
             },
