@@ -78,7 +78,7 @@ class CspGenerator:
             'credentialSubject': {
                 "type": "gx:GaiaXTermsAndConditions",
                 "gx:termsAndConditions": self.registry.get_gx_tandc()['text'],
-                "id": self.cred_base_url + "/tandc_cs.json"
+                "id": self.cred_base_url + "/tandc.json#subject"
             }
         }
         return crypto.sign_cred(cred=tandc_vc,
