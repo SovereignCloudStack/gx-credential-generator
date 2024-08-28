@@ -122,7 +122,7 @@ def kubernetes():
     default="config/config.yaml",
     help="Path to Configuration file for SCS GX Credential Generator.")
 def csp(config, out_dir, auto_sign):
-    """Generate Gaia-X Credential for CPS."""
+    """Generate Gaia-X Credential for CSP."""
     # load config file
     with open(config, "r") as config_file:
         conf = Config(yaml.safe_load(config_file))
