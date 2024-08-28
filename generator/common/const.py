@@ -22,7 +22,7 @@ CONFIG_IAAS_DATA_EXPORT_ACCESS_TYPE = "access-type"
 CONFIG_IAAS_DATA_EXPORT_FORMAT_TYPE = "format-type"
 CONFIG_IAAS_SERVICE_POLICY = "service-policy"
 
-# CPS configuration keys
+# CSP configuration keys
 CONFIG_CSP = "CSP"
 CONFIG_CSP_NAME = "legal-name"
 CONFIG_CSP_LEG_AD = "legal-address-country-code"
