@@ -11,7 +11,7 @@ Credentials:
   # URL did resolver web service
   did_resolver: https://uniresolver.io/1.0/identifiers
 
-CPS:
+CSP:
   did: did:web:example.com
   legal-name: Example Corp
   # allowed values are country codes according to ISO 3166-2 alpha2, alpha-3 or numeric format.
