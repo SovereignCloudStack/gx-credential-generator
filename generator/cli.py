@@ -97,7 +97,7 @@ def openstack(cloud, timeout, config, out_dir, auto_sign):
 
 @click.command()
 def kubernetes():
-    """Generates Gaia-X Credentials for CPS and kubernetes."""
+    """Generates Gaia-X Credentials for CSP and Kubernetes."""
     pass
 
 
