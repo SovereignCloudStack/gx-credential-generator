@@ -15,7 +15,7 @@ from generator.common.gx_schema import (CheckSum, ChecksumAlgorithm, Disk,
                                         DiskBusType, FirmType, HypervisorType,
                                         LatestN, MaintenanceSubscription,
                                         Memory, MemorySize, OperatingSystem,
-                                        RNGTypes, Signature,
+                                        OSDistribution, RNGTypes, Signature,
                                         SignatureAlgorithm, UpdateFrequency,
                                         UpdateStrategy, Validity1, Validity2,
                                         VMDiskType)
@@ -290,7 +290,12 @@ class VmImageDiscovery:
     def _get_operation_system(self, os_image: OS_Image) -> OperatingSystem:
         # Copyright owner and license not supported as Image properties, currently --> Default values from config are used
         if os_image.os_distro is None:
-            return None
+            return OperatingSystem(
+                version=os_image.os_version,
+                osDistribution=OSDistribution.others,
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="TBA",
+                license="https://www.example.com/tba")
 
         if os_image.os_distro.lower() == "arch":
             return OperatingSystem(
