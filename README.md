@@ -93,6 +93,7 @@ Create Gaia-X Credential for CSP without specifying a configuration file. This i
 ```commandline
 python3 -m generator.cli csp
 ```
+
 Gaia-X terms and conditions are prompt and you are asked to agree to them. Type 'y' to agree or 'no' to dis-agree.
 
 **Note**: If you do not agree Gaia-X terms and conditions, process will be aborted and none Gaia-X credential is created.
@@ -127,16 +128,16 @@ python3 -m generator.cli csp --auto-sign
 
 #### 1. Create `clouds.yaml` configuration file
 
-gx-credential-generator  requires access to OpenStack cluster as normal tenant
+gx-credential-generator requires access to OpenStack cluster as normal tenant
   user and has to be configured with these user credentials to access your
   Openstack cloud. This is done
   using [clouds.yaml](https://docs.openstack.org/python-openstackclient/ussuri/configuration/index.html).
   clouds.yaml is a yaml file containing several cloud configurations. Each configuration is referred by name.
 
 SMake sure the following keys exist in our `clouds.yaml`.
-  - `auth.user_domain_name`
-  - `auth.project_domain_name`
-  - `region_name`
+- `auth.user_domain_name`
+- `auth.project_domain_name`
+- `region_name`
 
 #### 2. Create configuration file
 
@@ -178,7 +179,7 @@ includes:
 
 ### Mandatory Attributes
 
-Gaia-X Credential schema dictates mandatory attributes for some class. 
+Gaia-X Credential schema dictates mandatory attributes for some class.
 If values for mandatory attributes can not be discovered from OpenStack or K8S cluster, default values are taken from configuration.
 Providers are able to change default values. 
 In doing so, attribute values for *
@@ -226,7 +227,6 @@ cloud resources:
 ### Prerequisites to create and sign Gaia-X Credential
 
 gx-credential-generator creates Gaia-X Credentials, which refer to [W3C Verifiable Credentials](https://www.w3.org/TR/vc-data-model-2.0/). Verifiable Credentials requires a proof, e.g. a digital signature of credential's issuer. Therefore some settings, e.g. a private key to sign, are required and defined in section `Credentials` of configuration file.
-
 
 ### Enpoints to GXDCH services
 
