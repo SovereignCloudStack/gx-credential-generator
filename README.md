@@ -135,6 +135,7 @@ gx-credential-generator requires access to OpenStack cluster as normal tenant
   clouds.yaml is a yaml file containing several cloud configurations. Each configuration is referred by name.
 
 SMake sure the following keys exist in our `clouds.yaml`.
+
 - `auth.user_domain_name`
 - `auth.project_domain_name`
 - `region_name`
