@@ -9,6 +9,13 @@ Tool for creating compliant Gaia-X Credentials, previously known as Gaia-X Self-
 infrastructures. 
 To get familiar with Gaia-X Credentials, please consult the corresponding [documentation](https://docs.gaia-x.eu/).
 
+## Table of Contents
+
+ 1. [Introduction](#introduction)
+ 2. [Quick Start](#quick-start)
+ 3. [User Guide](#user-guide)
+ 4. [Developer Guide](#developer-guide)
+
 ## Introduction
 
 Gaia-X Ontology defines classes and attributes, which Gaia-X offers to describe CSPs as well as services to be published in a Gaia-X catalogue.
@@ -19,10 +26,10 @@ gx-credential-generator automatically discovers CSP's and service's properties a
 
 - Cloud Service Provider of SCS-compliant cloud infrastructure 
 - OpenStack as an IaaS Offering
-- Kubernetes as a C8S Offering
+- Kubernetes as a CaaS Offering
 
 Each description may consist of several Gaia-X Credentials, each of them attesting other properties. 
-All credentials are bundled in a so called [Presentation](https://www.w3.org/TR/vc-data-model/#presentations-0) and send to [GXDCH Cpmpliance Service](https://gaia-x.eu/gxdch/), which issues a Compliance Credential to certify Gaia-X compliance of given CSP and/or service.
+All credentials are bundled in a so called [Presentation](https://www.w3.org/TR/vc-data-model/#presentations-0) and send to [GXDCH Compliance Service](https://gaia-x.eu/gxdch/), which issues a Compliance Credential to certify Gaia-X compliance of given CSP and/or service.
 
 Gaia-X defines several level of compliance, each with a different trust level. gx-credential-generator supports the very basic level, called "Conformity" and is compliant Gaia-X Tagus release.
 
@@ -30,9 +37,9 @@ Gaia-X defines several level of compliance, each with a different trust level. g
 
 gx-credential generator outputs the following Gaia-X Credentials for a CSP in order to be Gaia-X compliant
 
-- Gaia-X Terms and Conditions signed by CSP as instance Gaia-X class `GaiaXTermsAndConditions`
-- Legal Registration number issued by a Notary Service accredited by GXDCH as instancec of Gaia-x class `LegalRegistrationNumber`
-- Gaia-X mandatory attributes for CSP as instance of Gaia-X class `LegalPeron`
+- Gaia-X Terms and Conditions signed by CSP as an instance Gaia-X class `GaiaXTermsAndConditions`
+- Legal Registration number issued by a Notary Service accredited by GXDCH as an instancec of Gaia-x class `LegalRegistrationNumber`
+- Gaia-X mandatory attributes for CSP as an instance of Gaia-X class `LegalPeron`
 - Compliance Credentials for CSP issued by GXDCH Compliance Service as an instance of Gaia-X class `compliance`
 
 
@@ -44,8 +51,8 @@ gx-credential-generator collects discoverable information from an OpenStack clou
 
 Besides the Gaia-X Credentials of CSP of OpenStack cloud, with are required by Gaia-X, the follwing Gaia-X Credentials will be created:
 
-- Mandatory properties for IaaS Offering as instance of Gaia-X `ServiceOffering`
-- Detailed description of OpenStack cloud as instance of Gaia-X `VirtualMachineServiceOffering`
+- Mandatory properties for IaaS Offering as an instance of Gaia-X `ServiceOffering`
+- Detailed description of OpenStack cloud as an instance of Gaia-X `VirtualMachineServiceOffering`
 - Compliance Credentials for OpenStack cloud issued by GXDCH Compliance Service as an instance of Gaia-X class `compliance`
 
 To discover cloud properties, gx-credential generator requires access to OpenStack cloud as normal tenant user. 
@@ -70,8 +77,9 @@ git clone git@github.com:SovereignCloudStack/gx-credential-generator.git
 cd gx-credential-generator
 ```
 
-#### 2. Install scripts dependencies (installing them into a
-   Python [virtualenv](https://virtualenv.pypa.io/en/stable/) is recommended)
+#### 2. Install scripts dependencies 
+
+Installing dependecies into a Python [virtualenv](https://virtualenv.pypa.io/en/stable/) is recommended
 
    ```bash
    pip install -r requirements.txt
@@ -108,7 +116,7 @@ Gaia-X Credential files are placed in current working directory, be default. To 
 python3 -m generator.cli csp --out-dir=my-output-dir
 ```
 
-Running the gx-credential-generator with a specified configuration file path use parameter `--config:
+Running the gx-credential-generator with a specified configuration file path use parameter `--config`:
 
 ```commandline
 python3 -m generator.cli csp --config=my-config.yaml
@@ -124,13 +132,14 @@ python3 -m generator.cli csp --auto-sign
 
 #### 1. Create `clouds.yaml` configuration file
 
-- gx-credential-generator  requires access to OpenStack cluster as normal tenant
+gx-credential-generator  requires access to OpenStack cluster as normal tenant
   user and has to be configured with these user credentials to access your
   Openstack cloud. This is done
   using [clouds.yaml](https://docs.openstack.org/python-openstackclient/ussuri/configuration/index.html).
   clouds.yaml is a yaml file containing several cloud configurations. Each
   configuration is referred by name.
-- Make sure the following keys exist in our `clouds.yaml`.
+
+SMake sure the following keys exist in our `clouds.yaml`.
   - `auth.user_domain_name`
   - `auth.project_domain_name`
   - `region_name`
@@ -141,12 +150,12 @@ gx-credential-generator requires some configuration options. See [configuration]
 
 #### 3. Run gx-credential-generator
 
-The command to run gx-credential-generator for OpenStack cloud is similar to the one to run gx-credential-generator for CSP. Also command's arguments `--config`, `--out-dir` and `--auto-sign` are available and act like in CSP command. 
+The command to run gx-credential-generator for OpenStack cloud is similar to the one to run gx-credential-generator for CSP. Also arguments `--config`, `--out-dir` and `--auto-sign` are available and act like for CSP. 
 
 Create Gaia-X Credential for Openstack cloud
 
   ```bash
-  python3 cli.py openstack <os-cloud>
+  python3 -m generator.cli openstack <os-cloud>
   ```
 
 As Gaia-X requires to define a provider for each published service offering, gx-credential-generator creates Gaia-X Credentials for CSP at very run for OpenStack cloud, too.  
@@ -179,7 +188,7 @@ includes:
 ### Mandatory Attributes
 
 Gaia-X Credential schema dictates mandatory attributes for some class. 
-If values for mandatory attributes can not be discovered from OpenStack or K8S cluster,default values are taken from configuration.
+If values for mandatory attributes can not be discovered from OpenStack or K8S cluster, default values are taken from configuration.
 Providers are able to change default values. 
 In doing so, attribute values for *
 *ALL** instances of impacted cloud resource are modified.
@@ -201,9 +210,9 @@ software resources:
       - https://gitlab.alpinelinux.org/alpine/aports/-/issues/9074
 ```
 
-By default, generator uses operating system values for VM Image as well. I.e. by
+By default, gx-credential-generator uses operating system values for VM Image as well. I.e. by
 default, VM Image and operating system have the same values
-for `copyrigth owner`, `license` and `resourcePolicy`. Providers are able to
+for `copyrigthOwner`, `license` and `resourcePolicy`. Providers are able to
 change values for each VM image, individually. Therefore, the
 section `own images` in `cloud resources` exists. To set individual values for a
 specific VM image, add a new section, started by image's name (as defined in
