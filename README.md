@@ -272,10 +272,7 @@ docker run -v "${PWD}/os_secret:/root/.config/openstack" gx-credential-generator
 
 ### Running the tests
 
-First, install the test dependencies **in addition** to the main dependencies
-into
-your virtualenv as described above
-under ["Quick Start Guide"](#quick-start-guide):
+First, install the test dependencies **in addition** to the main dependencies into your virtualenv as described above under ["Quick Start Guide"](#quick-start-guide):
 
 ```shell
 pip install -r test-requirements.txt
