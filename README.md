@@ -11,7 +11,7 @@ To get familiar with Gaia-X Credentials, please consult the corresponding [docum
 ## Table of Contents
 
  1. [Introduction](#introduction)
- 2. [Quick Start](#quick-start)
+ 2. [Quick Start](#quick-start-guide)
  3. [User Guide](#user-guide)
  4. [Developer Guide](#developer-guide)
 
@@ -277,7 +277,7 @@ mkdir -p os_secret && cp secret1 ./os_secret
 docker run -v "${PWD}/os_secret:/root/.config/openstack" gx-credential-generator ./gx-cred-generator.py --os-cloud gx-h61.1
 ```
 
-## Development Guide
+## Developer Guide
 
 ### Running the tests
 
