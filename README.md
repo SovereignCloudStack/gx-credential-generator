@@ -65,14 +65,14 @@ Comming soon.
 
 ## Quick Start Guide
 
-#### Clone the repository into a location of your choice
+### 1. Clone the repository into a location of your choice
 
 ```bash
 git clone git@github.com:SovereignCloudStack/gx-credential-generator.git
 cd gx-credential-generator
 ```
 
-#### Install scripts dependencies
+### 2. Install scripts dependencies
 
 Installing dependecies into a Python [virtualenv](https://virtualenv.pypa.io/en/stable/) is recommended
 
@@ -82,11 +82,11 @@ Installing dependecies into a Python [virtualenv](https://virtualenv.pypa.io/en/
 
 ### Cloud Service Provider
 
-#### Create configuration file
+### 1. Create configuration file
 
 gx-credential-generator requires some configuration options. See [configuration](#configuration) section for more details.
 
-#### Run gx-credential-generator
+#### 2. Run gx-credential-generator
 
 Create Gaia-X Credential for CSP without specifying a configuration file. This implies the default path at `/etc/gx-credential-generator/config.yaml`, which must exist:
 
@@ -125,7 +125,7 @@ python3 -m generator.cli csp --auto-sign
 
 ### OpenStack
 
-#### Create `clouds.yaml` configuration file
+#### 1. Create `clouds.yaml` configuration file
 
 gx-credential-generator  requires access to OpenStack cluster as normal tenant
   user and has to be configured with these user credentials to access your
@@ -138,11 +138,11 @@ SMake sure the following keys exist in our `clouds.yaml`.
   - `auth.project_domain_name`
   - `region_name`
 
-#### Create configuration file
+#### 2. Create configuration file
 
 gx-credential-generator requires some configuration options. See [configuration](#configuration) section for more details.
 
-#### Run gx-credential-generator
+#### 3. Run gx-credential-generator
 
 The command to run gx-credential-generator for OpenStack cloud is similar to the one to run gx-credential-generator for CSP. Also arguments `--config`, `--out-dir` and `--auto-sign` are available and act like for CSP.
 
@@ -161,11 +161,9 @@ Each Gaia-X Credential is serialized in [JSON-LD](https://json-ld.org/) and stor
 - vp_so: Presentation of all Gaia-X Credentials to be sent to GXDCH Compliance Service to assert compliance
 - cs_so: Compliance Credentials for OpenStack cloud as Gaia-X `ServiceOffering` issued by GXDCH Compliance Service
 
-
 ### K8s
 
 Comming soon!
-
 
 ## User Guide
 
@@ -178,13 +176,13 @@ includes:
 - Prerequisites to create and sign Gaia-X Credentials
 - Enpoints to GXDCH services
 
-
 ### Mandatory Attributes
 
-Gaia-X Credential schema dictates mandatory attributes for some class.
+Gaia-X Credential schema dictates mandatory attributes for some class. 
 If values for mandatory attributes can not be discovered from OpenStack or K8S cluster, default values are taken from configuration.
-Providers are able to change default values.
-In doing so, attribute values for **ALL** instances of impacted cloud resource are modified.
+Providers are able to change default values. 
+In doing so, attribute values for *
+*ALL** instances of impacted cloud resource are modified.
 
 #### CopyrightOwner, License and ResourcePolicy of VM images and Operating System
 
@@ -228,6 +226,7 @@ cloud resources:
 ### Prerequisites to create and sign Gaia-X Credential
 
 gx-credential-generator creates Gaia-X Credentials, which refer to [W3C Verifiable Credentials](https://www.w3.org/TR/vc-data-model-2.0/). Verifiable Credentials requires a proof, e.g. a digital signature of credential's issuer. Therefore some settings, e.g. a private key to sign, are required and defined in section `Credentials` of configuration file.
+
 
 ### Enpoints to GXDCH services
 
@@ -326,5 +325,3 @@ GX-Credential generator uses python classes to create Gaia-X compliant Gaia-X Cr
 These classes mirror [Gaia-X Ontology](https://gitlab.com/gaia-x/technical-committee/service-characteristics-working-group/service-characteristics) and are generated automatically using [linkML's python generator](https://linkml.io/linkml/generators/python.html).
 LinkMl seems to have a bug, as creation of inlined objects fails with `TypeError: unhashable type: 'list'` (see comment in [#70](https://github.com/SovereignCloudStack/gx-credential-generator/issues/70#issuecomment-2122354334)).
 As a quick workaround, we comment creation of inlined objects out.
-
-
