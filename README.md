@@ -181,9 +181,8 @@ includes:
 
 Gaia-X Credential schema dictates mandatory attributes for some class.
 If values for mandatory attributes can not be discovered from OpenStack or K8S cluster, default values are taken from configuration.
-Providers are able to change default values. 
-In doing so, attribute values for *
-*ALL** instances of impacted cloud resource are modified.
+Providers are able to change default values.
+In doing so, attribute values for **ALL** instances of impacted cloud resource are modified.
 
 #### CopyrightOwner, License and ResourcePolicy of VM images and Operating System
 
@@ -234,7 +233,7 @@ gx-credential-generator interacts with GXDCH service, e.g. to retreive credentia
 
 ### Docker
 
-*outdated*
+----*outdated*---
 
 The docker environment creates a general and portable environment for the
 gx-cred-generator module. Before running the container, don't forget to mount
