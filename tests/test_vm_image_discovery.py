@@ -7,8 +7,9 @@ from generator.common import const
 from generator.common.gx_schema import (CPU, CheckSum, ChecksumAlgorithm, Disk,
                                         FirmType, HypervisorType, LatestN,
                                         MaintenanceSubscription, Memory,
-                                        MemorySize, OperatingSystem, RNGTypes,
-                                        Signature, UpdateStrategy, VMDiskType)
+                                        MemorySize, OperatingSystem,
+                                        OSDistribution, RNGTypes, Signature,
+                                        UpdateStrategy, VMDiskType)
 from generator.common.gx_schema import VMImage as GX_Image
 from generator.common.gx_schema import WatchDogActions
 from generator.common.json_ld import JsonLdObject
@@ -225,18 +226,18 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
     def test_get_firmeware_type(self):
         self.assertEqual(
             FirmType(FirmType.BIOS),
-            self.discovery._get_firme_ware_type(OS_Image(hw_firmware_type="BIOS")),
+            self.discovery._get_firmware_type(OS_Image(hw_firmware_type="BIOS")),
         )
         self.assertEqual(
             FirmType(FirmType.BIOS),
-            self.discovery._get_firme_ware_type(OS_Image(hw_firmware_type="bioS")),
+            self.discovery._get_firmware_type(OS_Image(hw_firmware_type="bioS")),
         )
         self.assertEqual(
             FirmType(FirmType.other),
-            self.discovery._get_firme_ware_type(OS_Image(hw_firmware_type="foo")),
+            self.discovery._get_firmware_type(OS_Image(hw_firmware_type="foo")),
         )
         self.assertEqual(
-            FirmType(FirmType.other), self.discovery._get_firme_ware_type(OS_Image())
+            FirmType(FirmType.other), self.discovery._get_firmware_type(OS_Image())
         )
 
     def test_get_watchdog_action(self):
@@ -256,10 +257,10 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
             WatchDogActions("disabled"), self.discovery._get_watchdog_action(OS_Image())
         )
 
-    def test_get_vmpu(self):
-        self.assertTrue(self.discovery._get_vmpu(OS_Image(hw_pmu=True)))
-        self.assertFalse(self.discovery._get_vmpu(OS_Image(hw_pmu=False)))
-        self.assertFalse(self.discovery._get_vmpu(OS_Image()))
+    def test_get_hw_pmu(self):
+        self.assertTrue(self.discovery._get_hw_pmu(OS_Image(hw_pmu=True)))
+        self.assertFalse(self.discovery._get_hw_pmu(OS_Image(hw_pmu=False)))
+        self.assertFalse(self.discovery._get_hw_pmu(OS_Image()))
 
     def test_get_cpu_req(self):
         self.assertEqual(
@@ -869,6 +870,18 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
             ),
             self.discovery._get_operation_system(
                 OS_Image(os_version="1", os_distro="windows")
+            ),
+        )
+        self.assertEqual(
+            OperatingSystem(
+                version="1",
+                osDistribution=OSDistribution.others,
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="TBA",
+                license=["https://www.example.com/tba"]
+            ),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1")
             ),
         )
 

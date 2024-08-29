@@ -1,12 +1,38 @@
-################################################################
+########################################################################################
 # Mandatory attributes required by Gaia-X
-################################################################
-CPS:
+########################################################################################
+Credentials:
+  # absolute path to private key to sign verifiable credentials
+  key: path-to-private-key
+  # verification method used to check proof of verifiable credential. Method must be published within DID document of CSP
+  verification-method: did:web:example.com#JWK2020-X509-0
+  # base url for generated credentials
+  base_url: https://example.com
+  # URL did resolver web service
+  did_resolver: https://uniresolver.io/1.0/identifiers
+
+CSP:
   did: did:web:example.com
+  legal-name: Example Corp
+  # allowed values are country codes according to ISO 3166-2 alpha2, alpha-3 or numeric format.
+  legal-address-country-code: DE-SN
+  # allowed values are country codes according to ISO 3166-2 alpha2, alpha-3 or numeric format.
+  headquarter-address-country-code: DE-SN
+  # list of registration numbers. At least one registration number must be given. Each key MUST can only be set once.
+  registration_numbers:
+    # CSP VAT number
+    vat-id: DE123456789
+    # CSP LEI code
+    lei-code: 123456789
+    # CSP local registration number
+    local-req-number: 123456789
+    # CSP EORI code
+    eori: 123456789
+    # CSP EUID code
+    euid: 123456789
 
 IaaS:
   did: did:web:example.com:iaas
-  # URL to a document containing terms and conditions of service offering
   terms-and-conditions:
     - www.example.com/tan1
     - www.example.com/tan2
@@ -19,6 +45,13 @@ IaaS:
     access-type: digital
     # Allowed values are MIME types
     format-type: "plain"
+
+# Endpoints of Gaia-X Digital Clearing House
+gxdch:
+  notary-service: https://registrationnumber.notary.lab.gaia-x.eu/v1-staging
+  compliance-service: https://compliance.lab.gaia-x.eu/v1-staging
+  registry-service: https://registry.lab.gaia-x.eu/v1-staging
+
 
 ################################################################
 # CAUTION: Do not change these values, unless you want to overwrite default behaviour

@@ -16,10 +16,21 @@ def _get_value(config, keys: List[str]):
 
 
 class Config:
-    def __init__(self, config):
+    """Wrapper class for all configuration settings. Configuration settings are stored in yaml file on drive and
+      imported as a nested dictionary."""
+    def __init__(self, config: dict):
         self.config = config
 
     def get_value(self, keys: List[str]):
+        """
+        Return configuration value. Config settings are stored as yaml and imported as nested dict.
+        E.g. { 'key1': {'key2': {'key3': 'foo'}}}
+
+        The list of keys are required to step down throught nested dicts to requested value.
+        E.g. ['key1', 'key2', 'key3'] returns 'foo'
+        @param keys: list of keys
+        @return: value
+        """
         try:
             return _get_value(self.config, keys)
         except KeyError:
