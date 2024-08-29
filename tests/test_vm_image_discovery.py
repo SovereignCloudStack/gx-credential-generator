@@ -7,8 +7,9 @@ from generator.common import const
 from generator.common.gx_schema import (CPU, CheckSum, ChecksumAlgorithm, Disk,
                                         FirmType, HypervisorType, LatestN,
                                         MaintenanceSubscription, Memory,
-                                        MemorySize, OperatingSystem, RNGTypes,
-                                        Signature, UpdateStrategy, VMDiskType)
+                                        MemorySize, OperatingSystem,
+                                        OSDistribution, RNGTypes, Signature,
+                                        UpdateStrategy, VMDiskType)
 from generator.common.gx_schema import VMImage as GX_Image
 from generator.common.gx_schema import WatchDogActions
 from generator.common.json_ld import JsonLdObject
@@ -871,7 +872,18 @@ class VMImageDiscoveryTestcase(OpenstackTestcase):
                 OS_Image(os_version="1", os_distro="windows")
             ),
         )
-        self.assertIsNone(self.discovery._get_operation_system(OS_Image()))
+        self.assertEqual(
+            OperatingSystem(
+                version="1",
+                osDistribution=OSDistribution.others,
+                resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
+                copyrightOwnedBy="TBA",
+                license=["https://www.example.com/tba"]
+            ),
+            self.discovery._get_operation_system(
+                OS_Image(os_version="1")
+            ),
+        )
 
 
 if __name__ == "__main__":
