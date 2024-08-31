@@ -14,7 +14,6 @@ import functools
 import json
 import logging
 import os
-import sys
 from datetime import datetime, timezone
 from typing import List
 
@@ -342,7 +341,7 @@ def _are_gaiax_tandc_signed(conf: Config) -> bool:
 
     resp = input()
     while resp.lower() not in ['y', 'n']:
-        "Please type 'y' for 'I do agree' and 'n' for 'I do not agree: '")
+        print("Please type 'y' for 'I do agree' and 'n' for 'I do not agree: '")
         resp = input()
 
     if resp.lower() == 'y':
