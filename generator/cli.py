@@ -122,8 +122,15 @@ def openstack(cloud, timeout, config, out_dir, auto_sign):
 
     if not auto_sign and not _are_gaiax_tandc_signed(conf):
         # user did not agree Gaia-X terms and conditions, we have to abort here
-        print("Gaia-X terms and conditions were not signed - process aborted!")
+        logging.error(
+            "Gaia-X Terms and Conditions were not signed - process aborted!"
+        )
         return
+    elif auto_sign:
+        logging.info(
+            "Gaia-X Terms and Conditions accepted non-interactively via "
+            "auto-sign option"
+        )
 
     # create Gaia-X Credentials for CSP
     csp_gen = CspGenerator(conf=conf)
@@ -177,8 +184,15 @@ def csp(config, out_dir, auto_sign):
 
     if not auto_sign and not _are_gaiax_tandc_signed(conf):
         # user did not agree Gaia-X terms and conditions, we have to abort here
-        print("Gaia-X terms and conditions were not signed - process aborted!")
+        logging.error(
+            "Gaia-X Terms and Conditions were not signed - process aborted!"
+        )
         return
+    elif auto_sign:
+        logging.info(
+            "Gaia-X Terms and Conditions accepted non-interactively via "
+            "auto-sign option"
+        )
     vcs = CspGenerator(conf).generate()
     _print_vcs(vcs, out_dir)
 
@@ -194,7 +208,7 @@ def init_openstack_connection(cloud: str, timeout: int = 12) -> Connection:
         conn = o_stack.connect(cloud=cloud, timeout=timeout, api_timeout=timeout * 1.5 + 4)
         conn.authorize()
     except Exception:
-        print("INFO: Retry connection with 'default' domain", file=sys.stderr)
+        logging.error("Retry connection with 'default' domain")
         conn = o_stack.connect(
             cloud=cloud,
             timeout=timeout,
@@ -318,7 +332,7 @@ def _are_gaiax_tandc_signed(conf: Config) -> bool:
     reg = RegistryService(conf.get_value([const.CONST_GXDCH, const.CONST_GXDCH_REG]))
     tand = reg.get_gx_tandc()
 
-    print("Do you agree Gaia-X Terms and conditions version " + tand['version'] + ".")
+    print("Do you agree Gaia-X Terms and Conditions version " + tand['version'] + "?")
     print()
     print("-------------------------- Gaia-X Terms and Conditions --------------------------------------------")
     print(tand['text'])
@@ -328,11 +342,17 @@ def _are_gaiax_tandc_signed(conf: Config) -> bool:
 
     resp = input()
     while resp.lower() not in ['y', 'n']:
-        print("Please type 'y' for 'I do agree' and 'n' for 'I do not agree: '")
+        "Please type 'y' for 'I do agree' and 'n' for 'I do not agree: '")
         resp = input()
 
     if resp.lower() == 'y':
+        logging.info(
+            "Gaia-X Terms and Conditions accepted via interactive input"
+        )
         return True
+    logging.info(
+        "Gaia-X Terms and Conditions declined via interactive input"
+    )
     return False
 
 
