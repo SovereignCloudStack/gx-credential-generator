@@ -47,6 +47,20 @@ VC_NAME_LOOKUP = {
 
 
 def add_logging_options(func):
+    """Python Click decorator to include common logging options
+
+    Offers an alternative to adding logging options directly to a
+    @click.group() in order to circumvent group option limitations that
+    would require any such options to be specified before the command name
+    by the user on the command line.
+
+    Any @click.command() function can be decorated with this decorator to
+    include logging initialization based on common logging options that
+    can be specified alongside with the respective command's individual
+    options, e.g.,
+
+        mycommand --log-file local.log --debug --option1 --option2
+    """
     @click.option(
         "--log-file",
         default="-",
@@ -59,20 +73,6 @@ def add_logging_options(func):
     )
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        """Python Click decorator to include common logging options
-
-        Offers an alternative to adding logging options directly to a
-        @click.group() in order to circumvent group option limitations that
-        would require any such options to be specified before the command name
-        by the user on the command line.
-
-        Any @click.command() function can be decorated with this decorator to
-        include logging initialization based on common logging options that
-        can be specified alongside with the respective command's individual
-        options, e.g.,
-
-            mycommand --log-file local.log --debug --option1 --option2
-        """
         # consume the common logging options from kwargs directly
         # (so that they are not passed to the wrapped function down below)
         debug = kwargs.pop("debug")
