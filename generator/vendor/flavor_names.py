@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import logging
 import os
 import os.path
 import re
@@ -413,7 +414,9 @@ class Outputter:
                 else:
                     parts.append(f"{value:.1f}")
             else:
-                print(pattern, i)
+                logging.error(
+                    f"Pattern problem with pattern '{pattern}' (i=={str(i)})"
+                )
                 raise RuntimeError("Pattern problem")
             i += 1
 
@@ -786,7 +789,7 @@ class CompatLayer:
             if not is_old:
                 raise
         if not self.quiet and flavorname is not None and self.prefer_old != is_old:
-            print(f"WARNING: flavor name not v{2 - self.prefer_old}: {namestr}")
+            logging.warning(f"flavor name not v{2 - self.prefer_old}: {namestr}")
         return flavorname
 
     def outname(self, flavorname):
@@ -808,7 +811,7 @@ class CompatLayer:
         """Read mandatory and recommended flavors from passed YAML file"""
         fnm = self.findflvfile(fnm)
         if self.debug:
-            print(f"DEBUG: Reading flavors from {fnm}")
+            logging.warning(f"Reading flavors from {fnm}")
         with open(fnm, "r", encoding="UTF-8)") as fobj:
             yamldict = yaml.safe_load(fobj)
         # Translate to old names in-place
