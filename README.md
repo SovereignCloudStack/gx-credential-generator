@@ -46,7 +46,7 @@ CSP's properties are not discoverable and read out from configuration file. See 
 
 gx-credential-generator collects discoverable information from an OpenStack cloud, bundles them to Gaia-X Credentials and requests for compliance at GXDCH.
 
-Besides the Gaia-X Credentials of CSP of OpenStack cloud, with are required by Gaia-X, the follwing Gaia-X Credentials will be created:
+Besides the Gaia-X Credentials of a CSP of an OpenStack cloud, which are required by Gaia-X, the following Gaia-X Credentials will be created:
 
 - Mandatory properties for IaaS Offering as an instance of Gaia-X `ServiceOffering`
 - Detailed description of OpenStack cloud as an instance of Gaia-X `VirtualMachineServiceOffering`
