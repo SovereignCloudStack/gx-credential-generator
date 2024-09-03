@@ -33,7 +33,7 @@ Gaia-X defines several level of compliance, each with a different trust level. g
 
 ### Cloud Service Provider
 
-gx-credential generator outputs the following Gaia-X Credentials for a CSP in order to be Gaia-X compliant
+gx-credential-generator outputs the following Gaia-X Credentials for a CSP in order to be Gaia-X compliant
 
 - Gaia-X Terms and Conditions signed by CSP as an instance Gaia-X class `GaiaXTermsAndConditions`
 - Legal Registration number issued by a Notary Service accredited by GXDCH as an instancec of Gaia-x class `LegalRegistrationNumber`
