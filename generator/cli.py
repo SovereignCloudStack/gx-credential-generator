@@ -115,6 +115,7 @@ def kubernetes():
 )
 @click.option(
     "--out-dir",
+    default=".",
     help="Path to output directory.",
 )
 @click.option(
