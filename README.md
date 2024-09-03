@@ -180,7 +180,7 @@ includes:
 
 ### Mandatory Attributes
 
-Gaia-X Credential schema dictates mandatory attributes for some class.
+The Gaia-X Credential schema dictates mandatory attributes for some classes.
 If values for mandatory attributes can not be discovered from OpenStack or K8S cluster, default values are taken from configuration.
 Providers are able to change default values.
 In doing so, attribute values for **ALL** instances of impacted cloud resource are modified.
