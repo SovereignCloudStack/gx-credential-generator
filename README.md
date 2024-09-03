@@ -94,7 +94,7 @@ Create Gaia-X Credential for CSP without specifying a configuration file. This i
 python3 -m generator.cli csp
 ```
 
-Gaia-X terms and conditions are prompt and you are asked to agree to them. Type 'y' to agree or 'no' to dis-agree.
+Gaia-X terms and conditions are displayed and you are prompted to agree to them. Type 'y' to agree or 'n' to disagree.
 
 **Note**: If you do not agree Gaia-X terms and conditions, process will be aborted and none Gaia-X credential is created.
 
