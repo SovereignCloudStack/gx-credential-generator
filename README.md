@@ -112,7 +112,7 @@ Gaia-X Credential files are placed in the current working directory, by default.
 python3 -m generator.cli csp --out-dir=my-output-dir
 ```
 
-Running the gx-credential-generator with a specified configuration file path use parameter `--config`:
+Running the gx-credential-generator with a specified configuration file path using the parameter `--config`:
 
 ```commandline
 python3 -m generator.cli csp --config=my-config.yaml
