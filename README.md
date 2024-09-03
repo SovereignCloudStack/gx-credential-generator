@@ -54,7 +54,7 @@ Besides the Gaia-X Credentials of a CSP of an OpenStack cloud, which are require
 
 To discover cloud properties, gx-credential-generator requires access to the OpenStack cloud as normal tenant user.
 
-gx-credential-generator read the OpenStack catalog to collect
+gx-credential-generator queries the OpenStack API to collect
 
 - public VM Images and their properties, such as operation system or hardware requirements
 - public Server Flavors, such as number and capability of virtual CPUs or size of root disk
