@@ -118,7 +118,7 @@ Running the gx-credential-generator with a specified configuration file path usi
 python3 -m generator.cli csp --config=my-config.yaml
 ```
 
-You can prevent to prompt Gaia-X terms and conditions using option `--auto-sign`. This implies you agree to them:
+You can avoid interactive prompt for Gaia-X terms and conditions agreement using the option `--auto-sign`. This implies you agree to them:
 
 ```commandline
 python3 -m generator.cli csp --auto-sign
