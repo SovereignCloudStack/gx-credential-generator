@@ -106,7 +106,7 @@ Each Gaia-X Credential is serialized in [JSON-LD](https://json-ld.org/) and stor
 - vp_csp: Presentation of all Gaia-X Credentials to be sent to GXDCH Compliance Service to assert compliance
 - cs_csp: Compliance Credential for CSP as Gaia-X `LegalPerson` issued by GXDCH Compliance Service
 
-Gaia-X Credential files are placed in current working directory, be default. To change output directory use parameter `--out-dir`:
+Gaia-X Credential files are placed in the current working directory, by default. To change the output directory use the parameter `--out-dir`:
 
 ```commandline
 python3 -m generator.cli csp --out-dir=my-output-dir
