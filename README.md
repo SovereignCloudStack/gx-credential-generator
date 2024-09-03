@@ -193,7 +193,7 @@ In doing so, attribute values for **ALL** instances of impacted cloud resource a
 Images and their operating systems. As these values are not accessible from
 OpenStack cloud, default values are used. The values for operating system are
 defined in the section ``software resources`` with one subsection for each operating
-system. Operating systems are referred by name, e.g. for Alpine Linux:
+system. Operating systems are referenced by name, e.g. for Alpine Linux:
 
 ```yaml
 software resources:
