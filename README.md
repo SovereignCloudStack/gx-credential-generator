@@ -29,7 +29,7 @@ gx-credential-generator automatically discovers CSP's and service's properties a
 Each description may consist of several Gaia-X Credentials, each of them attesting other properties.
 All credentials are bundled in a so called [Presentation](https://www.w3.org/TR/vc-data-model/#presentations-0) and send to [GXDCH Compliance Service](https://gaia-x.eu/gxdch/), which issues a Compliance Credential to certify Gaia-X compliance of given CSP and/or service.
 
-Gaia-X defines several level of compliance, each with a different trust level. gx-credential-generator supports the very basic level, called "Conformity" and is compliant Gaia-X Tagus release.
+Gaia-X defines several level of compliance, each with a different trust level. gx-credential-generator supports the very basic level, called "Conformity" and is compliant with the Gaia-X Tagus release.
 
 ### Cloud Service Provider
 
