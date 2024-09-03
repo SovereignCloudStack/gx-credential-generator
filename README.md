@@ -96,7 +96,7 @@ python3 -m generator.cli csp
 
 Gaia-X terms and conditions are displayed and you are prompted to agree to them. Type 'y' to agree or 'n' to disagree.
 
-**Note**: If you do not agree Gaia-X terms and conditions, process will be aborted and none Gaia-X credential is created.
+**Note**: If you do not agree Gaia-X terms and conditions, the process will be aborted and no Gaia-X credential is created.
 
 Each Gaia-X Credential is serialized in [JSON-LD](https://json-ld.org/) and stored in a separate file prefixed as follows:
 
