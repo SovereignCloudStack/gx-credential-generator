@@ -52,7 +52,7 @@ Besides the Gaia-X Credentials of a CSP of an OpenStack cloud, which are require
 - Detailed description of OpenStack cloud as an instance of Gaia-X `VirtualMachineServiceOffering`
 - Compliance Credentials for OpenStack cloud issued by GXDCH Compliance Service as an instance of Gaia-X class `compliance`
 
-To discover cloud properties, gx-credential generator requires access to OpenStack cloud as normal tenant user.
+To discover cloud properties, gx-credential-generator requires access to the OpenStack cloud as normal tenant user.
 
 gx-credential-generator read the OpenStack catalog to collect
 
