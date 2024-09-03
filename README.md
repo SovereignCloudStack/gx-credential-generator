@@ -59,7 +59,7 @@ gx-credential-generator queries the OpenStack API to collect
 - public VM Images and their properties, such as operation system or hardware requirements
 - public Server Flavors, such as number and capability of virtual CPUs or size of root disk
 
-### k8s
+### Kubernetes (k8s)
 
 Comming soon.
 
