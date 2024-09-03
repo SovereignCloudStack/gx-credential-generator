@@ -228,7 +228,7 @@ cloud resources:
 
 ### Prerequisites to create and sign Gaia-X Credential
 
-gx-credential-generator creates Gaia-X Credentials, which refer to [W3C Verifiable Credentials](https://www.w3.org/TR/vc-data-model-2.0/). Verifiable Credentials requires a proof, e.g. a digital signature of credential's issuer. Therefore some settings, e.g. a private key to sign, are required and defined in section `Credentials` of configuration file.
+gx-credential-generator creates Gaia-X Credentials, which refer to [W3C Verifiable Credentials](https://www.w3.org/TR/vc-data-model-2.0/). Verifiable Credentials require a proof, e.g. a digital signature of the credential's issuer. Therefore some settings, e.g. a private key to sign, are required and defined in the section `Credentials` of the configuration file.
 
 ### Enpoints to GXDCH services
 
