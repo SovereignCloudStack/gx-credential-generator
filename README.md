@@ -131,7 +131,7 @@ python3 -m generator.cli csp --auto-sign
 gx-credential-generator requires access to the OpenStack API as a normal tenant
   user and has to be configured with these user credentials to access your
   OpenStack cloud. This is done
-  using [clouds.yaml](https://docs.openstack.org/python-openstackclient/ussuri/configuration/index.html).
+  using [clouds.yaml](https://docs.openstack.org/python-openstackclient/latest/configuration/index.html).
 A `clouds.yaml` is a YAML file containing several cloud access configurations. Each configuration is referred to by name.
 
 SMake sure the following keys exist in our `clouds.yaml`.
