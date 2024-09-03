@@ -173,7 +173,7 @@ Comming soon!
 
 ### Configuration
 
-gx-credential-generartor is configured by `config.yaml`. The configuration
+gx-credential-generator is configured by `config.yaml`. The configuration
 includes:
 
 - Values for mandatory attributes for CSP and service offering, which are not discoverable
