@@ -163,7 +163,7 @@ Each Gaia-X Credential is serialized in [JSON-LD](https://json-ld.org/) and stor
 - so: Mandatory properties for the OpenStack cloud
 - vmso: Detailed description of the OpenStack cloud
 - vp_so: Presentation of all Gaia-X Credentials to be sent to GXDCH Compliance Service to assert compliance
-- cs_so: Compliance Credentials for OpenStack cloud as Gaia-X `ServiceOffering` issued by GXDCH Compliance Service
+- cs_so: Compliance Credentials for the OpenStack cloud as Gaia-X `ServiceOffering` issued by GXDCH Compliance Service
 
 ### K8s
 
