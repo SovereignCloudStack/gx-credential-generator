@@ -20,7 +20,7 @@ Gaia-X Ontology defines classes and attributes, which Gaia-X offers to describe 
 
 A service and/or CSP is supposed to be "Gaia-X compliant", if their Gaia-X Credential(s) fulfill a set of special requirements.
 These requirements are defined in [Gaia-X Policy and Rules Documents](https://docs.gaia-x.eu/policy-rules-committee/policy-rules-conformity-document/23.10/) as well as [Gaia-X Trust Framework](https://docs.gaia-x.eu/policy-rules-committee/trust-framework/22.10/).
-gx-credential-generator automatically discovers CSP's and service's properties and creates Gaia-X Credentials for
+gx-credential-generator automatically discovers a CSP's and service's properties and creates Gaia-X Credentials for
 
 - Cloud Service Provider of SCS-compliant cloud infrastructure
 - OpenStack as an IaaS Offering
