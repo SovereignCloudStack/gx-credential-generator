@@ -232,7 +232,7 @@ gx-credential-generator creates Gaia-X Credentials, which refer to [W3C Verifiab
 
 ### Enpoints to GXDCH services
 
-gx-credential-generator interacts with GXDCH service, e.g. to retreive credential for CSP's legal registration number or to assert compliance. To set the GXDCH endpoints use the options in the section `gxdch`. For a list of available GXSCH endpoints refer to [Gaia-X Framework](https://docs.gaia-x.eu/framework/?tab=clearing-house)
+gx-credential-generator interacts with GXDCH service, e.g. to retrieve a credential for a CSP's legal registration number or to assert compliance. To set the GXDCH endpoints use the options in the section `gxdch`. For a list of available GXSCH endpoints refer to [Gaia-X Framework](https://docs.gaia-x.eu/framework/?tab=clearing-house)
 
 ### Docker
 
