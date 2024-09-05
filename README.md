@@ -61,7 +61,7 @@ gx-credential-generator queries the OpenStack API to collect
 
 ### Kubernetes (k8s)
 
-Comming soon.
+Coming soon.
 
 ## Quick Start Guide
 
