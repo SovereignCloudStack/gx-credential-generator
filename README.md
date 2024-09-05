@@ -100,11 +100,11 @@ Gaia-X terms and conditions are displayed and you are prompted to agree to them.
 
 Each Gaia-X Credential is serialized in [JSON-LD](https://json-ld.org/) and stored in a separate file prefixed as follows:
 
-- lp: Gaia-X Credential containing CSP's legal address and headquarter address
-- lrn: Gaia-X Credential for CSP's legal registration number issued by GXDCH Notary Service. gx-credential-generator reaches out to Notary Service by itself.
-- tandc: Gaia-X Terms and Conditions signed by CSP
+- lp: Gaia-X Credential containing the CSP's legal address and headquarter address
+- lrn: Gaia-X Credential for the CSP's legal registration number issued by GXDCH Notary Service. gx-credential-generator reaches out to Notary Service by itself.
+- tandc: Gaia-X Terms and Conditions signed by the CSP
 - vp_csp: Presentation of all Gaia-X Credentials to be sent to GXDCH Compliance Service to assert compliance
-- cs_csp: Compliance Credential for CSP as Gaia-X `LegalPerson` issued by GXDCH Compliance Service
+- cs_csp: Compliance Credential for the CSP as Gaia-X `LegalPerson` issued by GXDCH Compliance Service
 
 Gaia-X Credential files are placed in the current working directory, by default. To change the output directory use the parameter `--out-dir`:
 
