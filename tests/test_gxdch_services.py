@@ -1,6 +1,6 @@
 import unittest
 import uuid
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from requests.exceptions import HTTPError
 
@@ -80,7 +80,9 @@ class GxdchTestCase(unittest.TestCase):
     @patch("requests.post")
     def test_request_compliance_vc_exception(self, post_mock):
         # init test
-        post_mock.side_effect = HTTPError(409)
+        resp = MagicMock()
+        resp.raise_for_status.side_effect = HTTPError(409)
+        post_mock.return_value = resp
 
         # run test
         comp_serv = ComplianceService("https://example.com/gxdch/compliance-service")
