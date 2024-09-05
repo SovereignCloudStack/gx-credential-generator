@@ -1,6 +1,7 @@
 """Generator of Gaia-X Credentials for CSPs.
 """
 import json
+import logging
 from datetime import datetime, timezone
 
 import generator.common.const as const
@@ -34,30 +35,30 @@ class CspGenerator:
         @return: dictionary of VCs
         """
         # sign Gaia-X terms and conditions
-        print('Create and sign VC of type "gx:GaiaXTermsAndConditions" for CSP...', end='')
+        logging.info('Create and sign VC of type "gx:GaiaXTermsAndConditions" for CSP...')
         tandc_vc = self._sign_gaia_x_terms_and_conditions()
         if tandc_vc is None:
             return
-        print('ok')
+        logging.info('ok')
 
         # retrieve legal registration number from GXDCH Notary
-        print('Request VC of type for "gx:LegalRegistrationNumber" for CSP at GXDCH Notary Service...', end='')
+        logging.info('Request VC of type for "gx:LegalRegistrationNumber" for CSP at GXDCH Notary Service...')
         lrn_vc = self.notary.request_reg_number_vc(
             csp=self.csp,
             cred_id=self.cred_base_url + "/lrn.json",
             cred_subject_id=self.cred_base_url + "/lrn.json#subject")
-        print('ok')
+        logging.info('ok')
 
         # create Gaia-X Credential for CSP as Legal Person
-        print('Create and sign VC of type "gx:LegalPerson for CSP"...', end='')
+        logging.info('Create and sign VC of type "gx:LegalPerson for CSP"...')
         lp_vc = self._sign_legal_person(lrn_vc['credentialSubject']['id'])
-        print('ok')
+        logging.info('ok')
 
         # request Gaia-X compliance credential for CSP as Legal Person
-        print('Request VC of type "gx:compliance" for CSP at GXDCH Compliance Service...', end='')
+        logging.info('Request VC of type "gx:compliance" for CSP at GXDCH Compliance Service...')
         vp = credentials.convert_to_vp(creds=[tandc_vc, lrn_vc, lp_vc])
         cs_vc = self.compliance.request_compliance_vc(vp, self.cred_base_url + "/csp_compliance.json")
-        print('ok')
+        logging.info('ok')
         return {'tandc': tandc_vc, 'lrn': lrn_vc, 'lp': lp_vc, 'cs_csp': json.loads(cs_vc), 'vp_csp': vp}
 
     def _sign_gaia_x_terms_and_conditions(self) -> dict:
