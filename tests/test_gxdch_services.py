@@ -1,6 +1,6 @@
 import unittest
 import uuid
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 from requests.exceptions import HTTPError
 
