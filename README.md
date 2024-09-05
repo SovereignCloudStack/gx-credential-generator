@@ -167,7 +167,7 @@ Each Gaia-X Credential is serialized in [JSON-LD](https://json-ld.org/) and stor
 
 ### Kubernetes (k8s)
 
-Comming soon!
+Coming soon!
 
 ## User Guide
 
