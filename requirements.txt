@@ -44,7 +44,7 @@ click==8.1.7
     #   linkml
     #   linkml-runtime
     #   prefixcommons
-cryptography==42.0.5
+cryptography==43.0.1
     # via
     #   jwcrypto
     #   openstacksdk
