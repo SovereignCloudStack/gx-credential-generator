@@ -40,7 +40,7 @@ gx-credential-generator outputs the following Gaia-X Credentials for a CSP in or
 - Gaia-X mandatory attributes for a CSP as an instance of Gaia-X class `LegalPerson`
 - Compliance Credentials for a CSP issued by the GXDCH Compliance Service as an instance of Gaia-X class `compliance`
 
-CSP's properties are not discoverable and read out from configuration file. See [configuration](#configuration) section for more details.
+A CSP's properties are not discoverable and read out from the configuration file. See the [configuration](#configuration) section for more details.
 
 ### OpenStack
 
