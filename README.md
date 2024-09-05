@@ -88,7 +88,7 @@ gx-credential-generator requires some configuration options. See [configuration]
 
 #### 2. Run gx-credential-generator
 
-Create Gaia-X Credential for CSP without specifying a configuration file. This implies the default path at `/etc/gx-credential-generator/config.yaml`, which must exist:
+Create Gaia-X Credential for a CSP without specifying a configuration file. This implies the default path at `/etc/gx-credential-generator/config.yaml`, which must exist:
 
 ```commandline
 python3 -m generator.cli csp
