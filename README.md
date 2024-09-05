@@ -82,7 +82,7 @@ Installing dependecies into a Python [virtualenv](https://virtualenv.pypa.io/en/
 
 ### Cloud Service Provider
 
-### 1. Create configuration file
+#### 1. Create configuration file
 
 gx-credential-generator requires some configuration options. See [configuration](#configuration) section for more details.
 
