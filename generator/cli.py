@@ -10,9 +10,10 @@
 SPDX-License-Identifier: EPL-2.0
 """
 
+import functools
 import json
+import logging
 import os
-import sys
 from datetime import datetime, timezone
 from typing import List
 
@@ -45,12 +46,56 @@ VC_NAME_LOOKUP = {
 }
 
 
+def add_logging_options(func):
+    """Python Click decorator to include common logging options
+
+    Offers an alternative to adding logging options directly to a
+    @click.group() in order to circumvent group option limitations that
+    would require any such options to be specified before the command name
+    by the user on the command line.
+
+    Any @click.command() function can be decorated with this decorator to
+    include logging initialization based on common logging options that
+    can be specified alongside with the respective command's individual
+    options, e.g.,
+
+        mycommand --log-file local.log --debug --option1 --option2
+    """
+    @click.option(
+        "--log-file",
+        default="-",
+        help="Specify path to log file. If not specified, log messages will be printed to stdout"
+    )
+    @click.option(
+        "--debug/--no-debug",
+        default=False,
+        help="Enable debug log level"
+    )
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        # consume the common logging options from kwargs directly
+        # (so that they are not passed to the wrapped function down below)
+        debug = kwargs.pop("debug")
+        log_file = kwargs.pop("log_file")
+        # initialize logging
+        log_file = None if log_file == "-" else log_file
+        logging.basicConfig(
+            format="%(levelname)s: %(message)s",
+            level=logging.DEBUG if debug else logging.INFO,
+            filename=log_file
+        )
+        # call wrapped function
+        return func(*args, **kwargs)
+    return wrapper
+
+
 @click.group()
 def cli_commands():
     pass
 
 
 @click.command()
+@add_logging_options
 @click.option(
     "--auto-sign/--no-auto-sign",
     default=False,
@@ -76,8 +121,15 @@ def openstack(cloud, timeout, config, out_dir, auto_sign):
 
     if not auto_sign and not _are_gaiax_tandc_signed(conf):
         # user did not agree Gaia-X terms and conditions, we have to abort here
-        print("Gaia-X terms and conditions were not signed - process aborted!")
+        logging.error(
+            "Gaia-X Terms and Conditions were not signed - process aborted!"
+        )
         return
+    elif auto_sign:
+        logging.info(
+            "Gaia-X Terms and Conditions accepted non-interactively via "
+            "auto-sign option"
+        )
 
     # create Gaia-X Credentials for CSP
     csp_gen = CspGenerator(conf=conf)
@@ -96,6 +148,7 @@ def openstack(cloud, timeout, config, out_dir, auto_sign):
 
 
 @click.command()
+@add_logging_options
 def kubernetes():
     """Generates Gaia-X Credentials for CSP and Kubernetes."""
     pass
@@ -108,6 +161,7 @@ def kubernetes():
 #    return graph
 
 @click.command()
+@add_logging_options
 @click.option(
     "--auto-sign/--no-auto-sign",
     default=False,
@@ -130,8 +184,15 @@ def csp(config, out_dir, auto_sign):
 
     if not auto_sign and not _are_gaiax_tandc_signed(conf):
         # user did not agree Gaia-X terms and conditions, we have to abort here
-        print("Gaia-X terms and conditions were not signed - process aborted!")
+        logging.error(
+            "Gaia-X Terms and Conditions were not signed - process aborted!"
+        )
         return
+    elif auto_sign:
+        logging.info(
+            "Gaia-X Terms and Conditions accepted non-interactively via "
+            "auto-sign option"
+        )
     vcs = CspGenerator(conf).generate()
     _print_vcs(vcs, out_dir)
 
@@ -147,7 +208,7 @@ def init_openstack_connection(cloud: str, timeout: int = 12) -> Connection:
         conn = o_stack.connect(cloud=cloud, timeout=timeout, api_timeout=timeout * 1.5 + 4)
         conn.authorize()
     except Exception:
-        print("INFO: Retry connection with 'default' domain", file=sys.stderr)
+        logging.error("Retry connection with 'default' domain")
         conn = o_stack.connect(
             cloud=cloud,
             timeout=timeout,
@@ -181,7 +242,7 @@ def create_vmso_vcs(conf: Config, cloud: str, csp_vcs: List[dict], timeout: int 
     discovery = OpenstackDiscovery(conn=conn, config=conf)
 
     # run openstack discovery and build Gaia-X Credential for Virtual Machine Service Offering
-    print('Create VC of type "gx:VirtualMachineServiceOffering"...', end='')
+    logging.info('Create VC of type "gx:VirtualMachineServiceOffering"...')
     vm_offering = discovery.discover()
     vmso_vc = {
         '@context': [const.VC_CONTEXT, const.JWS_CONTEXT, const.REG_CONTEXT],
@@ -194,10 +255,10 @@ def create_vmso_vcs(conf: Config, cloud: str, csp_vcs: List[dict], timeout: int 
     vmso_vc_signed = crypto.sign_cred(cred=vmso_vc,
                                       key=crypto.load_jwk_from_file(cred_settings[const.CONFIG_CRED_KEY]),
                                       verification_method=cred_settings[const.CONFIG_CRED_VER_METH])
-    print('ok')
+    logging.info('ok')
 
     # build Gaia-X Credential for Service Offering
-    print('Create VC of type "gx:ServiceOffering"...', end='')
+    logging.info('Create VC of type "gx:ServiceOffering"...')
     so_vc = {
         '@context': [const.VC_CONTEXT, const.JWS_CONTEXT, const.REG_CONTEXT],
         'type': "VerifiableCredential",
@@ -226,15 +287,15 @@ def create_vmso_vcs(conf: Config, cloud: str, csp_vcs: List[dict], timeout: int 
     so_vc_signed = crypto.sign_cred(cred=so_vc,
                                     key=crypto.load_jwk_from_file(cred_settings[const.CONFIG_CRED_KEY]),
                                     verification_method=cred_settings[const.CONFIG_CRED_VER_METH])
-    print('ok')
+    logging.info('ok')
 
     # Request Gaia-X Compliance Credential for Service Offering
-    print('Request VC of type "gx:compliance" for Service Offering at GXDCH Compliance Service...', end='')
+    logging.info('Request VC of type "gx:compliance" for Service Offering at GXDCH Compliance Service...')
     vp = credentials.convert_to_vp(creds=[csp_vcs['tandc'], csp_vcs['lrn'], csp_vcs['lp'], so_vc_signed])
     comp_vc = compliance.request_compliance_vc(vp,
                                                cred_settings[const.CONFIG_CRED_BASE_CRED_URL] + "/so_compliance.json")
 
-    print('ok')
+    logging.info('ok')
     return {'so': so_vc, 'cs_so': json.loads(comp_vc), 'vmso': vmso_vc_signed, 'vp_so': vp}
 
 
@@ -253,17 +314,17 @@ def _print_vcs(vcs: dict, out_dir: str = "."):
         vc_path = os.path.join(out_dir, key + "_" + ts + ".json")
         with open(vc_path, "w") as vc_file:
             if key == 'vp_csp':
-                print(
-                    "Write Verifiable Presentation of Cloud Service Provider to be verified at GXDCH Compliance Service to " + str(
+                logging.info(
+                    "Writing Verifiable Presentation of Cloud Service Provider to be verified at GXDCH Compliance Service to " + str(
                         vc_path))
                 vc_file.write(json.dumps(vcs[key], indent=2))
             elif key == 'vp_so':
-                print(
-                    "Write Verifiable Presentation of Service Offering to be verified at GXDCH Compliance Service to " + str(
+                logging.info(
+                    "Writing Verifiable Presentation of Service Offering to be verified at GXDCH Compliance Service to " + str(
                         vc_path))
                 vc_file.write(json.dumps(vcs[key], indent=2))
             else:
-                print("Write Gaia-X Credential for " + VC_NAME_LOOKUP[key] + " to " + str(vc_path))
+                logging.info("Writing Gaia-X Credential for " + VC_NAME_LOOKUP[key] + " to " + str(vc_path))
                 vc_file.write(json.dumps(vcs[key], indent=2))
 
 
@@ -271,7 +332,7 @@ def _are_gaiax_tandc_signed(conf: Config) -> bool:
     reg = RegistryService(conf.get_value([const.CONST_GXDCH, const.CONST_GXDCH_REG]))
     tand = reg.get_gx_tandc()
 
-    print("Do you agree Gaia-X Terms and conditions version " + tand['version'] + ".")
+    print("Do you agree Gaia-X Terms and Conditions version " + tand['version'] + "?")
     print()
     print("-------------------------- Gaia-X Terms and Conditions --------------------------------------------")
     print(tand['text'])
@@ -285,7 +346,13 @@ def _are_gaiax_tandc_signed(conf: Config) -> bool:
         resp = input()
 
     if resp.lower() == 'y':
+        logging.info(
+            "Gaia-X Terms and Conditions accepted via interactive input"
+        )
         return True
+    logging.info(
+        "Gaia-X Terms and Conditions declined via interactive input"
+    )
     return False
 
 
