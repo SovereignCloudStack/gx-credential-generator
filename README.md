@@ -146,7 +146,7 @@ gx-credential-generator requires some configuration options. See [configuration]
 
 #### 3. Run gx-credential-generator
 
-The command to run gx-credential-generator for OpenStack cloud is similar to the one to run gx-credential-generator for CSP. Also arguments `--config`, `--out-dir` and `--auto-sign` are available and act like for CSP.
+The command to run gx-credential-generator for OpenStack clouds is similar to the one to run gx-credential-generator for a CSP. The arguments `--config`, `--out-dir` and `--auto-sign` are also available and act like for the CSP command.
 
 Create Gaia-X Credential for an OpenStack cloud
 
