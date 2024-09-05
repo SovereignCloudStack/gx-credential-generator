@@ -87,7 +87,6 @@ class GxdchTestCase(unittest.TestCase):
         # run test
         comp_serv = ComplianceService("https://example.com/gxdch/compliance-service")
 
-
         # Check results
         self.assertRaises(HTTPError, comp_serv.request_compliance_vc, vp="{\\\"foo\\\": \\\"bar\\\"}",
                           vp_id="example.json")
