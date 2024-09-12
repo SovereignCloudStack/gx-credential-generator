@@ -296,7 +296,6 @@ class VmImageDiscovery:
                 resourcePolicy=const.DEFAULT_RESOURCE_POLICY,
                 copyrightOwnedBy="TBA",
                 license="https://www.example.com/tba")
-
         if os_image.os_distro.lower() == "arch":
             return OperatingSystem(
                 version=os_image.os_version,
