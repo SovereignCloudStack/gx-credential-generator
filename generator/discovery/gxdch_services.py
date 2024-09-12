@@ -16,11 +16,11 @@ class ComplianceService:
 
     def request_compliance_vc(self, vp: dict, vp_id) -> str:
         resp = requests.post(self.api + "/api/credential-offers?vcid=" + vp_id, json.dumps(vp))
-        try:
-            resp.raise_for_status()
-        except requests.exceptions.HTTPError as err:
-            logging.error(resp.text)
-            raise err
+        #try:
+        #    resp.raise_for_status()
+        #except requests.exceptions.HTTPError as err:
+        #    logging.error(resp.text)
+        #    raise err
         return resp.text
 
 
@@ -42,7 +42,11 @@ class NotaryService:
         }
         resp = requests.post(self.api + "/registrationNumberVC?vcid=" + str(cred_id), json=body)
 
-        resp.raise_for_status()
+        try:
+            resp.raise_for_status()
+        except requests.exceptions.HTTPError as err:
+            logging.error(resp.text)
+            raise err
         return resp.json()
 
 
@@ -56,5 +60,9 @@ class RegistryService:
 
     def get_gx_tandc(self) -> dict:
         resp = requests.get(self.api + "/api/termsAndConditions")
-        resp.raise_for_status()
+        try:
+            resp.raise_for_status()
+        except requests.exceptions.HTTPError as err:
+            logging.error(resp.text)
+            raise err
         return resp.json()
