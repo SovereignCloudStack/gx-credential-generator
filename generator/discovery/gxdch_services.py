@@ -16,11 +16,11 @@ class ComplianceService:
 
     def request_compliance_vc(self, vp: dict, vp_id) -> str:
         resp = requests.post(self.api + "/api/credential-offers?vcid=" + vp_id, json.dumps(vp))
-        #try:
-        #    resp.raise_for_status()
-        #except requests.exceptions.HTTPError as err:
-        #    logging.error(resp.text)
-        #    raise err
+        try:
+            resp.raise_for_status()
+        except requests.exceptions.HTTPError as err:
+            logging.error(resp.text)
+            raise err
         return resp.text
 
 
