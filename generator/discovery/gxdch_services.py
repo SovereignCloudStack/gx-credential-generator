@@ -42,7 +42,11 @@ class NotaryService:
         }
         resp = requests.post(self.api + "/registrationNumberVC?vcid=" + str(cred_id), json=body)
 
-        resp.raise_for_status()
+        try:
+            resp.raise_for_status()
+        except requests.exceptions.HTTPError as err:
+            logging.error(resp.text)
+            raise err
         return resp.json()
 
 
@@ -56,5 +60,9 @@ class RegistryService:
 
     def get_gx_tandc(self) -> dict:
         resp = requests.get(self.api + "/api/termsAndConditions")
-        resp.raise_for_status()
+        try:
+            resp.raise_for_status()
+        except requests.exceptions.HTTPError as err:
+            logging.error(resp.text)
+            raise err
         return resp.json()
