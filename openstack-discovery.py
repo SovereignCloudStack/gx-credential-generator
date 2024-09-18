@@ -218,6 +218,7 @@ class osFlavor:
         self.ramSize = flv['ram']       # MiB
         self.diskSize = flv['disk']     # GB
         self.diskType = ""
+        self.extraSpecs = flv['extra_specs']
 
     def values(self):
         ydct = dict(name = self.name,
@@ -225,6 +226,8 @@ class osFlavor:
                     ramSize = dict(Value=self.ramSize/1024, Unit='GiB'))
         if self.diskSize:
             ydct['diskSize'] = dict(Value=self.diskSize, Unit='GB')
+        if self.extraSpecs:
+            ydct['extraSpecs'] = dict(self.extraSpecs)
         # TODO: cpuType, cpuGen, diskType output
         return ydct
 
@@ -244,7 +247,7 @@ class osCompute(osService):
     def values(self):
         dct = super().values()
         if self.flavors:
-            dct[self.stype]["flavors"] = self.flavors
+            dct[self.stype]["flavors"] = (self.flavors)
         return dct
 
     def get_openstack_flavors(self):
