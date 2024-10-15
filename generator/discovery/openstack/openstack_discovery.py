@@ -8,12 +8,12 @@ from openstack.connection import Connection
 from requests.exceptions import HTTPError
 
 from generator.common import const
-from generator import Config
+from generator.common.config import Config
 from generator.common.gx_schema import (DataAccountExport, TermsAndConditions,
                                         VirtualMachineServiceOffering)
-from generator import \
+from generator.discovery.openstack.server_flavor_discovery import \
     ServerFlavorDiscovery
-from generator import VmImageDiscovery
+from generator.discovery.openstack.vm_images_discovery import VmImageDiscovery
 
 
 class OpenstackDiscovery:

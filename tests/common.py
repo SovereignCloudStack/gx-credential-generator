@@ -6,7 +6,7 @@ import yaml
 from openstack.compute.v2.flavor import Flavor as OS_Flavor
 from openstack.image.v2.image import Image as OS_Image
 
-from generator.common.config import Config
+from generator import Config
 from generator.common.gx_schema import (CPU, GPU, CheckSum, CodeArtifact,
                                         Device, Disk, Encryption, GaiaXEntity,
                                         Hypervisor, Image,

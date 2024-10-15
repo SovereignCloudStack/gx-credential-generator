@@ -47,7 +47,7 @@ IaaS:
     format-type: "plain"
 
 # Endpoints of Gaia-X Digital Clearing House
-gxdch:
+GXDCH:
   notary-service: https://registrationnumber.notary.lab.gaia-x.eu/v1-staging
   compliance-service: https://compliance.lab.gaia-x.eu/v1-staging
   registry-service: https://registry.lab.gaia-x.eu/v1-staging
