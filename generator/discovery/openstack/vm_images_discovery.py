@@ -8,7 +8,7 @@ from openstack.connection import Connection
 from openstack.image.v2.image import Image as OS_Image
 
 import generator.common.const as const
-from generator.common.config import Config
+from generator import Config
 from generator.common.gx_schema import CPU, SPDX
 from generator.common.gx_schema import Architectures as CpuArch
 from generator.common.gx_schema import (CheckSum, ChecksumAlgorithm, Disk,

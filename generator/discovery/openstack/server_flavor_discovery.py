@@ -7,7 +7,7 @@ from openstack.compute.v2.flavor import Flavor as OS_Flavor
 from openstack.connection import Connection
 
 from generator.common import const
-from generator.common.config import Config
+from generator import Config
 from generator.common.gx_schema import CPU
 from generator.common.gx_schema import Architectures as CpuArch
 from generator.common.gx_schema import (Disk, DiskType, Frequency, Hypervisor,
@@ -93,7 +93,7 @@ class ServerFlavorDiscovery:
         # Initialize Gaia-X Server Flavor
         disks = self._get_disks(os_flavor, flavorname)
         gx_flavor = GX_Flavor(
-            # name=os_flavor.name,
+            name=os_flavor.name,
             cpu=self._get_cpu(os_flavor, flavorname),
             ram=self._get_ram(os_flavor, flavorname),
             bootVolume=disks[0],

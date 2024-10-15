@@ -4,10 +4,10 @@ import json
 import logging
 from datetime import datetime, timezone
 
-import generator.common.const as const
-from generator.common import credentials, crypto
-from generator.common.config import Config
-from generator.discovery.gxdch_services import (ComplianceService,
+import common.const as const
+from common import credentials, crypto
+from common.config import Config
+from discovery.gxdch_services import (ComplianceService,
                                                 NotaryService, RegistryService)
 
 
