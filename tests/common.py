@@ -26,7 +26,7 @@ def get_absolute_path(relative_path: str) -> str:
 
 
 def get_config() -> Config:
-    with open(get_absolute_path("config/config.yaml"), "r") as config_file:
+    with open(get_absolute_path("config/config.yaml.template"), "r") as config_file:
         return Config(yaml.safe_load(config_file))
 
 

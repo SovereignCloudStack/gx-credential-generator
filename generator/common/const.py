@@ -1,7 +1,7 @@
 """
 Constants used by SCS GX Credential Generator.
 """
-CONFIG_FILE = "config/config.yaml"
+CONFIG_FILE = "config/config.yaml.template"
 
 # General keys
 CONFIG_DID = "did"
