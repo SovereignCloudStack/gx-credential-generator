@@ -147,7 +147,7 @@ class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
         gx_flavor = self.discovery._convert_to_gx(OS_Flavor(name="SCS-2C-4-10h", disk=50))
         self.assertEqual(
             [
-                Disk(diskSize=MemorySize(value=10, unit=const.UNIT_GB), diskType=DiskType("local HDD"), )
+                Disk(diskSize=MemorySize(value=10, unit=const.UNIT_GB), diskType=DiskType("local HDD"),)
             ],
             [gx_flavor.bootVolume] + gx_flavor.additionalVolume,
         )
