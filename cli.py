@@ -45,6 +45,7 @@ VC_NAME_LOOKUP = {
     "vmso": "Virtual Machine Service Offering",
 }
 
+
 def add_logging_options(func):
     """Python Click decorator to include common logging options
 
@@ -86,7 +87,6 @@ def add_logging_options(func):
         # call wrapped function
         return func(*args, **kwargs)
     return wrapper
-
 
 
 @click.group()
@@ -356,6 +356,7 @@ def _are_gaiax_tandc_signed(conf: Config) -> bool:
         "Gaia-X Terms and Conditions declined via interactive input"
     )
     return False
+
 
 if __name__ == "__main__":
     cli_commands()

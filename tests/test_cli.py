@@ -8,7 +8,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from jwcrypto.jwt import JWK
 
-from generator import cli
+import cli
 from generator.common import config, const
 from generator.common.gx_schema import (DataAccountExport, TermsAndConditions,
                                         VirtualMachineServiceOffering)
@@ -21,7 +21,7 @@ class CliTestCase(unittest.TestCase):
     @patch("generator.common.crypto.load_jwk_from_file")
     @patch("generator.discovery.openstack.openstack_discovery.OpenstackDiscovery.discover")
     @patch("openstack.connect")
-    @patch("generator.cli._print_vcs")
+    @patch("cli._print_vcs")
     def test_generate_vsmo(self, cli_print_vs, os_connect, os_discover, load_jwk, gxdch_req_compl):
         # Mock openstack calls
         cli_print_vs.return_value = None
@@ -63,8 +63,8 @@ class CliTestCase(unittest.TestCase):
         self.assertIsNotNone(vcs['vp_so'])
 
     @patch("generator.discovery.csp_generator.CspGenerator.generate")
-    @patch("generator.cli.create_vmso_vcs")
-    @patch("generator.cli._print_vcs")
+    @patch("cli.create_vmso_vcs")
+    @patch("cli._print_vcs")
     def test_openstack(self, cli_print_vs, gen_vmso, gen_csp):
         cli_print_vs.return_value = None
         gen_vmso.return_value = {"foo": "foo"}
@@ -82,8 +82,8 @@ class CliTestCase(unittest.TestCase):
         self.assertEqual(0, result.exit_code)
 
     @patch("generator.discovery.csp_generator.CspGenerator.generate")
-    @patch("generator.cli.create_vmso_vcs")
-    @patch("generator.cli._print_vcs")
+    @patch("cli.create_vmso_vcs")
+    @patch("cli._print_vcs")
     def test_openstack_auto_sign(self, cli_print_vs, gen_vmso, gen_csp):
         cli_print_vs.return_value = None
         gen_vmso.return_value = {"foo": "foo"}
@@ -101,8 +101,8 @@ class CliTestCase(unittest.TestCase):
         self.assertEqual(0, result.exit_code)
 
     @patch("generator.discovery.csp_generator.CspGenerator.generate")
-    @patch("generator.cli.create_vmso_vcs")
-    @patch("generator.cli._print_vcs")
+    @patch("cli.create_vmso_vcs")
+    @patch("cli._print_vcs")
     def test_openstack_no_auto_sign(self, cli_print_vs, gen_vmso, gen_csp):
         cli_print_vs.return_value = None
         gen_vmso.return_value = {"foo": "foo"}
@@ -121,8 +121,8 @@ class CliTestCase(unittest.TestCase):
         self.assertEqual(0, result.exit_code)
 
     @patch("generator.discovery.csp_generator.CspGenerator.generate")
-    @patch("generator.cli.create_vmso_vcs")
-    @patch("generator.cli._print_vcs")
+    @patch("cli.create_vmso_vcs")
+    @patch("cli._print_vcs")
     def test_openstack_sign(self, cli_print_vs, gen_vmso, gen_csp):
         cli_print_vs.return_value = None
         gen_vmso.return_value = {"foo": "foo"}
@@ -152,7 +152,7 @@ class CliTestCase(unittest.TestCase):
         self.assertIsNotNone(con)
 
     @patch("generator.discovery.csp_generator.CspGenerator.generate")
-    @patch("generator.cli._print_vcs")
+    @patch("cli._print_vcs")
     def test_csp_auto_sign(self, cli_print_vs, gen_csp):
         cli_print_vs.return_value = None
         gen_csp.return_value = {"vc": "bar"}
@@ -167,7 +167,7 @@ class CliTestCase(unittest.TestCase):
         self.assertEqual(0, result.exit_code)
 
     @patch("generator.discovery.csp_generator.CspGenerator.generate")
-    @patch("generator.cli._print_vcs")
+    @patch("cli._print_vcs")
     def test_csp_sign(self, cli_print_vs, gen_csp):
         cli_print_vs.return_value = None
         gen_csp.return_value = {"vc": "bar"}
@@ -182,7 +182,7 @@ class CliTestCase(unittest.TestCase):
         self.assertEqual(0, result.exit_code)
 
     @patch("generator.discovery.csp_generator.CspGenerator.generate")
-    @patch("generator.cli._print_vcs")
+    @patch("cli._print_vcs")
     def test_csp_no_auto_sign(self, cli_print_vs, gen_csp):
         cli_print_vs.return_value = None
         gen_csp.return_value = {"vc": "bar"}
