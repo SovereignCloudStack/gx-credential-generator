@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 
 from requests.exceptions import HTTPError
 
-from generator import (ComplianceService,
+from generator.discovery.gxdch_services import (ComplianceService,
                        NotaryService, RegistryService)
 
 
