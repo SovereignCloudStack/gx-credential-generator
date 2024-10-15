@@ -91,7 +91,7 @@ gx-credential-generator requires some configuration options. See [configuration]
 Create Gaia-X Credential for a CSP without specifying a configuration file. This implies the default path at `/etc/gx-credential-generator/config.yaml`, which must exist:
 
 ```commandline
-python3 -m generator.cli csp
+python3 -m cli csp
 ```
 
 Gaia-X terms and conditions are displayed and you are prompted to agree to them. Type 'y' to agree or 'n' to disagree.
@@ -109,19 +109,19 @@ Each Gaia-X Credential is serialized in [JSON-LD](https://json-ld.org/) and stor
 Gaia-X Credential files are placed in the current working directory, by default. To change the output directory use the parameter `--out-dir`:
 
 ```commandline
-python3 -m generator.cli csp --out-dir=my-output-dir
+python3 -m cli csp --out-dir=my-output-dir
 ```
 
 Running the gx-credential-generator with a specified configuration file path using the parameter `--config`:
 
 ```commandline
-python3 -m generator.cli csp --config=my-config.yaml
+python3 -m cli csp --config=my-config.yaml
 ```
 
 You can avoid interactive prompt for Gaia-X terms and conditions agreement using the option `--auto-sign`. This implies you agree to them:
 
 ```commandline
-python3 -m generator.cli csp --auto-sign
+python3 -m cli csp --auto-sign
 ```
 
 ### OpenStack
@@ -151,7 +151,7 @@ The command to run gx-credential-generator for OpenStack clouds is similar to th
 Create Gaia-X Credential for an OpenStack cloud
 
   ```bash
-  python3 -m generator.cli openstack <os-cloud>
+  python3 -m cli openstack <os-cloud>
   ```
 
 (`<os-cloud>` is a placeholder for the name of the desired entry in `clouds.yaml`)
