@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 from requests.exceptions import HTTPError
 
 from generator.discovery.gxdch_services import (ComplianceService,
-                       NotaryService, RegistryService)
+                                                NotaryService, RegistryService)
 
 
 class GxdchTestCase(unittest.TestCase):
