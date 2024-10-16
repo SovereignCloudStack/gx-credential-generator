@@ -45,7 +45,7 @@ class CliTestCase(unittest.TestCase):
             encryption_algorithm=serialization.NoEncryption()))
         csp_vcs = {'tandc': {"credentialSubject": {"type": "gx:GaiaXTermsAndConditions"}},
                    "lrn": {"credentialSubject": {"type": "gx:LegalRegistrationNumber", "id": "foo"}},
-                   "lp": {"credentialSubject": {"type": "gx:LegalParticipant", "id": "foo"}}}
+                   "legal_person": {"credentialSubject": {"type": "gx:LegalParticipant", "id": "foo"}}}
         gxdch_req_compl.return_value = "{\"credentialSubject\": {\"type\": \"gx:ComplianceCredential\", \"id\": \"foo\"}}"
 
         with open(get_absolute_path(const.CONFIG_FILE), "r") as config_file:
@@ -58,7 +58,7 @@ class CliTestCase(unittest.TestCase):
 
         self.assertEqual(4, len(vcs))
         self.assertEqual("gx:ServiceOffering", vcs['so']['credentialSubject']["type"])
-        self.assertEqual("gx:ComplianceCredential", vcs['cs_so']['credentialSubject']["type"])
+        self.assertEqual("gx:ComplianceCredential", vcs['so_compliance']['credentialSubject']["type"])
         self.assertEqual("gx:VirtualMachineServiceOffering", vcs['vmso']['credentialSubject']["type"])
         self.assertIsNotNone(vcs['vp_so'])
 
