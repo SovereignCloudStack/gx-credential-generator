@@ -220,7 +220,7 @@ def init_openstack_connection(cloud: str, timeout: int = 12) -> Connection:
     return conn
 
 
-def create_vmso_vcs(conf: Config, cloud: str, csp_vcs: List[dict], timeout: int = 12) -> dict:
+def create_vmso_vcs(conf: Config, cloud: str, csp_vcs: List[dict], timeout: int = 12) -> dict[dict]:
     """
     Create Gaia-X Credentials  for Virtual Machine Service Offering. This means
       - Gaia-X Credential of OpenStack Cloud as ServiceOffering with mandatory attributes

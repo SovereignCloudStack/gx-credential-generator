@@ -8,8 +8,8 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from jwcrypto.jwt import JWK
 
-import cli
-from generator.common import config, const
+from generator import cli
+from generator.common import config
 from generator.common.gx_schema import (DataAccountExport, TermsAndConditions,
                                         VirtualMachineServiceOffering)
 from tests.common import MockConnection, get_absolute_path
@@ -21,7 +21,7 @@ class CliTestCase(unittest.TestCase):
     @patch("generator.common.crypto.load_jwk_from_file")
     @patch("generator.discovery.openstack.openstack_discovery.OpenstackDiscovery.discover")
     @patch("openstack.connect")
-    @patch("cli._print_vcs")
+    @patch("generator.cli._print_vcs")
     def test_generate_vsmo(self, cli_print_vs, os_connect, os_discover, load_jwk, gxdch_req_compl):
         # Mock openstack calls
         cli_print_vs.return_value = None
@@ -48,7 +48,7 @@ class CliTestCase(unittest.TestCase):
                    "legal_person": {"credentialSubject": {"type": "gx:LegalParticipant", "id": "foo"}}}
         gxdch_req_compl.return_value = "{\"credentialSubject\": {\"type\": \"gx:ComplianceCredential\", \"id\": \"foo\"}}"
 
-        with open(get_absolute_path(const.CONFIG_FILE), "r") as config_file:
+        with open(get_absolute_path("config/config.yaml.template"), "r") as config_file:
             conf = config.Config(yaml.safe_load(config_file))
 
         vcs = cli.create_vmso_vcs(conf, "myCloud", csp_vcs)
@@ -63,8 +63,8 @@ class CliTestCase(unittest.TestCase):
         self.assertIsNotNone(vcs['vp_so'])
 
     @patch("generator.discovery.csp_generator.CspGenerator.generate")
-    @patch("cli.create_vmso_vcs")
-    @patch("cli._print_vcs")
+    @patch("generator.cli.create_vmso_vcs")
+    @patch("generator.cli._print_vcs")
     def test_openstack(self, cli_print_vs, gen_vmso, gen_csp):
         cli_print_vs.return_value = None
         gen_vmso.return_value = {"foo": "foo"}
@@ -72,7 +72,7 @@ class CliTestCase(unittest.TestCase):
 
         runner = CliRunner()
         result = runner.invoke(
-            cli.openstack, "myCloud --config=" + get_absolute_path(const.CONFIG_FILE) + " --auto-sign"
+            cli.openstack, "myCloud --config=" + get_absolute_path("config/config.yaml.template") + " --auto-sign"
         )
 
         gen_csp.assert_called_once()
@@ -82,8 +82,8 @@ class CliTestCase(unittest.TestCase):
         self.assertEqual(0, result.exit_code)
 
     @patch("generator.discovery.csp_generator.CspGenerator.generate")
-    @patch("cli.create_vmso_vcs")
-    @patch("cli._print_vcs")
+    @patch("generator.cli.create_vmso_vcs")
+    @patch("generator.cli._print_vcs")
     def test_openstack_auto_sign(self, cli_print_vs, gen_vmso, gen_csp):
         cli_print_vs.return_value = None
         gen_vmso.return_value = {"foo": "foo"}
@@ -91,7 +91,7 @@ class CliTestCase(unittest.TestCase):
 
         runner = CliRunner()
         result = runner.invoke(
-            cli.openstack, "myCloud --config=" + get_absolute_path(const.CONFIG_FILE) + " --auto-sign"
+            cli.openstack, "myCloud --config=" + get_absolute_path("config/config.yaml.template") + " --auto-sign"
         )
 
         gen_csp.assert_called_once()
@@ -101,8 +101,8 @@ class CliTestCase(unittest.TestCase):
         self.assertEqual(0, result.exit_code)
 
     @patch("generator.discovery.csp_generator.CspGenerator.generate")
-    @patch("cli.create_vmso_vcs")
-    @patch("cli._print_vcs")
+    @patch("generator.cli.create_vmso_vcs")
+    @patch("generator.cli._print_vcs")
     def test_openstack_no_auto_sign(self, cli_print_vs, gen_vmso, gen_csp):
         cli_print_vs.return_value = None
         gen_vmso.return_value = {"foo": "foo"}
@@ -111,7 +111,7 @@ class CliTestCase(unittest.TestCase):
         with patch('builtins.input', return_value="n"):
             runner = CliRunner()
             result = runner.invoke(
-                cli.openstack, "myCloud --config=" + get_absolute_path(const.CONFIG_FILE) + " --no-auto-sign"
+                cli.openstack, "myCloud --config=" + get_absolute_path("config/config.yaml.template") + " --no-auto-sign"
             )
 
         self.assertEqual(0, gen_csp.call_count)
@@ -121,8 +121,8 @@ class CliTestCase(unittest.TestCase):
         self.assertEqual(0, result.exit_code)
 
     @patch("generator.discovery.csp_generator.CspGenerator.generate")
-    @patch("cli.create_vmso_vcs")
-    @patch("cli._print_vcs")
+    @patch("generator.cli.create_vmso_vcs")
+    @patch("generator.cli._print_vcs")
     def test_openstack_sign(self, cli_print_vs, gen_vmso, gen_csp):
         cli_print_vs.return_value = None
         gen_vmso.return_value = {"foo": "foo"}
@@ -131,7 +131,7 @@ class CliTestCase(unittest.TestCase):
         with patch('builtins.input', return_value="y"):
             runner = CliRunner()
             result = runner.invoke(
-                cli.openstack, "myCloud --config=" + get_absolute_path(const.CONFIG_FILE)
+                cli.openstack, "myCloud --config=" + get_absolute_path("config/config.yaml.template")
             )
 
         gen_csp.assert_called_once()
@@ -152,14 +152,14 @@ class CliTestCase(unittest.TestCase):
         self.assertIsNotNone(con)
 
     @patch("generator.discovery.csp_generator.CspGenerator.generate")
-    @patch("cli._print_vcs")
+    @patch("generator.cli._print_vcs")
     def test_csp_auto_sign(self, cli_print_vs, gen_csp):
         cli_print_vs.return_value = None
         gen_csp.return_value = {"vc": "bar"}
 
         runner = CliRunner()
         result = runner.invoke(
-            cli.csp, "--config=" + get_absolute_path(const.CONFIG_FILE) + " --auto-sign"
+            cli.csp, "--config=" + get_absolute_path("config/config.yaml.template") + " --auto-sign"
         )
 
         gen_csp.assert_called_once()
@@ -167,7 +167,7 @@ class CliTestCase(unittest.TestCase):
         self.assertEqual(0, result.exit_code)
 
     @patch("generator.discovery.csp_generator.CspGenerator.generate")
-    @patch("cli._print_vcs")
+    @patch("generator.cli._print_vcs")
     def test_csp_sign(self, cli_print_vs, gen_csp):
         cli_print_vs.return_value = None
         gen_csp.return_value = {"vc": "bar"}
@@ -175,14 +175,14 @@ class CliTestCase(unittest.TestCase):
         with patch('builtins.input', return_value="y"):
             runner = CliRunner()
             result = runner.invoke(
-                cli.csp, "--config=" + get_absolute_path(const.CONFIG_FILE)
+                cli.csp, "--config=" + get_absolute_path("config/config.yaml.template")
             )
         gen_csp.assert_called_once()
         self.assertIsNone(result.exception)
         self.assertEqual(0, result.exit_code)
 
     @patch("generator.discovery.csp_generator.CspGenerator.generate")
-    @patch("cli._print_vcs")
+    @patch("generator.cli._print_vcs")
     def test_csp_no_auto_sign(self, cli_print_vs, gen_csp):
         cli_print_vs.return_value = None
         gen_csp.return_value = {"vc": "bar"}
@@ -190,7 +190,7 @@ class CliTestCase(unittest.TestCase):
         with patch('builtins.input', return_value="n"):
             runner = CliRunner()
             result = runner.invoke(
-                cli.csp, "--config=" + get_absolute_path(const.CONFIG_FILE) + " --no-auto-sign"
+                cli.csp, "--config=" + get_absolute_path("config/config.yaml.template") + " --no-auto-sign"
             )
 
         self.assertEqual(0, gen_csp.call_count)
