@@ -8,8 +8,8 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from jwcrypto.jwt import JWK
 
-import cli
-from generator.common import config, const
+from generator import cli
+from generator.common import config
 from generator.common.gx_schema import (DataAccountExport, TermsAndConditions,
                                         VirtualMachineServiceOffering)
 from tests.common import MockConnection, get_absolute_path
