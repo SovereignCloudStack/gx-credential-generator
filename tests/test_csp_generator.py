@@ -15,7 +15,7 @@ class CspPGeneratorTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        with open(get_absolute_path(const.CONFIG_FILE), "r") as config_file:
+        with open(get_absolute_path("config/config.yaml.template"), "r") as config_file:
             cls.conf = config.Config(yaml.safe_load(config_file))
 
         cls.private_key = JWK.from_pem(rsa.generate_private_key(
