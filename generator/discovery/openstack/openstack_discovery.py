@@ -3,6 +3,8 @@
 
 from hashlib import sha256
 
+from typing import List
+
 import requests
 from openstack.connection import Connection
 from requests.exceptions import HTTPError
@@ -10,10 +12,15 @@ from requests.exceptions import HTTPError
 from generator.common import const
 from generator.common.config import Config
 from generator.common.gx_schema import (DataAccountExport, TermsAndConditions,
-                                        VirtualMachineServiceOffering)
+                                        VirtualMachineServiceOffering, BlockStorageServiceOffering)
+from generator.common.gx_schema import VMImage as GX_Image
+from generator.common.gx_schema import ServerFlavor as GX_Flavor
+from generator.common.gx_schema import BlockStorageConfiguration as GX_Type
+
 from generator.discovery.openstack.server_flavor_discovery import \
     ServerFlavorDiscovery
 from generator.discovery.openstack.vm_images_discovery import VmImageDiscovery
+from generator.discovery.openstack.volume_type_discovery import VolumeTypeDiscovery
 
 
 class OpenstackDiscovery:
@@ -33,7 +40,17 @@ class OpenstackDiscovery:
         """
         images = VmImageDiscovery(self.conn, self.config).discover()
         flavors = ServerFlavorDiscovery(self.conn, self.config).discover()
+        vol_types = VolumeTypeDiscovery(self.conn, self.config).discover()
 
+        vm_offering = self._create_vm_offering(images,flavors)
+        storage_offering = self._create_storage_offering(vol_types)
+
+        vm_offering.dependsOn(storage_offering)
+
+        return vm_offering
+
+
+    def _create_vm_offering(self, images: List[GX_Image], flavors: List[GX_Flavor]) -> VirtualMachineServiceOffering:
         # Create Virtual Service Offering object
         data_export_account = DataAccountExport(
             requestType=self.config.get_value(
@@ -92,3 +109,6 @@ class OpenstackDiscovery:
             codeArtifact=images,
             instantiationReq=flavors,
         )
+
+    def _create_storage_offering(self, vol_types: List[GX_Type]) -> BlockStorageServiceOffering:
+        pass

@@ -5,6 +5,7 @@ from typing import List
 import yaml
 from openstack.compute.v2.flavor import Flavor as OS_Flavor
 from openstack.image.v2.image import Image as OS_Image
+from openstack.block_storage.v3.type import Type as OS_Type
 
 from generator.common.config import Config
 from generator.common.gx_schema import (CPU, GPU, CheckSum, CodeArtifact,
@@ -286,15 +287,19 @@ class MockConnection:
     Wrap connection to OpenStack Cluster
     """
 
-    def __init__(self, images: List[OS_Image] = None, flavors: List[OS_Flavor] = None):
+    def __init__(self, images: List[OS_Image] = None, flavors: List[OS_Flavor] = None, types: List[OS_Type] = None):
         self.images = images or []
         self.flavors = flavors or []
+        self.types = types or []
 
     def list_images(self) -> List[OS_Image]:
         return self.images
 
     def list_flavors(self) -> List[OS_Flavor]:
         return self.flavors
+
+    def list_volume_types(self) -> List[OS_Type]:
+        return self.types
 
     def authorize(self):
         pass
