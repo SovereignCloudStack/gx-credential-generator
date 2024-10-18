@@ -93,7 +93,7 @@ class ServerFlavorDiscovery:
         # Initialize Gaia-X Server Flavor
         disks = self._get_disks(os_flavor, flavorname)
         gx_flavor = GX_Flavor(
-            # name=os_flavor.name,
+            name=os_flavor.name,
             cpu=self._get_cpu(os_flavor, flavorname),
             ram=self._get_ram(os_flavor, flavorname),
             bootVolume=disks[0],

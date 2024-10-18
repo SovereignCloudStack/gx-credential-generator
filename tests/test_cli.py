@@ -9,7 +9,7 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from jwcrypto.jwt import JWK
 
 from generator import cli
-from generator.common import config, const
+from generator.common import config
 from generator.common.gx_schema import (DataAccountExport, TermsAndConditions,
                                         VirtualMachineServiceOffering)
 from tests.common import MockConnection, get_absolute_path
@@ -45,10 +45,10 @@ class CliTestCase(unittest.TestCase):
             encryption_algorithm=serialization.NoEncryption()))
         csp_vcs = {'tandc': {"credentialSubject": {"type": "gx:GaiaXTermsAndConditions"}},
                    "lrn": {"credentialSubject": {"type": "gx:LegalRegistrationNumber", "id": "foo"}},
-                   "lp": {"credentialSubject": {"type": "gx:LegalParticipant", "id": "foo"}}}
+                   "legal_person": {"credentialSubject": {"type": "gx:LegalParticipant", "id": "foo"}}}
         gxdch_req_compl.return_value = "{\"credentialSubject\": {\"type\": \"gx:ComplianceCredential\", \"id\": \"foo\"}}"
 
-        with open(get_absolute_path(const.CONFIG_FILE), "r") as config_file:
+        with open(get_absolute_path("config/config.yaml.template"), "r") as config_file:
             conf = config.Config(yaml.safe_load(config_file))
 
         vcs = cli.create_vmso_vcs(conf, "myCloud", csp_vcs)
@@ -58,7 +58,7 @@ class CliTestCase(unittest.TestCase):
 
         self.assertEqual(4, len(vcs))
         self.assertEqual("gx:ServiceOffering", vcs['so']['credentialSubject']["type"])
-        self.assertEqual("gx:ComplianceCredential", vcs['cs_so']['credentialSubject']["type"])
+        self.assertEqual("gx:ComplianceCredential", vcs['so_compliance']['credentialSubject']["type"])
         self.assertEqual("gx:VirtualMachineServiceOffering", vcs['vmso']['credentialSubject']["type"])
         self.assertIsNotNone(vcs['vp_so'])
 
@@ -72,7 +72,7 @@ class CliTestCase(unittest.TestCase):
 
         runner = CliRunner()
         result = runner.invoke(
-            cli.openstack, "myCloud --config=" + get_absolute_path(const.CONFIG_FILE) + " --auto-sign"
+            cli.openstack, "myCloud --config=" + get_absolute_path("config/config.yaml.template") + " --auto-sign"
         )
 
         gen_csp.assert_called_once()
@@ -91,7 +91,7 @@ class CliTestCase(unittest.TestCase):
 
         runner = CliRunner()
         result = runner.invoke(
-            cli.openstack, "myCloud --config=" + get_absolute_path(const.CONFIG_FILE) + " --auto-sign"
+            cli.openstack, "myCloud --config=" + get_absolute_path("config/config.yaml.template") + " --auto-sign"
         )
 
         gen_csp.assert_called_once()
@@ -111,7 +111,7 @@ class CliTestCase(unittest.TestCase):
         with patch('builtins.input', return_value="n"):
             runner = CliRunner()
             result = runner.invoke(
-                cli.openstack, "myCloud --config=" + get_absolute_path(const.CONFIG_FILE) + " --no-auto-sign"
+                cli.openstack, "myCloud --config=" + get_absolute_path("config/config.yaml.template") + " --no-auto-sign"
             )
 
         self.assertEqual(0, gen_csp.call_count)
@@ -131,7 +131,7 @@ class CliTestCase(unittest.TestCase):
         with patch('builtins.input', return_value="y"):
             runner = CliRunner()
             result = runner.invoke(
-                cli.openstack, "myCloud --config=" + get_absolute_path(const.CONFIG_FILE)
+                cli.openstack, "myCloud --config=" + get_absolute_path("config/config.yaml.template")
             )
 
         gen_csp.assert_called_once()
@@ -159,7 +159,7 @@ class CliTestCase(unittest.TestCase):
 
         runner = CliRunner()
         result = runner.invoke(
-            cli.csp, "--config=" + get_absolute_path(const.CONFIG_FILE) + " --auto-sign"
+            cli.csp, "--config=" + get_absolute_path("config/config.yaml.template") + " --auto-sign"
         )
 
         gen_csp.assert_called_once()
@@ -175,7 +175,7 @@ class CliTestCase(unittest.TestCase):
         with patch('builtins.input', return_value="y"):
             runner = CliRunner()
             result = runner.invoke(
-                cli.csp, "--config=" + get_absolute_path(const.CONFIG_FILE)
+                cli.csp, "--config=" + get_absolute_path("config/config.yaml.template")
             )
         gen_csp.assert_called_once()
         self.assertIsNone(result.exception)
@@ -190,7 +190,7 @@ class CliTestCase(unittest.TestCase):
         with patch('builtins.input', return_value="n"):
             runner = CliRunner()
             result = runner.invoke(
-                cli.csp, "--config=" + get_absolute_path(const.CONFIG_FILE) + " --no-auto-sign"
+                cli.csp, "--config=" + get_absolute_path("config/config.yaml.template") + " --no-auto-sign"
             )
 
         self.assertEqual(0, gen_csp.call_count)

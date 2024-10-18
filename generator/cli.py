@@ -36,11 +36,11 @@ SHAPES_FILE_FORMAT = "turtle"
 DATA_FILE_FORMAT = "json-ld"
 
 VC_NAME_LOOKUP = {
-    "lp": "Legal Person",
+    "legal_person": "Legal Person",
     "lrn": "Legal Registration Number",
     "tandc": "Gaia-X Terms and Conditions",
-    "cs_csp": "GXDCH Compliance Service",
-    "cs_so": "GXDCH Compliance Service",
+    "csp_compliance": "GXDCH Compliance Service",
+    "so_compliance": "GXDCH Compliance Service",
     "so": "Service Offering",
     "vmso": "Virtual Machine Service Offering",
 }
@@ -94,7 +94,7 @@ def cli_commands():
     pass
 
 
-@click.command()
+@cli_commands.command()
 @add_logging_options
 @click.option(
     "--auto-sign/--no-auto-sign",
@@ -147,7 +147,7 @@ def openstack(cloud, timeout, config, out_dir, auto_sign):
     _print_vcs(vcs, out_dir)
 
 
-@click.command()
+@cli_commands.command()
 @add_logging_options
 def kubernetes():
     """Generates Gaia-X Credentials for CSP and Kubernetes."""
@@ -160,7 +160,7 @@ def kubernetes():
 #    graph.parse(filepath, format=file_format)
 #    return graph
 
-@click.command()
+@cli_commands.command()
 @add_logging_options
 @click.option(
     "--auto-sign/--no-auto-sign",
@@ -232,6 +232,7 @@ def create_vmso_vcs(conf: Config, cloud: str, csp_vcs: List[dict], timeout: int 
     @param timeout: timeout for connection to OpenStack cloud. If timeout expires, connection is initialed a second time.
     @return: A list of Gaia-X Credentials describing given OpenStack cloud.
     """
+
     csp = conf.get_value([const.CONFIG_CSP])
     # iaas = conf.get_value([const.CONFIG_IAAS]) not yet used, as Gaia-X "abuses" id attribute of Verifiable Credentials
     cred_settings = conf.get_value([const.CONFIG_CRED])
@@ -247,7 +248,7 @@ def create_vmso_vcs(conf: Config, cloud: str, csp_vcs: List[dict], timeout: int 
     vmso_vc = {
         '@context': [const.VC_CONTEXT, const.JWS_CONTEXT, const.REG_CONTEXT],
         'type': "VerifiableCredential",
-        'id': cred_settings[const.CONFIG_CRED_BASE_CRED_URL] + "/vmo.json",
+        'id': cred_settings[const.CONFIG_CRED_BASE_CRED_URL] + "/vmso.json",
         'issuer': csp['did'],
         'issuanceDate': str(datetime.now(tz=timezone.utc).isoformat()),
         'credentialSubject': json.loads(json.dumps(vm_offering, default=json_ld.to_json_ld)),
@@ -269,7 +270,7 @@ def create_vmso_vcs(conf: Config, cloud: str, csp_vcs: List[dict], timeout: int 
             "type": "gx:ServiceOffering",
             "id": cred_settings[const.CONFIG_CRED_BASE_CRED_URL] + "/so.json#subject",  # iaas['did'],
             "gx:providedBy": {
-                'id': csp_vcs['lp']['credentialSubject']['id']
+                'id': csp_vcs['legal_person']['credentialSubject']['id']
             },
             "gx:termsAndConditions": [
                 {'gx:URL': s_tac.url, 'gx:hash': s_tac.hash}
@@ -291,12 +292,12 @@ def create_vmso_vcs(conf: Config, cloud: str, csp_vcs: List[dict], timeout: int 
 
     # Request Gaia-X Compliance Credential for Service Offering
     logging.info('Request VC of type "gx:compliance" for Service Offering at GXDCH Compliance Service...')
-    vp = credentials.convert_to_vp(creds=[csp_vcs['tandc'], csp_vcs['lrn'], csp_vcs['lp'], so_vc_signed])
+    vp = credentials.convert_to_vp(creds=[csp_vcs['tandc'], csp_vcs['lrn'], csp_vcs['legal_person'], so_vc_signed])
     comp_vc = compliance.request_compliance_vc(vp,
                                                cred_settings[const.CONFIG_CRED_BASE_CRED_URL] + "/so_compliance.json")
 
     logging.info('ok')
-    return {'so': so_vc, 'cs_so': json.loads(comp_vc), 'vmso': vmso_vc_signed, 'vp_so': vp}
+    return {'so': so_vc, 'so_compliance': json.loads(comp_vc), 'vmso': vmso_vc_signed, 'vp_so': vp}
 
 
 def _get_timestamp():
@@ -355,10 +356,6 @@ def _are_gaiax_tandc_signed(conf: Config) -> bool:
     )
     return False
 
-
-cli_commands.add_command(openstack)
-cli_commands.add_command(kubernetes)
-cli_commands.add_command(csp)
 
 if __name__ == "__main__":
     cli_commands()

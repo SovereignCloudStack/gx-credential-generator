@@ -35,7 +35,7 @@ CONFIG_CSP_EORI = "eori"
 CONFIG_CSP_EUID = "euid"
 
 # GXDCH
-CONST_GXDCH = "gxdch"
+CONST_GXDCH = "GXDCH"
 CONST_GXDCH_NOT = "notary-service"
 CONST_GXDCH_COMP = "compliance-service"
 CONST_GXDCH_REG = "registry-service"

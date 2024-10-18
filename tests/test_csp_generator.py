@@ -15,7 +15,7 @@ class CspPGeneratorTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        with open(get_absolute_path(const.CONFIG_FILE), "r") as config_file:
+        with open(get_absolute_path("config/config.yaml.template"), "r") as config_file:
             cls.conf = config.Config(yaml.safe_load(config_file))
 
         cls.private_key = JWK.from_pem(rsa.generate_private_key(
@@ -70,14 +70,14 @@ class CspPGeneratorTestCase(unittest.TestCase):
         self.assertEqual("gx:legalRegistrationNumber", csp_vcs['lrn']['credentialSubject']['type'])
         self.assertEqual(
             self.conf.get_value([const.CONFIG_CRED, const.CONFIG_CRED_BASE_CRED_URL]) + "/legal_person.json",
-            csp_vcs['lp']['id'])
+            csp_vcs['legal_person']['id'])
         self.assertEqual(
             self.conf.get_value([const.CONFIG_CRED, const.CONFIG_CRED_BASE_CRED_URL]) + "/legal_person.json#subject",
-            csp_vcs['lp']['credentialSubject']['id'])
-        self.assertEqual(self.conf.get_value([const.CONFIG_CSP, const.CONFIG_DID]), csp_vcs['lp']['issuer'])
-        self.assertIsNotNone(csp_vcs['lp']['proof'])
-        self.assertEqual("gx:LegalParticipant", csp_vcs['lp']['credentialSubject']['type'])
-        self.assertEqual("gx:ComplianceCredential", csp_vcs['cs_csp']['credentialSubject']['type'])
+            csp_vcs['legal_person']['credentialSubject']['id'])
+        self.assertEqual(self.conf.get_value([const.CONFIG_CSP, const.CONFIG_DID]), csp_vcs['legal_person']['issuer'])
+        self.assertIsNotNone(csp_vcs['legal_person']['proof'])
+        self.assertEqual("gx:LegalParticipant", csp_vcs['legal_person']['credentialSubject']['type'])
+        self.assertEqual("gx:ComplianceCredential", csp_vcs['csp_compliance']['credentialSubject']['type'])
 
 
 if __name__ == '__main__':
