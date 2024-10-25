@@ -11,7 +11,7 @@ from jwcrypto.jwt import JWK
 from generator import cli
 from generator.common import config
 from generator.common.gx_schema import (DataAccountExport, TermsAndConditions,
-                                        VirtualMachineServiceOffering)
+                                        VirtualMachineServiceOffering, VMImage)
 from tests.common import MockConnection, get_absolute_path
 
 
@@ -34,8 +34,8 @@ class CliTestCase(unittest.TestCase):
             dataAccountExport=DataAccountExport(
                 requestType="API",
                 accessType="digital",
-                formatType="plain"),
-            codeArtifact=["foo"],
+                formatType="text/plain"),
+            codeArtifact=[VMImage(copyrightOwnedBy='foo', resourcePolicy='bar', license='APL-1.0')],
             instantiationReq=["bar"])
         load_jwk.return_value = JWK.from_pem(rsa.generate_private_key(
             public_exponent=65537,

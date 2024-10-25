@@ -1,4 +1,5 @@
 from datetime import datetime
+from distutils.command.config import config
 from typing import List, Union
 import re
 
@@ -31,30 +32,30 @@ class VolumeTypeDiscovery:
         """
         types = []
         for t in self.conn.list_volume_types():
-            if t.is_public:
-                types.append(self._convert_to_gx_image(t))
+            types.append(self._convert_to_gx_type(t))
         return types
 
     def _convert_to_gx_type(self, v_type: OS_Type) -> GX_Type:
         gx_vol_type = GX_Type(name=v_type.name, description=v_type.description)
 
         if self._is_volume_encrypted(v_type.description):
-            gx_vol_type.storageEncryption = Encryption()
-
+            gx_vol_type.storageEncryption = {
+                'id': self.conf.get_value([const.CONFIG_CRED, const.CONFIG_CRED_BASE_CRED_URL]) + "/storage-encryption-" + v_type.id
+            }
+        if self._is_volume_replicated(v_type.description):
+            gx_vol_type.storageRedundancyMechanism = [{
+                'id': self.conf.get_value(
+                    [const.CONFIG_CRED, const.CONFIG_CRED_BASE_CRED_URL]) + "/storage-replication-" + v_type.id
+            }]
 
         return gx_vol_type
 
-    def _is_volume_encrypted(self, vol_name) -> bool:
-        match = re.search(r'\[scs:\s*.*?encrypted.*?\]', vol_name)
-        if match:
-            return True
-        else:
+    def _is_volume_encrypted(self, vol_desc) -> bool:
+        if not vol_desc:
             return False
+        return True if re.search(r'\[scs:.*\s+encrypted[, \]].*', vol_desc) else False
 
-    def _is_volume_replicated(self, vol_name) -> bool:
-        match = re.search(r'\[scs:\s*.*?replicated.*?\]', vol_name)
-        if match:
-            return True
-        else:
+    def _is_volume_replicated(self, vol_desc) -> bool:
+        if not vol_desc:
             return False
-
+        return True if re.search(r'\[scs:.*\s+replicated[, \]].*', vol_desc) else False

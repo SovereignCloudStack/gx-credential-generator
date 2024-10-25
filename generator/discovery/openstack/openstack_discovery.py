@@ -42,16 +42,15 @@ class OpenstackDiscovery:
         flavors = ServerFlavorDiscovery(self.conn, self.config).discover()
         vol_types = VolumeTypeDiscovery(self.conn, self.config).discover()
 
-        vm_offering = self._create_vm_offering(images,flavors)
-        storage_offering = self._create_storage_offering(vol_types)
+        mand_props = self._get_mandatorty_service_propteries()
+        vm_offering = self._create_vm_offering(images,flavors, mand_props)
+        storage_offering = self._create_storage_offering(vol_types, mand_props)
 
         vm_offering.dependsOn(storage_offering)
-
         return vm_offering
 
 
-    def _create_vm_offering(self, images: List[GX_Image], flavors: List[GX_Flavor]) -> VirtualMachineServiceOffering:
-        # Create Virtual Service Offering object
+    def _get_mandatorty_service_propteries(self) -> dict:
         data_export_account = DataAccountExport(
             requestType=self.config.get_value(
                 [
@@ -98,17 +97,23 @@ class OpenstackDiscovery:
                 "Service offerings terms and conditions MUST not be empty. Please check config.yaml. There MUST be at least one entry."
                 + const.CONFIG_IAAS + "." + const.CONFIG_IAAS_T_AND_C
             )
-
-        return VirtualMachineServiceOffering(
-            providedBy=self.config.get_value([const.CONFIG_CSP, const.CONFIG_DID]),
-            dataAccountExport=data_export_account,
-            servicePolicy=self.config.get_value(
+        return {
+            'dataAccountExport': data_export_account,
+            'servicePolicy': self.config.get_value(
                 [const.CONFIG_IAAS, const.CONFIG_IAAS_SERVICE_POLICY]
             ),
-            serviceOfferingTermsAndConditions=service_tac,
+            'serviceOfferingTermsAndConditions': service_tac,
+            'providedBy': self.config.get_value([const.CONFIG_CSP, const.CONFIG_DID])}
+
+
+    def _create_vm_offering(self, images: List[GX_Image], flavors: List[GX_Flavor], mand_prop: dict) -> VirtualMachineServiceOffering:
+        # Create Virtual Service Offering object
+
+        return VirtualMachineServiceOffering(
+            mand_prop,
             codeArtifact=images,
             instantiationReq=flavors,
         )
 
-    def _create_storage_offering(self, vol_types: List[GX_Type]) -> BlockStorageServiceOffering:
-        pass
+    def _create_storage_offering(self, vol_types: List[GX_Type],  mand_prop: dict) -> BlockStorageServiceOffering:
+        bso = BlockStorageServiceOffering(mand_prop, storageConfiguration=vol_types)

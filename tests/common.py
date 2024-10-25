@@ -27,11 +27,15 @@ def get_absolute_path(relative_path: str) -> str:
 
 
 def get_config() -> Config:
-    with open(get_absolute_path("config/config.yaml.template"), "r") as config_file:
+    with open(get_absolute_path("config/config.yaml"), "r") as config_file:
         return Config(yaml.safe_load(config_file))
 
 
 class OpenstackTestcase(unittest.TestCase):
+
+    def get_config(self):
+        with open(get_absolute_path("config/config.yaml.template"), "r") as config_file:
+            return Config(yaml.safe_load(config_file))
 
     def assert_gaia_x_entity(self, ob_1: GaiaXEntity, ob_2: GaiaXEntity):
         self.assertEqual(ob_1.name, ob_2.name, "GaiaXEntity.name")

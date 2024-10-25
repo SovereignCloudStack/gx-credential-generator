@@ -12,7 +12,7 @@ from linkml_runtime.utils.enumerations import EnumDefinitionImpl
 from linkml_runtime.utils.metamodelcore import URI
 from linkml_runtime.utils.yamlutils import YAMLRoot
 
-from generator.common.gx_schema import GX, QUDT, SCHEMA, VCARD, slots
+from generator.common.gx_schema import GX, QUDT, HTTPS_SCHEMA, HTTPS_VCARD, slots
 
 
 class JsonLdObject:
@@ -46,8 +46,8 @@ def get_json_ld_context() -> dict:
         "@context": {
             GX.prefix: GX,
             QUDT.prefix: QUDT,
-            SCHEMA.prefix: SCHEMA,
-            VCARD.prefix: VCARD,
+            HTTPS_SCHEMA.prefix: HTTPS_SCHEMA,
+            HTTPS_VCARD.prefix: HTTPS_VCARD,
             "xsd": "http://www.w3.org/2001/XMLSchema#",
             "ex": "https://example.com/",
         }
