@@ -21,9 +21,9 @@ OS_FLAVOR_2 = OS_Flavor(
 
 class VMServerFlavorDiscoveryTestcase(OpenstackTestcase):
     def setUp(self):
+        self.conf = self.get_config()
         self.discovery = ServerFlavorDiscovery(
-            conn=MockConnection(flavors=[OS_FLAVOR_1, OS_FLAVOR_2]), conf=get_config()
-        )
+            conn=MockConnection(flavors=[OS_FLAVOR_1, OS_FLAVOR_2]), conf=self.conf)
 
     def test_get_cpu(self):
         self.assertEqual(
