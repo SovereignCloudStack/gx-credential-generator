@@ -25,7 +25,7 @@ GX_IMAGE_1 = JsonLdObject(
         copyrightOwnedBy=["Fedora-Project"],
         license=["https://docs.fedoraproject.org/en-US/legal/fedora-linux-license/"],
         resourcePolicy=["default: allow intent"],
-        checksum=CheckSum(
+        checkSum=CheckSum(
             checkSumCalculation="sha-512",
             checkSumValue="7f8bababc2c2a94880747383750470aee68c7e8840bb8811eaeda1b0ce71d59f40ebb182",
         ),
@@ -43,7 +43,7 @@ GX_IMAGE_1 = JsonLdObject(
                 "https://docs.fedoraproject.org/en-US/legal/fedora-linux-license/"
             ],
             resourcePolicy=["default: allow intent"],
-            checksum=None,
+            checkSum=None,
             signature=None,
             version="Stable",
             patchLevel=None,
@@ -94,7 +94,6 @@ GX_IMAGE_1 = JsonLdObject(
             diskBusType="SCSI",
         ),
         encryption=None,
-        checkSum=None,
         secureBoot=True,
         vPMU=False,
         multiQueues=True,
@@ -129,7 +128,7 @@ GX_IMAGE_2 = JsonLdObject(
             copyrightOwnedBy=["The FreeBSD Project"],
             license=["GPL-3.0-only", "LGPL-2.0"],
             resourcePolicy=["default: allow intent"],
-            checksum=None,
+            checkSum=None,
             signature=None,
             version=None,
             osDistribution="FreeBSD",

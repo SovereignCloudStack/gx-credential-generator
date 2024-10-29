@@ -44,7 +44,7 @@ IaaS:
     # allowed values are: digital, physical
     access-type: digital
     # Allowed values are MIME types
-    format-type: "plain"
+    format-type: "text/plain"
 
 # Endpoints of Gaia-X Digital Clearing House
 GXDCH:

@@ -8,10 +8,10 @@ from openstack.image.v2.image import Image as OS_Image
 from openstack.block_storage.v3.type import Type as OS_Type
 
 from generator.common.config import Config
-from generator.common.gx_schema import (CPU, GPU, CheckSum, CodeArtifact,
+from generator.common.gx_schema import (CPU, CpuCapabilities, GPU, CheckSum, CodeArtifact,
                                         Device, Disk, Encryption, GaiaXEntity,
                                         Hypervisor, Image,
-                                        InstantiationRequirement, Memory,
+                                        InstantiationRequirement, Memory, MemoryCapabilities,
                                         OperatingSystem, Resource,
                                         ServerFlavor, Signature,
                                         SoftwareResource, VirtualResource,
@@ -27,15 +27,11 @@ def get_absolute_path(relative_path: str) -> str:
 
 
 def get_config() -> Config:
-    with open(get_absolute_path("config/config.yaml"), "r") as config_file:
+    with open(get_absolute_path("config/config.yaml.template"), "r") as config_file:
         return Config(yaml.safe_load(config_file))
 
 
 class OpenstackTestcase(unittest.TestCase):
-
-    def get_config(self):
-        with open(get_absolute_path("config/config.yaml.template"), "r") as config_file:
-            return Config(yaml.safe_load(config_file))
 
     def assert_gaia_x_entity(self, ob_1: GaiaXEntity, ob_2: GaiaXEntity):
         self.assertEqual(ob_1.name, ob_2.name, "GaiaXEntity.name")
@@ -63,8 +59,8 @@ class OpenstackTestcase(unittest.TestCase):
 
     def assert_software_resource(self, ob_1: SoftwareResource, ob_2: SoftwareResource):
         self.assert_virtual_resource(ob_1, ob_2)
-        if ob_1.checksum:
-            self.assert_checksum(ob_1.checksum, ob_2.checksum)
+        if ob_1.checkSum:
+            self.assert_checksum(ob_1.checkSum, ob_2.checkSum)
         if ob_1.signature:
             self.assert_signature(ob_1.signature, ob_2.signature)
         self.assertEqual(ob_1.version, ob_2.version, "SoftwareResource.version")
@@ -200,8 +196,8 @@ class OpenstackTestcase(unittest.TestCase):
             )
         if ob_1.encryption:
             self.assert_encryption(ob_1.encryption, ob_2.encryption)
-        if ob_1.checksum:
-            self.assert_checksum(ob_1.checksum, ob_2.checksum)
+        if ob_1.checkSum:
+            self.assert_checksum(ob_1.checkSum, ob_2.checkSum)
 
         self.assertEqual(ob_1.secureBoot, ob_2.secureBoot, "Image.secureBoot")
         self.assertEqual(ob_1.vPMU, ob_2.vPMU, "Image.vPMU")
@@ -252,10 +248,19 @@ class OpenstackTestcase(unittest.TestCase):
     ):
         self.assert_gaia_x_entity(ob_1, ob_2)
 
+    def assert_cpu_cap(self, ob_1: CpuCapabilities, ob_2: CpuCapabilities):
+        self.assert_cpu(ob_1.pCPU, ob_2.pCPU)
+        self.assertEqual(ob_1.overProvisioningRatio, ob_2.overProvisioningRatio)
+        self.assertEqual(ob_1.vCPUs, ob_2.vCPUs)
+
+    def assert_memory_cap(self, ob_1: MemoryCapabilities, ob_2: MemoryCapabilities):
+        self.assert_mem(ob_1.memory, ob_2.memory)
+        self.assertEqual(ob_1.overProvisioningRatio, ob_2.overProvisioningRatio)
+
     def assert_flavor(self, ob_1: ServerFlavor, ob_2: ServerFlavor):
-        # self.check_installation_requirement(ob_1, ob_2)
-        self.assert_cpu(ob_1.cpu, ob_2.cpu)
-        self.assert_mem(ob_1.ram, ob_2.ram)
+        self.assert_instantiation_requirement(ob_1, ob_2)
+        self.assert_cpu_cap(ob_1.cpu, ob_2.cpu)
+        self.assert_memory_cap(ob_1.memory, ob_2.memory)
         self.assert_gpu(ob_1.gpu, ob_2.gpu)
         self.assert_disk(ob_1.bootVolume, ob_2.bootVolume)
         self.assertEqual(

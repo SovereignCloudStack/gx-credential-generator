@@ -147,7 +147,7 @@ class VmImageDiscovery:
         gx_image.vPMU = self._get_hw_pmu(os_image)
         gx_image.cpuReq = self._get_cpu_req(os_image)
         gx_image.multiQueues = self._get_multiqueue_enabled(os_image)
-        gx_image.checksum = self._get_checksum(os_image)
+        gx_image.checkSum = self._get_checksum(os_image)
         gx_image.hwRngTypeOfImage = self._get_rng_model(os_image)
         gx_image.videoRamSize = self._get_video_ram_size(os_image)
         gx_image.file_size = self._get_file_size(os_image)

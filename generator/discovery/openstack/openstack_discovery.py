@@ -12,7 +12,8 @@ from requests.exceptions import HTTPError
 from generator.common import const
 from generator.common.config import Config
 from generator.common.gx_schema import (DataAccountExport, TermsAndConditions,
-                                        VirtualMachineServiceOffering, BlockStorageServiceOffering)
+                                        VirtualMachineServiceOffering, BlockStorageServiceOffering,
+                                        StorageConfiguration)
 from generator.common.gx_schema import VMImage as GX_Image
 from generator.common.gx_schema import ServerFlavor as GX_Flavor
 from generator.common.gx_schema import BlockStorageConfiguration as GX_Type
@@ -108,12 +109,14 @@ class OpenstackDiscovery:
 
     def _create_vm_offering(self, images: List[GX_Image], flavors: List[GX_Flavor], mand_prop: dict) -> VirtualMachineServiceOffering:
         # Create Virtual Service Offering object
-
         return VirtualMachineServiceOffering(
-            mand_prop,
             codeArtifact=images,
             instantiationReq=flavors,
+            **mand_prop
         )
 
-    def _create_storage_offering(self, vol_types: List[GX_Type],  mand_prop: dict) -> BlockStorageServiceOffering:
-        bso = BlockStorageServiceOffering(mand_prop, storageConfiguration=vol_types)
+    def _create_storage_offering(self, vol_types: List[GX_Type], mand_prop: dict) -> BlockStorageServiceOffering:
+        return BlockStorageServiceOffering(
+            storageConfiguration=[StorageConfiguration()],
+            **mand_prop
+        )

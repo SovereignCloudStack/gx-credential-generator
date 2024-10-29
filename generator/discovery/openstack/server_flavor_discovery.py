@@ -8,10 +8,9 @@ from openstack.connection import Connection
 
 from generator.common import const
 from generator.common.config import Config
-from generator.common.gx_schema import CPU
 from generator.common.gx_schema import Architectures as CpuArch
-from generator.common.gx_schema import (Disk, DiskType, Frequency, Hypervisor,
-                                        HypervisorType, Memory, MemorySize)
+from generator.common.gx_schema import (CpuCapabilities, CPU, Disk, DiskType, Frequency, Hypervisor,
+                                        HypervisorType, Memory, MemoryCapabilities, MemorySize)
 from generator.common.gx_schema import ServerFlavor as GX_Flavor
 from generator.vendor.flavor_names import Flavorname, parser_v3
 
@@ -94,8 +93,8 @@ class ServerFlavorDiscovery:
         disks = self._get_disks(os_flavor, flavorname)
         gx_flavor = GX_Flavor(
             name=os_flavor.name,
-            cpu=self._get_cpu(os_flavor, flavorname),
-            ram=self._get_ram(os_flavor, flavorname),
+            cpu=self._get_cpu_cap(os_flavor, flavorname),
+            memory=self._get_ram_cap(os_flavor, flavorname),
             bootVolume=disks[0],
         )
 
@@ -108,7 +107,7 @@ class ServerFlavorDiscovery:
 
         return gx_flavor
 
-    def _get_cpu(self, os_flavor: OS_Flavor, flavorname: Optional[Flavorname]) -> CPU:
+    def _get_cpu_cap(self, os_flavor: OS_Flavor, flavorname: Optional[Flavorname]) -> CpuCapabilities:
         """
         Return Gaia-X compliance CPU specification of given OpenStack flavor.
         @param os_flavor: OpenStack flavor
@@ -116,22 +115,22 @@ class ServerFlavorDiscovery:
         @return: Gaia-X compliant CPU definition
         @rtype CPU
         """
-        cpu = CPU(cpuArchitecture=CpuArch.Other, numberOfCores=os_flavor.vcpus)
+        pCpu = CPU(cpuArchitecture=CpuArch.Other)
+        cpuCap = CpuCapabilities(pCPU=pCpu, vCPUs=os_flavor.vcpus, overProvisioningRatio = 1)
         if flavorname:
-            cpu.smtEnabled = (
+            pCpu.smtEnabled = (
                 flavorname.cpuram.cputype != "C"
             )  # FIXME this is unclear to me, see #85
 
-            cpu.defaultOversubscriptionRatio = 1
             if flavorname.cpuram.cputype == "V":
-                cpu.defaultOversubscriptionRatio = 5
+                cpuCap.overProvisioningRatio = 5
             elif flavorname.cpuram.cputype == "L":
-                cpu.defaultOversubscriptionRatio = 16
-        return cpu
+                cpuCap.overProvisioningRatio = 16
+        return cpuCap
 
-    def _get_ram(
+    def _get_ram_cap(
             self, os_flavor: OS_Flavor, flavorname: Optional[Flavorname]
-    ) -> Memory:
+    ) -> MemoryCapabilities:
         """
         Return Gaia-X RAM definition specified in given OpenStack flavor.
         @param os_flavor: OpenStack Flavor
@@ -140,12 +139,12 @@ class ServerFlavorDiscovery:
         @rtype Memory
         """
         size = MemorySize(value=float(os_flavor.ram), unit=const.UNIT_MB)
-        mem = Memory(memorySize=size)
+        memCap = MemoryCapabilities(memory=Memory(memorySize=size), overProvisioningRatio=1)
         if flavorname:
-            mem.eccEnabled = not flavorname.cpuram.raminsecure
+            memCap.memory.eccEnabled = not flavorname.cpuram.raminsecure
             if flavorname.cpuram.ramoversubscribed:
-                mem.defaultOversubscriptionRatio = 2
-        return mem
+                memCap.overProvisioningRatio = 2
+        return memCap
 
     def _get_disks(
             self, os_flavor: OS_Flavor, flavorname: Optional[Flavorname]
@@ -210,16 +209,16 @@ class ServerFlavorDiscovery:
             gx_flavor.hardwareAssistedVirtualization = True
         if flavorname.cpubrand:
             arch, vendor, gens = CPUVENDOR_LOOKUP[flavorname.cpubrand.cpuvendor]
-            gx_flavor.cpu.cpuArchitecture = CpuArch(arch)
+            gx_flavor.cpu.pCPU.cpuArchitecture = CpuArch(arch)
             if vendor is not None:
-                gx_flavor.cpu.vendor = vendor
+                gx_flavor.cpu.pCPU.vendor = vendor
             idx = flavorname.cpubrand.cpugen
             if idx is not None and idx < len(gens):
-                gx_flavor.cpu.generation = gens[idx]
+                gx_flavor.cpu.pCPU.generation = gens[idx]
             # parse frequency
             if flavorname.cpubrand.perf:
                 freq = 0.5 * len(flavorname.cpubrand.perf) + 2.25
-                gx_flavor.cpu.baseFrequency = Frequency(value=freq, unit=const.UNIT_GHZ)
+                gx_flavor.cpu.pCPU.baseFrequency = Frequency(value=freq, unit=const.UNIT_GHZ)
 
     def _add_description(self, os_flavor: OS_Flavor, gx_flavor: GX_Flavor) -> None:
         """

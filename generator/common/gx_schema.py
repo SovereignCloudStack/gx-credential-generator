@@ -5380,7 +5380,7 @@ class VMImage(Image):
     vmImageDiskFormat: Optional[Union[str, "VMDiskType"]] = "RAW"
     hypervisorType: Optional[Union[str, "HypervisorType"]] = "other"
     firmwareType: Optional[Union[str, "FirmType"]] = "other"
-    hwRngTypeOfImage: Optional[Union[str, "RNGTypes"]] = None
+    hwRngTypeOfImage: Optional[Union[str, "RNGTypes"]] = "None"
     watchDogAction: Optional[Union[str, "WatchDogActions"]] = "disabled"
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
