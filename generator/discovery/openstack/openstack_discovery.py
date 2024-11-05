@@ -47,7 +47,7 @@ class OpenstackDiscovery:
         vm_offering = self._create_vm_offering(images,flavors, mand_props)
         storage_offering = self._create_storage_offering(vol_types, mand_props)
 
-        vm_offering.dependsOn(storage_offering)
+        vm_offering.dependsOn.append(storage_offering)
         return vm_offering
 
 
@@ -117,6 +117,6 @@ class OpenstackDiscovery:
 
     def _create_storage_offering(self, vol_types: List[GX_Type], mand_prop: dict) -> BlockStorageServiceOffering:
         return BlockStorageServiceOffering(
-            storageConfiguration=[StorageConfiguration()],
+            storageConfiguration=vol_types,
             **mand_prop
         )

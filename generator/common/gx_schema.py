@@ -1,5 +1,5 @@
 # Auto generated from gaia-x.yaml by pythongen.py version: 0.0.1
-# Generation date: 2024-10-24T13:35:54
+# Generation date: 2024-10-30T13:54:11
 # Schema: gaia-x
 #
 # id: https://w3id.org/gaia-x/development#gaia-x
@@ -1318,7 +1318,7 @@ class GPU(Device):
     class_model_uri: ClassVar[URIRef] = GX.GPU
 
     gpuMemory: Optional[Union[dict, "MemorySize"]] = None
-    gpuInterconnection: Optional[Union[str, "GPUInterconnetionTypes"]] = None
+    gpuInterconnection: Optional[Union[str, "GPUInterconnetionTypes"]] = "none"
     gpuProcessingUnits: Optional[int] = None
     gpuPassthrough: Optional[Union[bool, Bool]] = False
 
@@ -2664,26 +2664,6 @@ class Constraint(YAMLRoot):
 
         super().__post_init__(**kwargs)
 
-
-@dataclass(repr=False)
-class LogicalConstraint(YAMLRoot):
-    """
-    ODRL Core Vocabulary Terms related to Logical Constraints
-    """
-    _inherited_slots: ClassVar[List[str]] = []
-
-    class_class_uri: ClassVar[URIRef] = ODRL["LogicalConstraint"]
-    class_class_curie: ClassVar[str] = "odrl:LogicalConstraint"
-    class_name: ClassVar[str] = "LogicalConstraint"
-    class_model_uri: ClassVar[URIRef] = GX.LogicalConstraint
-
-    operand: Optional[str] = None
-
-    def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
-        if self.operand is not None and not isinstance(self.operand, str):
-            self.operand = str(self.operand)
-
-        super().__post_init__(**kwargs)
 
 class Participant(GaiaXEntity):
     """
@@ -4926,7 +4906,7 @@ class StorageServiceOffering(InfrastructureServiceOffering):
     providedBy: Union[str, LegalPersonRegistrationNumber] = None
     serviceOfferingTermsAndConditions: Union[Union[dict, TermsAndConditions], List[Union[dict, TermsAndConditions]]] = None
     dataAccountExport: Union[Union[dict, DataAccountExport], List[Union[dict, DataAccountExport]]] = None
-    storageConfiguration: Union[dict, StorageConfiguration] = None
+    storageConfiguration: Union[Union[dict, StorageConfiguration], List[Union[dict, StorageConfiguration]]] = None
     minimumSize: Optional[Union[dict, MemorySize]] = None
     maximumSize: Optional[Union[dict, MemorySize]] = None
     lifetimeManagement: Optional[int] = None
@@ -4938,8 +4918,10 @@ class StorageServiceOffering(InfrastructureServiceOffering):
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self._is_empty(self.storageConfiguration):
             self.MissingRequiredField("storageConfiguration")
-        if not isinstance(self.storageConfiguration, StorageConfiguration):
-            self.storageConfiguration = StorageConfiguration(**as_dict(self.storageConfiguration))
+        if not isinstance(self.storageConfiguration, list):
+            self.storageConfiguration = [self.storageConfiguration] if self.storageConfiguration is not None else []
+        self.storageConfiguration = [v if isinstance(v, StorageConfiguration) else StorageConfiguration(**as_dict(v))
+                                     for v in self.storageConfiguration]
 
         if self.minimumSize is not None and not isinstance(self.minimumSize, MemorySize):
             self.minimumSize = MemorySize(**as_dict(self.minimumSize))
@@ -4980,15 +4962,16 @@ class FileStorageServiceOffering(StorageServiceOffering):
     providedBy: Union[str, LegalPersonRegistrationNumber] = None
     serviceOfferingTermsAndConditions: Union[Union[dict, TermsAndConditions], List[Union[dict, TermsAndConditions]]] = None
     dataAccountExport: Union[Union[dict, DataAccountExport], List[Union[dict, DataAccountExport]]] = None
-    storageConfiguration: Union[dict, FileStorageConfiguration] = None
+    storageConfiguration: Union[Union[dict, FileStorageConfiguration], List[Union[dict, FileStorageConfiguration]]] = None
     accessSemantics: Optional[Union[bool, Bool]] = None
     accessAttributes: Optional[Union[Union[str, "AccessAttribute"], List[Union[str, "AccessAttribute"]]]] = empty_list()
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self._is_empty(self.storageConfiguration):
             self.MissingRequiredField("storageConfiguration")
-        if not isinstance(self.storageConfiguration, FileStorageConfiguration):
-            self.storageConfiguration = FileStorageConfiguration(**as_dict(self.storageConfiguration))
+        if not isinstance(self.storageConfiguration, list):
+            self.storageConfiguration = [self.storageConfiguration] if self.storageConfiguration is not None else []
+        self.storageConfiguration = [v if isinstance(v, FileStorageConfiguration) else FileStorageConfiguration(**as_dict(v)) for v in self.storageConfiguration]
 
         if self.accessSemantics is not None and not isinstance(self.accessSemantics, Bool):
             self.accessSemantics = Bool(self.accessSemantics)
@@ -5015,13 +4998,14 @@ class BlockStorageServiceOffering(StorageServiceOffering):
     providedBy: Union[str, LegalPersonRegistrationNumber] = None
     serviceOfferingTermsAndConditions: Union[Union[dict, TermsAndConditions], List[Union[dict, TermsAndConditions]]] = None
     dataAccountExport: Union[Union[dict, DataAccountExport], List[Union[dict, DataAccountExport]]] = None
-    storageConfiguration: Union[dict, BlockStorageConfiguration] = None
+    storageConfiguration: Union[Union[dict, BlockStorageConfiguration], List[Union[dict, BlockStorageConfiguration]]] = None
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self._is_empty(self.storageConfiguration):
             self.MissingRequiredField("storageConfiguration")
-        if not isinstance(self.storageConfiguration, BlockStorageConfiguration):
-            self.storageConfiguration = BlockStorageConfiguration(**as_dict(self.storageConfiguration))
+        if not isinstance(self.storageConfiguration, list):
+            self.storageConfiguration = [self.storageConfiguration] if self.storageConfiguration is not None else []
+        self.storageConfiguration = [v if isinstance(v, BlockStorageConfiguration) else BlockStorageConfiguration(**as_dict(v)) for v in self.storageConfiguration]
 
         super().__post_init__(**kwargs)
 
@@ -5213,7 +5197,7 @@ class ServerFlavor(InstantiationRequirement):
     confidentialComputing: Optional[Union[dict, "ConfidentialComputing"]] = None
     hypervisor: Optional[Union[dict, Hypervisor]] = None
     hardwareAssistedVirtualization: Optional[Union[bool, Bool]] = False
-    hwRngTypeOfFlavor: Optional[Union[str, "RNGTypes"]] = None
+    hwRngTypeOfFlavor: Optional[Union[str, "RNGTypes"]] = "None"
 
     def __post_init__(self, *_: List[str], **kwargs: Dict[str, Any]):
         if self._is_empty(self.cpu):
@@ -37017,9 +37001,6 @@ slots.rule__assigner = Slot(uri=ODRL.assigner, name="rule__assigner", curie=ODRL
 slots.rule__constraint = Slot(uri=ODRL.constraint, name="rule__constraint", curie=ODRL.curie('constraint'),
                    model_uri=GX.rule__constraint, domain=None, range=Optional[Union[Union[dict, Constraint], List[Union[dict, Constraint]]]])
 
-slots.rule__logicalConstraint = Slot(uri=ODRL.logicalConstraint, name="rule__logicalConstraint", curie=ODRL.curie('logicalConstraint'),
-                   model_uri=GX.rule__logicalConstraint, domain=None, range=Optional[Union[Union[dict, LogicalConstraint], List[Union[dict, LogicalConstraint]]]])
-
 slots.rule__duty = Slot(uri=ODRL.duty, name="rule__duty", curie=ODRL.curie('duty'),
                    model_uri=GX.rule__duty, domain=None, range=Optional[Union[Union[dict, Duty], List[Union[dict, Duty]]]])
 
@@ -37336,7 +37317,7 @@ slots.storageServiceOffering__multipleViews = Slot(uri=GX.multipleViews, name="s
                    model_uri=GX.storageServiceOffering__multipleViews, domain=None, range=Optional[Union[bool, Bool]])
 
 slots.fileStorageServiceOffering__storageConfiguration = Slot(uri=GX.storageConfiguration, name="fileStorageServiceOffering__storageConfiguration", curie=GX.curie('storageConfiguration'),
-                   model_uri=GX.fileStorageServiceOffering__storageConfiguration, domain=None, range=Union[dict, FileStorageConfiguration])
+                   model_uri=GX.fileStorageServiceOffering__storageConfiguration, domain=None, range=Union[Union[dict, FileStorageConfiguration], List[Union[dict, FileStorageConfiguration]]])
 
 slots.fileStorageServiceOffering__accessSemantics = Slot(uri=GX.accessSemantics, name="fileStorageServiceOffering__accessSemantics", curie=GX.curie('accessSemantics'),
                    model_uri=GX.fileStorageServiceOffering__accessSemantics, domain=None, range=Optional[Union[bool, Bool]])
@@ -37345,7 +37326,7 @@ slots.fileStorageServiceOffering__accessAttributes = Slot(uri=GX.accessAttribute
                    model_uri=GX.fileStorageServiceOffering__accessAttributes, domain=None, range=Optional[Union[Union[str, "AccessAttribute"], List[Union[str, "AccessAttribute"]]]])
 
 slots.blockStorageServiceOffering__storageConfiguration = Slot(uri=GX.storageConfiguration, name="blockStorageServiceOffering__storageConfiguration", curie=GX.curie('storageConfiguration'),
-                   model_uri=GX.blockStorageServiceOffering__storageConfiguration, domain=None, range=Union[dict, BlockStorageConfiguration])
+                   model_uri=GX.blockStorageServiceOffering__storageConfiguration, domain=None, range=Union[Union[dict, BlockStorageConfiguration], List[Union[dict, BlockStorageConfiguration]]])
 
 slots.objectStorageServiceOffering__accessAttributes = Slot(uri=GX.accessAttributes, name="objectStorageServiceOffering__accessAttributes", curie=GX.curie('accessAttributes'),
                    model_uri=GX.objectStorageServiceOffering__accessAttributes, domain=None, range=Optional[Union[Union[str, "AccessAttribute"], List[Union[str, "AccessAttribute"]]]])

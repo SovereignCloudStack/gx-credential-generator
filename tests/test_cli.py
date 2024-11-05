@@ -30,7 +30,9 @@ class CliTestCase(unittest.TestCase):
             providedBy="foo",
             serviceOfferingTermsAndConditions=[TermsAndConditions(
                 url="https://example.com/tandc",
-                hash="123")],
+                hash="123"), TermsAndConditions(
+                url="https://example.com/tandc2",
+                hash="124")],
             dataAccountExport=DataAccountExport(
                 requestType="API",
                 accessType="digital",
@@ -52,6 +54,7 @@ class CliTestCase(unittest.TestCase):
             conf = config.Config(yaml.safe_load(config_file))
 
         vcs = cli.create_vmso_vcs(conf, "myCloud", csp_vcs)
+
         os_connect.assert_called_once()
         os_discover.assert_called_once()
         gxdch_req_compl.assert_called_once()

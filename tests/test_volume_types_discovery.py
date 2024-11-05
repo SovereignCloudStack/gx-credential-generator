@@ -32,7 +32,7 @@ OS_TYPE_6 = OS_TYPE(
 
 class VolumeTypeDiscoveryTestcase(OpenstackTestcase):
     def setUp(self):
-        self.conf = self.get_config()
+        self.conf = get_config()
         self.discovery = VolumeTypeDiscovery(
             conn=MockConnection(types=[OS_TYPE_1,
                                        OS_TYPE_2,
